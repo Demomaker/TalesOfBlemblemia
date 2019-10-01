@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game
 {
@@ -7,70 +8,62 @@ namespace Game
     /// Les unités sur le tableau qui seront soit contrôllées par le joueur ou l'intelligence artificielle
     /// Auteur: Zacharie Lavigne
     /// </summary>
-    public class Unit
+    public class Unit : MonoBehaviour
     {
         /// <summary>
-        /// La tuile où se trouve l'unité
+        /// The tile the unit is on
         /// </summary>
         private Tile unitTile;
         public Tile UnitTile => unitTile;
         /// <summary>
-        /// L'intelligence artificielle de l'unité, seulement utilisée pour les unités ennemies
+        /// Value of if a unit is an enemy 
         /// </summary>
-        private AiController aiController;
+        private bool isEnemy;
+        public bool IsEnemy => isEnemy;
         /// <summary>
-        /// Représente si une unité est ennemie
+        /// The unit's class stats
         /// </summary>
-        private bool isEnnemy;
-        public bool IsEnnemy => isEnnemy;
-        /// <summary>
-        /// Les statistiques de la classe, ou niveau, de l'unité
-        /// </summary>
+        [SerializeField]
         private UnitStats classStats;
         /// <summary>
-        /// L'arme de l'unité
+        /// The unit's weapon
         /// </summary>
+        [SerializeField]
         private Weapon weapon;
         /// <summary>
-        /// Le coût en mouvements pour accéder à chaque cases de la grille de jeu
+        /// Array representing the movement cost needed to move to every tile on the grid
         /// </summary>
         private int[,] movementCosts;
         public int[,] MovementCosts => movementCosts;
         /// <summary>
-        /// Les points de vie courrants de l'unité
+        /// The unit's current health
         /// </summary>
         private int currentHealthPoints;
         public int CurrentHealthPoints => currentHealthPoints;
         /// <summary>
-        /// L'action à effectuer par une unité pendant son tour
-        /// </summary>
-        private Action turnAction;
-        public Action TurnAction => turnAction;
-
-        /// <summary>
-        /// Les statistiques de l'unité, c'est-à-dire les statistiques de la classe additionnées à celles de son arme
+        /// The unit's stats
         /// </summary>
         public UnitStats UnitStats
         {
             get { return classStats + weapon.WeaponStats; }
         }
         /// <summary>
-        /// Le type de l'arme de l'arme de l'unité
+        /// The unit's weapon type
         /// </summary>
         public WeaponType WeaponType
         {
             get { return weapon.WeaponType; }
         }
         /// <summary>
-        /// Le type de l'arme contre laquelle l'arme de l'unité a un avantage
+        /// The weapon type this unit has advantage on 
         /// </summary>
         public WeaponType WeaponAdvantage
         {
             get { return weapon.Advantage; }
         }
         /// <summary>
-        /// Les points de vie qu'une unité gagne en se reposant
-        /// Se reposer redonne la moitié de sa vie à une unité, sans pouvoir dépasser ses points de vie maximum
+        /// The health points a unit would gain by resting
+        /// Resting replenishes half your health points without exceeding the unit's max health
         /// </summary>
         public int HpGainedByResting
         {
@@ -83,13 +76,8 @@ namespace Game
             }
         }
 
-        public Unit(Tile tile, AiController aiController, bool isEnnemy, UnitStats classStats, Weapon weapon)
+        private void OnEnable()
         {
-            this.unitTile = tile;
-            this.aiController = aiController;
-            this.isEnnemy = isEnnemy;
-            this.classStats = classStats;
-            this.weapon = weapon;
             this.currentHealthPoints = UnitStats.MaxHealthPoints;
         }
 
@@ -100,9 +88,9 @@ namespace Game
         
         public virtual void SetTurnAction(Grid grid)
         {
-            if (isEnnemy)
+            if (isEnemy)
             {
-                turnAction = aiController.DetermineAction(this, grid);
+                
             }
             else
             {

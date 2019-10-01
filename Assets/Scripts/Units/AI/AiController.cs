@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Game
 {
@@ -7,7 +9,7 @@ namespace Game
     /// Logique d'intelligence artificielle pour les unités ennemies
     /// Auteur: Zacharie Lavigne
     /// </summary>
-    public class AiController
+    public class AiController : MonoBehaviour
     {
         /// <summary>
         /// Le nombre d'actions parmis lesquelles l'IA va choisir dépendamment du niveau de difficulté
@@ -249,7 +251,7 @@ namespace Game
             List<Unit> units = null; //new List<Unit>(Units); TODO créer un get qui obtient les unité dans le niveau
             for (int i = 0; i < units.Count; i++)
             {
-                if(!units[i].IsEnnemy)
+                if(!units[i].IsEnemy)
                     actions.Add(new Action(FindPathTo(grid, aiUnit, units[i]), ActionType.Attack, 20f, units[i]));
             }
             return actions;
