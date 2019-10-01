@@ -3,7 +3,7 @@ using Game;
 using UnityEngine;
 
 //Authors: Jérémie Bertrand & Mike Bédard
-public abstract class Character : MonoBehaviour
+public abstract class Unit : MonoBehaviour
 {
     [SerializeField] private Vector2Int initialPosition;
     private GridController gridController;
@@ -23,13 +23,13 @@ public abstract class Character : MonoBehaviour
         get => canPlay;
         set => canPlay = value;
     }
-    public bool IsCurrentlySelected => gridController.SelectedCharacter == this;
+    public bool IsCurrentlySelected => gridController.SelectedUnit == this;
     public bool CanMove => MovesLeft > 0;
     public bool IsDead => healthPoints <= 0;
     public int MovementRange => movementRange;
     public int AttackRange => attackRange;
 
-    protected Character(int movementRange, int attackRange)
+    protected Unit(int movementRange, int attackRange)
     {
         this.movementRange = movementRange;
         this.attackRange = attackRange;
@@ -57,9 +57,9 @@ public abstract class Character : MonoBehaviour
     public void MoveTo(Tile tile)
     {
         MovesLeft -= 1;
-        if (currentTile != null) currentTile.UnlinkCharacter();
+        if (currentTile != null) currentTile.UnlinkUnit();
         currentTile = tile;
-        if(currentTile != null && currentTile.LinkCharacter(this)) MoveTo(currentTile.WorldPosition);
+        if(currentTile != null && currentTile.LinkUnit(this)) MoveTo(currentTile.WorldPosition);
     }
     
 
@@ -70,10 +70,10 @@ public abstract class Character : MonoBehaviour
         MoveTo(Finder.GridController.GetTile(initialPosition.x, initialPosition.y));
     }
 
-    public void Attack(Character character)
+    public void Attack(Unit unit)
     {
         MovesLeft -= 1;
-        character.healthPoints -= 2;
+        unit.healthPoints -= 2;
     }
 
     public void Die()

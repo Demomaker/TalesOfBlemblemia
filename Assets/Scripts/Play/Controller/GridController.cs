@@ -13,13 +13,13 @@ using UnityEngine.UI;
         [SerializeField] private Sprite selectedTileSprite = null;
         [SerializeField] private Sprite attackableTileSprite = null;
 
-        public Character SelectedCharacter { get; private set; } = null;
+        public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
         public Sprite AttackableTileSprite => attackableTileSprite;
 
-        public bool ACharacterIsCurrentlySelected => SelectedCharacter != null;
+        public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
         public int NbColumns { get; private set; } = 0;
         public int NbLines { get; private set; } = 0;
@@ -31,15 +31,15 @@ using UnityEngine.UI;
             NbLines = (int)(GetComponent<RectTransform>().rect.height / gridLayoutGroup.cellSize.y);
         }
 
-        public void SelectCharacter(Character character)
+        public void SelectUnit(Unit unit)
         {
-            if(SelectedCharacter != null) DeselectCharacter();
-            SelectedCharacter = character;
+            if(SelectedUnit != null) DeselectUnit();
+            SelectedUnit = unit;
         }
 
-        public void DeselectCharacter()
+        public void DeselectUnit()
         {
-            SelectedCharacter = null;
+            SelectedUnit = null;
             foreach (Transform child in transform)
             {
                 child.GetComponent<Tile>().HideActionPossibility();
@@ -49,10 +49,10 @@ using UnityEngine.UI;
         public void DisplayPossibleActionsFrom(Tile fromTile)
         {
             fromTile.DisplaySelectedTile();
-            var linkedCharacter = fromTile.LinkedCharacter;
-            for (int i = -linkedCharacter.MovementRange; i <= linkedCharacter.MovementRange; i++)
+            var linkedUnit = fromTile.LinkedUnit;
+            for (int i = -linkedUnit.MovementRange; i <= linkedUnit.MovementRange; i++)
             {
-                for(int j = -linkedCharacter.MovementRange; j <= linkedCharacter.MovementRange ; j++)
+                for(int j = -linkedUnit.MovementRange; j <= linkedUnit.MovementRange ; j++)
                 {
                     if (i != 0 || j != 0)
                     {
@@ -61,11 +61,11 @@ using UnityEngine.UI;
                         {
                             int distance = Math.Abs(i) + Math.Abs(j);
                             Tile tile = GetTile(position.x, position.y);
-                            if (distance <= linkedCharacter.MovementRange && tile.IsAvailable)
+                            if (distance <= linkedUnit.MovementRange && tile.IsAvailable)
                             {
                                 tile.DisplayMoveActionPossibility();
                             }
-                            else if (distance <= linkedCharacter.AttackRange && tile.LinkedCharacter is Enemy)
+                            else if (distance <= linkedUnit.AttackRange && tile.LinkedUnit is Enemy)
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
