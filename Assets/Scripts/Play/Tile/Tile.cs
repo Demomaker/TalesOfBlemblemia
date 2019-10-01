@@ -10,19 +10,19 @@ namespace Game
         private Button tileButton;
         private readonly TileType tileType;
         private Image tileImage;
-        private Character linkedCharacter;
+        private global::Unit linkedUnit;
         private GridController gridController;
         
-        private bool IsPossibleAction => gridController.ACharacterIsCurrentlySelected && gridController.SelectedCharacter.CanPlay && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedCharacterCanBeAttacked => IsOccupiedByACharacter && linkedCharacter is Enemy && IsPossibleAction;
-        private bool LinkedCharacterCanBeSelected => IsOccupiedByACharacter && linkedCharacter is Ally && linkedCharacter.CanPlay;
+        private bool IsPossibleAction => gridController.ACharacterIsCurrentlySelected && gridController.SelectedUnit.CanPlay && tileImage.sprite != gridController.NormalSprite;
+        private bool LinkedCharacterCanBeAttacked => IsOccupiedByACharacter && linkedUnit.IsEnemy && IsPossibleAction;
+        private bool LinkedCharacterCanBeSelected => IsOccupiedByACharacter && !linkedUnit.IsEnemy && linkedUnit.CanPlay;
         private bool IsWalkable => tileType != TileType.OBSTACLE;
         public bool IsAvailable => IsWalkable && !IsOccupiedByACharacter;
-        private bool IsOccupiedByACharacter => linkedCharacter != null;
+        private bool IsOccupiedByACharacter => linkedUnit != null;
         private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
-        public Character LinkedCharacter => linkedCharacter;
+        public global::Unit LinkedUnit => linkedUnit;
 
         protected Tile(TileType tileType)
         {
@@ -50,23 +50,23 @@ namespace Game
             
             if (LinkedCharacterCanBeSelected)
             {
-                gridController.SelectCharacter(linkedCharacter); 
+                gridController.SelectCharacter(linkedUnit); 
                 gridController.DisplayPossibleActionsFrom(this);
                 return;
             }
             
             if (LinkedCharacterCanBeAttacked)
             {
-                gridController.SelectedCharacter.Attack(linkedCharacter);
-                if (linkedCharacter.IsDead)
+                gridController.SelectedUnit.Attack(linkedUnit);
+                if (linkedUnit.IsDead)
                 {
-                    linkedCharacter.Die();
-                    gridController.SelectedCharacter.MoveTo(this);
+                    linkedUnit.Die();
+                    gridController.SelectedUnit.MoveTo(this);
                 }
             }
             else if (IsPossibleAction)
             {
-                gridController.SelectedCharacter.MoveTo(this);
+                gridController.SelectedUnit.MoveTo(this);
             }
             gridController.DeselectCharacter();
         }
@@ -91,17 +91,17 @@ namespace Game
             tileImage.sprite = gridController.NormalSprite;
         }
 
-        public bool LinkCharacter(Character character)
+        public bool LinkCharacter(global::Unit unit)
         {
             if (!IsWalkable) return false;
-            this.linkedCharacter = character;
+            this.linkedUnit = unit;
             return IsOccupiedByACharacter;
         }
 
         public bool UnlinkCharacter()
         {
             if (!IsOccupiedByACharacter) return false;
-            linkedCharacter = null;
+            linkedUnit = null;
             return true;
         }
     }

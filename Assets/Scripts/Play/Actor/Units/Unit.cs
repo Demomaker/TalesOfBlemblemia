@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Game;
 
-namespace Game
+namespace GameOld
 {
     /// <summary>
     /// Les unités sur le tableau qui seront soit contrôllées par le joueur ou l'intelligence artificielle
@@ -25,10 +26,10 @@ namespace Game
         /// </summary>
         [SerializeField]
         private UnitStats classStats;
+        [SerializeField]
         /// <summary>
         /// The unit's weapon
         /// </summary>
-        [SerializeField]
         private Weapon weapon;
         /// <summary>
         /// Array representing the movement cost needed to move to every tile on the grid
