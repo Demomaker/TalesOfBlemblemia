@@ -43,7 +43,8 @@ namespace Game
         private static void IsUpMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromY > 0 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX, fromY - 1]
-                          && grid.GetTile(fromX, fromY - 1).CostToMove != int.MaxValue)
+                          && grid.GetTile(fromX, fromY - 1).CostToMove != int.MaxValue
+                          && !grid.GetTile(fromX,fromY - 1).LinkedUnit.IsEnemy)
             {
                 movementCosts[fromX, fromY - 1] = movementCosts[fromX, fromY] + costToMove;
                 ComputeCosts(grid, movementCosts, fromX, fromY - 1);
@@ -53,7 +54,8 @@ namespace Game
         private static void IsLeftMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromX > 0 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX - 1, fromY]
-                          && grid.GetTile(fromX - 1, fromY).CostToMove != int.MaxValue)
+                          && grid.GetTile(fromX - 1, fromY).CostToMove != int.MaxValue
+                          && !grid.GetTile(fromX -1, fromY).LinkedUnit.IsEnemy)
             {
                 movementCosts[fromX - 1, fromY] = movementCosts[fromX, fromY] + costToMove;
                 ComputeCosts(grid, movementCosts, fromX - 1, fromY);
@@ -63,7 +65,8 @@ namespace Game
         private static void IsDownMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromY < grid.NbLines - 1 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX, fromY + 1]
-                                        && grid.GetTile(fromX, fromY + 1).CostToMove != int.MaxValue)
+                                        && grid.GetTile(fromX, fromY + 1).CostToMove != int.MaxValue
+                                        && !grid.GetTile(fromX, fromY +1).LinkedUnit.IsEnemy)
             {
                 movementCosts[fromX, fromY + 1] = movementCosts[fromX, fromY] + costToMove;
                 ComputeCosts(grid, movementCosts, fromX, fromY + 1);
@@ -73,7 +76,8 @@ namespace Game
         private static void IsRightMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromX < grid.NbColumns - 1 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX + 1, fromY]
-                                       && grid.GetTile(fromX + 1, fromY).CostToMove != int.MaxValue)
+                                       && grid.GetTile(fromX + 1, fromY).CostToMove != int.MaxValue
+                                       && !grid.GetTile(fromX +1, fromY).LinkedUnit.IsEnemy)
             {
                 //Changing the value to move to the cell 
                 movementCosts[fromX + 1, fromY] = movementCosts[fromX, fromY] + costToMove;
