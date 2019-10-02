@@ -8,14 +8,16 @@ namespace Game
     public abstract class Tile : MonoBehaviour
     {
         private Button tileButton;
-        private readonly TileType tileType;
+        [SerializeField] private TileType tileType;
+        public TileType TileType => tileType;
+
         private Image tileImage;
         private Unit linkedUnit;
         private GridController gridController;
         
         private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && gridController.SelectedUnit.CanPlay && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit is Enemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && linkedUnit is Ally && linkedUnit.CanPlay;
+        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && linkedUnit.CanPlay;
         private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;
