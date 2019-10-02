@@ -23,10 +23,15 @@ namespace Game
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
+        private int costToMove;
 
-        protected Tile(TileType tileType)
+        public int CostToMove => costToMove;
+        
+
+            protected Tile(TileType tileType, int costToMove = 1)
         {
             this.tileType = tileType;
+            this.costToMove = costToMove;
         }
         
         protected virtual void Awake()
