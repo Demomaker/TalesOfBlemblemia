@@ -28,19 +28,20 @@ namespace Game
         {
             int costToMove = grid.GetTile(fromX, fromY).CostToMove;
             
-            IsRightMouvementPossible(grid, movementCosts, fromX, fromY, costToMove);
+            //We check if the cost to move is smaller then the cost of the current tile. We do so for each direction
+            IsRightMovementPossible(grid, movementCosts, fromX, fromY, costToMove);
+            
+            IsDownMovementPossible(grid, movementCosts, fromX, fromY, costToMove);
 
-            IsDownMouvementPossible(grid, movementCosts, fromX, fromY, costToMove);
+            IsLeftMovementPossible(grid, movementCosts, fromX, fromY, costToMove);
 
-            IsLeftMouvementPossible(grid, movementCosts, fromX, fromY, costToMove);
-
-            IsUpMouvementPossible(grid, movementCosts, fromX, fromY, costToMove);
+            IsUpMovementPossible(grid, movementCosts, fromX, fromY, costToMove);
 
             //Once all movements are calculated, the array with the cost to move to every cell is returned
             return movementCosts;
         }
 
-        private static void IsUpMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
+        private static void IsUpMovementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromY > 0 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX, fromY - 1]
                           && grid.GetTile(fromX, fromY - 1).CostToMove != int.MaxValue
@@ -51,7 +52,7 @@ namespace Game
             }
         }
 
-        private static void IsLeftMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
+        private static void IsLeftMovementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromX > 0 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX - 1, fromY]
                           && grid.GetTile(fromX - 1, fromY).CostToMove != int.MaxValue
@@ -62,7 +63,7 @@ namespace Game
             }
         }
 
-        private static void IsDownMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
+        private static void IsDownMovementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromY < grid.NbLines - 1 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX, fromY + 1]
                                         && grid.GetTile(fromX, fromY + 1).CostToMove != int.MaxValue
@@ -73,7 +74,7 @@ namespace Game
             }
         }
 
-        private static void IsRightMouvementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
+        private static void IsRightMovementPossible(GridController grid, int[,] movementCosts, int fromX, int fromY, int costToMove)
         {
             if (fromX < grid.NbColumns - 1 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX + 1, fromY]
                                        && grid.GetTile(fromX + 1, fromY).CostToMove != int.MaxValue
@@ -188,21 +189,21 @@ namespace Game
             int x = 0;
             int y = 0;
             
-            (x,y) = CheckLeftMouvement(grid, movementCosts, path, toX, toY, x, y);
+            (x,y) = CheckLeftMovement(grid, movementCosts, path, toX, toY, x, y);
             
             //Check Right
-            (x,y) = CheckRightMouvement(grid, movementCosts, path, toX, toY, x, y);
+            (x,y) = CheckRightMovement(grid, movementCosts, path, toX, toY, x, y);
             
             //Check Up
-            (x,y) = CheckUpMouvement(grid, movementCosts, path, toX, toY, x, y);
+            (x,y) = CheckUpMovement(grid, movementCosts, path, toX, toY, x, y);
             
             //Check Down
-            (x,y) = CheckDownMouvement(grid, movementCosts, path, toX, toY, x, y);
+            (x,y) = CheckDownMovement(grid, movementCosts, path, toX, toY, x, y);
 
             return FindPath(grid, movementCosts, path, fromX, fromY, x, y);
         }
 
-        private static (int,int) CheckDownMouvement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
+        private static (int,int) CheckDownMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
         {
             if (toY + 1 < grid.NbLines && movementCosts[toX, toY + 1] < movementCosts[toX, toY])
             {
@@ -217,7 +218,7 @@ namespace Game
             return (x,y);
         }
 
-        private static (int,int) CheckUpMouvement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
+        private static (int,int) CheckUpMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
         {
             if (toY - 1 >= 0 && movementCosts[toX, toY - 1] < movementCosts[toX, toY])
             {
@@ -232,7 +233,7 @@ namespace Game
             return (x,y);
         }
 
-        private static (int,int) CheckRightMouvement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
+        private static (int,int) CheckRightMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
         {
             if (toX + 1 < grid.NbColumns && movementCosts[toX + 1, toY] < movementCosts[toX, toY])
             {
@@ -247,7 +248,7 @@ namespace Game
             return (x,y);
         }
 
-        private static (int,int) CheckLeftMouvement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
+        private static (int,int) CheckLeftMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y)
         {
             if (toX - 1 >= 0 && movementCosts[toX - 1, toY] < movementCosts[toX, toY])
             {
