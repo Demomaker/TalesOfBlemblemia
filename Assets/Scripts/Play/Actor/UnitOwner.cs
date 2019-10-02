@@ -7,10 +7,10 @@ namespace Game
 {
     public class UnitOwner
     {
-        public string Name = "";
         [SerializeField] private readonly List<Unit> ownedUnits = new List<Unit>();
         [SerializeField] private readonly List<Unit> playableUnits = new List<Unit>();
         private bool hasLost = false;
+        public string Name = "";
 
         public bool HasLost
         {
