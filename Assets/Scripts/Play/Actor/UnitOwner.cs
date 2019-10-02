@@ -7,8 +7,8 @@ namespace Game
 {
     public class UnitOwner
     {
-        [SerializeField] private readonly List<Unit> ownedUnits = new List<Unit>();
-        [SerializeField] private readonly List<Unit> playableUnits = new List<Unit>();
+        private readonly List<Unit> ownedUnits = new List<Unit>();
+        private readonly List<Unit> playableUnits = new List<Unit>();
         private bool hasLost = false;
         public string Name = "";
 
