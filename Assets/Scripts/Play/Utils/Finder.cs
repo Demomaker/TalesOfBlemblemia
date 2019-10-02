@@ -7,7 +7,7 @@ namespace Game
     {
         private static GameController gameController;
         private static GridController gridController;
-
+        
         public static GameController GameController
         {
             get

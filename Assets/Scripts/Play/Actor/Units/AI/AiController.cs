@@ -19,9 +19,9 @@ namespace Game
         //TODO avoir un Random commun a tout?
         private static Random random = new Random();
         
-        public static void PlayTurn(Unit playableUnit, List<Unit> enemyUnits, Grid grid)
+        public static void PlayTurn(Unit playableUnit, List<Unit> enemyUnits)
         {
-            Action actionToDo = DetermineAction(playableUnit, grid, enemyUnits);
+            Action actionToDo = DetermineAction(playableUnit, enemyUnits);
             playableUnit.MoveByPath(actionToDo.Path);
             if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
             {
@@ -41,10 +41,10 @@ namespace Game
         /// <param name="grid">The level map</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>L'action que l'unité devra exécuter</returns>
-        public static Action DetermineAction(Unit aiUnit, Grid grid, List<Unit> enemyUnits)
+        public static Action DetermineAction(Unit aiUnit, List<Unit> enemyUnits)
         {
             //Les actions potentielles que l'unité pourra effectuer pendant son tour
-            List<Action> actionsToDo = ScanForEnnemies(grid, aiUnit, enemyUnits);
+            List<Action> actionsToDo = ScanForEnnemies(aiUnit, enemyUnits);
             
             //Attribution d'un score à chaque action
             ComputeChoiceScores(actionsToDo, aiUnit);
@@ -53,7 +53,7 @@ namespace Game
             Action[] bestActions = GetBestActions(actionsToDo);
 
             //Vérification de s'il serait raisonnable de se reposer à se tour-ci
-            AddRestActionIfNeeded(grid, bestActions, aiUnit, actionsToDo);
+            AddRestActionIfNeeded(Finder.GridController, bestActions, aiUnit, actionsToDo);
 
             return SelectRandomBestAction(bestActions);
         }
@@ -90,7 +90,7 @@ namespace Game
         /// </summary>
         /// <param name="bestActions">Tableau des meilleures actions que l'unité pourrait faire</param>
         /// <param name="aiUnit">L'unité controllée</param>
-        private static void AddRestActionIfNeeded(Grid grid, Action[] bestActions, Unit aiUnit, List<Action> potentialAction)
+        private static void AddRestActionIfNeeded(GridController grid, Action[] bestActions, Unit aiUnit, List<Action> potentialAction)
         {
             if(aiUnit.Stats.MaxHealthPoints * 1.33f < aiUnit.Stats.MaxHealthPoints + aiUnit.HpGainedByResting)
             {
@@ -176,11 +176,13 @@ namespace Game
         /// <summary>
         /// Trouve le chemin vers où l'unité devrait s'enfuir pour se reposer
         /// </summary>
+        /// <param name="potentialActions">The potential actions of this unit</param>
         /// <param name="aiUnit">L'unité contrôllée par IA</param>
+        /// <param name="grid">The level map</param>
         /// <returns>Le chemin à prendre pour s'enfuir</returns>
-        private static List<Tile> FindFleePath(Grid grid, List<Action> potentialActions, Unit aiUnit)
+        private static List<Tile> FindFleePath(GridController grid, List<Action> potentialActions, Unit aiUnit)
         {
-            int[,] optionMap = null;//new int[grid.Width, grid.Height]; TODO remettre quand on aura Grid
+            int[,] optionMap = new int[grid.NbColumns, grid.NbLines]; 
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
                 for (int j = 0; j < optionMap.GetLength(1); j++)
@@ -228,7 +230,7 @@ namespace Game
         /// <param name="aiUnit">L'unité contrôllée par l'IA</param>
         /// <param name="potentialTarget">L'unité ciblée</param>
         /// <returns>Le chemin le plus court vers la cible</returns>
-        private static List<Tile> FindPathTo(Grid grid, Unit aiUnit, Unit potentialTarget)
+        private static List<Tile> FindPathTo(GridController grid, Unit aiUnit, Unit potentialTarget)
         {
             //return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.UnitTile.X, aiUnit.UnitTile.Y,
             //   potentialTarget.UnitTile.X, potentialTarget.UnitTile.Y);
@@ -244,7 +246,7 @@ namespace Game
         /// <param name="targetX">La position en X ciblée</param>
         /// <param name="targetY">La position en Y ciblée</param>
         /// <returns>Le chemin le plus court vers la cible</returns>
-        private static List<Tile> FindPathTo(Grid grid, Unit aiUnit, int targetX, int targetY)
+        private static List<Tile> FindPathTo(GridController grid, Unit aiUnit, int targetX, int targetY)
         {
             //return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.UnitTile.X, aiUnit.UnitTile.Y,
             //    targetX, targetY);
@@ -259,13 +261,13 @@ namespace Game
         /// <param name="aiUnit">L'unité contrôllée par l'IA</param>
         /// <param name="enemyUnits"></param>
         /// <returns>La liste des ennemis de l'unité</returns>
-        private static List<Action> ScanForEnnemies(Grid grid, Unit aiUnit, List<Unit> enemyUnits)
+        private static List<Action> ScanForEnnemies(Unit aiUnit, List<Unit> enemyUnits)
         {
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
             {
                 if(!enemyUnits[i].IsEnemy)
-                    actions.Add(new Action(FindPathTo(grid, aiUnit, enemyUnits[i]), ActionType.Attack, 20f, enemyUnits[i]));
+                    actions.Add(new Action(FindPathTo(Finder.GridController, aiUnit, enemyUnits[i]), ActionType.Attack, 20f, enemyUnits[i]));
             }
             return actions;
         }
@@ -312,7 +314,7 @@ namespace Game
                 //cost += path[i].costToMove;
             }
             return cost;
-        }
+        }    
         
         /// <summary>
         /// Détermine comment les types d'armes de l'unité à attaquer et celle de l'IA
