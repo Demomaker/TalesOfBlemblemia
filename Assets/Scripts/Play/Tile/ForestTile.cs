@@ -3,7 +3,7 @@
     //Author: Jérémie Bertrand
     public class ForestTile : Tile
     {
-        public ForestTile() : base(TileType.FOREST)
+        public ForestTile() : base(TileType.Forest)
         {
         }
     }

@@ -8,85 +8,31 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] private Vector2Int initialPosition;
     private GridController gridController;
     private Tile currentTile = null;
+    private readonly int movementRange;
+    private readonly int attackRange;
+    private int healthPoints = Constants.DEFAULT_CHARACTER_HEALTH_POINTS;
+    private int movesLeft = Constants.NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN;
     private bool canPlay = false;
+    public int MovesLeft
+    {
+        get => movesLeft;
+        set => movesLeft = value;
+    }
     public bool CanPlay
     {
         get => canPlay;
         set => canPlay = value;
     }
     public bool IsCurrentlySelected => gridController.SelectedUnit == this;
-
-    /// <summary>
-    /// Value representing if a unit is an enemy 
-    /// </summary>
-    private bool isEnemy;
-    public bool IsEnemy => isEnemy;
-    /// <summary>
-    /// The unit's class stats
-    /// </summary>
-    [SerializeField]
-    private UnitStats classStats;
-    /// <summary>
-    /// The unit's weapon
-    /// </summary>
-    [SerializeField]
-    private Weapon weapon;
-    /// <summary>
-    /// Array representing the movement cost needed to move to every tile on the grid
-    /// </summary>
-    private int[,] movementCosts;
-    public int[,] MovementCosts => movementCosts;
-    /// <summary>
-    /// The unit's current health
-    /// </summary>
-    private int currentHealthPoints;
-    public int CurrentHealthPoints => currentHealthPoints;
-    /// <summary>
-    /// The unit's stats
-    /// </summary>
-    public UnitStats UnitStats
-    {
-    get { return classStats + weapon.WeaponStats; }
-    }
-    /// <summary>
-    /// The unit's weapon type
-    /// </summary>
-    public WeaponType WeaponType
-    {
-    get { return weapon.WeaponType; }
-    }
-    /// <summary>
-    /// The weapon type this unit has advantage on 
-    /// </summary>
-    public WeaponType WeaponAdvantage
-    {
-    get { return weapon.Advantage; }
-    }
-    /// <summary>
-    /// The health points a unit would gain by resting
-    /// Resting replenishes half your health points without exceeding the unit's max health
-    /// </summary>
-    public int HpGainedByResting
-    {
-    get
-    {
-        int maxGain = UnitStats.MaxHealthPoints / 2;
-        if (currentHealthPoints + maxGain > UnitStats.MaxHealthPoints)
-            return UnitStats.MaxHealthPoints - currentHealthPoints;
-        return maxGain;
-    }
-    }
-
-    private int movesLeft = 0;
-    public int MovesLeft => movesLeft;
     public bool CanMove => MovesLeft > 0;
-    public bool IsDead => currentHealthPoints <= 0;
-    public int MovementRange => UnitStats.MoveSpeed;
-    public int AttackRange => 1;
-    
-    
-    protected Unit()
+    public bool IsDead => healthPoints <= 0;
+    public int MovementRange => movementRange;
+    public int AttackRange => attackRange;
+
+    protected Unit(int movementRange, int attackRange)
     {
+        this.movementRange = movementRange;
+        this.attackRange = attackRange;
     }
     private void Awake()
     {
@@ -100,7 +46,7 @@ public abstract class Unit : MonoBehaviour
     
     public void ResetNumberOfMovesLeft()
     {
-        movesLeft = MovementRange;
+        MovesLeft = Constants.NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN;
     }
 
     private void MoveTo(Vector3 position)
@@ -110,23 +56,24 @@ public abstract class Unit : MonoBehaviour
 
     public void MoveTo(Tile tile)
     {
-        movesLeft -= 1;
-        if (currentTile != null) currentTile.UnlinkCharacter();
+        MovesLeft -= 1;
+        if (currentTile != null) currentTile.UnlinkUnit();
         currentTile = tile;
-        if(currentTile != null && currentTile.LinkCharacter(this)) MoveTo(currentTile.WorldPosition);
+        if(currentTile != null && currentTile.LinkUnit(this)) MoveTo(currentTile.WorldPosition);
     }
     
+
     private IEnumerator InitPosition()
     {
         yield return new WaitForEndOfFrame();
-        movesLeft += 1;
+        MovesLeft += 1;
         MoveTo(Finder.GridController.GetTile(initialPosition.x, initialPosition.y));
     }
 
     public void Attack(Unit unit)
     {
-        movesLeft -= 1;
-        unit.currentHealthPoints -= 2;
+        MovesLeft -= 1;
+        unit.healthPoints -= 2;
     }
 
     public void Die()
