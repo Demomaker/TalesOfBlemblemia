@@ -32,8 +32,6 @@ namespace Game
                 playableUnit.Rest();
             }
         }
-
-
         /// <summary>
         /// Détermine l'action qu'une unité contrôllée par intelligence artificielle devra exécuter pendant son tour
         /// </summary>
@@ -57,7 +55,6 @@ namespace Game
 
             return SelectRandomBestAction(bestActions);
         }
-
         /// <summary>
         /// Sélectionne au hasard une action parmis les meilleures actions possibles
         /// </summary>
@@ -84,7 +81,6 @@ namespace Game
             }
             return bestAction;
         }
-
         /// <summary>
         /// Rajoute à la liste d'actions potentielles 
         /// </summary>
@@ -97,7 +93,6 @@ namespace Game
                 bestActions[nbOfChoice - 1] = new Action(FindFleePath(grid, potentialAction, aiUnit), ActionType.Rest, 12, null);
             }
         }
-
         /// <summary>
         /// Attribue un score à chaque action potentielle que l'unité pourrait effectuer
         /// </summary>
@@ -114,7 +109,6 @@ namespace Game
                                         HarmChoiceMod(aiUnit, actionsToDo[i].Target);
             }
         }
-        
         /// <summary>
         /// Retourne un tableau des actions aux meilleurs scores en ordre décroissant
         /// Le nombre d'actions dépend du niveau de difficulté
@@ -145,7 +139,6 @@ namespace Game
             
             return bestAttacks;
         }
-        
         /// <summary>
         /// Trouve l'index de l'action au meilleur score dans une liste
         /// </summary>
@@ -172,7 +165,6 @@ namespace Game
             }
             return bestActionIndex;
         }
-
         /// <summary>
         /// Trouve le chemin vers où l'unité devrait s'enfuir pour se reposer
         /// </summary>
@@ -221,8 +213,7 @@ namespace Game
             }
 
             return FindPathTo(grid, aiUnit, posX, posY);
-        }    
-
+        }
         /// <summary>
         /// Trouve un chemin vers une unité ciblée
         /// </summary>
@@ -232,12 +223,9 @@ namespace Game
         /// <returns>Le chemin le plus court vers la cible</returns>
         private static List<Tile> FindPathTo(GridController grid, Unit aiUnit, Unit potentialTarget)
         {
-            //return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.UnitTile.X, aiUnit.UnitTile.Y,
-            //   potentialTarget.UnitTile.X, potentialTarget.UnitTile.Y);
-            //TODO remettre quand on aura le PathFinder
-            return null;
+            return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.CurrentTile.LogicalPosition.x, aiUnit.CurrentTile.LogicalPosition.y,
+               potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y);
         }
-        
         /// <summary>
         /// Trouve un chemin vers une position ciblée
         /// </summary>
@@ -248,12 +236,9 @@ namespace Game
         /// <returns>Le chemin le plus court vers la cible</returns>
         private static List<Tile> FindPathTo(GridController grid, Unit aiUnit, int targetX, int targetY)
         {
-            //return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.UnitTile.X, aiUnit.UnitTile.Y,
-            //    targetX, targetY);
-            //TODO remettre quand on aura le PathFinder
-            return null;
+            return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.CurrentTile.LogicalPosition.x, aiUnit.CurrentTile.LogicalPosition.y,
+                targetX, targetY);
         }
-
         /// <summary>
         /// Trouve les ennemis de l'unité et initialise une liste d'une action potentielle par ennemis
         /// </summary>
@@ -271,7 +256,6 @@ namespace Game
             }
             return actions;
         }
-        
         /// <summary>
         /// Détermine comment la vie de l'unité à attaquer et la force d'attaque de l'IA
         /// influencent le choix de l'action à faire de l'IA
@@ -285,7 +269,6 @@ namespace Game
                 return 1;
             return -(targetHp - aiUnit.Stats.AttackStrength);
         }
-        
         /// <summary>
         /// Détermine comment la distance entre l'unité à attaquer et l'IA
         /// influence le choix de l'action à faire de l'IA
@@ -299,7 +282,6 @@ namespace Game
             int nbTours = (int)Math.Ceiling(nbToursDouble);
             return -(2 * nbTours) + 3;
         }
-
         /// <summary>
         /// Calcule le nombre de mouvements nécessaires exécuter les mouvements d'un chemin
         /// </summary>
@@ -310,12 +292,10 @@ namespace Game
             int cost = 0;
             for (int i = 0; i < path.Count - 1; i++)
             {
-                //TODO remettre quand il y aura tile
-                //cost += path[i].costToMove;
+                cost += path[i].CostToMove;
             }
             return cost;
-        }    
-        
+        }
         /// <summary>
         /// Détermine comment les types d'armes de l'unité à attaquer et celle de l'IA
         /// influencent le choix de l'action à faire de l'IA
