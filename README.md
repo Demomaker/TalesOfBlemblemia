@@ -110,10 +110,11 @@ Inscrivez aussi, en détail, ce sur quoi chaque membre de l'équipe a principale
 * **Benjamin Lemelin** - *Programmeur*
   * Extensions sur le moteur Unity pour la recherche d'objets et de composants. Générateur de constantes. Gestionnaire de
     chargement des scènes.
-* **Prénom Nom** - *Programmeur*
-* **Prénom Nom** - *Programmeur*
-* **Prénom Nom** - *Programmeur*
-* **Prénom Nom** - *Programmeur*
+* **Jérémie Bertrand** - *Programmeur*
+* **Mike Bédard** - *Programmeur*
+* **Zacharie Lavigne** - *Programmeur*
+* **Antoine Lessard** - *Programmeur*
+* **Pierre-Luc Maltais** - *Programmeur*
 * **Prénom Nom** - *Concepteur sonore*
 * **Prénom Nom** - *Artiste 2D et Artiste UI*
 
