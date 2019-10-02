@@ -4,12 +4,12 @@
     {
         public override void Win()
         {
-            base.Win();
+            //Do nothing
         }
 
         public override void Lose()
         {
-            base.Lose();
+            //Do nothing
         }
     }
 }
