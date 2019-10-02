@@ -16,7 +16,7 @@ namespace Game
         private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && gridController.SelectedUnit.CanPlay && tileImage.sprite != gridController.NormalSprite;
         private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit is Enemy && IsPossibleAction;
         private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && linkedUnit is Ally && linkedUnit.CanPlay;
-        private bool IsWalkable => tileType != TileType.OBSTACLE;
+        private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;
         private Vector2Int positionInGrid;
@@ -108,11 +108,11 @@ namespace Game
 
     public enum TileType 
     {
-        EMPTY = 0,
-        OBSTACLE = 1,
-        FOREST = 2,
-        FORTRESS = 3,
-        DOOR = 4
+        Empty = 0,
+        Obstacle = 1,
+        Forest = 2,
+        Fortress = 3,
+        Door = 4
     }
 }
 
