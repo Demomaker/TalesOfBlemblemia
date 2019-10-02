@@ -1,4 +1,4 @@
-﻿﻿namespace Game
+﻿namespace Game
 {
     //Author: Jérémie Bertrand
     public class FortressTile : Tile
