@@ -1,6 +1,6 @@
 ﻿namespace Game
 {
-    public class ComputerPlayer : CharacterOwner
+    public class HumanPlayer : UnitOwner
     {
         public override void Win()
         {
