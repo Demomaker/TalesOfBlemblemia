@@ -1,9 +1,8 @@
 ﻿namespace Game
 {
     /// <summary>
-    /// Concept d'arme, qui a un bonus à l'attaque, une chance de toucher et une chance de coup critique, un type et un type contre qui elle a un avantage
-    /// Chaque unité à une arme
-    /// Auteur: Zacharie Lavigne
+    /// A weapon to be held by a unit. A weapon has a bonus to its attack, a hit rate, a critical hit rate, a weapon type and an advantage
+    /// Author: Zacharie Lavigne
     /// </summary>
     public abstract class Weapon
     {
