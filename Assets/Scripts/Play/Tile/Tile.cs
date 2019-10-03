@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -15,9 +16,9 @@ namespace Game
         private Unit linkedUnit;
         private GridController gridController;
         
-        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && gridController.SelectedUnit.CanPlay && tileImage.sprite != gridController.NormalSprite;
+        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && linkedUnit.CanPlay;
+        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
         private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;
@@ -64,7 +65,7 @@ namespace Game
             
             if (LinkedUnitCanBeAttacked)
             {
-                gridController.SelectedUnit.Attack(linkedUnit);
+                gridController.SelectedUnit.Attack(linkedUnit, true);
                 if (linkedUnit.IsDead)
                 {
                     linkedUnit.Die();
@@ -110,6 +111,14 @@ namespace Game
             if (!IsOccupiedByAUnit) return false;
             linkedUnit = null;
             return true;
+        }
+
+        public bool IsWithinRange(Tile otherTile, int range)
+        {
+            if (range <= 0)
+                throw  new ArgumentException("Range should be higher than zero");
+            return (Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) <= range
+                && Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range);
         }
     }
 

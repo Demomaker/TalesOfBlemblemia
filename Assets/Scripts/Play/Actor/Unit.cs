@@ -85,22 +85,18 @@
          }
 
          private int movesLeft;
-         private bool canPlay = false;
          public int MovesLeft
          {
              get => movesLeft;
-             set => movesLeft = value;
+         }
+         public bool CanStillMove
+         {
+             get => movesLeft > 0;
          }
 
-         public bool CanPlay
-         {
-             get => canPlay;
-             set => canPlay = value;
-         }
+         public bool HasActed { get; set; } = false;
 
          public bool IsCurrentlySelected => gridController.SelectedUnit == this;
-         //TODO changer pour que ca soit quand l'unité a fait son action
-         public bool HasDoneAction => MovesLeft > 0;
          public bool IsDead => currentHealthPoints <= 0;
          public int MovementRange => Stats.MoveSpeed;
          public int AttackRange => 1;
@@ -122,7 +118,7 @@
 
          public void ResetNumberOfMovesLeft()
          {
-             MovesLeft = Constants.NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN;
+             movesLeft = Stats.MoveSpeed;
          }
 
          private void MoveTo(Vector3 position)
@@ -132,7 +128,7 @@
 
          public void MoveTo(Tile tile)
          {
-             MovesLeft -= 1;
+             movesLeft -= 1;
              if (currentTile != null) currentTile.UnlinkUnit();
              currentTile = tile;
              if (currentTile != null && currentTile.LinkUnit(this)) MoveTo(currentTile.WorldPosition);
@@ -142,25 +138,28 @@
          private IEnumerator InitPosition()
          {
              yield return new WaitForEndOfFrame();
-             MovesLeft += 1;
+             movesLeft += 1;
              MoveTo(Finder.GridController.GetTile(initialPosition.x, initialPosition.y));
          }
 
          //TODO changements pour la mécanique d'attaque
-         public void Attack(Unit target)
+         //La chance de hit, le coup critique, la riposte ensuite
+         public bool Attack(Unit target, bool canCrit)
          {
              if (TargetIsInRange(target))
              {
-                 //TODO changer pour mettre fin au tour
-                 MovesLeft -= 1;
+                 HasActed = true;
                  target.currentHealthPoints -= 2;
+                 //A unit cannot make a critical hit on a counter
+                 target.Attack(this, false);
+                 return true;
              }
+             return false;
          }
 
          private bool TargetIsInRange(Unit target)
          {
-             return (Math.Abs(target.CurrentTile.LogicalPosition.x - this.currentTile.LogicalPosition.x) <= AttackRange
-                 && Math.Abs(target.CurrentTile.LogicalPosition.y - this.currentTile.LogicalPosition.y) <= AttackRange);
+             return currentTile.IsWithinRange(target.currentTile, AttackRange);
          }
 
          public void Die()
@@ -174,7 +173,13 @@
              //TODO changer ca, peut etre dans une coroutine
              for (int i = 0; i < path.Count; i++)
              {
-                 MoveTo(path[i]);
+                 if (movesLeft <= 0)
+                     i = path.Count;
+                 else
+                 {
+                     movesLeft--;
+                     MoveTo(path[i]);
+                 }
              }
          }
 

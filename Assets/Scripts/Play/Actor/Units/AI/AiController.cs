@@ -6,13 +6,13 @@ using Random = System.Random;
 namespace Game
 {
     /// <summary>
-    /// Logique d'intelligence artificielle pour les unités ennemies
-    /// Auteur: Zacharie Lavigne
+    /// The artificial player that controls the enemy units
+    /// Author: Zacharie Lavigne
     /// </summary>
     public static class AiController
     {
         /// <summary>
-        /// Le nombre d'actions parmis lesquelles l'IA va choisir dépendamment du niveau de difficulté
+        /// The number of actions from which the enemy may choose randomly from based on the difficulty level 
         /// </summary>
         private static int nbOfChoice = 5;
 
@@ -22,36 +22,47 @@ namespace Game
         public static void PlayTurn(Unit playableUnit, List<Unit> enemyUnits)
         {
             Action actionToDo = DetermineAction(playableUnit, enemyUnits);
+            ExecuteAction(playableUnit, actionToDo);
+        }
+
+        /// <summary>
+        /// Execute an enemy unit's turn action
+        /// </summary>
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="actionToDo">The action to execute on this turn</param>
+        private static void ExecuteAction(Unit playableUnit, Action actionToDo)
+        {
             playableUnit.MoveByPath(actionToDo.Path);
             if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
             {
-                playableUnit.Attack(actionToDo.Target);
+                if(!playableUnit.Attack(actionToDo.Target, true))
+                    playableUnit.Rest();
             }
             else
             {
                 playableUnit.Rest();
             }
         }
+
         /// <summary>
-        /// Détermine l'action qu'une unité contrôllée par intelligence artificielle devra exécuter pendant son tour
+        /// Finds an action to do for an AI controlled unit on its turn
         /// </summary>
-        /// <param name="aiUnit">L'unité dont l'action est déterminé</param>
-        /// <param name="grid">The level map</param>
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
-        /// <returns>L'action que l'unité devra exécuter</returns>
-        public static Action DetermineAction(Unit aiUnit, List<Unit> enemyUnits)
+        /// <returns>The action the unit should play on its turn</returns>
+        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits)
         {
             //Les actions potentielles que l'unité pourra effectuer pendant son tour
-            List<Action> actionsToDo = ScanForEnnemies(aiUnit, enemyUnits);
+            List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
             
             //Attribution d'un score à chaque action
-            ComputeChoiceScores(actionsToDo, aiUnit);
+            ComputeChoiceScores(actionsToDo, playableUnit);
             
             //Les meilleures actions parmis lesquelles l'unité va choisir aléatoirement
             Action[] bestActions = GetBestActions(actionsToDo);
 
             //Vérification de s'il serait raisonnable de se reposer à se tour-ci
-            AddRestActionIfNeeded(Finder.GridController, bestActions, aiUnit, actionsToDo);
+            AddRestActionIfNeeded(Finder.GridController, bestActions, playableUnit, actionsToDo);
 
             return SelectRandomBestAction(bestActions);
         }
@@ -246,7 +257,7 @@ namespace Game
         /// <param name="aiUnit">L'unité contrôllée par l'IA</param>
         /// <param name="enemyUnits"></param>
         /// <returns>La liste des ennemis de l'unité</returns>
-        private static List<Action> ScanForEnnemies(Unit aiUnit, List<Unit> enemyUnits)
+        private static List<Action> ScanForEnemies(Unit aiUnit, List<Unit> enemyUnits)
         {
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
