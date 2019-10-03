@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
  using System.Collections;
  using System.Collections.Generic;
  using UnityEngine;
@@ -121,10 +121,10 @@
              movesLeft = Stats.MoveSpeed;
          }
 
-         private void MoveTo(Vector3 position)
-         {
-             transform.position = position;
-         }
+    private void MoveTo(Vector3 position)
+    {
+        transform.position = position;
+    }
 
          public void MoveTo(Tile tile)
          {
@@ -190,3 +190,4 @@
          }
      } 
  }
+
