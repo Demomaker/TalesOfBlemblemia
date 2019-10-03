@@ -65,7 +65,7 @@ namespace Game
             
             if (LinkedUnitCanBeAttacked)
             {
-                gridController.SelectedUnit.Attack(linkedUnit, true);
+                gridController.SelectedUnit.Attack(linkedUnit);
                 if (linkedUnit.IsDead)
                 {
                     linkedUnit.Die();

@@ -106,7 +106,7 @@
              gridController = Finder.GridController;
              
              classStats = UnitStats.SoldierUnitStats;
-             weapon = Axe.BasicWeapon;
+             weapon = Sword.BasicWeapon;
              currentHealthPoints = Stats.MaxHealthPoints;
              movesLeft = Stats.MoveSpeed;
          }
@@ -145,20 +145,22 @@
 
          //TODO changements pour la mécanique d'attaque
          //La chance de hit, le coup critique, la riposte ensuite
-         public bool Attack(Unit target, bool canCrit)
+         public bool Attack(Unit target, bool isCountering = true)
          {
              if (TargetIsInRange(target))
              {
                  HasActed = true;
                  target.currentHealthPoints -= 2;
                  //A unit cannot make a critical hit on a counter
-                 target.Attack(this, false);
+                 //A unit cannot counter on a counter
+                 if (!isCountering && !target.IsDead)
+                     target.Attack(this, false);
                  return true;
              }
              return false;
          }
 
-         private bool TargetIsInRange(Unit target)
+         public bool TargetIsInRange(Unit target)
          {
              return currentTile.IsWithinRange(target.currentTile, AttackRange);
          }

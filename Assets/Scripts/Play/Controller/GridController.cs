@@ -51,47 +51,25 @@ using UnityEngine.UI;
             fromTile.DisplaySelectedTile();
             var linkedUnit = fromTile.LinkedUnit;
             var movementCosts = linkedUnit.MovementCosts;
+            Tile tile = null;
             for (int i = 0; i < movementCosts.GetLength(0); i++)
             {
                 for (int j = 0; j < movementCosts.GetLength(1); j++)
                 {
-                    if (movementCosts[i, j] > 0 && movementCosts[i, j] <= linkedUnit.MovementRange)
+                    if (movementCosts[i, j] > 0)
                     {
-                        Tile tile = GetTile(i, j);
-                        if (tile.IsAvailable)
+                        tile = GetTile(i, j);
+                        if (tile.IsAvailable && movementCosts[i, j] <= linkedUnit.MovementRange)
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (movementCosts[i, j] <= linkedUnit.AttackRange && tile.LinkedUnit != null && tile.LinkedUnit.IsEnemy)
+                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit) && tile.LinkedUnit.IsEnemy)
                         {
                             tile.DisplayAttackActionPossibility();
                         }
                     }
                 }
             }
-            /*for (int i = -linkedUnit.MovementRange; i <= linkedUnit.MovementRange; i++)
-            {
-                for(int j = -linkedUnit.MovementRange; j <= linkedUnit.MovementRange ; j++)
-                {
-                    if (i != 0 || j != 0)
-                    {
-                        Vector2Int position = fromTile.LogicalPosition + new Vector2Int(i, j);
-                        if (IsValidGridPosition(position.x, position.y))
-                        {
-                            int distance = Math.Abs(i) + Math.Abs(j);
-                            Tile tile = GetTile(position.x, position.y);
-                            if (distance <= linkedUnit.MovementRange && tile.IsAvailable)
-                            {
-                                tile.DisplayMoveActionPossibility();
-                            }
-                            else if (distance <= linkedUnit.AttackRange && tile.LinkedUnit != null && tile.LinkedUnit.IsEnemy)
-                            {
-                                tile.DisplayAttackActionPossibility();
-                            }
-                        }
-                    }
-                }
-            }*/
         }
 
         public Tile GetTile(int x, int y)

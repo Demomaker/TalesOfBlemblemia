@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using UnityEngine;
+
+namespace Game
 {
     /// <summary>
     /// Propriétés statistiques qu'une unité peut avoir
@@ -95,7 +97,7 @@
         public static UnitStats operator+ (UnitStats addends1, UnitStats addends2) 
         {
             UnitStats sum = new UnitStats(0, 0, 0, 0f, 0f);
-
+            
             sum.maxHealthPoints = addends1.maxHealthPoints + addends2.maxHealthPoints;
             sum.moveSpeed = addends1.moveSpeed + addends2.moveSpeed;
             sum.attackStrength = addends1.attackStrength + addends2.attackStrength;
