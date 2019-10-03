@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2153022417438629074}
   - component: {fileID: 2153022417438629077}
-  - component: {fileID: 2153022417438629076}
+  - component: {fileID: 7491241864473177875}
   m_Layer: 0
   m_Name: Pleblem
   m_TagString: Untagged
@@ -68,7 +68,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 154259895
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -5277672816485211988, guid: 706eefd9bedf61849a175cde2505a3b5,
     type: 3}
@@ -79,10 +79,10 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2153022417438629076
+--- !u!114 &7491241864473177875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2153022417438629079}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd05d3d6d6486d74fab27a73d2227cf4, type: 3}
+  m_Script: {fileID: 11500000, guid: 351fc08561d87304c993a86def06b476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosition: {x: 0, y: 0}
+  initialPosition: {x: 1, y: 0}
