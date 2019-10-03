@@ -1,6 +1,8 @@
 ﻿
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,12 +12,19 @@ namespace Game
      [Findable("GameController")]
      public class GameController : MonoBehaviour
      {
+         public List<string> LevelsCompleted = new List<string>();
          [SerializeField] private string startingLevelName;
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
          private void Start()
          {
+             ResetCompletedLevels();
              LoadLevel(startingLevelName);
+         }
+
+         private void ResetCompletedLevels()
+         {
+             LevelsCompleted.Clear();
          }
 
          public void UnloadLevel(string levelname)

@@ -6,10 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class LevelEntry : MonoBehaviour
 {
-    [SerializeField] private string representedLevelName;
+    public string RepresentedLevelName;
+    public string PreviousLevelName;
+    public bool PreviousLevelCompleted =>  RepresentedLevelName == PreviousLevelName || Finder.GameController.LevelsCompleted.Contains(PreviousLevelName);
+    private bool CanBeClicked => PreviousLevelCompleted;
 
     public void OnLevelEntry()
     {
-        Finder.GameController.LoadLevel(representedLevelName);
+        if(CanBeClicked && !string.IsNullOrEmpty(RepresentedLevelName))
+        Finder.GameController.LoadLevel(RepresentedLevelName);
     }
 }
