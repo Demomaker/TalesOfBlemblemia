@@ -1,10 +1,14 @@
 ﻿using JetBrains.Annotations;
+using TMPro;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 namespace Game
 {
-    public class NewGameMenuController : MonoBehaviour
+    public class NewGameMenuController : MonoBehaviour, IMenuController
     {
         [Header("Buttons")] 
         [SerializeField] private Dropdown difficultyDropdownMenu;
@@ -13,27 +17,19 @@ namespace Game
         [SerializeField] private Button returnToMainMenuButton;
         
         [Header("Controls")]
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0; 
-        [SerializeField] private KeyCode returnToMainMenuKey = KeyCode.Escape;
+        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0;
 
-        private Canvas newGameMenuCanvas;
+        private MenusController menusController;
 
         private void Awake()
         {
-            newGameMenuCanvas = GetComponent<Canvas>();
+            menusController = Finder.MenusController;
         }
 
-        private void Start()
-        {
-            newGameMenuCanvas.enabled = true;
-        }
-        
-        private void Update()
+        public void Update()
         {
             if (Input.GetKeyDown(confirmKey))
                 UIExtensions.SelectedButton?.Click();
-            else if (Input.GetKeyDown(returnToMainMenuKey))
-                ReturnToMainMenu();
         }
 
         [UsedImplicitly]
@@ -46,7 +42,7 @@ namespace Game
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {
-            
+            menusController.ReturnFromNewGameMenu();
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game
 {
-    public class MainMenuController : MonoBehaviour
+    public class MainMenuController : MonoBehaviour, IMenuController
     {
         [Header("Buttons")] 
         [SerializeField] private Button newGameButton = null;
@@ -18,30 +19,26 @@ namespace Game
         [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0; 
         [SerializeField] private KeyCode exitKey = KeyCode.Escape;
 
-        private Canvas mainMenuCanvas;
+        private MenusController menusController;
 
         private void Awake()
         {
-            mainMenuCanvas = GetComponent<Canvas>();
+            menusController = Finder.MenusController;
         }
 
-        private void Start()
-        {
-            mainMenuCanvas.enabled = true;
-        }
-
-        private void Update()
+        public void Update()
         {
             if (Input.GetKeyDown(confirmKey))
                 UIExtensions.SelectedButton?.Click();
-            else if(Input.GetKeyDown(exitKey))
+            else if (Input.GetKeyDown(exitKey))
                 Exit();
         }
 
         [UsedImplicitly]
         public void StartNewGame()
         {
-            //Start nouvelle scene du jeu
+            //menu newgame
+            menusController.GoToNewGameMenu();
         }
 
         [UsedImplicitly]
@@ -54,6 +51,7 @@ namespace Game
         public void Options()
         {
             //Interface d'options;
+            menusController.GoToOptionsMenu();
         }
 
         [UsedImplicitly]
