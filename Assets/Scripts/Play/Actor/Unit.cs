@@ -85,7 +85,7 @@
          }
 
          private int movesLeft;
-         private bool canPlay = false;
+         private bool canPlay = true;
          public int MovesLeft
          {
              get => movesLeft;
@@ -136,6 +136,7 @@
              if (currentTile != null) currentTile.UnlinkUnit();
              currentTile = tile;
              if (currentTile != null && currentTile.LinkUnit(this)) MoveTo(currentTile.WorldPosition);
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
 
 
