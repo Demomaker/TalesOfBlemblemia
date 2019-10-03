@@ -1,20 +1,91 @@
-﻿﻿using System.Collections;
+﻿﻿using System;
+ using System.Collections;
+ using System.Collections.Generic;
  using UnityEngine;
 
  namespace Game
  {
      //Authors: Jérémie Bertrand & Mike Bédard
-     public abstract class Unit : MonoBehaviour
+     public class Unit : MonoBehaviour
      {
          [SerializeField] private Vector2Int initialPosition;
          private GridController gridController;
+         /// <summary>
+         /// The tile the unit is on
+         /// </summary>
          private Tile currentTile = null;
-         private readonly int movementRange;
-         private readonly int attackRange;
-         private int healthPoints = Constants.DEFAULT_CHARACTER_HEALTH_POINTS;
-         private int movesLeft = Constants.NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN;
-         private bool canPlay = true;
+         public Tile CurrentTile => currentTile;
+         
+         /// <summary>
+         /// Value of if a unit is an enemy 
+         /// </summary>
+         [SerializeField] private bool isEnemy;
+         public bool IsEnemy => isEnemy;
 
+         /// <summary>
+         /// The unit's class stats
+         /// </summary>
+         [SerializeField] private UnitStats classStats;
+
+         /// <summary>
+         /// The unit's weapon
+         /// </summary>
+         [SerializeField] private Weapon weapon;
+
+         /// <summary>
+         /// Array representing the movement cost needed to move to every tile on the grid
+         /// </summary>
+         private int[,] movementCosts;
+         public int[,] MovementCosts => movementCosts;
+
+         /// <summary>
+         /// The unit's current health
+         /// </summary>
+         private int currentHealthPoints;
+
+         public int CurrentHealthPoints => currentHealthPoints;
+
+         /// <summary>
+         /// The unit's stats
+         /// </summary>
+         public UnitStats Stats
+         {
+             get { return classStats + weapon.WeaponStats; }
+         }
+
+         /// <summary>
+         /// The unit's weapon type
+         /// </summary>
+         public WeaponType WeaponType
+         {
+             get { return weapon.WeaponType; }
+         }
+
+         /// <summary>
+         /// The weapon type this unit has advantage on 
+         /// </summary>
+         public WeaponType WeaponAdvantage
+         {
+             get { return weapon.Advantage; }
+         }
+
+         /// <summary>
+         /// The health points a unit would gain by resting
+         /// Resting replenishes half your health points without exceeding the unit's max health
+         /// </summary>
+         public int HpGainedByResting
+         {
+             get
+             {
+                 int maxGain = Stats.MaxHealthPoints / 2;
+                 if (currentHealthPoints + maxGain > Stats.MaxHealthPoints)
+                     return Stats.MaxHealthPoints - currentHealthPoints;
+                 return maxGain;
+             }
+         }
+
+         private int movesLeft;
+         private bool canPlay = false;
          public int MovesLeft
          {
              get => movesLeft;
@@ -28,20 +99,20 @@
          }
 
          public bool IsCurrentlySelected => gridController.SelectedUnit == this;
-         public bool CanMove => MovesLeft > 0;
-         public bool IsDead => healthPoints <= 0;
-         public int MovementRange => movementRange;
-         public int AttackRange => attackRange;
-
-         protected Unit(int movementRange, int attackRange)
-         {
-             this.movementRange = movementRange;
-             this.attackRange = attackRange;
-         }
+         //TODO changer pour que ca soit quand l'unité a fait son action
+         public bool HasDoneAction => MovesLeft > 0;
+         public bool IsDead => currentHealthPoints <= 0;
+         public int MovementRange => Stats.MoveSpeed;
+         public int AttackRange => 1;
 
          private void Awake()
          {
              gridController = Finder.GridController;
+             
+             classStats = UnitStats.SoldierUnitStats;
+             weapon = Axe.BasicWeapon;
+             currentHealthPoints = Stats.MaxHealthPoints;
+             movesLeft = Stats.MoveSpeed;
          }
 
          protected void Start()
@@ -75,16 +146,42 @@
              MoveTo(Finder.GridController.GetTile(initialPosition.x, initialPosition.y));
          }
 
-         public void Attack(Unit unit)
+         //TODO changements pour la mécanique d'attaque
+         public void Attack(Unit target)
          {
-             MovesLeft -= 1;
-             unit.healthPoints -= 2;
+             if (TargetIsInRange(target))
+             {
+                 //TODO changer pour mettre fin au tour
+                 MovesLeft -= 1;
+                 target.currentHealthPoints -= 2;
+             }
+         }
+
+         private bool TargetIsInRange(Unit target)
+         {
+             return (Math.Abs(target.CurrentTile.LogicalPosition.x - this.currentTile.LogicalPosition.x) <= AttackRange
+                 && Math.Abs(target.CurrentTile.LogicalPosition.y - this.currentTile.LogicalPosition.y) <= AttackRange);
          }
 
          public void Die()
          {
              Destroy(gameObject);
          }
-     }
- }
 
+
+         public void MoveByPath(List<Tile> path)
+         {
+             //TODO changer ca, peut etre dans une coroutine
+             for (int i = 0; i < path.Count; i++)
+             {
+                 MoveTo(path[i]);
+             }
+         }
+
+         public void Rest()
+         {
+             //TODO changer pour mettre fin au tour
+             currentHealthPoints += HpGainedByResting;
+         }
+     } 
+ }

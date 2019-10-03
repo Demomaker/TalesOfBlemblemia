@@ -1,5 +1,5 @@
 ﻿﻿using System;
- using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
@@ -65,7 +65,7 @@ using UnityEngine.UI;
                             {
                                 tile.DisplayMoveActionPossibility();
                             }
-                            else if (distance <= linkedUnit.AttackRange && tile.LinkedUnit is Enemy)
+                            else if (distance <= linkedUnit.AttackRange && tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
