@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelEntry : MonoBehaviour
 {
@@ -15,5 +17,19 @@ public class LevelEntry : MonoBehaviour
     {
         if(CanBeClicked && !string.IsNullOrEmpty(RepresentedLevelName))
         Finder.GameController.LoadLevel(RepresentedLevelName);
+    }
+
+    private void Update()
+    {
+        var colors = GetComponent<Button>().colors;
+        if (!CanBeClicked || string.IsNullOrEmpty(RepresentedLevelName))
+        {
+            colors.pressedColor = Color.red;
+        }
+        else
+        {
+            colors.pressedColor = Color.green;
+        }
+        GetComponent<Button>().colors = colors;
     }
 }
