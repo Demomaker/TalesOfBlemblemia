@@ -11,6 +11,7 @@ TagManager:
   - Water
   - Fauna
   - Database
+  - GridController
   layers:
   - Default
   - TransparentFX

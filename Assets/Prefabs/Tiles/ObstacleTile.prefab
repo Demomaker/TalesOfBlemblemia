@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3968903628605653850}
   - component: {fileID: 6421347330665454901}
   - component: {fileID: 842591911598487710}
+  - component: {fileID: 4077972132614444818}
   m_Layer: 5
   m_Name: ObstacleTile
   m_TagString: Untagged
@@ -104,8 +105,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 8069719877939992251, guid: 706eefd9bedf61849a175cde2505a3b5,
-      type: 3}
+    m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
@@ -122,3 +122,15 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &4077972132614444818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822714897129928834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41d65651229981a46bf50d14caa37f48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
