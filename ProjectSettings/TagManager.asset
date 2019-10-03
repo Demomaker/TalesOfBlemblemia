@@ -21,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - Sensor
+  - 
   - 
   - 
   - 
@@ -48,4 +48,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Tilemap
+    uniqueID: 2569251369
+    locked: 0
+  - name: Character
+    uniqueID: 3709152311
+    locked: 0
+  - name: UI
+    uniqueID: 2306725519
     locked: 0

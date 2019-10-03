@@ -22,12 +22,13 @@ namespace Game
         [SerializeField] private TileBase obstacleTile = null;
         [SerializeField] private TileBase fortressTile = null;
 
-        [Header("Tilemap")] [SerializeField] private Tilemap tilemap = null;
+        [Header("Tilemap")] [SerializeField] private Tilemap interactiveTilemap = null;
+        [SerializeField] private Tilemap backgroundTilemap = null;
 
         public void CreateGridCells()
         {
-            BoundsInt bounds = tilemap.cellBounds;
-            TileBase[] allTiles = tilemap.GetTilesBlock(bounds);
+            BoundsInt bounds = backgroundTilemap.cellBounds;
+            TileBase[] allTiles = interactiveTilemap.GetTilesBlock(bounds);
             Rect cellGridRectangle = GetComponent<RectTransform>().rect;
 
             int minX = GetMinX(bounds, cellGridRectangle);
