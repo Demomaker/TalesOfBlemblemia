@@ -50,7 +50,26 @@ using UnityEngine.UI;
         {
             fromTile.DisplaySelectedTile();
             var linkedUnit = fromTile.LinkedUnit;
-            for (int i = -linkedUnit.MovementRange; i <= linkedUnit.MovementRange; i++)
+            var movementCosts = linkedUnit.MovementCosts;
+            for (int i = 0; i < movementCosts.GetLength(0); i++)
+            {
+                for (int j = 0; j < movementCosts.GetLength(1); j++)
+                {
+                    if (movementCosts[i, j] > 0 && movementCosts[i, j] <= linkedUnit.MovementRange)
+                    {
+                        Tile tile = GetTile(i, j);
+                        if (tile.IsAvailable)
+                        {
+                            tile.DisplayMoveActionPossibility();
+                        }
+                        else if (movementCosts[i, j] <= linkedUnit.AttackRange && tile.LinkedUnit != null && tile.LinkedUnit.IsEnemy)
+                        {
+                            tile.DisplayAttackActionPossibility();
+                        }
+                    }
+                }
+            }
+            /*for (int i = -linkedUnit.MovementRange; i <= linkedUnit.MovementRange; i++)
             {
                 for(int j = -linkedUnit.MovementRange; j <= linkedUnit.MovementRange ; j++)
                 {
@@ -65,14 +84,14 @@ using UnityEngine.UI;
                             {
                                 tile.DisplayMoveActionPossibility();
                             }
-                            else if (distance <= linkedUnit.AttackRange && tile.LinkedUnit.IsEnemy)
+                            else if (distance <= linkedUnit.AttackRange && tile.LinkedUnit != null && tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
                         }
                     }
                 }
-            }
+            }*/
         }
 
         public Tile GetTile(int x, int y)

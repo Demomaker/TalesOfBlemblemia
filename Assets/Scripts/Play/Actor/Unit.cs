@@ -1,4 +1,3 @@
-﻿using System;
  using System.Collections;
  using System.Collections.Generic;
  using UnityEngine;
@@ -85,6 +84,7 @@
          }
 
          private int movesLeft;
+         private bool canPlay = true;
          public int MovesLeft
          {
              get => movesLeft;
@@ -121,10 +121,10 @@
              movesLeft = Stats.MoveSpeed;
          }
 
-    private void MoveTo(Vector3 position)
-    {
-        transform.position = position;
-    }
+         private void MoveTo(Vector3 position)
+         {
+             transform.position = position;
+         }
 
          public void MoveTo(Tile tile)
          {
@@ -132,6 +132,7 @@
              if (currentTile != null) currentTile.UnlinkUnit();
              currentTile = tile;
              if (currentTile != null && currentTile.LinkUnit(this)) MoveTo(currentTile.WorldPosition);
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
 
 
@@ -170,13 +171,14 @@
 
          public void MoveByPath(List<Tile> path)
          {
-             //TODO changer ca dans la mécanique de mouvements, peut etre dans une coroutine
+             //TODO changer ca, peut etre dans une coroutine
              for (int i = 0; i < path.Count; i++)
              {
                  if (movesLeft <= 0)
                      i = path.Count;
                  else
                  {
+                     //Changer pour le cost des cases
                      movesLeft--;
                      MoveTo(path[i]);
                  }

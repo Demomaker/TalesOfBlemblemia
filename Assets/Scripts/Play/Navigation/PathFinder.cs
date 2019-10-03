@@ -45,7 +45,7 @@ namespace Game
         {
             if (fromY > 0 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX, fromY - 1]
                           && grid.GetTile(fromX, fromY - 1).CostToMove != int.MaxValue
-                          && !grid.GetTile(fromX,fromY - 1).LinkedUnit.IsEnemy)
+                          && (grid.GetTile(fromX, fromY - 1).LinkedUnit == null || !grid.GetTile(fromX, fromY - 1).LinkedUnit.IsEnemy))
             {
                 movementCosts[fromX, fromY - 1] = movementCosts[fromX, fromY] + costToMove;
                 ComputeCosts(grid, movementCosts, fromX, fromY - 1);
@@ -56,7 +56,7 @@ namespace Game
         {
             if (fromX > 0 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX - 1, fromY]
                           && grid.GetTile(fromX - 1, fromY).CostToMove != int.MaxValue
-                          && !grid.GetTile(fromX -1, fromY).LinkedUnit.IsEnemy)
+                          && (grid.GetTile(fromX - 1, fromY).LinkedUnit == null || !grid.GetTile(fromX -1, fromY).LinkedUnit.IsEnemy))
             {
                 movementCosts[fromX - 1, fromY] = movementCosts[fromX, fromY] + costToMove;
                 ComputeCosts(grid, movementCosts, fromX - 1, fromY);
@@ -67,7 +67,7 @@ namespace Game
         {
             if (fromY < grid.NbLines - 1 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX, fromY + 1]
                                         && grid.GetTile(fromX, fromY + 1).CostToMove != int.MaxValue
-                                        && !grid.GetTile(fromX, fromY +1).LinkedUnit.IsEnemy)
+                                        && (grid.GetTile(fromX, fromY + 1).LinkedUnit == null || !grid.GetTile(fromX, fromY + 1).LinkedUnit.IsEnemy))
             {
                 movementCosts[fromX, fromY + 1] = movementCosts[fromX, fromY] + costToMove;
                 ComputeCosts(grid, movementCosts, fromX, fromY + 1);
@@ -78,7 +78,7 @@ namespace Game
         {
             if (fromX < grid.NbColumns - 1 && movementCosts[fromX, fromY] + costToMove < movementCosts[fromX + 1, fromY]
                                        && grid.GetTile(fromX + 1, fromY).CostToMove != int.MaxValue
-                                       && !grid.GetTile(fromX +1, fromY).LinkedUnit.IsEnemy)
+                                       && (grid.GetTile(fromX + 1, fromY).LinkedUnit == null || !grid.GetTile(fromX +1, fromY).LinkedUnit.IsEnemy))
             {
                 //Changing the value to move to the cell 
                 movementCosts[fromX + 1, fromY] = movementCosts[fromX, fromY] + costToMove;
