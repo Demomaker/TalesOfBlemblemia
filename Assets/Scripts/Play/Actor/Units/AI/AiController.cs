@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game
 {
     /// <summary>
-    /// The artificial player that controls the enemy units
+    /// The artificial intelligence controller for the enemy units
     /// Author: Zacharie Lavigne
     /// </summary>
     public static class AiController
