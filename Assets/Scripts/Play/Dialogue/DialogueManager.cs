@@ -12,7 +12,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Text nameText;
     [SerializeField] private Text dialogueText;
     [SerializeField] private Animator animator;
-    
+
     private Queue<string> sentences;
 
     // Start is called before the first frame update
@@ -25,6 +25,8 @@ public class DialogueManager : MonoBehaviour
     {
         animator.SetBool("IsOpen",true);
         
+        ChangePortrait(dialogue.texture);
+        
         nameText.text = dialogue.name;
         sentences.Clear();
 
@@ -34,6 +36,12 @@ public class DialogueManager : MonoBehaviour
         }
 
         DisplayNextSentence();
+    }
+
+    private void ChangePortrait(Texture texture)
+    {
+        RawImage portrait = GameObject.FindWithTag("UiPortrait").GetComponent<RawImage>();
+        portrait.texture = texture;
     }
 
     public void DisplayNextSentence()
