@@ -1,6 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
-using UnityEditor;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -58,6 +56,7 @@ namespace Game
         public void Credits()
         {
             //Interface de credits
+            menusController.GoToCreditsMenu();
         }
 
         [UsedImplicitly]
