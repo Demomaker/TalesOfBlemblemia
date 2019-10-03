@@ -14,7 +14,7 @@ namespace Game
         private void Awake()
         {
             sliderValueText = GetComponent<TextMeshProUGUI>();
-            
+
             GetComponentInParent<Slider>().onValueChanged.AddListener(HandleValueChanged);
         }
 
