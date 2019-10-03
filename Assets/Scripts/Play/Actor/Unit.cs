@@ -170,7 +170,7 @@
 
          public void MoveByPath(List<Tile> path)
          {
-             //TODO changer ca, peut etre dans une coroutine
+             //TODO changer ca dans la mécanique de mouvements, peut etre dans une coroutine
              for (int i = 0; i < path.Count; i++)
              {
                  if (movesLeft <= 0)
@@ -185,7 +185,7 @@
 
          public void Rest()
          {
-             //TODO changer pour mettre fin au tour
+             HasActed = true;
              currentHealthPoints += HpGainedByResting;
          }
      } 

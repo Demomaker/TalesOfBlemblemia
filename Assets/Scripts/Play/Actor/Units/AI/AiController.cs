@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = System.Random;
 
 namespace Game
 {
@@ -15,18 +14,18 @@ namespace Game
         /// The number of actions from which the enemy may choose randomly from based on the difficulty level 
         /// </summary>
         private static int nbOfChoice = 5;
-
-        //TODO avoir un Random commun a tout?
-        private static Random random = new Random();
-        
+        /// <summary>
+        /// Chooses an action to do for a unit and executes it
+        /// </summary>
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="enemyUnits">The player's units</param>
         public static void PlayTurn(Unit playableUnit, List<Unit> enemyUnits)
         {
             Action actionToDo = DetermineAction(playableUnit, enemyUnits);
             ExecuteAction(playableUnit, actionToDo);
         }
-
         /// <summary>
-        /// Execute an enemy unit's turn action
+        /// Executes an enemy unit's turn action
         /// </summary>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="actionToDo">The action to execute on this turn</param>
@@ -43,7 +42,6 @@ namespace Game
                 playableUnit.Rest();
             }
         }
-
         /// <summary>
         /// Finds an action to do for an AI controlled unit on its turn
         /// </summary>
@@ -52,25 +50,26 @@ namespace Game
         /// <returns>The action the unit should play on its turn</returns>
         public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits)
         {
-            //Les actions potentielles que l'unité pourra effectuer pendant son tour
+            //Every potential actions the unit could do
             List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
             
-            //Attribution d'un score à chaque action
+            //Setting every action's turn
             ComputeChoiceScores(actionsToDo, playableUnit);
             
-            //Les meilleures actions parmis lesquelles l'unité va choisir aléatoirement
+            //The best potential actions
             Action[] bestActions = GetBestActions(actionsToDo);
 
-            //Vérification de s'il serait raisonnable de se reposer à se tour-ci
-            AddRestActionIfNeeded(Finder.GridController, bestActions, playableUnit, actionsToDo);
+            //Verification of if resting and fleeing is needed
+            AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo);
 
+            //The action is randomly selected from the best possible ones
             return SelectRandomBestAction(bestActions);
         }
         /// <summary>
-        /// Sélectionne au hasard une action parmis les meilleures actions possibles
+        /// Randomly chooses an action from the best possible actions to do
         /// </summary>
-        /// <param name="bestActions">Les meilleures actions possibles</param>
-        /// <returns>Une action aléatoirement choisie parmis les meilleures actions que l'unité peut faire</returns>
+        /// <param name="bestActions">The best possible actions to do</param>
+        /// <returns>A randomly chosen an action</returns>
         private static Action SelectRandomBestAction(Action[] bestActions)
         {
             Action bestAction = null;
@@ -87,45 +86,47 @@ namespace Game
             {
                 while (bestAction == null)
                 {
-                    bestAction = bestActions[random.Next(0, nbOfChoice)];
+                    bestAction = bestActions[Finder.Random.Next(0, nbOfChoice)];
                 }
             }
             return bestAction;
         }
         /// <summary>
-        /// Rajoute à la liste d'actions potentielles 
+        /// Adds resting as a potential action if needed
         /// </summary>
-        /// <param name="bestActions">Tableau des meilleures actions que l'unité pourrait faire</param>
-        /// <param name="aiUnit">L'unité controllée</param>
-        private static void AddRestActionIfNeeded(GridController grid, Action[] bestActions, Unit aiUnit, List<Action> potentialAction)
+        /// <param name="bestActions">The best possible actions to do</param>
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="actionsToDo">The potential actions the unit could do</param>
+        private static void AddRestActionIfNeeded(Action[] bestActions, Unit playableUnit, List<Action> actionsToDo)
         {
-            if(aiUnit.Stats.MaxHealthPoints * 1.33f < aiUnit.Stats.MaxHealthPoints + aiUnit.HpGainedByResting)
+            //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
+            if(playableUnit.Stats.MaxHealthPoints * 1.33f < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
             {
-                bestActions[nbOfChoice - 1] = new Action(FindFleePath(grid, potentialAction, aiUnit), ActionType.Rest, 12, null);
+                bestActions[nbOfChoice - 1] = new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, 12, null);
             }
         }
         /// <summary>
-        /// Attribue un score à chaque action potentielle que l'unité pourrait effectuer
+        /// Computes the score of every action the unit could do
         /// </summary>
-        /// <param name="actionsToDo">Les actions potentielles que l'unité pourrait faire</param>
-        /// <param name="aiUnit">L'unité controllée par IA</param>
-        private static void ComputeChoiceScores(List<Action> actionsToDo, Unit aiUnit)
+        /// <param name="actionsToDo">The potential actions the unit could do</param>
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        private static void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
             for(int i = 0; i < actionsToDo.Count; i++)
             {
-                actionsToDo[i].Score += HpChoiceMod(aiUnit, actionsToDo[i].Target.CurrentHealthPoints) +
-                                        DistanceChoiceMod(aiUnit, actionsToDo[i].Path) +
-                                        ClassTypeChoiceMod(aiUnit, actionsToDo[i].Target.WeaponType) +
-                                        EnvironmentChoiceMod(aiUnit, actionsToDo[i].Target.CurrentTile) +
-                                        HarmChoiceMod(aiUnit, actionsToDo[i].Target);
+                actionsToDo[i].Score += HpChoiceMod(playableUnit, actionsToDo[i].Target.CurrentHealthPoints) +
+                                        DistanceChoiceMod(playableUnit, actionsToDo[i].Path) +
+                                        WeaponTypeChoiceMod(playableUnit, actionsToDo[i].Target.WeaponType) +
+                                        EnvironmentChoiceMod(playableUnit, actionsToDo[i].Target.CurrentTile) +
+                                        HarmChoiceMod(playableUnit, actionsToDo[i].Target);
             }
         }
         /// <summary>
-        /// Retourne un tableau des actions aux meilleurs scores en ordre décroissant
-        /// Le nombre d'actions dépend du niveau de difficulté
+        /// Gets the best possible actions (with the highest scores) in descending order
+        /// The number of best actions depends on the difficulty level
         /// </summary>
-        /// <param name="actionsToDo">Les actions que l'unité peut effectuer</param>
-        /// <returns>Un tableau d'actions aux meilleurs scores, en ordre décroissant'</returns>
+        /// <param name="actionsToDo">The action to execute on this turn</param>
+        /// <returns>An array of all the best possible actions</returns>
         private static Action[] GetBestActions(List<Action> actionsToDo)
         {
             //Copie de la liste pour ne pas la modifier en dehors de la méthode
@@ -139,7 +140,7 @@ namespace Game
             
             for (int i = 0; i < nbOfChoice; i++)
             {
-                actionIndex = GetBestAttack(actionsToDo);
+                actionIndex = FindBestAttack(actionsToDo);
                 if (actionIndex > -1)
                 {
                     bestAttacks[i] = actionsToDo[actionIndex];
@@ -151,11 +152,11 @@ namespace Game
             return bestAttacks;
         }
         /// <summary>
-        /// Trouve l'index de l'action au meilleur score dans une liste
+        /// Finds the index of the highest scored action in a list
         /// </summary>
-        /// <param name="actionsToDo">Liste d'actions potentielles</param>
-        /// <returns>L'index de la meilleure action; -1 si la liste d'actions est vide</returns>
-        private static int GetBestAttack(List<Action> actionsToDo)
+        /// <param name="actionsToDo">The potential actions the unit could do</param>
+        /// <returns>The index of the highest scored action</returns>
+        private static int FindBestAttack(List<Action> actionsToDo)
         {
             int bestActionIndex = -1;
             
@@ -177,15 +178,14 @@ namespace Game
             return bestActionIndex;
         }
         /// <summary>
-        /// Trouve le chemin vers où l'unité devrait s'enfuir pour se reposer
+        /// Finds the safest place a unit could go to rest
         /// </summary>
         /// <param name="potentialActions">The potential actions of this unit</param>
-        /// <param name="aiUnit">L'unité contrôllée par IA</param>
-        /// <param name="grid">The level map</param>
-        /// <returns>Le chemin à prendre pour s'enfuir</returns>
-        private static List<Tile> FindFleePath(GridController grid, List<Action> potentialActions, Unit aiUnit)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <returns>The path to the safest tile to go</returns>
+        private static List<Tile> FindFleePath(List<Action> potentialActions, Unit playableUnit)
         {
-            int[,] optionMap = new int[grid.NbColumns, grid.NbLines]; 
+            int[,] optionMap = new int[Finder.GridController.NbColumns, Finder.GridController.NbLines]; 
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
                 for (int j = 0; j < optionMap.GetLength(1); j++)
@@ -208,116 +208,95 @@ namespace Game
             }
 
             int highestScore = 0;
-            int posX = -1;
-            int posY = -1;
+            Vector2Int position = new Vector2Int(-1, -1);
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
                 for (int j = 0; j < optionMap.GetLength(1); j++)
                 {
-                    if (optionMap[i, j] >= highestScore && aiUnit.MovementCosts[i,j] <= aiUnit.Stats.MoveSpeed)
+                    if (optionMap[i, j] >= highestScore && playableUnit.MovementCosts[i,j] <= playableUnit.Stats.MoveSpeed)
                     {
                         highestScore = optionMap[i, j];
-                        posX = i;
-                        posY = j;
+                        position.x = i;
+                        position.y = j;
                     }
                 }
             }
 
-            return FindPathTo(grid, aiUnit, posX, posY);
+            return FindPathTo(playableUnit, position);
         }
         /// <summary>
-        /// Trouve un chemin vers une unité ciblée
+        /// Finds the shortest path to a target unit
         /// </summary>
-        /// <param name="grid">La grille de jeu</param>
-        /// <param name="aiUnit">L'unité contrôllée par l'IA</param>
-        /// <param name="potentialTarget">L'unité ciblée</param>
-        /// <returns>Le chemin le plus court vers la cible</returns>
-        private static List<Tile> FindPathTo(GridController grid, Unit aiUnit, Unit potentialTarget)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="potentialTarget">The target unit</param>
+        /// <returns>The path to a target unit</returns>
+        private static List<Tile> FindPathTo(Unit playableUnit, Unit potentialTarget)
         {
-            return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.CurrentTile.LogicalPosition.x, aiUnit.CurrentTile.LogicalPosition.y,
+            return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
                potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y);
         }
+
         /// <summary>
-        /// Trouve un chemin vers une position ciblée
+        /// Finds the shortest path to a target position
         /// </summary>
-        /// <param name="grid">La grille de jeu</param>
-        /// <param name="aiUnit">L'unité contrôllée par l'IA</param>
-        /// <param name="targetX">La position en X ciblée</param>
-        /// <param name="targetY">La position en Y ciblée</param>
-        /// <returns>Le chemin le plus court vers la cible</returns>
-        private static List<Tile> FindPathTo(GridController grid, Unit aiUnit, int targetX, int targetY)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="targetPosition">The target position</param>
+        /// <returns>The shortest path to a target position</returns>
+        private static List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
         {
-            return PathFinder.GetPath(grid, aiUnit.MovementCosts, new List<Tile>(), aiUnit.CurrentTile.LogicalPosition.x, aiUnit.CurrentTile.LogicalPosition.y,
-                targetX, targetY);
+            return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
+                targetPosition.x, targetPosition.y);
         }
         /// <summary>
-        /// Trouve les ennemis de l'unité et initialise une liste d'une action potentielle par ennemis
+        /// Initializes action based on the unit's enemies
         /// </summary>
-        /// <param name="grid">La grille de jeu</param>
-        /// <param name="aiUnit">L'unité contrôllée par l'IA</param>
-        /// <param name="enemyUnits"></param>
-        /// <returns>La liste des ennemis de l'unité</returns>
-        private static List<Action> ScanForEnemies(Unit aiUnit, List<Unit> enemyUnits)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="enemyUnits">The player's units</param>
+        /// <returns>A list of potential actions, on per enemy</returns>
+        private static List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits)
         {
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
             {
                 if(!enemyUnits[i].IsEnemy)
-                    actions.Add(new Action(FindPathTo(Finder.GridController, aiUnit, enemyUnits[i]), ActionType.Attack, 20f, enemyUnits[i]));
+                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, 20f, enemyUnits[i]));
             }
             return actions;
         }
         /// <summary>
-        /// Détermine comment la vie de l'unité à attaquer et la force d'attaque de l'IA
-        /// influencent le choix de l'action à faire de l'IA
+        /// Calculates how the health of a target unit influences the score of an action
         /// </summary>
-        /// <param name="aiUnit">L'unité contrôllée par IA</param>
-        /// <param name="targetHp">La vie de l'unité à attaquer</param>
-        /// <returns>Le modificateur de score causé par les points de vie de l'unité à attaquer et la force d'attaque de l'IA</returns>
-        public static float HpChoiceMod(Unit aiUnit, int targetHp)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="targetHp">The target unit's health</param>
+        /// <returns>The score modifier caused by the target's health</returns>
+        public static float HpChoiceMod(Unit playableUnit, int targetHp)
         {
-            if (targetHp - aiUnit.Stats.AttackStrength <= 0)
-                return 1;
-            return -(targetHp - aiUnit.Stats.AttackStrength);
+            if (targetHp - playableUnit.Stats.AttackStrength <= 0)
+                return 2;
+            return -(targetHp - playableUnit.Stats.AttackStrength);
         }
         /// <summary>
-        /// Détermine comment la distance entre l'unité à attaquer et l'IA
-        /// influence le choix de l'action à faire de l'IA
+        /// Calculates how the distance to a target unit influences the score of an action
         /// </summary>
-        /// <param name="aiUnit">L'unité contrôllée par IA</param>
-        /// <param name="targetPath">Le chemin à parcourir pour atteindre l'unité à attaquer</param>
-        /// <returns>Le modificateur de score causé par la distance à parcourir pour atteindre l'unité à attaquer</returns>
-        public static float DistanceChoiceMod(Unit aiUnit, List<Tile> targetPath)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="targetPath">The path to a target unit</param>
+        /// <returns>The score modifier caused by the target's distance</returns>
+        public static float DistanceChoiceMod(Unit playableUnit, List<Tile> targetPath)
         {
-            double nbToursDouble = CalculatePathCost(targetPath) / aiUnit.Stats.MoveSpeed;
+            double nbToursDouble = PathFinder.CalculatePathCost(targetPath, playableUnit.MovementCosts) / playableUnit.Stats.MoveSpeed;
             int nbTours = (int)Math.Ceiling(nbToursDouble);
             return -(2 * nbTours) + 3;
         }
         /// <summary>
-        /// Calcule le nombre de mouvements nécessaires exécuter les mouvements d'un chemin
+        /// Calculates how the weapon types between the unit and a target influences the score of an action
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private static int CalculatePathCost(List<Tile> path)
-        {
-            int cost = 0;
-            for (int i = 0; i < path.Count - 1; i++)
-            {
-                cost += path[i].CostToMove;
-            }
-            return cost;
-        }
-        /// <summary>
-        /// Détermine comment les types d'armes de l'unité à attaquer et celle de l'IA
-        /// influencent le choix de l'action à faire de l'IA
-        /// </summary>
-        /// <param name="aiUnit">L'unité contrôllée par IA</param>
-        /// <param name="targetWeaponType">Le type d'arme de l'unité à attaquer</param>
-        /// <returns>Le modificateur de score causé par les types d'armes de l'unité à attaquer et celle de l'IA</returns>
-        public static float ClassTypeChoiceMod(Unit aiUnit, WeaponType targetWeaponType)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="targetWeaponType">The target of an attack's weapon type</param>
+        /// <returns>The score modifier caused by the weapon types involved in an attack</returns>
+        public static float WeaponTypeChoiceMod(Unit playableUnit, WeaponType targetWeaponType)
         {
             int choiceMod = 0;
-            if (aiUnit.WeaponAdvantage == targetWeaponType)
+            if (playableUnit.WeaponAdvantage == targetWeaponType)
             {
                 switch (targetWeaponType)
                 {
@@ -332,7 +311,7 @@ namespace Game
                         break;
                 }
             }
-            else if (aiUnit.WeaponType != targetWeaponType)
+            else if (playableUnit.WeaponType != targetWeaponType)
             {
                 switch (targetWeaponType)
                 {
@@ -351,16 +330,15 @@ namespace Game
             return choiceMod;
         }
         /// <summary>
-        /// Détermine comment l'environnement où se trouve l'unité ennemie
-        /// influence le choix de l'action à faire de l'IA
+        /// Calculates how the tile a target unit is on influences the score of an action
         /// </summary>
-        /// <param name="aiUnit">L'unité contrôllée par IA</param>
-        /// <param name="enemyTargetTile">La case où se trouve l'unité à attaquer</param>
-        /// <returns>Le modificateur de score causé par la tuile où se trouve l'unité à attaquer</returns>
-        public static float EnvironmentChoiceMod( Unit aiUnit, Tile enemyTargetTile)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="enemyTargetTile">The target enemy's tile location</param>
+        /// <returns>The score modifier caused by the target unit's tile</returns>
+        public static float EnvironmentChoiceMod( Unit playableUnit, Tile enemyTargetTile)
         {
             float environmentChoiceMod = 0.0f;
-            switch (aiUnit.WeaponType)
+            switch (playableUnit.WeaponType)
             {
                 case WeaponType.Spear:
                     if(enemyTargetTile.TileType == TileType.Fortress)
@@ -384,15 +362,14 @@ namespace Game
             return environmentChoiceMod;
         }
         /// <summary>
-        /// Détermine comment la vie que va perdre l'IA en attaquant une unité
-        /// influence le choix de l'action à faire de l'IA
+        /// Calculates how the the potential damage a unit would receive by attacking a target unit influences the score of an action
         /// </summary>
-        /// <param name="aiUnit">L'unité contrôllée par IA</param>
-        /// <param name="targetUnit">L'unité à attaquer</param>
-        /// <returns>Le modificateur de score causé par les dommages qu'infligeront l'unité à attaquer</returns>
-        public static float HarmChoiceMod(Unit aiUnit, Unit targetUnit)
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="targetUnit">The target unit</param>
+        /// <returns>The score modifier caused by the potential damage a unit would receive by attacking a target unit</returns>
+        public static float HarmChoiceMod(Unit playableUnit, Unit targetUnit)
         {
-            if (aiUnit.CurrentHealthPoints - targetUnit.Stats.AttackStrength <= 0)
+            if (playableUnit.CurrentHealthPoints - targetUnit.Stats.AttackStrength <= 0)
                 return -4f;
             return -(0.8f * targetUnit.Stats.AttackStrength);
         }

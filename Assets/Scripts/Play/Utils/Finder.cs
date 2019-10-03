@@ -1,4 +1,5 @@
 ﻿﻿using UnityEngine;
+using Random = System.Random;
 
 namespace Game
 {
@@ -7,6 +8,7 @@ namespace Game
     {
         private static GameController gameController;
         private static GridController gridController;
+        private static Random random;
         
         public static GameController GameController
         {
@@ -28,5 +30,15 @@ namespace Game
                 return gridController;
             }
         }
+        
+        public static Random Random
+        {
+            get
+            {
+                if (random == null)
+                    random = new Random();
+                return random;
+            }
+        } 
     }
 }
