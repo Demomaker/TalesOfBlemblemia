@@ -3,15 +3,32 @@
 namespace Game
 {
     /// <summary>
-    /// Propriétés statistiques qu'une unité peut avoir
-    /// Auteur: Zacharie Lavigne
+    /// A unit or weapon's stats
+    /// Author: Zacharie Lavigne
     /// </summary>
     public class UnitStats
     {
-        private static UnitStats plebUnitStats = new UnitStats(7, 3, 0, 0f, 0f);
+        public const int PLEB_MAX_HEALTH = 7;
+        public const int PLEB_MOVE_SPEED = 3;
+        public const int PLEB_ATTACK_STRENGTH = 0;
+        public const float PLEB_HIT_RATE = 0f;
+        public const float PLEB_CRIT_RATE = 0f;
+        
+        public const int SOLDIER_MAX_HEALTH = 9;
+        public const int SOLDIER_MOVE_SPEED = 3;
+        public const int SOLDIER_ATTACK_STRENGTH = 1;
+        public const float SOLDIER_HIT_RATE = 0f;
+        public const float SOLDIER_CRIT_RATE = 0f;
+        
+        public const int NOBLE_MAX_HEALTH = 12;
+        public const int NOBLE_MOVE_SPEED = 5;
+        public const int NOBLE_ATTACK_STRENGTH = 1;
+        public const float NOBLE_HIT_RATE = 0f;
+        public const float NOBLE_CRIT_RATE = 0f;
+        
+        private static UnitStats plebUnitStats = null;
         /// <summary>
-        /// Ensemble pré-fabriqué de statistiques pour une unité de niveau plèbe
-        /// Implémenté en singleton car toutes les unités de ce niveau auront les mêmes statistiques
+        /// Pre-made set of stats for weak units
         /// </summary>
         public static UnitStats PlebUnitStats
         {
@@ -19,16 +36,15 @@ namespace Game
             {
                 if (plebUnitStats == null)
                 {
-                    return new UnitStats(7, 3, 0, 0f, 0f);
+                    return new UnitStats(PLEB_MAX_HEALTH, PLEB_MOVE_SPEED, PLEB_ATTACK_STRENGTH, PLEB_HIT_RATE, PLEB_CRIT_RATE);
                 }
                 return plebUnitStats;
             }
         }
         
-        private static UnitStats soldierUnitStats = new UnitStats(9, 3, 1, 0f, 0f);
+        private static UnitStats soldierUnitStats = null;
         /// <summary>
-        /// Ensemble pré-fabriqué de statistiques pour une unité de niveau soldat
-        /// Implémenté en singleton car toutes les unités de ce niveau auront les mêmes statistiques
+        /// Pre-made set of stats for medium units
         /// </summary>
         public static UnitStats SoldierUnitStats
         {
@@ -36,16 +52,15 @@ namespace Game
             {
                 if (soldierUnitStats == null)
                 {
-                    return new UnitStats(9, 3, 1, 0f, 0f);
+                    return new UnitStats(SOLDIER_MAX_HEALTH, SOLDIER_MOVE_SPEED, SOLDIER_ATTACK_STRENGTH, SOLDIER_HIT_RATE, SOLDIER_CRIT_RATE);
                 }
                 return soldierUnitStats;
             }
         }
-        
-        private static UnitStats nobleUnitStats = new UnitStats(12, 5, 1, 0f, 0f);
+
+        private static UnitStats nobleUnitStats = null;
         /// <summary>
-        /// Ensemble pré-fabriqué de statistiques pour une unité de niveau noble
-        /// Implémenté en singleton car toutes les unités de ce niveau auront les mêmes statistiques
+        /// Pre-made set of stats for strong units
         /// </summary>
         public static UnitStats NobleUnitStats
         {
@@ -53,34 +68,34 @@ namespace Game
             {
                 if (nobleUnitStats == null)
                 {
-                    return new UnitStats(12, 5, 1, 0f, 0f);
+                    return new UnitStats(NOBLE_MAX_HEALTH, NOBLE_MOVE_SPEED, NOBLE_ATTACK_STRENGTH, NOBLE_HIT_RATE, NOBLE_CRIT_RATE);
                 }
                 return nobleUnitStats;
             }
         }
         
         /// <summary>
-        /// Les points de vie maximum d'une unité 
+        /// The max health points
         /// </summary>
         private int maxHealthPoints;
         public int MaxHealthPoints => maxHealthPoints;
         /// <summary>
-        /// La vitesse, en case qu'une unité peut parcourir par tour d'une unité 
+        /// The unit's speed in tile per turn
         /// </summary>
         private int moveSpeed;
         public int MoveSpeed => moveSpeed;
         /// <summary>
-        /// Les points de dégâts qu'une unité peut affliger
+        /// The base damage a unit's attack would do
         /// </summary>
         private int attackStrength;
         public int AttackStrength => attackStrength;
         /// <summary>
-        /// La chance, en pourcentage (sur 1), qu'une unité a de toucher une unité adverse en attaquant
+        /// The chance that a unit lands his attack
         /// </summary>
         private float hitRate;
         public float HitRate => hitRate;
         /// <summary>
-        /// La chance, en pourcentage (sur 1), qu'une unité a d'effectuer une attaque critique sur une unité adverse en attaquant
+        /// The chance that a hit is critical
         /// </summary>
         private float critRate;
         public float CritRate => critRate;

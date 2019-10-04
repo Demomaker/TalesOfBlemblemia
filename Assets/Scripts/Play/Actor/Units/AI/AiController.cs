@@ -48,7 +48,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>The action the unit should play on its turn</returns>
-        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits)
+        private static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits)
         {
             //Every potential actions the unit could do
             List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
@@ -106,7 +106,7 @@ namespace Game
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
             if(playableUnit.Stats.MaxHealthPoints * HEALTH_MOD_FOR_RESTING < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
             {
-                bestActions[nbOfChoice - 1] = new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, 12, null);
+                bestActions[nbOfChoice - 1] = new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, AiControllerValues.BASE_REST_ACTION_SCORE, null);
             }
         }
         /// <summary>
@@ -133,14 +133,13 @@ namespace Game
         /// <returns>An array of all the best possible actions</returns>
         private static Action[] GetBestActions(List<Action> actionsToDo)
         {
-            //Copie de la liste pour ne pas la modifier en dehors de la méthode
+            //Copy to not change the original list
             actionsToDo = new List<Action>(actionsToDo);
             
-            //Tableau regroupant les actions aux meilleurs scores
             Action[] bestAttacks = new Action[nbOfChoice];
             
-            //L'index de la meilleure action dans la liste d'actions potentielles 
-            int actionIndex = -1;
+            //The index of the highest scored action in the action list
+            int actionIndex = 0;
             
             for (int i = 0; i < nbOfChoice; i++)
             {
@@ -148,9 +147,11 @@ namespace Game
                 if (actionIndex > -1)
                 {
                     bestAttacks[i] = actionsToDo[actionIndex];
-                    //On enlève la meilleure action de la liste pour pouvoir trouver la meilleure ensuite
+                    //The current best action in the list is removed
                     actionsToDo.RemoveAt(actionIndex);
                 }
+                else if(bestAttacks.Length == 0)
+                    i = nbOfChoice;
             }
             
             return bestAttacks;
@@ -206,6 +207,7 @@ namespace Game
                     for (int k = 0; k < potentialActions.Count; k++)
                     {
                         ennemy = potentialActions[k].Target;
+                        //Each tile has a score based on the added number of turns it would take each player's unit to get there
                         optionMap[i, j] += (int)Math.Ceiling(((double)(ennemy.MovementCosts[i, j] - 1) / (double)ennemy.Stats.MoveSpeed));
                     }
                 }
@@ -239,7 +241,6 @@ namespace Game
             return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
                potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y);
         }
-
         /// <summary>
         /// Finds the shortest path to a target position
         /// </summary>
@@ -263,7 +264,7 @@ namespace Game
             for (int i = 0; i < enemyUnits.Count; i++)
             {
                 if(!enemyUnits[i].IsEnemy)
-                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, 20f, enemyUnits[i]));
+                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, AiControllerValues.BASE_CHOICE_ACTION_SCORE, enemyUnits[i]));
             }
             return actions;
         }
@@ -276,7 +277,7 @@ namespace Game
         public static float HpChoiceMod(Unit playableUnit, int targetHp)
         {
             if (targetHp - playableUnit.Stats.AttackStrength <= 0)
-                return 2;
+                return AiControllerValues.KILLING_ENEMY_CHOICE_MOD;
             return -(targetHp - playableUnit.Stats.AttackStrength);
         }
         /// <summary>
@@ -287,9 +288,9 @@ namespace Game
         /// <returns>The score modifier caused by the target's distance</returns>
         public static float DistanceChoiceMod(Unit playableUnit, List<Tile> targetPath)
         {
-            double nbToursDouble = PathFinder.CalculatePathCost(targetPath, playableUnit.MovementCosts) / playableUnit.Stats.MoveSpeed;
+            float nbToursDouble = PathFinder.CalculatePathCost(targetPath, playableUnit.MovementCosts) / playableUnit.Stats.MoveSpeed;
             int nbTours = (int)Math.Ceiling(nbToursDouble);
-            return -(2 * nbTours) + 3;
+            return AiControllerValues.TURN_MULTIPLIER_FOR_DISTANCE_CHOICE_MOD * nbTours + AiControllerValues.TURN_ADDER_FOR_DISTANCE_CHOICE_MOD;
         }
         /// <summary>
         /// Calculates how the weapon types between the unit and a target influences the score of an action
@@ -299,19 +300,19 @@ namespace Game
         /// <returns>The score modifier caused by the weapon types involved in an attack</returns>
         public static float WeaponTypeChoiceMod(Unit playableUnit, WeaponType targetWeaponType)
         {
-            int choiceMod = 0;
+            float choiceMod = 0f;
             if (playableUnit.WeaponAdvantage == targetWeaponType)
             {
                 switch (targetWeaponType)
                 {
                     case WeaponType.Axe:
-                        choiceMod = 3;
+                        choiceMod = AiControllerValues.ATTACKING_AXE_WITH_ADVANTAGE_CHOICE_MOD;
                         break;
                     case WeaponType.Spear:
-                        choiceMod = 1;
+                        choiceMod = AiControllerValues.ATTACKING_SPEAR_WITH_ADVANTAGE_CHOICE_MOD;
                         break;
                     case WeaponType.Sword:
-                        choiceMod = 2;
+                        choiceMod = AiControllerValues.ATTACKING_SWORD_WITH_ADVANTAGE_CHOICE_MOD;
                         break;
                 }
             }
@@ -320,13 +321,13 @@ namespace Game
                 switch (targetWeaponType)
                 {
                     case WeaponType.Axe:
-                        choiceMod = -1;
+                        choiceMod = AiControllerValues.ATTACKING_AXE_WITHOUT_ADVANTAGE_CHOICE_MOD;
                         break;
                     case WeaponType.Spear:
-                        choiceMod = -2;
+                        choiceMod = AiControllerValues.ATTACKING_SPEAR_WITHOUT_ADVANTAGE_CHOICE_MOD;
                         break;
                     case WeaponType.Sword:
-                        choiceMod = -2;
+                        choiceMod = AiControllerValues.ATTACKING_SWORD_WITHOUT_ADVANTAGE_CHOICE_MOD;
                         break;
                 }
             }
@@ -346,21 +347,21 @@ namespace Game
             {
                 case WeaponType.Spear:
                     if(enemyTargetTile.TileType == TileType.Fortress)
-                        environmentChoiceMod = -2f;
+                        environmentChoiceMod = AiControllerValues.SPEAR_ATTACKING_FORTRESS_CHOICE_MOD;
                     else if(enemyTargetTile.TileType == TileType.Forest)
-                        environmentChoiceMod = -1f;
+                        environmentChoiceMod = AiControllerValues.SPEAR_ATTACKING_FOREST_CHOICE_MOD;
                     break;
                 case WeaponType.Axe:
                     if(enemyTargetTile.TileType == TileType.Fortress)
-                        environmentChoiceMod = -4f;
+                        environmentChoiceMod = AiControllerValues.AXE_ATTACKING_FORTRESS_CHOICE_MOD;
                     else if(enemyTargetTile.TileType == TileType.Forest)
-                        environmentChoiceMod = -3f;
+                        environmentChoiceMod = AiControllerValues.AXE_ATTACKING_FOREST_CHOICE_MOD;
                     break;
                 case WeaponType.Sword:
                     if(enemyTargetTile.TileType == TileType.Fortress)
-                        environmentChoiceMod = -3f;
+                        environmentChoiceMod = AiControllerValues.SWORD_ATTACKING_FORTRESS_CHOICE_MOD;
                     else if(enemyTargetTile.TileType == TileType.Forest)
-                        environmentChoiceMod = -2f;
+                        environmentChoiceMod = AiControllerValues.SWORD_ATTACKING_FOREST_CHOICE_MOD;
                     break;
             }
             return environmentChoiceMod;
@@ -374,9 +375,8 @@ namespace Game
         public static float HarmChoiceMod(Unit playableUnit, Unit targetUnit)
         {
             if (playableUnit.CurrentHealthPoints - targetUnit.Stats.AttackStrength <= 0)
-                return -4f;
-            return -(0.8f * targetUnit.Stats.AttackStrength);
+                return AiControllerValues.POTENTIAL_DEATH_CHOICE_MOD;
+            return AiControllerValues.DAMAGE_RECEIVE_CHOICE_MOD * targetUnit.Stats.AttackStrength;
         }
-
     }
 }
