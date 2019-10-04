@@ -11,7 +11,8 @@ TagManager:
   - Water
   - Fauna
   - Database
-  - GridController
+  - DialogueUi
+  - UiPortrait
   layers:
   - Default
   - TransparentFX
