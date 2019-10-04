@@ -1,18 +1,32 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Harmony;
+using Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Finder = Harmony.Finder;
 
 public class LevelEntry : MonoBehaviour
 {
+    private List<string> previousLevelNames;
+    private bool IsFirstLevel => RepresentedLevelName == Finder.GameController.StartingLevelName;
+    private bool CanBeClicked => IsFirstLevel && Finder.GameController.NameOfLevelCompleted == null || PreviousLevelWasCompleted();
     public string RepresentedLevelName;
-    public string PreviousLevelName;
-    public bool PreviousLevelCompleted =>  RepresentedLevelName == PreviousLevelName || Finder.GameController.LevelsCompleted.Contains(PreviousLevelName);
-    private bool CanBeClicked => PreviousLevelCompleted;
-
+    public List<string> PreviousLevelNames
+    {
+        get
+        {
+            List<string> retval = new List<string>();
+            List<Level> currentLevels = Finder.GameController.Levels.FindAll(level => level.LevelName == RepresentedLevelName);
+            for (int i = 0; i < currentLevels.Count; i++)
+            {
+                if (currentLevels[i] != null)
+                retval.Add(currentLevels[i].PreviousLevel);
+            }
+            return retval;
+        }
+    }
     public void OnLevelEntry()
     {
         if(CanBeClicked && !string.IsNullOrEmpty(RepresentedLevelName))
@@ -31,5 +45,18 @@ public class LevelEntry : MonoBehaviour
             colors.pressedColor = Color.green;
         }
         GetComponent<Button>().colors = colors;
+    }
+
+    private bool PreviousLevelWasCompleted()
+    {
+        for (int i = 0; i < PreviousLevelNames.Count; i++)
+        {
+            if (PreviousLevelNames[i] == Finder.GameController.NameOfLevelCompleted)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

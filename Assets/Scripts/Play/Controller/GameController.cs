@@ -12,16 +12,39 @@ namespace Game
      [Findable("GameController")]
      public class GameController : MonoBehaviour
      {
+         public string NameOfLevelCompleted => nameOfLevelCompleted;
+         private List<Level> levels = new List<Level>();
+         public List<Level> Levels => levels;
          public List<string> LevelsCompleted = new List<string>();
-         [SerializeField] private string startingLevelName;
+         private string startingLevelName = Constants.LEVEL_3_SCENE_NAME;
+         public string StartingLevelName => startingLevelName;
+
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
+
+         private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
          private void Start()
          {
+             InstantiateLevelList();
              ResetCompletedLevels();
-             LoadLevel(startingLevelName);
+             LoadLevel(Constants.OVERWORLD_SCENE_NAME);
          }
 
+         private void InstantiateLevelList()
+         {
+             levels = new List<Level>
+             {
+                 new Level("", Constants.LEVEL_1_SCENE_NAME),
+                 new Level(Constants.LEVEL_1_SCENE_NAME, Constants.LEVEL_2_SCENE_NAME),
+                 new Level(Constants.LEVEL_2_SCENE_NAME, Constants.LEVEL_3_SCENE_NAME),
+                 new Level(Constants.LEVEL_3_SCENE_NAME, Constants.LEVEL_4_SCENE_NAME),
+                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_5_SCENE_NAME),
+                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_6_SCENE_NAME),
+                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_7_SCENE_NAME),
+                 new Level(Constants.LEVEL_7_SCENE_NAME, Constants.LEVEL_8_SCENE_NAME),
+                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_8_SCENE_NAME)
+             };
+         }
          private void ResetCompletedLevels()
          {
              LevelsCompleted.Clear();

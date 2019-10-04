@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Harmony;
+using Game;
 using UnityEngine;
+using Finder = Harmony.Finder;
 
 public class LevelController : MonoBehaviour
 {
-    [SerializeField] private string overworldName;
     [SerializeField] private string levelName;
 
     private void Update()
@@ -14,7 +14,7 @@ public class LevelController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             Finder.GameController.LevelsCompleted.Add(levelName);
-            Finder.GameController.LoadLevel(overworldName);
+            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
     }
 

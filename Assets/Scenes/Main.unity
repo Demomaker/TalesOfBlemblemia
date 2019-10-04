@@ -323,7 +323,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b304b45f5546e89de52e8d624fc029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingLevelName: Overworld
+  LevelsCompleted: []
+  StartingLevelName: ParabeneForest
+  overworldLevelName: Overworld
 --- !u!4 &1829097447
 Transform:
   m_ObjectHideFlags: 0
