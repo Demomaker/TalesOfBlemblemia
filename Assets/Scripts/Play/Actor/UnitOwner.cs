@@ -7,8 +7,10 @@ namespace Game
 {
     public class UnitOwner
     {
-        private readonly List<Unit> ownedUnits = new List<Unit>();
-        private readonly List<Unit> playableUnits = new List<Unit>();
+        protected readonly List<Unit> ownedUnits = new List<Unit>();
+        protected readonly List<Unit> playableUnits = new List<Unit>();
+        protected readonly List<Unit> ennemyUnits = new List<Unit>();
+
         private bool hasLost = false;
         public string Name = "";
 
@@ -18,11 +20,11 @@ namespace Game
             set => hasLost = value;
         }
 
-        public void Play()
+        public virtual void Play()
         {
             for(int i = 0; i < playableUnits.Count; i++)
             {
-                if (!playableUnits[i].CanMove)
+                if (!playableUnits[i].HasActed)
                 {
                     RemoveUnitFromPlayableUnits(playableUnits[i]);
                 }
@@ -48,19 +50,19 @@ namespace Game
             
         }
 
-        public void MakeOwnedUnitsUnplayable()
+        private void MakeOwnedUnitsUnplayable()
         {
             foreach (Unit unit in playableUnits)
             {
-                unit.CanPlay = false;
+                unit.HasActed = false;
             }
         }
 
-        public void MakeOwnedUnitsPlayable()
+        private void MakeOwnedUnitsPlayable()
         {
             foreach (Unit unit in playableUnits)
             {
-                unit.CanPlay = true;
+                unit.HasActed = true;
                 unit.ResetNumberOfMovesLeft();
             }
         }
@@ -89,7 +91,7 @@ namespace Game
 
         public void RemoveOwnedUnit(Unit unit)
         {
-            unit.CanPlay = false;
+            unit.HasActed = false;
             if (playableUnits.Contains(unit))
                 playableUnits.Remove(unit);
             if (ownedUnits.Contains(unit))
@@ -98,7 +100,7 @@ namespace Game
 
         public void RemoveUnitFromPlayableUnits(Unit unit)
         {
-            unit.CanPlay = false;
+            unit.HasActed = false;
             playableUnits.Remove(unit);
         }
     }

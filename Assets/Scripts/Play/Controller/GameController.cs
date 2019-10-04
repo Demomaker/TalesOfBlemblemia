@@ -102,6 +102,7 @@ namespace Game
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
          }
      }
+
      public enum DifficultyLevel
      {
          Easy,
