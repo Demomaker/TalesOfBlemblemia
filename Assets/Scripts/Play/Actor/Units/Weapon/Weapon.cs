@@ -6,6 +6,22 @@
     /// </summary>
     public abstract class Weapon
     {
+        protected const float AXE_HIT_RATE = 0.67f;
+        protected const float AXE_CRIT_RATE = 0.15f;
+        protected const int AXE_ATTACK_STRENGTH = 3;
+        protected const int AXE_MOVE_SPEED = 0;
+        protected const int AXE_MAX_HEALTH_POINTS = 0;
+        protected const float SPEAR_HIT_RATE = 0.95f;
+        protected const float SPEAR_CRIT_RATE = 0.15f;
+        protected const int SPEAR_ATTACK_STRENGTH = 2;
+        protected const int SPEAR_MOVE_SPEED = 0;
+        protected const int SPEAR_MAX_HEALTH_POINTS = 0;
+        protected const float SWORD_HIT_RATE = 0.8f;
+        protected const float SWORD_CRIT_RATE = 0.3f;
+        protected const int SWORD_ATTACK_STRENGTH = 2;
+        protected const int SWORD_MOVE_SPEED = 0;
+        protected const int SWORD_MAX_HEALTH_POINTS = 0;
+        
         protected UnitStats weaponStats;
         /// <summary>
         /// Les bonus que l'arme va offrir à une unité

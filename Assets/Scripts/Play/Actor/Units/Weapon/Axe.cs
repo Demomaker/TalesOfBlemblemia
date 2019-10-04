@@ -20,7 +20,7 @@
         {
             if (weaponStats == null)
             {
-                this.weaponStats = new UnitStats(0, 0, 3, 0.67f, 0.15f);
+                this.weaponStats = new UnitStats(AXE_MAX_HEALTH_POINTS, AXE_MOVE_SPEED, AXE_ATTACK_STRENGTH, AXE_HIT_RATE, AXE_CRIT_RATE);
             }
         }
     }
