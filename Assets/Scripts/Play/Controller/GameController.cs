@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
@@ -15,7 +14,6 @@ namespace Game
          private int choiceRange;
          private bool permaDeath;
          
-
          public GameController(DifficultyLevel difficultyLevel)
          {
              this.difficultyLevel = difficultyLevel;

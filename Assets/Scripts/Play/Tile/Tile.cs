@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -8,14 +9,16 @@ namespace Game
     public abstract class Tile : MonoBehaviour
     {
         private Button tileButton;
-        private readonly TileType tileType;
+        [SerializeField] private TileType tileType;
+        public TileType TileType => tileType;
+
         private Image tileImage;
         private Unit linkedUnit;
         private GridController gridController;
         
-        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && gridController.SelectedUnit.CanPlay && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit is Enemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && linkedUnit is Ally && linkedUnit.CanPlay;
+        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
+        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
         private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;
@@ -23,10 +26,15 @@ namespace Game
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
+        private int costToMove;
 
-        protected Tile(TileType tileType)
+        public int CostToMove => costToMove;
+        
+
+            protected Tile(TileType tileType, int costToMove = 1)
         {
             this.tileType = tileType;
+            this.costToMove = costToMove;
         }
         
         protected virtual void Awake()
@@ -103,6 +111,14 @@ namespace Game
             if (!IsOccupiedByAUnit) return false;
             linkedUnit = null;
             return true;
+        }
+
+        public bool IsWithinRange(Tile otherTile, int range)
+        {
+            if (range <= 0)
+                throw  new ArgumentException("Range should be higher than zero");
+            return (Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) <= range
+                && Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range);
         }
     }
 
