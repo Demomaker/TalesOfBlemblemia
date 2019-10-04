@@ -19,12 +19,17 @@ public class LevelEntry : MonoBehaviour
         {
             List<string> retval = new List<string>();
             List<Level> currentLevels = Finder.GameController.Levels.FindAll(level => level.LevelName == RepresentedLevelName);
-            for (int i = 0; i < currentLevels.Count; i++)
+            if (currentLevels != null)
             {
-                if (currentLevels[i] != null)
-                retval.Add(currentLevels[i].PreviousLevel);
+                for (int i = 0; i < currentLevels.Count; i++)
+                {
+                    if (currentLevels[i] != null)
+                        retval.Add(currentLevels[i].PreviousLevel);
+                }
+                return retval;
             }
-            return retval;
+
+            return null;
         }
     }
     public void OnLevelEntry()
@@ -49,6 +54,7 @@ public class LevelEntry : MonoBehaviour
 
     private bool PreviousLevelWasCompleted()
     {
+        if(PreviousLevelNames != null)
         for (int i = 0; i < PreviousLevelNames.Count; i++)
         {
             if (PreviousLevelNames[i] == Finder.GameController.NameOfLevelCompleted)

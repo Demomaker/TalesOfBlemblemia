@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -81,6 +82,11 @@ namespace Game
          {
              if (SceneManager.GetSceneByName(levelname).isLoaded)
                  yield return SceneManager.UnloadSceneAsync(levelname);
+         }
+
+         public GameController() : this(DifficultyLevel.Easy)
+         {
+             
          }
          public GameController(DifficultyLevel difficultyLevel)
          {
