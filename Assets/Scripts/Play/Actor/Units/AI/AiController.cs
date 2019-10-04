@@ -92,10 +92,6 @@ namespace Game
             return bestAction;
         }
         /// <summary>
-        /// Constante permettant de déterminer si se soigner permettrait de gagner assez de vie pour le considérer comme option
-        /// </summary>
-        private const float HEALTH_MOD_FOR_RESTING = 1.33f; 
-        /// <summary>
         /// Adds resting as a potential action if needed
         /// </summary>
         /// <param name="bestActions">The best possible actions to do</param>
@@ -104,7 +100,7 @@ namespace Game
         private static void AddRestActionIfNeeded(Action[] bestActions, Unit playableUnit, List<Action> actionsToDo)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
-            if(playableUnit.Stats.MaxHealthPoints * HEALTH_MOD_FOR_RESTING < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
+            if(playableUnit.Stats.MaxHealthPoints * AiControllerValues.HEALTH_MOD_FOR_RESTING < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
             {
                 bestActions[nbOfChoice - 1] = new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, AiControllerValues.BASE_REST_ACTION_SCORE, null);
             }

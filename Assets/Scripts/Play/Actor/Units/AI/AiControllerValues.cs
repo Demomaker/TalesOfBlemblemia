@@ -25,5 +25,6 @@
         public const int KILLING_ENEMY_CHOICE_MOD = 3;
         public const float BASE_CHOICE_ACTION_SCORE = 20f;
         public const int BASE_REST_ACTION_SCORE = 12;
+        public const float HEALTH_MOD_FOR_RESTING = 1.33f; 
     }
 }
