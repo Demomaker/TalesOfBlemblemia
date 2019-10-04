@@ -3,11 +3,6 @@
     /// Auteur: Zacharie Lavigne
     public class Sword : Weapon
     {
-        protected const float SWORD_HIT_RATE = 0.8f;
-        protected const float SWORD_CRIT_RATE = 0.3f;
-        protected const int SWORD_ATTACK_STRENGTH = 2;
-        protected const int SWORD_MOVE_SPEED = 0;
-        protected const int SWORD_MAX_HEALTH_POINTS = 0;
         private static Sword basicWeapon = new Sword();
         public static Sword BasicWeapon
         {
