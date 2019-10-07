@@ -9,7 +9,7 @@ namespace Game
     {
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> playableUnits = new List<Unit>();
-        protected readonly List<Unit> ennemyUnits = new List<Unit>();
+        protected readonly List<Unit> enemyUnits = new List<Unit>();
 
         private bool hasLost = false;
         public string Name = "";
@@ -24,7 +24,7 @@ namespace Game
         {
             for(int i = 0; i < playableUnits.Count; i++)
             {
-                if (!playableUnits[i].HasActed)
+                if (playableUnits[i].HasActed)
                 {
                     RemoveUnitFromPlayableUnits(playableUnits[i]);
                 }
@@ -50,24 +50,24 @@ namespace Game
             
         }
 
-        private void MakeOwnedUnitsUnplayable()
+        public void MakeOwnedUnitsUnplayable()
         {
             foreach (Unit unit in playableUnits)
             {
-                unit.HasActed = false;
+                unit.HasActed = true;
             }
         }
 
         private void MakeOwnedUnitsPlayable()
         {
-            foreach (Unit unit in playableUnits)
+            for (int i = 0; i < playableUnits.Count; i++)
             {
-                unit.HasActed = true;
-                unit.ResetNumberOfMovesLeft();
+                playableUnits[i].HasActed = false;
+                playableUnits[i].ResetNumberOfMovesLeft();
             }
         }
 
-        public bool HasNoMoreMovableUnits()
+        public bool HasNoMorePlayableUnits()
         {
             return playableUnits.Count <= 0;
         }
@@ -80,7 +80,7 @@ namespace Game
         public void OnTurnGiven()
         {
             foreach(Unit unit in ownedUnits)
-            playableUnits.Add(unit);
+                playableUnits.Add(unit);
             MakeOwnedUnitsPlayable();
         }
 
@@ -91,7 +91,7 @@ namespace Game
 
         public void RemoveOwnedUnit(Unit unit)
         {
-            unit.HasActed = false;
+            unit.HasActed = true;
             if (playableUnits.Contains(unit))
                 playableUnits.Remove(unit);
             if (ownedUnits.Contains(unit))
@@ -100,8 +100,12 @@ namespace Game
 
         public void RemoveUnitFromPlayableUnits(Unit unit)
         {
-            unit.HasActed = false;
             playableUnits.Remove(unit);
+        }
+
+        public void AddEnemyUnit(Unit enemy)
+        {
+            enemyUnits.Add(enemy);
         }
     }
 }
