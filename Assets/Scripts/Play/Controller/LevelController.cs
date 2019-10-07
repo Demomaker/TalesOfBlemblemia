@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Permissions;
 using Game;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,24 +11,18 @@ public class LevelController : MonoBehaviour
 {
     //The turnSystem branches' changes are needed to continue
     [SerializeField] private string levelName;
-
-    [Header("Level Completion Conditions")]
-    [SerializeField] private bool completeIfAllEnemiesDefeated;
-    [SerializeField] private bool completeIfPointAchieved;
-    [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns;
-    [SerializeField] private bool completeIfCertainEnemyDefeated;
-
-    [SerializeField] private Vector3 pointToAchieve;
-    [SerializeField] private Unit enemyToDefeat;
-    [SerializeField] private int numberOfTurnsBeforeCompletion;
-
-    [Header("Level Defeat Conditions")] 
-    [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns;
-    [SerializeField] private bool defeatIfProtectedIsKilled;
-    [SerializeField] private bool defeatIfAllPlayerUnitsDied;
-
-    [SerializeField] private Unit unitToProtect;
-    [SerializeField] private int numberOfTurnsBeforeDefeat;
+    [SerializeField] private bool completeIfAllEnemiesDefeated = false;
+    [SerializeField] private bool completeIfPointAchieved = false;
+    [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
+    [SerializeField] private bool completeIfCertainEnemyDefeated = false;
+    [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
+    [SerializeField] private bool defeatIfProtectedIsKilled = false;
+    [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
+    [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
+    [SerializeField] private Unit enemyToDefeat = null;
+    [SerializeField] private Unit unitToProtect = null;
+    [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
+    [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
 
     private bool levelCompleted = false;
     private bool levelFailed = false;
@@ -73,7 +68,7 @@ public class LevelController : MonoBehaviour
         }
         if (completeIfPointAchieved)
         {
-            if (!(GameObject.Find("Franklem").transform.position == pointToAchieve)) secondConditionAchieved = false;
+            if (!(GameObject.Find("Franklem").GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
         }
         if (completeIfCertainEnemyDefeated)
         {
