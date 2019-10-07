@@ -209,7 +209,7 @@ namespace Game
         private static List<Tile> FindPathTo(Unit playableUnit, Unit potentialTarget)
         {
             return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-               potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y);
+               potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y, playableUnit.IsEnemy);
         }
         /// <summary>
         /// Finds the shortest path to a target position
@@ -220,7 +220,7 @@ namespace Game
         private static List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
         {
             return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-                targetPosition.x, targetPosition.y);
+                targetPosition.x, targetPosition.y, playableUnit.IsEnemy);
         }
         /// <summary>
         /// Initializes action based on the unit's enemies
