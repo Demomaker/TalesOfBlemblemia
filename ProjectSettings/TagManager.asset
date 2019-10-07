@@ -13,6 +13,7 @@ TagManager:
   - Database
   - DialogueUi
   - UiPortrait
+  - GameUIController
   layers:
   - Default
   - TransparentFX

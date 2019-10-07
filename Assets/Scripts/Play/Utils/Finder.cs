@@ -33,6 +33,7 @@
         
         //Author : Antoine Lessard
         public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);
+        public static GameUiController GameUiController => FindWithTag<GameUiController>(Tags.GAME_UI_CONTROLLER);
 
         private static T FindWithTag<T>(string tag)
         {

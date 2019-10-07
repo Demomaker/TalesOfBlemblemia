@@ -6,10 +6,11 @@ namespace Game
  {
      public class GameController : MonoBehaviour
      {
+         [Header("Difficulty Settings")]
          [SerializeField] private int choiceForEasy = 10;
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
-         
+
          private DifficultyLevel difficultyLevel;
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
