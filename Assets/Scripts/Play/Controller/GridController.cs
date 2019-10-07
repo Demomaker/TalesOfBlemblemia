@@ -74,7 +74,16 @@ using UnityEngine.UI;
 
         public Tile GetTile(int x, int y)
         {
-            return transform.GetChild(x + y * NbColumns).GetComponent<Tile>();
+            try
+            {
+                return transform.GetChild(x + y * NbColumns).GetComponent<Tile>();
+            }
+            catch (Exception e)
+            {
+                int i = 0;
+            }
+
+            return null;
         }
         
         public bool IsValidGridPosition(int x, int y)

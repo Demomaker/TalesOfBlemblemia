@@ -66,7 +66,7 @@ namespace Game
             if (LinkedUnitCanBeAttacked)
             {
                 gridController.SelectedUnit.Attack(linkedUnit);
-                if (linkedUnit.IsDead)
+                if (linkedUnit.NoHealthLeft)
                 {
                     linkedUnit.Die();
                     gridController.SelectedUnit.MoveTo(this);
@@ -117,8 +117,7 @@ namespace Game
         {
             if (range <= 0)
                 throw  new ArgumentException("Range should be higher than zero");
-            return (Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) <= range
-                && Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range);
+            return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
         }
     }
 

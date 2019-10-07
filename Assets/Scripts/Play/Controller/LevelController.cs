@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game;
@@ -32,21 +31,44 @@ public class LevelController : MonoBehaviour
         //TODO enlever ca au plus criss
         CheckForComputerTurnSkip();
         CheckForPlayerTurnSkip();
+        
         CheckForCurrentPlayerWin();
         CheckForCurrentPlayerLoss();
         CheckForCurrentPlayerEndOfTurn();
-        currentPlayer.Play();
+        Play(currentPlayer);
+    }
+
+    private bool isComputerPlaying;
+    private void Play(UnitOwner unitOwner)
+    {
+        unitOwner.CheckUnitDeaths();
+        if (!isComputerPlaying && unitOwner is ComputerPlayer)
+        {
+            isComputerPlaying = true;
+            var currentComputerPlayer = unitOwner as ComputerPlayer;
+            StartCoroutine(currentComputerPlayer.PlayUnits());
+        }
     }
 
     private void CheckForPlayerTurnSkip()
     {
-        if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY))
+        if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is HumanPlayer)
         {
+            isComputerPlaying = false;
             currentPlayer = players.Find(player => player is ComputerPlayer);
             currentPlayer.OnTurnGiven();
         }
     }
-
+    public void CheckForComputerTurnSkip()
+    {
+        if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is ComputerPlayer)
+        {
+            isComputerPlaying = false;
+            currentPlayer = players.Find(player => player is HumanPlayer);
+            currentPlayer.OnTurnGiven();
+        }
+    }
+    
     private void InitializePlayersAndUnits()
     {
         UnitOwner player1 = HumanPlayer.Instance;
@@ -73,18 +95,10 @@ public class LevelController : MonoBehaviour
                 unitOwner.AddEnemyUnit(units[i]);
         }
     }
-    public void CheckForComputerTurnSkip()
-    {
-        if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY))
-        {
-            currentPlayer = players.Find(player => player is HumanPlayer);
-            currentPlayer.OnTurnGiven();
-        }
-    }
 
     public void CheckForCurrentPlayerEndOfTurn()
     {
-        if (currentPlayer.HasNoMorePlayableUnits())
+        if (currentPlayer.HasNoMorePlayableUnits)
         {
             GiveTurnToNextPlayer();
             currentPlayer.OnTurnGiven();
@@ -106,7 +120,6 @@ public class LevelController : MonoBehaviour
             currentPlayer.Lose();
             UnitOwner playerWhoLost = currentPlayer;
             GiveTurnToNextPlayer();
-            players.Remove(playerWhoLost);
         }
     }
     
@@ -117,13 +130,9 @@ public class LevelController : MonoBehaviour
     
     public void GiveTurnToNextPlayer()
     {
+        isComputerPlaying = false;
         currentPlayer.MakeOwnedUnitsUnplayable();
-        int nextPlayerIndex = players.IndexOf(currentPlayer) + 1;
-        if (nextPlayerIndex >= players.Count)
-        {
-            nextPlayerIndex = 0;
-        }
-
+        int nextPlayerIndex = (players.IndexOf(currentPlayer) + 1) % 2;
         try
         {
             if(players.ElementAt(nextPlayerIndex) != null)

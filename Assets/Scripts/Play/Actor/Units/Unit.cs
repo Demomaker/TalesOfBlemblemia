@@ -1,3 +1,4 @@
+ using System;
  using System.Collections;
  using System.Collections.Generic;
  using System.Linq;
@@ -44,7 +45,18 @@
          /// </summary>
          private int currentHealthPoints;
 
-         public int CurrentHealthPoints => currentHealthPoints;
+         public int CurrentHealthPoints
+         {
+             get { return currentHealthPoints; }
+             private set
+             {
+                 currentHealthPoints = value;
+                 if (NoHealthLeft)
+                 {
+                     Die();
+                 }
+             }
+         }
 
          /// <summary>
          /// The unit's stats
@@ -79,8 +91,8 @@
              get
              {
                  int maxGain = Stats.MaxHealthPoints / 2;
-                 if (currentHealthPoints + maxGain > Stats.MaxHealthPoints)
-                     return Stats.MaxHealthPoints - currentHealthPoints;
+                 if (CurrentHealthPoints + maxGain > Stats.MaxHealthPoints)
+                     return Stats.MaxHealthPoints - CurrentHealthPoints;
                  return maxGain;
              }
          }
@@ -99,12 +111,15 @@
          public bool HasActed { get; set; } = false;
 
          public bool IsCurrentlySelected => gridController.SelectedUnit == this;
-         public bool IsDead => currentHealthPoints <= 0;
+         public bool NoHealthLeft => CurrentHealthPoints <= 0;
          public int MovementRange => Stats.MoveSpeed;
          public int AttackRange => 1;
          
          private bool isMoving = false;
+         public bool IsMoving => isMoving;
+
          private bool isAttacking = false;
+         public bool IsAttacking => isAttacking;
 
          private void Awake()
          {
@@ -112,7 +127,7 @@
              
              classStats = UnitStats.SoldierUnitStats;
              weapon = Sword.BasicWeapon;
-             currentHealthPoints = Stats.MaxHealthPoints;
+             CurrentHealthPoints = Stats.MaxHealthPoints;
              movesLeft = Stats.MoveSpeed;
          }
 
@@ -128,25 +143,35 @@
 
          public void MoveTo(Tile tile)
          {
-             if (tile == null) return;
+             if (tile == null || tile == currentTile || isMoving) return;
              if (currentTile == null)
              {
                  transform.position = tile.WorldPosition;
+                 tile.LinkUnit(this);
+                 currentTile = tile;
              }
              else
              {
                  currentTile.UnlinkUnit();
+                 isMoving = true;
                  List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
                      currentTile.LogicalPosition.x,
                      currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y);
                  path.Reverse();
-                 path.RemoveAt(0);
+                 try
+                 {
+                     path.RemoveAt(0);
+
+                 }
+                 catch (Exception e)
+                 {
+                     Console.WriteLine(e);
+                     throw;
+                 }
                  path.Add(tile);
                  movesLeft -= currentTile.CostToMove;
                  MoveByPath(path);
              }
-             tile.LinkUnit(this);
-             currentTile = tile;
              movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
 
@@ -187,8 +212,13 @@
                  yield return null;
              }
 
-             HasActed = true;
-             target.currentHealthPoints -= 2;
+             if (!isCountering)
+             {
+                 HasActed = true;
+                 Debug.Log("Unit attacked!");
+             }
+
+             target.CurrentHealthPoints -= 2;
              counter = 0;
              
              while (counter < duration)
@@ -203,7 +233,7 @@
              
              //A unit cannot make a critical hit on a counter
              //A unit cannot counter on a counter
-             if (!isCountering && !target.IsDead)
+             if (!isCountering && !target.NoHealthLeft)
                  target.Attack(this, true);
          }
 
@@ -229,25 +259,31 @@
 
          private IEnumerator MoveByPath(List<Tile> path, float duration)
          {
-             if (isMoving) yield break;
-             isMoving = true;
-
-             foreach (var tile in path)
+             Tile finalTile = null;
+             for (int i = 0; i < path.Count; i++)
              {
+                 finalTile = path[i];
                  float counter = 0;
 
-                 if(path.IndexOf(tile) != path.Count - 1) movesLeft -= tile.CostToMove;
+                 if(path.IndexOf(finalTile) != path.Count - 1) 
+                     movesLeft -= finalTile.CostToMove;
                  Vector3 startPos = transform.position;
-                 LookAt(tile.WorldPosition);
+                 LookAt(finalTile.WorldPosition);
 
                  while (counter < duration)
                  {
                      counter += Time.deltaTime;
-                     transform.position = Vector3.Lerp(startPos, tile.WorldPosition, counter / duration);
+                     transform.position = Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
                      yield return null;
                  }
-             }
 
+                 if (movesLeft < 0 && path.IndexOf(finalTile) != path.Count - 1)
+                 {
+                     i = path.Count;
+                 }
+             }
+             finalTile.LinkUnit(this);
+             currentTile = finalTile;
              transform.position = currentTile.WorldPosition;
              isMoving = false;
          }
@@ -255,7 +291,35 @@
          public void Rest()
          {
              HasActed = true;
-             currentHealthPoints += HpGainedByResting;
+             CurrentHealthPoints += HpGainedByResting;
+             Debug.Log("Unit rested!");
+         }
+         
+         /// <summary>
+         /// Executes an action
+         /// </summary>
+         /// <param name="actionToDo">The action to execute on this turn</param>
+         public void ExecuteAction(Action actionToDo)
+         {
+             if (!isMoving && movesLeft > 0 && actionToDo.Path.Count > 1 && actionToDo.Path.Last() != currentTile) 
+                 MoveTo(actionToDo.Path.Last());
+             else if (!isMoving && !isAttacking)
+             {
+                 if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
+                 {
+                     if(!Attack(actionToDo.Target))
+                         Rest();
+                 }
+                 else
+                 {
+                     Rest();
+                 }
+             }
+         }
+
+         public void ComputeTilesCosts()
+         {
+            movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
          }
      } 
  }

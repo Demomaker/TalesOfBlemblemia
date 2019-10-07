@@ -8,8 +8,22 @@ namespace Game
     public class UnitOwner
     {
         protected readonly List<Unit> ownedUnits = new List<Unit>();
-        protected readonly List<Unit> playableUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
+
+        public bool HasNoMorePlayableUnits
+        {
+            get
+            {
+                for (int i = 0; i < ownedUnits.Count; i++)
+                {
+                    if (!ownedUnits[i].HasActed)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
 
         private bool hasLost = false;
         public string Name = "";
@@ -20,19 +34,11 @@ namespace Game
             set => hasLost = value;
         }
 
-        public virtual void Play()
+        public virtual void CheckUnitDeaths()
         {
-            for(int i = 0; i < playableUnits.Count; i++)
+            for (int i = 0; i < ownedUnits.Count; i++)
             {
-                if (playableUnits[i].HasActed)
-                {
-                    RemoveUnitFromPlayableUnits(playableUnits[i]);
-                }
-            }
-
-            for(int i = 0; i < ownedUnits.Count; i++)
-            {
-                if (ownedUnits[i].IsDead)
+                if (ownedUnits[i].NoHealthLeft)
                 {
                     RemoveOwnedUnit(ownedUnits[i]);
                 }
@@ -52,24 +58,19 @@ namespace Game
 
         public void MakeOwnedUnitsUnplayable()
         {
-            foreach (Unit unit in playableUnits)
+            for (int i = 0; i < ownedUnits.Count; i++)
             {
-                unit.HasActed = true;
+                ownedUnits[i].HasActed = true;
             }
         }
 
         private void MakeOwnedUnitsPlayable()
         {
-            for (int i = 0; i < playableUnits.Count; i++)
+            for (int i = 0; i < ownedUnits.Count; i++)
             {
-                playableUnits[i].HasActed = false;
-                playableUnits[i].ResetNumberOfMovesLeft();
+                ownedUnits[i].HasActed = false;
+                ownedUnits[i].ResetNumberOfMovesLeft();
             }
-        }
-
-        public bool HasNoMorePlayableUnits()
-        {
-            return playableUnits.Count <= 0;
         }
 
         public bool HaveAllUnitsDied()
@@ -79,8 +80,6 @@ namespace Game
 
         public void OnTurnGiven()
         {
-            foreach(Unit unit in ownedUnits)
-                playableUnits.Add(unit);
             MakeOwnedUnitsPlayable();
         }
 
@@ -92,17 +91,9 @@ namespace Game
         public void RemoveOwnedUnit(Unit unit)
         {
             unit.HasActed = true;
-            if (playableUnits.Contains(unit))
-                playableUnits.Remove(unit);
             if (ownedUnits.Contains(unit))
                 ownedUnits.Remove(unit);
         }
-
-        public void RemoveUnitFromPlayableUnits(Unit unit)
-        {
-            playableUnits.Remove(unit);
-        }
-
         public void AddEnemyUnit(Unit enemy)
         {
             enemyUnits.Add(enemy);
