@@ -1,7 +1,7 @@
-# Jeu - Projet de départ
+# Tales of Blemblemia
 
 ```
-À faire : Écrire une courte description du projet ici. Remplacer le titre de ce document par le nom de votre jeu.
+Tales of Blemblemia est un tactical rpg. Le jeu se déroule dans le royaume de Blemblemia.
 
 ```
 
