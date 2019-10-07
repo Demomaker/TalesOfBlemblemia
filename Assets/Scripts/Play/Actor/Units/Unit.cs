@@ -147,8 +147,7 @@
              if (currentTile == null)
              {
                  transform.position = tile.WorldPosition;
-                 tile.LinkUnit(this);
-                 currentTile = tile;
+                 LinkUnitToTile(tile);
              }
              else
              {
@@ -156,7 +155,7 @@
                  isMoving = true;
                  List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
                      currentTile.LogicalPosition.x,
-                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y);
+                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
                  path.Reverse();
                  path.RemoveAt(0);
                  path.Add(tile);
@@ -164,6 +163,12 @@
                  MoveByPath(path);
              }
              movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+         }
+
+         private void LinkUnitToTile(Tile tile)
+         {
+             currentTile = tile;
+             tile.LinkUnit(this);
          }
 
 
@@ -240,6 +245,8 @@
 
          public void Die()
          {
+             currentTile.UnlinkUnit();
+             Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
              Destroy(gameObject);
          }
 
@@ -273,8 +280,7 @@
                      i = path.Count;
                  }
              }
-             finalTile.LinkUnit(this);
-             currentTile = finalTile;
+             LinkUnitToTile(finalTile);
              transform.position = currentTile.WorldPosition;
              isMoving = false;
          }
@@ -311,7 +317,9 @@
 
          public void ComputeTilesCosts()
          {
-            movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
+             if (currentTile != null)
+                 movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
          }
+         
      } 
  }
