@@ -87,11 +87,10 @@ namespace Game
             }
         }
 
-        public static List<Tile> PrepareFindPath(GridController grid, int[,] movementCosts,
-            int fromX, int fromY, int toX, int toY)
+        public static List<Tile> PrepareFindPath(GridController grid, int[,] movementCosts, int fromX, int fromY, int toX, int toY)
         {
             //If there is a unit on the target the unit must find the closest available tile.
-            if (grid.GetTile(toX, toY).LinkedUnit!=null)
+            if (grid.GetTile(toX, toY).LinkedUnit != null)
             {
                 List<Tile> currentPath = null;
                 //check for the closest available tile to target
@@ -104,6 +103,7 @@ namespace Game
                 currentPath = CheckUpOfTarget(grid, movementCosts, fromX, fromY, toX, toY, currentPath);
                 //Check down
                 currentPath = CheckDownOfTarget(grid, movementCosts, fromX, fromY, toX, toY, currentPath);
+                
                 return currentPath;
             }
             else
@@ -158,8 +158,7 @@ namespace Game
             return currentPath;
         }
 
-        private static List<Tile> CheckRightOfTarget(GridController grid, int[,] movementCosts, int fromX, int fromY, int toX,
-            int toY, List<Tile> currentPath)
+        private static List<Tile> CheckRightOfTarget(GridController grid, int[,] movementCosts, int fromX, int fromY, int toX, int toY, List<Tile> currentPath)
         {
             if (grid.GetTile(toX + 1, toY).LinkedUnit == null)
             {
@@ -179,7 +178,7 @@ namespace Game
             //Exit statement
             if (grid.GetTile(fromX, fromY).Equals(grid.GetTile(toX, toY)))
             {
-                path.Remove(path.Last());
+                path.Remove(null);
                 
                 return path;
             }
@@ -189,6 +188,7 @@ namespace Game
             int x = 0;
             int y = 0;
             
+            //Check Left
             (x,y) = CheckLeftMovement(grid, movementCosts, path, toX, toY, x, y);
             
             //Check Right
