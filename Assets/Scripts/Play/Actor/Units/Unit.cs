@@ -159,7 +159,7 @@
 
          //TODO changements pour la mécanique d'attaque
          //La chance de hit, le coup critique, la riposte ensuite
-         public bool Attack(Unit target, bool isCountering = true)
+         public bool Attack(Unit target, bool isCountering = false)
          {
              if (TargetIsInRange(target))
              {
@@ -203,8 +203,8 @@
              
              //A unit cannot make a critical hit on a counter
              //A unit cannot counter on a counter
-             if (isCountering && !target.IsDead)
-                 target.Attack(this, false);
+             if (!isCountering && !target.IsDead)
+                 target.Attack(this, true);
          }
 
          private void LookAt(Vector3 target)
