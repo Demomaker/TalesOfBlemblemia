@@ -92,6 +92,6 @@ public class LevelController : MonoBehaviour
         //TODO: Uncomment below when Turns are available
         levelFailed =
             defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
-            (defeatIfProtectedIsKilled && unitToProtect.IsDead) || (defeatIfAllPlayerUnitsDied /*&& HumanPlayer.Instance.HaveAllUnitsDied()*/);
+            (defeatIfProtectedIsKilled && unitToProtect.IsDead) || (defeatIfAllPlayerUnitsDied /*&& HumanPlayer.Instance.HaveAllUnitsDied()*/) || GameObject.Find("Franklem").GetComponent<Unit>().IsDead;
     }
 }
