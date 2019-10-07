@@ -103,7 +103,8 @@
          public int MovementRange => Stats.MoveSpeed;
          public int AttackRange => 1;
          
-         bool isMoving = false;
+         private bool isMoving = false;
+         private bool isAttacking = false;
 
          private void Awake()
          {
@@ -162,15 +163,53 @@
          {
              if (TargetIsInRange(target))
              {
-                 HasActed = true;
-                 target.currentHealthPoints -= 2;
-                 //A unit cannot make a critical hit on a counter
-                 //A unit cannot counter on a counter
-                 if (!isCountering && !target.IsDead)
-                     target.Attack(this, false);
+                 StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
                  return true;
              }
              return false;
+         }
+
+         private IEnumerator Attack(Unit target, bool isCountering, float duration)
+         {
+             if (isAttacking) yield break;
+             isAttacking = true;
+             
+             float counter = 0;
+             Vector3 startPos = transform.position;
+             Vector3 targetPos = (target.CurrentTile.WorldPosition + startPos) / 2f;
+             LookAt(targetPos);
+             duration /= 2;
+
+             while (counter < duration)
+             {
+                 counter += Time.deltaTime;
+                 transform.position = Vector3.Lerp(startPos, targetPos, counter / duration);
+                 yield return null;
+             }
+
+             HasActed = true;
+             target.currentHealthPoints -= 2;
+             counter = 0;
+             
+             while (counter < duration)
+             {
+                 counter += Time.deltaTime;
+                 transform.position = Vector3.Lerp(targetPos, startPos, counter / duration);
+                 yield return null;
+             }
+             
+             transform.position = startPos;
+             isAttacking = false;
+             
+             //A unit cannot make a critical hit on a counter
+             //A unit cannot counter on a counter
+             if (isCountering && !target.IsDead)
+                 target.Attack(this, false);
+         }
+
+         private void LookAt(Vector3 target)
+         {
+             transform.localRotation = Quaternion.Euler(0, target.x < transform.position.x ? 180 : 0, 0);
          }
 
          public bool TargetIsInRange(Unit target)
@@ -185,16 +224,12 @@
          
          public void MoveByPath(List<Tile> path)
          {
-             StartCoroutine(MoveByPath(path,0.2f));
+             StartCoroutine(MoveByPath(path,Constants.MOVEMENT_DURATION));
          }
 
-         private IEnumerator MoveByPath(List<Tile> path, float duration = 0.2f)
+         private IEnumerator MoveByPath(List<Tile> path, float duration)
          {
-             if (isMoving)
-             {
-                 yield break;
-             }
-             
+             if (isMoving) yield break;
              isMoving = true;
 
              foreach (var tile in path)
@@ -202,8 +237,8 @@
                  float counter = 0;
 
                  if(path.IndexOf(tile) != path.Count - 1) movesLeft -= tile.CostToMove;
-                 
                  Vector3 startPos = transform.position;
+                 LookAt(tile.WorldPosition);
 
                  while (counter < duration)
                  {
@@ -214,7 +249,6 @@
              }
 
              transform.position = currentTile.WorldPosition;
-             
              isMoving = false;
          }
 
