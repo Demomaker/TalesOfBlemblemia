@@ -18,7 +18,7 @@ namespace Game
         
         private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed && linkedUnit.CanStillMove;
+        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
         private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;

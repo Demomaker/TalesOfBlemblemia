@@ -18889,7 +18889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb984848d5b1460591abed472fca1966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosition: {x: 0, y: 7}
+  initialPosition: {x: 6, y: 7}
   isEnemy: 0
 --- !u!1 &920544017
 GameObject:
