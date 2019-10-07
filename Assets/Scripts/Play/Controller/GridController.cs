@@ -59,7 +59,7 @@ using UnityEngine.UI;
                     if (movementCosts[i, j] > 0)
                     {
                         tile = GetTile(i, j);
-                        if (tile.IsAvailable && movementCosts[i, j] <= linkedUnit.MovementRange)
+                        if (tile.IsAvailable && movementCosts[i, j] <= linkedUnit.MovesLeft)
                         {
                             tile.DisplayMoveActionPossibility();
                         }
