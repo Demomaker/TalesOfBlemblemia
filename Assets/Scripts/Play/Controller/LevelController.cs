@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Game;
+using Harmony;
 using UnityEngine;
 using Finder = Harmony.Finder;
 
@@ -11,10 +12,14 @@ namespace Game
     /// Controller for each individual level. Manages the turn functionalities as well as the players' turns
     /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne
     /// </summary>
+    [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
         [SerializeField] private string levelName;
 
+
+        private Unit[] units = null;
+        
         private UnitOwner currentPlayer;
         [NonSerialized] private readonly List<UnitOwner> players = new List<UnitOwner>();
 
@@ -78,7 +83,6 @@ namespace Game
                 currentPlayer.OnTurnGiven();
             }
         }
-
         private void InitializePlayersAndUnits()
         {
             UnitOwner player1 = HumanPlayer.Instance;
@@ -86,7 +90,7 @@ namespace Game
             player1.Name = "Leader of Allies";
             player2.Name = "Leader of Enemies";
 
-            Unit[] units = FindObjectsOfType<Unit>();
+            units = FindObjectsOfType<Unit>();
 
             GiveUnits(units, false, player1);
             GiveUnits(units, true, player2);
@@ -140,6 +144,7 @@ namespace Game
 
         public void GiveTurnToNextPlayer()
         {
+            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
             isComputerPlaying = false;
             currentPlayer.MakeOwnedUnitsUnplayable();
             int nextPlayerIndex = (players.IndexOf(currentPlayer) + 1) % 2;
@@ -147,5 +152,14 @@ namespace Game
             if (players.ElementAt(nextPlayerIndex) != null)
                 currentPlayer = players.ElementAt(nextPlayerIndex);
         }
+
+        public void ReevaluateAllMovementCosts()
+        {
+            for (int i = 0; i < units.Length; i++)
+            {
+                units[i].ComputeTilesCosts();
+            }
+        }
+        
     }
 }
