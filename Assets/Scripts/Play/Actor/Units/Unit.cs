@@ -144,8 +144,8 @@
                  movesLeft -= currentTile.CostToMove;
                  MoveByPath(path);
              }
+             tile.LinkUnit(this);
              currentTile = tile;
-             currentTile.LinkUnit(this);
              movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
 
