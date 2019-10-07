@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Game
 {
+    /// <summary>
+    /// The computer player that controls its units
+    /// Authors: Jérémie Bertrand, Zacharie Lavigne
+    /// </summary>
     public class ComputerPlayer : UnitOwner
     {
         private static ComputerPlayer instance = null;

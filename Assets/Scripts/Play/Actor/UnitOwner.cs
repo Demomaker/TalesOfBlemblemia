@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Game
 {
+    /// <summary>
+    /// A virtual player, be it human or artificial
+    /// Authors: Mike Bédard, Zacharie Lavigne
+    /// </summary>
     public class UnitOwner
     {
         protected readonly List<Unit> ownedUnits = new List<Unit>();
@@ -94,6 +98,7 @@ namespace Game
             if (ownedUnits.Contains(unit))
                 ownedUnits.Remove(unit);
         }
+        
         public void AddEnemyUnit(Unit enemy)
         {
             enemyUnits.Add(enemy);

@@ -7,7 +7,7 @@
 
  namespace Game
  {
-     //Authors: Jérémie Bertrand & Mike Bédard
+     //Authors: Jérémie Bertrand, Zacharie Lavigne
      public class Unit : MonoBehaviour
      {
          [SerializeField] private Vector2Int initialPosition;
@@ -158,16 +158,7 @@
                      currentTile.LogicalPosition.x,
                      currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y);
                  path.Reverse();
-                 try
-                 {
-                     path.RemoveAt(0);
-
-                 }
-                 catch (Exception e)
-                 {
-                     Console.WriteLine(e);
-                     throw;
-                 }
+                 path.RemoveAt(0);
                  path.Add(tile);
                  movesLeft -= currentTile.CostToMove;
                  MoveByPath(path);
@@ -251,8 +242,8 @@
          {
              Destroy(gameObject);
          }
-         
-         public void MoveByPath(List<Tile> path)
+
+         private void MoveByPath(List<Tile> path)
          {
              StartCoroutine(MoveByPath(path,Constants.MOVEMENT_DURATION));
          }
@@ -297,6 +288,7 @@
          
          /// <summary>
          /// Executes an action
+         /// Author: Jérémie Bertrand, Zacharie Lavigne
          /// </summary>
          /// <param name="actionToDo">The action to execute on this turn</param>
          public void ExecuteAction(Action actionToDo)

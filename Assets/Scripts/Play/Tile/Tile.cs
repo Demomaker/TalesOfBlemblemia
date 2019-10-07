@@ -113,6 +113,14 @@ namespace Game
             return true;
         }
 
+        /// <summary>
+        /// Verifies if a tile is adjacent on a X or Y axis to this tile
+        /// Author: Jérémie Bertrand, Zacharie Lavigne
+        /// </summary>
+        /// <param name="otherTile">The other tile to verify adjacency</param>
+        /// <param name="range">The threshold of adjacency</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">The range must be greater than 0</exception>
         public bool IsWithinRange(Tile otherTile, int range)
         {
             if (range <= 0)
