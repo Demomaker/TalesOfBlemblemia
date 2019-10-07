@@ -1,4 +1,5 @@
-﻿﻿using UnityEngine;
+﻿using UnityEngine;
+using Random = System.Random;
 
 namespace Game
 {
@@ -7,13 +8,15 @@ namespace Game
     {
         private static GameController gameController;
         private static GridController gridController;
-
+        private static Random random;
+        
         public static GameController GameController
         {
             get
             {
                 if (gameController == null)
-                    gameController = GameObject.FindWithTag(Constants.GAME_CONTROLLER_TAG).GetComponent<GameController>();
+                    gameController = GameObject.FindWithTag(Constants.GAME_CONTROLLER_TAG)
+                        .GetComponent<GameController>();
                 return gameController;
             }
             set => gameController = value;
@@ -24,9 +27,28 @@ namespace Game
             get
             {
                 if (gridController == null)
-                    gridController = GameObject.FindWithTag(Constants.GRID_CONTROLLER_TAG).GetComponent<GridController>();
+                    gridController = GameObject.FindWithTag(Constants.GRID_CONTROLLER_TAG)
+                        .GetComponent<GridController>();
                 return gridController;
             }
+        }
+        //Author: Zacharie Lavigne
+        public static Random Random
+        {
+            get
+            {
+                if (random == null)
+                    random = new Random();
+                return random;
+            }
+        } 
+        
+        //Author : Antoine Lessard
+        public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);
+
+        private static T FindWithTag<T>(string tag)
+        {
+            return GameObject.FindWithTag(tag).GetComponent<T>();
         }
     }
 }

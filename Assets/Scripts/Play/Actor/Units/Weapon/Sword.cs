@@ -20,7 +20,7 @@
         {
             if (weaponStats == null)
             {
-                this.weaponStats = new UnitStats(0, 0, 2, 0.80f, 0.35f);
+                this.weaponStats = new UnitStats(SWORD_MAX_HEALTH_POINTS, SWORD_MOVE_SPEED, SWORD_ATTACK_STRENGTH, SWORD_HIT_RATE, SWORD_CRIT_RATE);
             }
         }
     }

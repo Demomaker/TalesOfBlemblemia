@@ -3,6 +3,7 @@
     /// Auteur: Zacharie Lavigne
     public class Spear : Weapon
     {
+        
         private static Spear basicWeapon = new Spear();
         public static Spear BasicWeapon
         {
@@ -20,7 +21,7 @@
         {
             if (weaponStats == null)
             {
-                this.weaponStats = new UnitStats(0, 0, 2, 0.95f, 0.15f);
+                this.weaponStats = new UnitStats(SPEAR_MAX_HEALTH_POINTS, SPEAR_MOVE_SPEED, SPEAR_ATTACK_STRENGTH, SPEAR_HIT_RATE, SPEAR_CRIT_RATE);
             }
         }
     }

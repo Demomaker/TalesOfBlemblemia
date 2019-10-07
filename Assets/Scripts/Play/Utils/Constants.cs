@@ -13,6 +13,11 @@
         public const string LEVEL_2_SCENE_NAME = "Level2";
         public const string LEVEL_3_SCENE_NAME = "ParabeneForest";
         public const string LEVEL_4_SCENE_NAME = "Level4";
+        public const string LEVEL_5_SCENE_NAME = "Level5";
+        public const string LEVEL_6_SCENE_NAME = "Level6";
+        public const string LEVEL_7_SCENE_NAME = "Level7";
+        public const string LEVEL_8_SCENE_NAME = "Level8";
+        public const string OVERWORLD_SCENE_NAME = "Overworld";
         public const string GAME_CONTROLLER_TAG = "GameController";
         public const string GRID_CONTROLLER_TAG = "GridController";
         public const string PLAYER_NAME = "Leader of Allies";

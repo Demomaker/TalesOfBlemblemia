@@ -8,8 +8,7 @@ namespace Game
         {
             for (int i = 0; i < playableUnits.Count; i++)
             {
-                                                                    //TODO changer pour la grid de jeu
-                AiController.PlayTurn(playableUnits[i], ennemyUnits, new Grid());
+                AiController.PlayTurn(playableUnits[i], ennemyUnits);
             }
             base.Play();
         }

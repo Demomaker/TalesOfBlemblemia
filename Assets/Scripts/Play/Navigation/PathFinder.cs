@@ -271,5 +271,17 @@ namespace Game
             pathInOrder.Reverse();
             return pathInOrder;
         }
+
+        /// <summary>
+        /// Calculates de cost of movements needed to travel a path
+        /// Author: Zacharie Lavigne
+        /// </summary>
+        /// <param name="path">The path to calculate the cost</param>
+        /// <param name="movementCosts">The cost in movements to get to every tile in the grid for a specific unit</param>
+        /// <returns>The cost of movement of the path</returns>
+        public static int CalculatePathCost(List<Tile> path, int[,] movementCosts)
+        {
+            return movementCosts[path.Last().LogicalPosition.x, path.Last().LogicalPosition.y];
+        }
     }
 }
