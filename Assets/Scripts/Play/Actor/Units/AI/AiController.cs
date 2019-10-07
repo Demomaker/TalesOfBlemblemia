@@ -34,7 +34,7 @@ namespace Game
             playableUnit.MoveByPath(actionToDo.Path);
             if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
             {
-                if(!playableUnit.Attack(actionToDo.Target, true))
+                if(!playableUnit.Attack(actionToDo.Target))
                     playableUnit.Rest();
             }
             else

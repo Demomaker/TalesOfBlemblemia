@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -281,7 +282,9 @@ namespace Game
         /// <returns>The cost of movement of the path</returns>
         public static int CalculatePathCost(List<Tile> path, int[,] movementCosts)
         {
-            return movementCosts[path.Last().LogicalPosition.x, path.Last().LogicalPosition.y];
+            if (path.Count > 0)
+                return movementCosts[path.Last().LogicalPosition.x, path.Last().LogicalPosition.y];
+            return 0;
         }
     }
 }
