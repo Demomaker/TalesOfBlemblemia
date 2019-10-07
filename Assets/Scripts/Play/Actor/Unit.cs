@@ -1,6 +1,8 @@
 ﻿﻿using System;
  using System.Collections;
  using System.Collections.Generic;
+ using System.Linq;
+ using DG.Tweening;
  using UnityEngine;
 
  namespace Game
@@ -104,6 +106,8 @@
          public bool IsDead => currentHealthPoints <= 0;
          public int MovementRange => Stats.MoveSpeed;
          public int AttackRange => 1;
+         
+         bool isMoving = false;
 
          private void Awake()
          {
@@ -125,17 +129,27 @@
              MovesLeft = Constants.NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN;
          }
 
-         private void MoveTo(Vector3 position)
-         {
-             transform.position = position;
-         }
-
          public void MoveTo(Tile tile)
          {
-             MovesLeft -= 1;
-             if (currentTile != null) currentTile.UnlinkUnit();
+             if (tile == null) return;
+             if (currentTile == null)
+             {
+                 transform.position = tile.WorldPosition;
+             }
+             else
+             {
+                 currentTile.UnlinkUnit();
+                 List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
+                     currentTile.LogicalPosition.x,
+                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y);
+                 path.Reverse();
+                 path.RemoveAt(0);
+                 path.Add(tile);
+                 movesLeft -= currentTile.CostToMove;
+                 MoveByPath(path);
+             }
              currentTile = tile;
-             if (currentTile != null && currentTile.LinkUnit(this)) MoveTo(currentTile.WorldPosition);
+             currentTile.LinkUnit(this);
              movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
 
@@ -143,8 +157,7 @@
          private IEnumerator InitPosition()
          {
              yield return new WaitForEndOfFrame();
-             MovesLeft += 1;
-             MoveTo(Finder.GridController.GetTile(initialPosition.x, initialPosition.y));
+             MoveTo(gridController.GetTile(initialPosition.x, initialPosition.y));
          }
 
          //TODO changements pour la mécanique d'attaque
@@ -169,14 +182,39 @@
              Destroy(gameObject);
          }
 
-
          public void MoveByPath(List<Tile> path)
          {
-             //TODO changer ca, peut etre dans une coroutine
-             for (int i = 0; i < path.Count; i++)
+             StartCoroutine(MoveByPath(path,0.2f));
+         }
+
+         private IEnumerator MoveByPath(List<Tile> path, float duration = 0.2f)
+         {
+             if (isMoving)
              {
-                 MoveTo(path[i]);
+                 yield break;
              }
+             
+             isMoving = true;
+
+             foreach (var tile in path)
+             {
+                 float counter = 0;
+
+                 if(path.IndexOf(tile) != path.Count - 1) movesLeft -= tile.CostToMove;
+                 
+                 Vector3 startPos = transform.position;
+
+                 while (counter < duration)
+                 {
+                     counter += Time.deltaTime;
+                     transform.position = Vector3.Lerp(startPos, tile.WorldPosition, counter / duration);
+                     yield return null;
+                 }
+             }
+
+             transform.position = currentTile.WorldPosition;
+             
+             isMoving = false;
          }
 
          public void Rest()

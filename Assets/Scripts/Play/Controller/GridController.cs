@@ -69,29 +69,6 @@ using UnityEngine.UI;
                     }
                 }
             }
-            /*for (int i = -linkedUnit.MovementRange; i <= linkedUnit.MovementRange; i++)
-            {
-                for(int j = -linkedUnit.MovementRange; j <= linkedUnit.MovementRange ; j++)
-                {
-                    if (i != 0 || j != 0)
-                    {
-                        Vector2Int position = fromTile.LogicalPosition + new Vector2Int(i, j);
-                        if (IsValidGridPosition(position.x, position.y))
-                        {
-                            int distance = Math.Abs(i) + Math.Abs(j);
-                            Tile tile = GetTile(position.x, position.y);
-                            if (distance <= linkedUnit.MovementRange && tile.IsAvailable)
-                            {
-                                tile.DisplayMoveActionPossibility();
-                            }
-                            else if (distance <= linkedUnit.AttackRange && tile.LinkedUnit != null && tile.LinkedUnit.IsEnemy)
-                            {
-                                tile.DisplayAttackActionPossibility();
-                            }
-                        }
-                    }
-                }
-            }*/
         }
 
         public Tile GetTile(int x, int y)
