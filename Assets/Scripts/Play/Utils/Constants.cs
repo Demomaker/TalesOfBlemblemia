@@ -20,6 +20,8 @@
         public const string OVERWORLD_SCENE_NAME = "Overworld";
         public const string GAME_CONTROLLER_TAG = "GameController";
         public const string GRID_CONTROLLER_TAG = "GridController";
+        public const float ATTACK_DURATION = 0.3f;
+        public const float MOVEMENT_DURATION = 0.3f;
         public const string PLAYER_NAME = "Leader of Allies";
         public const string AI_NAME = "Leader of Enemies";
         public const int DEFAULT_CHARACTER_HEALTH_POINTS = 6;
