@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Game
@@ -31,7 +32,7 @@ namespace Game
         /// <param name="actionToDo">The action to execute on this turn</param>
         private static void ExecuteAction(Unit playableUnit, Action actionToDo)
         {
-            playableUnit.MoveByPath(actionToDo.Path);
+            playableUnit.MoveTo(actionToDo.Path.Last());
             if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
             {
                 if(!playableUnit.Attack(actionToDo.Target))
