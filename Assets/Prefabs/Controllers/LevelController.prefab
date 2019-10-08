@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3032034816976037128}
   m_Layer: 0
   m_Name: LevelController
-  m_TagString: LevelController
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,4 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a019ce7b817a7042a925124c03dbe2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelName: 
+  overworldName: Overworld
