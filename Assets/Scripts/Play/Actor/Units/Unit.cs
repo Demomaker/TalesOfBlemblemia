@@ -212,14 +212,15 @@
              if (!isCountering)
              {
                  HasActed = true;
-                 Debug.Log("Unit attacked!");
              }
 
-             int damage = Random.value <= Stats.HitRate ? Stats.AttackStrength : 0;
+             float hitRate = Stats.HitRate - target.currentTile.DefenseRate;
+             int damage = Random.value <= hitRate ? Stats.AttackStrength : 0;
              if (!isCountering && target.WeaponType == WeaponAdvantage)
              {
-                 
+                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
              }
+             
              target.CurrentHealthPoints -= damage;
              counter = 0;
              

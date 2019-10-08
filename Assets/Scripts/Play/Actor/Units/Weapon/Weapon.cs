@@ -21,7 +21,7 @@
         protected const int SWORD_ATTACK_STRENGTH = 2;
         protected const int SWORD_MOVE_SPEED = 0;
         protected const int SWORD_MAX_HEALTH_POINTS = 0;
-        
+
         protected UnitStats weaponStats;
         /// <summary>
         /// Les bonus que l'arme va offrir à une unité

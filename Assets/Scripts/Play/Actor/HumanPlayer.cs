@@ -20,7 +20,6 @@ namespace Game
         public override void CheckUnitDeaths()
         {
             base.CheckUnitDeaths();
-            Debug.Log("Beginning of player turn");
         }
 
         private HumanPlayer()
