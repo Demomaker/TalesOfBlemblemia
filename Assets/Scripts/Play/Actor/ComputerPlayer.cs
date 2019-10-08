@@ -1,55 +1,16 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game
 {
-    /// <summary>
-    /// The computer player that controls its units
-    /// Authors: Jérémie Bertrand, Zacharie Lavigne
-    /// </summary>
     public class ComputerPlayer : UnitOwner
     {
-        private static ComputerPlayer instance = null;
-        
-        public static ComputerPlayer Instance
+        public override void Play()
         {
-            get
+            for (int i = 0; i < playableUnits.Count; i++)
             {
-                if (instance == null)
-                {
-                    instance = new ComputerPlayer();
-                }
-                return instance;
+                AiController.PlayTurn(playableUnits[i], ennemyUnits);
             }
-        }
-
-        private ComputerPlayer()
-        {
-        }
-
-        public override void CheckUnitDeaths()
-        {
-            Debug.Log("Beginning of ai turn");
-            base.CheckUnitDeaths();
-        }
-
-        public IEnumerator PlayUnits()
-        {
-            for (int i = 0; i < ownedUnits.Count; i++)
-            {
-                var currentUnit = ownedUnits[i];
-                if (!currentUnit.HasActed)
-                {
-                    currentUnit.ComputeTilesCosts();
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits);
-                    while (!currentUnit.HasActed)
-                    {
-                        currentUnit.ExecuteAction(action);
-                        yield return null;
-                    }
-                    base.CheckUnitDeaths();
-                }
-            } 
+            base.Play();
         }
     }
 }

@@ -13,8 +13,6 @@ TagManager:
   - Database
   - DialogueUi
   - UiPortrait
-  - GridController
-  - LevelController
   layers:
   - Default
   - TransparentFX

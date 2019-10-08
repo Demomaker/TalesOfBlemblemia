@@ -1,4 +1,3 @@
- using System;
  using System.Collections;
  using System.Collections.Generic;
  using System.Linq;
@@ -7,7 +6,7 @@
 
  namespace Game
  {
-     //Authors: Jérémie Bertrand, Zacharie Lavigne
+     //Authors: Jérémie Bertrand & Mike Bédard
      public class Unit : MonoBehaviour
      {
          [SerializeField] private Vector2Int initialPosition;
@@ -45,18 +44,7 @@
          /// </summary>
          private int currentHealthPoints;
 
-         public int CurrentHealthPoints
-         {
-             get { return currentHealthPoints; }
-             private set
-             {
-                 currentHealthPoints = value;
-                 if (NoHealthLeft)
-                 {
-                     Die();
-                 }
-             }
-         }
+         public int CurrentHealthPoints => currentHealthPoints;
 
          /// <summary>
          /// The unit's stats
@@ -91,8 +79,8 @@
              get
              {
                  int maxGain = Stats.MaxHealthPoints / 2;
-                 if (CurrentHealthPoints + maxGain > Stats.MaxHealthPoints)
-                     return Stats.MaxHealthPoints - CurrentHealthPoints;
+                 if (currentHealthPoints + maxGain > Stats.MaxHealthPoints)
+                     return Stats.MaxHealthPoints - currentHealthPoints;
                  return maxGain;
              }
          }
@@ -111,15 +99,12 @@
          public bool HasActed { get; set; } = false;
 
          public bool IsCurrentlySelected => gridController.SelectedUnit == this;
-         public bool NoHealthLeft => CurrentHealthPoints <= 0;
+         public bool IsDead => currentHealthPoints <= 0;
          public int MovementRange => Stats.MoveSpeed;
          public int AttackRange => 1;
          
          private bool isMoving = false;
-         public bool IsMoving => isMoving;
-
          private bool isAttacking = false;
-         public bool IsAttacking => isAttacking;
 
          private void Awake()
          {
@@ -127,7 +112,7 @@
              
              classStats = UnitStats.SoldierUnitStats;
              weapon = Sword.BasicWeapon;
-             CurrentHealthPoints = Stats.MaxHealthPoints;
+             currentHealthPoints = Stats.MaxHealthPoints;
              movesLeft = Stats.MoveSpeed;
          }
 
@@ -143,32 +128,26 @@
 
          public void MoveTo(Tile tile)
          {
-             if (tile == null || tile == currentTile || isMoving) return;
+             if (tile == null) return;
              if (currentTile == null)
              {
                  transform.position = tile.WorldPosition;
-                 LinkUnitToTile(tile);
              }
              else
              {
                  currentTile.UnlinkUnit();
-                 isMoving = true;
                  List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
                      currentTile.LogicalPosition.x,
-                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
+                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y);
                  path.Reverse();
                  path.RemoveAt(0);
                  path.Add(tile);
                  movesLeft -= currentTile.CostToMove;
                  MoveByPath(path);
              }
-             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
-         }
-
-         private void LinkUnitToTile(Tile tile)
-         {
-             currentTile = tile;
              tile.LinkUnit(this);
+             currentTile = tile;
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
 
 
@@ -208,13 +187,8 @@
                  yield return null;
              }
 
-             if (!isCountering)
-             {
-                 HasActed = true;
-                 Debug.Log("Unit attacked!");
-             }
-
-             target.CurrentHealthPoints -= 2;
+             HasActed = true;
+             target.currentHealthPoints -= 2;
              counter = 0;
              
              while (counter < duration)
@@ -229,7 +203,7 @@
              
              //A unit cannot make a critical hit on a counter
              //A unit cannot counter on a counter
-             if (!isCountering && !target.NoHealthLeft)
+             if (!isCountering && !target.IsDead)
                  target.Attack(this, true);
          }
 
@@ -245,42 +219,35 @@
 
          public void Die()
          {
-             currentTile.UnlinkUnit();
-             Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
              Destroy(gameObject);
          }
-
-         private void MoveByPath(List<Tile> path)
+         
+         public void MoveByPath(List<Tile> path)
          {
              StartCoroutine(MoveByPath(path,Constants.MOVEMENT_DURATION));
          }
 
          private IEnumerator MoveByPath(List<Tile> path, float duration)
          {
-             Tile finalTile = null;
-             for (int i = 0; i < path.Count; i++)
+             if (isMoving) yield break;
+             isMoving = true;
+
+             foreach (var tile in path)
              {
-                 finalTile = path[i];
                  float counter = 0;
 
-                 if(path.IndexOf(finalTile) != path.Count - 1) 
-                     movesLeft -= finalTile.CostToMove;
+                 if(path.IndexOf(tile) != path.Count - 1) movesLeft -= tile.CostToMove;
                  Vector3 startPos = transform.position;
-                 LookAt(finalTile.WorldPosition);
+                 LookAt(tile.WorldPosition);
 
                  while (counter < duration)
                  {
                      counter += Time.deltaTime;
-                     transform.position = Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
+                     transform.position = Vector3.Lerp(startPos, tile.WorldPosition, counter / duration);
                      yield return null;
                  }
-
-                 if (movesLeft < 0 && path.IndexOf(finalTile) != path.Count - 1)
-                 {
-                     i = path.Count;
-                 }
              }
-             LinkUnitToTile(finalTile);
+
              transform.position = currentTile.WorldPosition;
              isMoving = false;
          }
@@ -288,38 +255,7 @@
          public void Rest()
          {
              HasActed = true;
-             CurrentHealthPoints += HpGainedByResting;
-             Debug.Log("Unit rested!");
+             currentHealthPoints += HpGainedByResting;
          }
-         
-         /// <summary>
-         /// Executes an action
-         /// Author: Jérémie Bertrand, Zacharie Lavigne
-         /// </summary>
-         /// <param name="actionToDo">The action to execute on this turn</param>
-         public void ExecuteAction(Action actionToDo)
-         {
-             if (!isMoving && movesLeft > 0 && actionToDo.Path.Count > 1 && actionToDo.Path.Last() != currentTile) 
-                 MoveTo(actionToDo.Path.Last());
-             else if (!isMoving && !isAttacking)
-             {
-                 if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
-                 {
-                     if(!Attack(actionToDo.Target))
-                         Rest();
-                 }
-                 else
-                 {
-                     Rest();
-                 }
-             }
-         }
-
-         public void ComputeTilesCosts()
-         {
-             if (currentTile != null)
-                 movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
-         }
-         
      } 
  }

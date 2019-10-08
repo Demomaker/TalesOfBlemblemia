@@ -66,7 +66,7 @@ namespace Game
             if (LinkedUnitCanBeAttacked)
             {
                 gridController.SelectedUnit.Attack(linkedUnit);
-                if (linkedUnit.NoHealthLeft)
+                if (linkedUnit.IsDead)
                 {
                     linkedUnit.Die();
                     gridController.SelectedUnit.MoveTo(this);
@@ -101,10 +101,8 @@ namespace Game
 
         public bool LinkUnit(Unit unit)
         {
-            if (!IsWalkable) 
-                return false;
+            if (!IsWalkable) return false;
             this.linkedUnit = unit;
-            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
             return IsOccupiedByAUnit;
         }
 
@@ -115,19 +113,12 @@ namespace Game
             return true;
         }
 
-        /// <summary>
-        /// Verifies if a tile is adjacent on a X or Y axis to this tile
-        /// Author: Jérémie Bertrand, Zacharie Lavigne
-        /// </summary>
-        /// <param name="otherTile">The other tile to verify adjacency</param>
-        /// <param name="range">The threshold of adjacency</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException">The range must be greater than 0</exception>
         public bool IsWithinRange(Tile otherTile, int range)
         {
             if (range <= 0)
                 throw  new ArgumentException("Range should be higher than zero");
-            return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
+            return (Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) <= range
+                && Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range);
         }
     }
 

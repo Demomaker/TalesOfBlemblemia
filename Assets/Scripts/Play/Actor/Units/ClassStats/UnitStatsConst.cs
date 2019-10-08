@@ -1,6 +1,6 @@
 ﻿namespace Game
 {
-    public class HumanPlayer : UnitOwner
+    public static class UnitStatsConst
     {
         
     }
