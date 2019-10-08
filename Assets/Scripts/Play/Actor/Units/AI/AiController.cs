@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Game
@@ -14,41 +15,14 @@ namespace Game
         /// The number of actions from which the enemy may choose randomly from based on the difficulty level 
         /// </summary>
         private static int nbOfChoice = 5;
-        /// <summary>
-        /// Chooses an action to do for a unit and executes it
-        /// </summary>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
-        /// <param name="enemyUnits">The player's units</param>
-        public static void PlayTurn(Unit playableUnit, List<Unit> enemyUnits)
-        {
-            Action actionToDo = DetermineAction(playableUnit, enemyUnits);
-            ExecuteAction(playableUnit, actionToDo);
-        }
-        /// <summary>
-        /// Executes an enemy unit's turn action
-        /// </summary>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
-        /// <param name="actionToDo">The action to execute on this turn</param>
-        private static void ExecuteAction(Unit playableUnit, Action actionToDo)
-        {
-            playableUnit.MoveByPath(actionToDo.Path);
-            if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
-            {
-                if(!playableUnit.Attack(actionToDo.Target, true))
-                    playableUnit.Rest();
-            }
-            else
-            {
-                playableUnit.Rest();
-            }
-        }
+
         /// <summary>
         /// Finds an action to do for an AI controlled unit on its turn
         /// </summary>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>The action the unit should play on its turn</returns>
-        private static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits)
+        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits)
         {
             //Every potential actions the unit could do
             List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
@@ -235,7 +209,7 @@ namespace Game
         private static List<Tile> FindPathTo(Unit playableUnit, Unit potentialTarget)
         {
             return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-               potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y);
+               potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y, playableUnit.IsEnemy);
         }
         /// <summary>
         /// Finds the shortest path to a target position
@@ -246,7 +220,7 @@ namespace Game
         private static List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
         {
             return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-                targetPosition.x, targetPosition.y);
+                targetPosition.x, targetPosition.y, playableUnit.IsEnemy);
         }
         /// <summary>
         /// Initializes action based on the unit's enemies
