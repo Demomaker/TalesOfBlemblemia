@@ -1634,7 +1634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb984848d5b1460591abed472fca1966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosition: {x: 2, y: 8}
+  initialPosition: {x: 5, y: 5}
   isEnemy: 1
 --- !u!1 &101582735
 GameObject:
@@ -18912,15 +18912,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 21817845905552890, guid: 386cff33803d9e742ab386963032c720,
+    - target: {fileID: 9184210282831072271, guid: 386cff33803d9e742ab386963032c720,
         type: 3}
-      propertyPath: initialPosition.x
+      propertyPath: m_Size.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184210282831072271, guid: 386cff33803d9e742ab386963032c720,
+        type: 3}
+      propertyPath: m_Size.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 21817845905552890, guid: 386cff33803d9e742ab386963032c720,
         type: 3}
+      propertyPath: initialPosition.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 21817845905552890, guid: 386cff33803d9e742ab386963032c720,
+        type: 3}
       propertyPath: initialPosition.y
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 386cff33803d9e742ab386963032c720, type: 3}
@@ -28083,12 +28093,12 @@ PrefabInstance:
     - target: {fileID: 2153022417438629077, guid: 081637307fdd0074d8e9979882a9ea7b,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2153022417438629077, guid: 081637307fdd0074d8e9979882a9ea7b,
         type: 3}
       propertyPath: m_Size.y
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2153022417438629077, guid: 081637307fdd0074d8e9979882a9ea7b,
         type: 3}
