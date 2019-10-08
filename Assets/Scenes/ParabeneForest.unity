@@ -15754,6 +15754,18 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1024871815642477055, guid: 386cff33803d9e742ab386963032c720, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 386cff33803d9e742ab386963032c720, type: 3}
+--- !u!114 &746879006 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 21817845905552890, guid: 386cff33803d9e742ab386963032c720,
+    type: 3}
+  m_PrefabInstance: {fileID: 746879005}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920093100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb984848d5b1460591abed472fca1966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &747456270
 GameObject:
   m_ObjectHideFlags: 0
@@ -28337,7 +28349,7 @@ PrefabInstance:
         type: 3}
       propertyPath: enemyToDefeat
       value: 
-      objectReference: {fileID: 99517786}
+      objectReference: {fileID: 746879006}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: numberOfTurnsBeforeCompletion
@@ -28351,7 +28363,37 @@ PrefabInstance:
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: completeIfPointAchieved
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: pointToAchieve.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: pointToAchieve.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: defeatIfAllPlayerUnitsDied
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: defeatIfNotCompleteLevelInCertainAmountOfTurns
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: numberOfTurnsBeforeDefeat
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: defeatIfProtectedIsKilled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
