@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Game
+﻿namespace Game
 {
     /// <summary>
     /// A unit or weapon's stats
@@ -8,24 +6,6 @@ namespace Game
     /// </summary>
     public class UnitStats
     {
-        public const int PLEB_MAX_HEALTH = 7;
-        public const int PLEB_MOVE_SPEED = 3;
-        public const int PLEB_ATTACK_STRENGTH = 0;
-        public const float PLEB_HIT_RATE = 0f;
-        public const float PLEB_CRIT_RATE = 0f;
-        
-        public const int SOLDIER_MAX_HEALTH = 9;
-        public const int SOLDIER_MOVE_SPEED = 3;
-        public const int SOLDIER_ATTACK_STRENGTH = 1;
-        public const float SOLDIER_HIT_RATE = 0f;
-        public const float SOLDIER_CRIT_RATE = 0f;
-        
-        public const int NOBLE_MAX_HEALTH = 12;
-        public const int NOBLE_MOVE_SPEED = 5;
-        public const int NOBLE_ATTACK_STRENGTH = 1;
-        public const float NOBLE_HIT_RATE = 0f;
-        public const float NOBLE_CRIT_RATE = 0f;
-        
         private static UnitStats plebUnitStats = null;
         /// <summary>
         /// Pre-made set of stats for weak units
@@ -36,7 +16,7 @@ namespace Game
             {
                 if (plebUnitStats == null)
                 {
-                    return new UnitStats(PLEB_MAX_HEALTH, PLEB_MOVE_SPEED, PLEB_ATTACK_STRENGTH, PLEB_HIT_RATE, PLEB_CRIT_RATE);
+                    return new UnitStats(UnitStatsValues.PLEB_MAX_HEALTH, UnitStatsValues.PLEB_MOVE_SPEED, UnitStatsValues.PLEB_ATTACK_STRENGTH, UnitStatsValues.PLEB_HIT_RATE, UnitStatsValues.PLEB_CRIT_RATE);
                 }
                 return plebUnitStats;
             }
@@ -52,7 +32,7 @@ namespace Game
             {
                 if (soldierUnitStats == null)
                 {
-                    return new UnitStats(SOLDIER_MAX_HEALTH, SOLDIER_MOVE_SPEED, SOLDIER_ATTACK_STRENGTH, SOLDIER_HIT_RATE, SOLDIER_CRIT_RATE);
+                    return new UnitStats(UnitStatsValues.SOLDIER_MAX_HEALTH, UnitStatsValues.SOLDIER_MOVE_SPEED, UnitStatsValues.SOLDIER_ATTACK_STRENGTH, UnitStatsValues.SOLDIER_HIT_RATE, UnitStatsValues.SOLDIER_CRIT_RATE);
                 }
                 return soldierUnitStats;
             }
@@ -68,7 +48,7 @@ namespace Game
             {
                 if (nobleUnitStats == null)
                 {
-                    return new UnitStats(NOBLE_MAX_HEALTH, NOBLE_MOVE_SPEED, NOBLE_ATTACK_STRENGTH, NOBLE_HIT_RATE, NOBLE_CRIT_RATE);
+                    return new UnitStats(UnitStatsValues.NOBLE_MAX_HEALTH, UnitStatsValues.NOBLE_MOVE_SPEED, UnitStatsValues.NOBLE_ATTACK_STRENGTH, UnitStatsValues.NOBLE_HIT_RATE, UnitStatsValues.NOBLE_CRIT_RATE);
                 }
                 return nobleUnitStats;
             }

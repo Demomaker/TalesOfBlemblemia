@@ -26,15 +26,18 @@ namespace Game
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
-        private int costToMove;
+        private readonly int costToMove;
 
         public int CostToMove => costToMove;
+        private readonly float defenseRate;
+        public float DefenseRate => defenseRate;
         
 
-            protected Tile(TileType tileType, int costToMove = 1)
+        protected Tile(TileType tileType, int costToMove = TileValues.DEFAULT_COST_TO_MOVE, float defenseRate = TileValues.DEFAULT_DEFENSE_RATE)
         {
             this.tileType = tileType;
             this.costToMove = costToMove;
+            this.defenseRate = defenseRate;
         }
         
         protected virtual void Awake()
@@ -129,15 +132,6 @@ namespace Game
                 throw  new ArgumentException("Range should be higher than zero");
             return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
         }
-    }
-
-    public enum TileType 
-    {
-        Empty = 0,
-        Obstacle = 1,
-        Forest = 2,
-        Fortress = 3,
-        Door = 4
     }
 }
 
