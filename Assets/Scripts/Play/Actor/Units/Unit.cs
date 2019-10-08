@@ -205,6 +205,7 @@
              //A unit cannot counter on a counter
              if (!isCountering && !target.IsDead)
                  target.Attack(this, true);
+
          }
 
          private void LookAt(Vector3 target)
