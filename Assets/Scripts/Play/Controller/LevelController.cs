@@ -16,7 +16,8 @@ namespace Game
     public class LevelController : MonoBehaviour
     {
         [SerializeField] private string levelName;
-
+        [SerializeField] private GameObject dialogueUi;
+        [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem;
 
         private Unit[] units = null;
         
@@ -29,6 +30,9 @@ namespace Game
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             players[0].OnTurnGiven();
+            
+            dialogueUi.SetActive(true);
+            dialogueTriggerStartFranklem.TriggerDialogue();
         }
 
         protected void Update()
