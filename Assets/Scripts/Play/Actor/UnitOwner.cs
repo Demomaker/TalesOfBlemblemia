@@ -14,7 +14,8 @@ namespace Game
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
         private bool hasLost = false;
-        public string Name = "";
+        private string name = "";
+        public string Name => name;
 
         public bool HasNoMorePlayableUnits
         {

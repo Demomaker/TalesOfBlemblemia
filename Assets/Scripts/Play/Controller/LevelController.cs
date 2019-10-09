@@ -89,8 +89,6 @@ namespace Game
         {
             UnitOwner player1 = HumanPlayer.Instance;
             UnitOwner player2 = ComputerPlayer.Instance;
-            player1.Name = "Leader of Allies";
-            player2.Name = "Leader of Enemies";
 
             units = FindObjectsOfType<Unit>();
 
