@@ -21,6 +21,9 @@
         protected const int SWORD_ATTACK_STRENGTH = 2;
         protected const int SWORD_MOVE_SPEED = 0;
         protected const int SWORD_MAX_HEALTH_POINTS = 0;
+        protected const WeaponType SWORD_ADVANTAGE = WeaponType.Axe;
+        protected const WeaponType AXE_ADVANTAGE = WeaponType.Spear;
+        protected const WeaponType SPEAR_ADVANTAGE = WeaponType.Sword;
         
         protected UnitStats weaponStats;
         /// <summary>
@@ -53,11 +56,11 @@
             switch (weaponType)
             {
                 case WeaponType.Axe:
-                    return Axe.ADVANTAGE;
+                    return Axe.AXE_ADVANTAGE;
                 case WeaponType.Spear:
-                    return Spear.ADVANTAGE;
+                    return Spear.SPEAR_ADVANTAGE;
                 case WeaponType.Sword:
-                    return Sword.ADVANTAGE;
+                    return Sword.SWORD_ADVANTAGE;
                 default:
                     return WeaponType.None;
             }
