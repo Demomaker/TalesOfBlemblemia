@@ -41,7 +41,7 @@ namespace Game
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
-            //TODO enlever ca quand le joueur pourra se reposer
+            //TODO enlever ca avant la release
             CheckForComputerTurnSkip();
             CheckForPlayerTurnSkip();
 

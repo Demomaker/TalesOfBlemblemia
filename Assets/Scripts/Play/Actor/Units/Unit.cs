@@ -151,16 +151,41 @@
              }
              else
              {
+                 MoveByAction(new Action(PrepareMove(tile), ActionType.Nothing));
+             }
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+         }
+
+         private List<Tile> PrepareMove(Tile tile)
+         {
+             currentTile.UnlinkUnit();
+             isMoving = true;
+             List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
+                 currentTile.LogicalPosition.x,
+                 currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
+             path.Reverse();
+             path.RemoveAt(0);
+             path.Add(tile);
+             movesLeft -= currentTile.CostToMove;
+             return path;
+         }
+         
+         public void MoveToAction(Action action)
+         {
+             var tile = action.Path.Last();
+             if (tile == null || tile == currentTile || isMoving) return;
+             if (currentTile == null)
+             {
+                 transform.position = tile.WorldPosition;
+                 LinkUnitToTile(tile);
+             }
+             else
+             {
                  currentTile.UnlinkUnit();
                  isMoving = true;
-                 List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
-                     currentTile.LogicalPosition.x,
-                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
-                 path.Reverse();
-                 path.RemoveAt(0);
-                 path.Add(tile);
+                 action.Path.RemoveAt(0);
                  movesLeft -= currentTile.CostToMove;
-                 MoveByPath(path);
+                 MoveByAction(action);
              }
              movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
@@ -170,16 +195,13 @@
              currentTile = tile;
              tile.LinkUnit(this);
          }
-
-
+         
          private IEnumerator InitPosition()
          {
              yield return new WaitForEndOfFrame();
              MoveTo(gridController.GetTile(initialPosition.x, initialPosition.y));
          }
-
-         //TODO changements pour la mécanique d'attaque
-         //La chance de hit, le coup critique, la riposte ensuite
+         
          public bool Attack(Unit target, bool isCountering = false)
          {
              if (TargetIsInRange(target))
@@ -250,13 +272,15 @@
              Destroy(gameObject);
          }
 
-         private void MoveByPath(List<Tile> path)
+         public void MoveByAction(Action action)
          {
-             StartCoroutine(MoveByPath(path,Constants.MOVEMENT_DURATION));
+             StartCoroutine(MoveByAction(action, Constants.MOVEMENT_DURATION));
          }
 
-         private IEnumerator MoveByPath(List<Tile> path, float duration)
+         private IEnumerator MoveByAction(Action action, float duration)
          {
+             var path = action.Path;
+             
              Tile finalTile = null;
              for (int i = 0; i < path.Count; i++)
              {
@@ -283,6 +307,18 @@
              LinkUnitToTile(finalTile);
              transform.position = currentTile.WorldPosition;
              isMoving = false;
+             if (action.ActionType != ActionType.Nothing)
+             {
+                 if (action.ActionType == ActionType.Attack && action.Target != null)
+                 {
+                     if (!Attack(action.Target))
+                         Rest();
+                 }
+                 else
+                 {
+                     Rest();
+                 }
+             }
          }
 
          public void Rest()
@@ -299,13 +335,13 @@
          /// <param name="actionToDo">The action to execute on this turn</param>
          public void ExecuteAction(Action actionToDo)
          {
-             if (!isMoving && movesLeft > 0 && actionToDo.Path.Count > 1 && actionToDo.Path.Last() != currentTile) 
-                 MoveTo(actionToDo.Path.Last());
+             if (!isMoving && movesLeft > 0 && actionToDo.Path.Count > 1 && actionToDo.Path.Last() != currentTile)
+                 MoveToAction(actionToDo);
              else if (!isMoving && !isAttacking)
              {
                  if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
                  {
-                     if(!Attack(actionToDo.Target))
+                     if (!Attack(actionToDo.Target))
                          Rest();
                  }
                  else
@@ -320,6 +356,27 @@
              if (currentTile != null)
                  movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
          }
-         
+
+         public void MoveToTileAndAct(Tile tile, ActionType actionType, Unit target = null)
+         {
+             if (tile == null || tile == currentTile || isMoving) return;
+             if (currentTile == null)
+             {
+                 transform.position = tile.WorldPosition;
+                 LinkUnitToTile(tile);
+             }
+             else
+             {
+                 MoveByAction(new Action(PrepareMove(tile), actionType, target));
+             }
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+         }
+
+         public void AttackDistantUnit(Tile tile, Unit target)
+         {
+             var adjacentTile = gridController.FindAvailableAdjacentTile(tile, this);
+             if (adjacentTile != null)
+                MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
+         }
      } 
  }

@@ -15,10 +15,11 @@ namespace Game
         private Image tileImage;
         private Unit linkedUnit;
         private GridController gridController;
-        
-        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
+        public GridController GridController => gridController;
+
+        public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
+        public bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        public bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
         private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;
@@ -41,7 +42,7 @@ namespace Game
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
-            tileButton.onClick.AddListener(OnCellClick); 
+            //tileButton.onClick.AddListener(OnCellClick); 
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -51,7 +52,7 @@ namespace Game
             positionInGrid.x = index % Finder.GridController.NbColumns;
             positionInGrid.y = index / Finder.GridController.NbLines;
         }
-
+        
         private void OnCellClick()
         {
             EventSystem.current.SetSelectedGameObject(null);
@@ -86,12 +87,17 @@ namespace Game
 
         public void DisplaySelectedTile()
         {
-            tileImage.sprite = gridController.SelectedSprite;
+            tileImage.sprite = gridController.HealableTileSprite;
         }
 
         public void DisplayAttackActionPossibility()
         {
             tileImage.sprite = gridController.AttackableTileSprite;
+        }
+
+        public void DisplayHealActionPossibility()
+        {
+            tileImage.sprite = gridController.HealableTileSprite;
         }
         
         public void HideActionPossibility()

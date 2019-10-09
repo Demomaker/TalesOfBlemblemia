@@ -4,6 +4,7 @@
     public enum ActionType
     {
         Rest,
-        Attack
+        Attack,
+        Nothing
     }
 }
