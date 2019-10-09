@@ -50,7 +50,7 @@ namespace Game
 
         public void ShowAchievement(Achievement achievement)
         {
-            achievement.AchievementHasBeenShown = true;
+            achievement.SetAchievementHasBeenShown();
             StartAchievement(achievement);
         }
         

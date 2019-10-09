@@ -5,9 +5,11 @@ namespace Game
     public class HumanPlayer : UnitOwner
     {
 
-        public bool HasEverLostAUnit = false;
-        public bool HasLostAUnitInCurrentLevel = false;
+        private bool hasEverLostAUnit = false;
+        private bool hasLostAUnitInCurrentLevel = false;
         private int numberOfRecruitedUnitsFromAlternativePath = 0;
+        public bool HasEverLostAUnit => hasEverLostAUnit;
+        public bool HasLostAUnitInCurrentLevel => hasLostAUnitInCurrentLevel;
         public int NumberOfUnits => ownedUnits.Count;
         public int NumberOfRecruitedUnitsFromAlternatePath => numberOfRecruitedUnitsFromAlternativePath;
         private static HumanPlayer instance = null;
@@ -31,14 +33,14 @@ namespace Game
         public override void RemoveOwnedUnit(Unit unit)
         {
             base.RemoveOwnedUnit(unit);
-            HasLostAUnitInCurrentLevel = true;
-            HasEverLostAUnit = true;
+            hasLostAUnitInCurrentLevel = true;
+            hasEverLostAUnit = true;
         }
 
         public override void OnNewLevel()
         {
             base.OnNewLevel();
-            HasLostAUnitInCurrentLevel = false;
+            hasLostAUnitInCurrentLevel = false;
         }
 
         private HumanPlayer()
