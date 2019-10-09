@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class OptionsMenuController : MonoBehaviour, IMenuController
+    public class OptionsMenuController : MonoBehaviour
     {
         [Header("Buttons")] 
         [SerializeField] private Toggle musicToggle;
@@ -31,12 +31,6 @@ namespace Game
         private void Start()
         {
             InitializeSettingsValues();
-        }
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(confirmKey))
-                UIExtensions.SelectedButton?.Click();
         }
 
         [UsedImplicitly]

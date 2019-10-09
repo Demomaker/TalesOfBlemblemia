@@ -16,50 +16,54 @@ namespace Game
         
         public void Insert(SaveInfos myObject)
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandType = CommandType.Text;
+                command.CommandText = "INSERT INTO SaveGame(savegame_id,player_name,difficulty_level,level_name) VALUES (?,?,?,?)";
 
-            command.CommandText =
-                "INSERT INTO SaveGame(savegame_id,player_name,difficulty_level,level_name) VALUES (?,?,?,?)";
+                var id = command.CreateParameter();
+                id.Value = myObject.id;
+                command.Parameters.Add(id);
 
-            var id = command.CreateParameter();
-            id.Value = myObject.id;
-            command.Parameters.Add(id);
-            
-            var playerName = command.CreateParameter();
-            playerName.Value = myObject.username;
-            command.Parameters.Add(playerName);
+                var playerName = command.CreateParameter();
+                playerName.Value = myObject.username;
+                command.Parameters.Add(playerName);
 
-            var difficultyLevel = command.CreateParameter();
-            difficultyLevel.Value = myObject.difficultyLevel;
-            command.Parameters.Add(difficultyLevel);
+                var difficultyLevel = command.CreateParameter();
+                difficultyLevel.Value = myObject.difficultyLevel;
+                command.Parameters.Add(difficultyLevel);
 
-            var levelName = command.CreateParameter();
-            levelName.Value = myObject.levelName;
-            command.Parameters.Add(levelName);
+                var levelName = command.CreateParameter();
+                levelName.Value = myObject.levelName;
+                command.Parameters.Add(levelName);
 
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
 
         public List<SaveInfos> FindAll()
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-
-            command.CommandText = "SELECT * FROM SaveGame";
-            
-            List<SaveInfos> result = new List<SaveInfos>();
-            DbDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            using (var command = connection.CreateCommand())
             {
-                int id = Convert.ToInt32(reader["savegame_id"]);
-                string playerName = reader["player_name"].ToString();
-                string difficultyLevel = reader["difficulty_level"].ToString();
-                string levelName = reader["level_name"].ToString();
-                SaveInfos saveInfos = new SaveInfos(id, playerName, difficultyLevel, levelName, null);
-                result.Add(saveInfos);
+                command.CommandType = CommandType.Text;
+                command.CommandText = "SELECT * FROM SaveGame";
+
+                var result = new List<SaveInfos>();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id = Convert.ToInt32(reader["savegame_id"]);
+                        string playerName = reader["player_name"].ToString();
+                        string difficultyLevel = reader["difficulty_level"].ToString();
+                        string levelName = reader["level_name"].ToString();
+                        SaveInfos saveInfos = new SaveInfos(id, playerName, difficultyLevel, levelName, null);
+                        result.Add(saveInfos);
+                    }
+                }
+
+                return result;
             }
-            return result;
         }
 
         public void Update(SaveInfos myObject)

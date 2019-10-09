@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class MainMenuController : MonoBehaviour, IMenuController
+    public class MainMenuController : MonoBehaviour
     {
         [Header("Buttons")] 
         [SerializeField] private Button newGameButton = null;
@@ -22,14 +22,6 @@ namespace Game
         private void Awake()
         {
             menusController = Finder.MenusController;
-        }
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(confirmKey))
-                UIExtensions.SelectedButton?.Click();
-            else if (Input.GetKeyDown(exitKey))
-                Exit();
         }
 
         [UsedImplicitly]

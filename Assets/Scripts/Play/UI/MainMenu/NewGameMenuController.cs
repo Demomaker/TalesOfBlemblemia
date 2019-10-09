@@ -6,7 +6,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace Game
 {
-    public class NewGameMenuController : MonoBehaviour, IMenuController
+    public class NewGameMenuController : MonoBehaviour
     {
         [Header("Buttons")] 
         [SerializeField] private TMP_Dropdown difficultyDropdownMenu;
@@ -24,12 +24,6 @@ namespace Game
         {
             menusController = Finder.MenusController;
             saveController = Finder.SaveController;
-        }
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(confirmKey))
-                UIExtensions.SelectedButton?.Click();
         }
 
         [UsedImplicitly]
