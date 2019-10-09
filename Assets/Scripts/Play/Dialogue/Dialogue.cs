@@ -6,11 +6,9 @@
 [System.Serializable]
 public class Dialogue
 {
-    public string name;
-    
-    [TextArea(3,10)]
+    [TextArea(3,2)]
     public string[] sentences;
 
-    public Texture texture;
+    public Texture[] texture;
 
 }

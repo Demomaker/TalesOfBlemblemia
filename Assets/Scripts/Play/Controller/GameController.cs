@@ -23,12 +23,16 @@ namespace Game
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
          private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
-         
+
          public string NameOfLevelCompleted => nameOfLevelCompleted;
          public List<Level> Levels = new List<Level>();
          public List<string> LevelsCompleted = new List<string>();
+         public string CurrentLevelName => lastLoadedLevelName; 
          public string StartingLevelName => startingLevelName;
-         
+         public bool AllLevelsCompleted => Levels.Count == LevelsCompleted.Count;
+
+         public DifficultyLevel DifficultyLevel => difficultyLevel;
+
          private void Start()
          {
              InstantiateLevelList();
