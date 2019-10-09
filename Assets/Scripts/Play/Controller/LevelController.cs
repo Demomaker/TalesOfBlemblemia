@@ -13,7 +13,6 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
-        //The turnSystem branches' changes are needed to continue
         [SerializeField] private string levelName;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
@@ -27,6 +26,7 @@ namespace Game
         [SerializeField] private Unit unitToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
+        [SerializeField] private bool revertWeaponTriangle = false;
 
         private bool levelCompleted = false;
         private bool levelFailed = false;
@@ -36,12 +36,9 @@ namespace Game
         private Unit[] units = null;
         private UnitOwner currentPlayer;
         private readonly List<UnitOwner> players = new List<UnitOwner>();
-        [SerializeField] private bool revertWeaponTriangle = false;
-        public bool RevertWeaponTriangle => revertWeaponTriangle;
-
-        
-        //Augment each turn
         private int numberOfPlayerTurns = 0;
+        public bool RevertWeaponTriangle => revertWeaponTriangle;
+        
         
         private void Start()
         {
