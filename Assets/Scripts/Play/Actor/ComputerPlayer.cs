@@ -1,16 +1,54 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Game
 {
+    /// <summary>
+    /// The computer player that controls its units
+    /// Authors: Jérémie Bertrand, Zacharie Lavigne
+    /// </summary>
     public class ComputerPlayer : UnitOwner
     {
-        public override void Play()
+        private static ComputerPlayer instance = null;
+        
+        public static ComputerPlayer Instance
         {
-            for (int i = 0; i < playableUnits.Count; i++)
+            get
             {
-                AiController.PlayTurn(playableUnits[i], ennemyUnits);
+                if (instance == null)
+                {
+                    instance = new ComputerPlayer();
+                }
+                return instance;
             }
-            base.Play();
+        }
+
+        private ComputerPlayer()
+        {
+        }
+
+        public override void CheckUnitDeaths()
+        {
+            base.CheckUnitDeaths();
+        }
+
+        public IEnumerator PlayUnits()
+        {
+            for (int i = 0; i < ownedUnits.Count; i++)
+            {
+                var currentUnit = ownedUnits[i];
+                if (!currentUnit.HasActed)
+                {
+                    currentUnit.ComputeTilesCosts();
+                    var action = AiController.DetermineAction(currentUnit, enemyUnits);
+                    while (!currentUnit.HasActed)
+                    {
+                        currentUnit.ExecuteAction(action);
+                        yield return null;
+                    }
+                    base.CheckUnitDeaths();
+                }
+            } 
         }
     }
 }
