@@ -55,25 +55,26 @@ namespace Game
                 return;
             }
             
-            if (tile.LinkedUnitCanBeAttacked)
+            if (clickButton == ClickButton.RightClick)
             {
-                if (clickButton == ClickButton.LeftClick)
-                    gridControllerSelectedUnit.Attack(tile.LinkedUnit);
-                if (clickButton == ClickButton.RightClick)
+                if (tile.LinkedUnitCanBeAttacked)
+                {
                     if (!gridControllerSelectedUnit.Attack(tile.LinkedUnit))
                         gridControllerSelectedUnit.AttackDistantUnit(tile, tile.LinkedUnit);
-                if (tile.LinkedUnit.NoHealthLeft)
+                    if (tile.LinkedUnit.NoHealthLeft)
+                    {
+                        tile.LinkedUnit.Die();
+                        gridControllerSelectedUnit.MoveTo(tile);
+                    }
+                }
+                else if (tile.IsPossibleAction)
                 {
-                    tile.LinkedUnit.Die();
-                    gridControllerSelectedUnit.MoveTo(tile);
+                    gridControllerSelectedUnit.MoveToTileAndAct(tile, ActionType.Rest);
                 }
             }
-            else if (tile.IsPossibleAction)
+            else if (tile.IsPossibleAction && tile.IsAvailable)
             {
-                if (clickButton == ClickButton.LeftClick)
-                    gridControllerSelectedUnit.MoveTo(tile);
-                if (clickButton == ClickButton.RightClick)
-                    gridControllerSelectedUnit.MoveToTileAndAct(tile, ActionType.Rest);
+                gridControllerSelectedUnit.MoveTo(tile);
             }
 
             tile.GridController.DeselectUnit();
