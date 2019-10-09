@@ -1,4 +1,5 @@
-﻿﻿using UnityEngine;
+﻿﻿using JetBrains.Annotations;
+ using UnityEngine;
  
  namespace Game
 {
@@ -26,6 +27,20 @@
         public const string AI_NAME = "Leader of Enemies";
         public const int DEFAULT_CHARACTER_HEALTH_POINTS = 6;
         public const int NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN = 3;
+        public const int NUMBER_OF_RECRUITABLES_ON_ALTERNATE_PATH = 8;
+        public const string ACHIEVEMENT_GET_STRING = "Achievement Get!";
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
+
+        public static class AchievementName
+        {
+            public const string COMPLETE_CAMPAIGN_ON_EASY = "Baby Steps";
+            public const string COMPLETE_CAMPAIGN_ON_MEDIUM = "Now you're getting it!";
+            public const string COMPLETE_CAMPAIGN_ON_HARD = "You mad man!";
+            public const string DEFEAT_BLACK_KNIGHT = "In my own castle...";
+            public const string REACH_FINAL_LEVEL_WITH_8_PLAYERS = "The Octet";
+            public const string FINISH_A_LEVEL_WITHOUT_UNIT_LOSS = "No one left behind...";
+            public const string FINISH_CAMPAIGN_WITHOUT_UNIT_LOSS = "Great leader";
+            public const string SAVE_ALL_RECRUITABLES_FROM_ALTERNATE_PATH = "Champion of the people!";
+        }
     }
 }
