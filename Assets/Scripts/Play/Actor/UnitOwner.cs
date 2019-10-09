@@ -13,6 +13,9 @@ namespace Game
     {
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
+        private bool hasLost = false;
+        private string name = "";
+        public string Name => name;
 
         public bool HasNoMorePlayableUnits
         {
@@ -29,8 +32,6 @@ namespace Game
             }
         }
 
-        private bool hasLost = false;
-        public string Name = "";
 
         public bool HasLost
         {
@@ -92,7 +93,7 @@ namespace Game
             ownedUnits.Add(unit);
         }
 
-        public void RemoveOwnedUnit(Unit unit)
+        public virtual void RemoveOwnedUnit(Unit unit)
         {
             unit.HasActed = true;
             if (ownedUnits.Contains(unit))
@@ -102,6 +103,11 @@ namespace Game
         public void AddEnemyUnit(Unit enemy)
         {
             enemyUnits.Add(enemy);
+        }
+
+        public virtual void OnNewLevel()
+        {
+            
         }
     }
 }
