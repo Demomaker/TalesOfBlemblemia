@@ -21,30 +21,46 @@
         protected const int SWORD_ATTACK_STRENGTH = 2;
         protected const int SWORD_MOVE_SPEED = 0;
         protected const int SWORD_MAX_HEALTH_POINTS = 0;
-
+        
         protected UnitStats weaponStats;
         /// <summary>
         /// Les bonus que l'arme va offrir à une unité
         /// </summary>
         public UnitStats WeaponStats => weaponStats;
 
-        private WeaponType weaponType;
+        private readonly WeaponType weaponType;
         /// <summary>
         /// Le type de l'arme
         /// </summary>
         public WeaponType WeaponType => weaponType;
         
-        private WeaponType advantage;
+        private readonly WeaponType advantage;
+        
         /// <summary>
         /// Le type d'arme contre lequelle l'arme a un avantage
         /// </summary>
-        public WeaponType Advantage => advantage;
+        public WeaponType Advantage => Harmony.Finder.LevelController.RevertWeaponTriangle ? GetAdvantageByWeaponType(advantage) : advantage;
 
         public Weapon(UnitStats weaponStats, WeaponType weaponType, WeaponType advantage)
         {
             this.weaponStats = weaponStats;
             this.weaponType = weaponType;
             this.advantage = advantage;
+        }
+
+        private static WeaponType GetAdvantageByWeaponType(WeaponType weaponType)
+        {
+            switch (weaponType)
+            {
+                case WeaponType.Axe:
+                    return Axe.ADVANTAGE;
+                case WeaponType.Spear:
+                    return Spear.ADVANTAGE;
+                case WeaponType.Sword:
+                    return Sword.ADVANTAGE;
+                default:
+                    return WeaponType.None;
+            }
         }
     }
 }

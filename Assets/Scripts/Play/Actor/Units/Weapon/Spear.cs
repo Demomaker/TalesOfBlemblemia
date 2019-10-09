@@ -5,6 +5,8 @@
     {
         
         private static Spear basicWeapon = new Spear();
+        
+        public const WeaponType ADVANTAGE = WeaponType.Sword;
         public static Spear BasicWeapon
         {
             get
@@ -17,7 +19,7 @@
             }
         }
 
-        public Spear(UnitStats weaponStats = null) : base(weaponStats, WeaponType.Spear, WeaponType.Sword)
+        public Spear(UnitStats weaponStats = null) : base(weaponStats, WeaponType.Spear, ADVANTAGE)
         {
             if (weaponStats == null)
             {

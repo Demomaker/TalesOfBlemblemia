@@ -214,6 +214,7 @@
                  HasActed = true;
              }
 
+             Debug.Log(WeaponAdvantage.ToString());
              float hitRate = Stats.HitRate - target.currentTile.DefenseRate;
              int damage = Random.value <= hitRate ? Stats.AttackStrength : 0;
              if (!isCountering && target.WeaponType == WeaponAdvantage)

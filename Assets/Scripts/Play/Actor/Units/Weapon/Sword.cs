@@ -4,6 +4,8 @@
     public class Sword : Weapon
     {
         private static Sword basicWeapon = new Sword();
+        public const WeaponType ADVANTAGE = WeaponType.Axe;
+
         public static Sword BasicWeapon
         {
             get
@@ -16,7 +18,7 @@
             }
         }
 
-        public Sword(UnitStats weaponStats = null) : base(weaponStats, WeaponType.Sword, WeaponType.Axe)
+        public Sword(UnitStats weaponStats = null) : base(weaponStats, WeaponType.Sword, ADVANTAGE)
         {
             if (weaponStats == null)
             {
