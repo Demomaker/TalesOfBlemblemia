@@ -19,7 +19,7 @@ namespace Game
         [SerializeField] private GameObject fortressCellPrefab = null;
 
         [Header("Tiles")] [SerializeField] private TileBase forestTile = null;
-        [SerializeField] private TileBase obstacleTile = null;
+        [SerializeField] private TileBase[] obstacleTiles = null;
         [SerializeField] private TileBase fortressTile = null;
 
         [Header("Tilemap")] [SerializeField] private Tilemap interactiveTilemap = null;
@@ -83,7 +83,7 @@ namespace Game
             {
                 spawningPrefab = forestCellPrefab;
             }
-            else if (tile == obstacleTile)
+            else if (obstacleTiles.Contains(tile))
             {
                 spawningPrefab = obstacleCellPrefab;
             }

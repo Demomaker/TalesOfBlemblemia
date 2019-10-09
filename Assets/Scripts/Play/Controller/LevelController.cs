@@ -10,10 +10,16 @@ using Finder = Harmony.Finder;
 
 namespace Game
 {
+    /// <summary>
+    /// Controller for each individual level. Manages the turn functionalities as well as the players' turns
+    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne
+    /// </summary>
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
         [SerializeField] private string levelName;
+        [SerializeField] private GameObject dialogueUi;
+        [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
@@ -38,17 +44,19 @@ namespace Game
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
-        
-        
+
         private void Start()
         {
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             OnTurnGiven();
+            
+            dialogueUi.SetActive(true);
+            dialogueTriggerStartFranklem.TriggerDialogue();
         }
-        
-        private void Update()
+
+        protected void Update()
         {
             CheckIfLevelEnded();
             
@@ -64,7 +72,7 @@ namespace Game
                     Finder.GameController.LevelsCompleted.Add(levelName);
                 Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
             }
-            
+
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
             //TODO enlever ca quand le joueur pourra se reposer
@@ -238,4 +246,3 @@ namespace Game
         }
     }
 }
-
