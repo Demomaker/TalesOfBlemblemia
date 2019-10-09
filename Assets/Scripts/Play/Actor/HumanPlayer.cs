@@ -26,7 +26,6 @@ namespace Game
         public override void CheckUnitDeaths()
         {
             base.CheckUnitDeaths();
-            Debug.Log("Beginning of player turn");
         }
 
         public override void RemoveOwnedUnit(Unit unit)

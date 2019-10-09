@@ -29,7 +29,6 @@ namespace Game
 
         public override void CheckUnitDeaths()
         {
-            Debug.Log("Beginning of ai turn");
             base.CheckUnitDeaths();
         }
 

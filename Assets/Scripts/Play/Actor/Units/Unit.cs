@@ -4,6 +4,7 @@
  using System.Linq;
  using DG.Tweening;
  using UnityEngine;
+ using Random = UnityEngine.Random;
 
  namespace Game
  {
@@ -211,10 +212,16 @@
              if (!isCountering)
              {
                  HasActed = true;
-                 Debug.Log("Unit attacked!");
              }
 
-             target.CurrentHealthPoints -= 2;
+             float hitRate = Stats.HitRate - target.currentTile.DefenseRate;
+             int damage = Random.value <= hitRate ? Stats.AttackStrength : 0;
+             if (!isCountering && target.WeaponType == WeaponAdvantage)
+             {
+                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
+             }
+             
+             target.CurrentHealthPoints -= damage;
              counter = 0;
              
              while (counter < duration)
@@ -231,6 +238,7 @@
              //A unit cannot counter on a counter
              if (!isCountering && !target.NoHealthLeft)
                  target.Attack(this, true);
+
          }
 
          private void LookAt(Vector3 target)
