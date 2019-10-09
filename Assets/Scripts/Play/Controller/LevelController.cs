@@ -95,6 +95,9 @@ namespace Game
             GiveUnits(units, false, player1);
             GiveUnits(units, true, player2);
 
+            player1.OnNewLevel();
+            player2.OnNewLevel();
+            
             players.Add(player1);
             players.Add(player2);
         }
