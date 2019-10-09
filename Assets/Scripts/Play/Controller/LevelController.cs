@@ -17,11 +17,13 @@ namespace Game
     {
         [SerializeField] private string levelName;
 
-
+  
         private Unit[] units = null;
         
         private UnitOwner currentPlayer;
-        [NonSerialized] private readonly List<UnitOwner> players = new List<UnitOwner>();
+        private readonly List<UnitOwner> players = new List<UnitOwner>();
+        [SerializeField] private bool revertWeaponTriangle = false;
+        public bool RevertWeaponTriangle => revertWeaponTriangle;
 
         private void Start()
         {
