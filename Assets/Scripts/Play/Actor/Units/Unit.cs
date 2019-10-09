@@ -281,11 +281,24 @@
              Destroy(gameObject);
          }
 
+         /// <summary>
+         /// Starts to move following an action path and then executes the action
+         /// Author: Jérémie Bertrand
+         /// </summary>
+         /// <param name="action">The action to execute</param>
          public void MoveByAction(Action action)
          {
              StartCoroutine(MoveByAction(action, Constants.MOVEMENT_DURATION));
          }
 
+         /// <summary>
+         /// Moves following an action path and then executes the action
+         /// Author: Jérémie Bertrand
+         /// Contributor: Zacharie Lavigne
+         /// </summary>
+         /// <param name="action">The action to execute</param>
+         /// <param name="duration">The duration in seconds to walk to each tile</param>
+         /// <returns>Is a coroutine</returns>
          private IEnumerator MoveByAction(Action action, float duration)
          {
              var path = action.Path;
@@ -338,7 +351,7 @@
          }
          
          /// <summary>
-         /// Executes an action
+         /// Executes an action for the AI
          /// Author: Jérémie Bertrand, Zacharie Lavigne
          /// </summary>
          /// <param name="actionToDo">The action to execute on this turn</param>
@@ -366,6 +379,13 @@
                  movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
          }
 
+         /// <summary>
+         /// Starts a series of action to move to a specific tile and do an action afterwards
+         /// Author: Zacharie Lavigne
+         /// </summary>
+         /// <param name="tile">The destination</param>
+         /// <param name="actionType">The type of action to execute</param>
+         /// <param name="target">The target if the action is to attack</param>
          public void MoveToTileAndAct(Tile tile, ActionType actionType, Unit target = null)
          {
              if (tile == null || tile == currentTile || isMoving) return;
@@ -381,9 +401,14 @@
              movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
 
-         public void AttackDistantUnit(Tile tile, Unit target)
+         /// <summary>
+         /// Starts a series of action to move next to an enemy unit and attack it
+         /// Author: Zacharie Lavigne
+         /// </summary>
+         /// <param name="target">The unit to attack</param>
+         public void AttackDistantUnit(Unit target)
          {
-             var adjacentTile = gridController.FindAvailableAdjacentTile(tile, this);
+             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile	, this);
              if (adjacentTile != null)
                 MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
          }

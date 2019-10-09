@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    //Author: Jérémie Bertrand
+    // <summary>
+    /// Behaviour of a tile
+    /// Author: Jérémie Bertrand
+    /// </summary>
     public abstract class Tile : MonoBehaviour
     {
         private Button tileButton;
@@ -45,7 +48,6 @@ namespace Game
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
-            //tileButton.onClick.AddListener(OnCellClick); 
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -54,33 +56,6 @@ namespace Game
             int index = transform.GetSiblingIndex();
             positionInGrid.x = index % Finder.GridController.NbColumns;
             positionInGrid.y = index / Finder.GridController.NbLines;
-        }
-        
-        private void OnCellClick()
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-            
-            if (LinkedUnitCanBeSelected)
-            {
-                gridController.SelectUnit(linkedUnit); 
-                gridController.DisplayPossibleActionsFrom(this);
-                return;
-            }
-            
-            if (LinkedUnitCanBeAttacked)
-            {
-                gridController.SelectedUnit.Attack(linkedUnit);
-                if (linkedUnit.NoHealthLeft)
-                {
-                    linkedUnit.Die();
-                    gridController.SelectedUnit.MoveTo(this);
-                }
-            }
-            else if (IsPossibleAction)
-            {
-                gridController.SelectedUnit.MoveTo(this);
-            }
-            gridController.DeselectUnit();
         }
 
         public void DisplayMoveActionPossibility()
@@ -96,11 +71,6 @@ namespace Game
         public void DisplayAttackActionPossibility()
         {
             tileImage.sprite = gridController.AttackableTileSprite;
-        }
-
-        public void DisplayHealActionPossibility()
-        {
-            tileImage.sprite = gridController.HealableTileSprite;
         }
         
         public void HideActionPossibility()
@@ -126,7 +96,7 @@ namespace Game
 
         /// <summary>
         /// Verifies if a tile is adjacent on a X or Y axis to this tile
-        /// Author: Jérémie Bertrand, Zacharie Lavigne
+        /// Authors: Jérémie Bertrand, Zacharie Lavigne
         /// </summary>
         /// <param name="otherTile">The other tile to verify adjacency</param>
         /// <param name="range">The threshold of adjacency</param>

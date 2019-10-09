@@ -5,6 +5,10 @@ using UnityEngine.EventSystems;
 
 namespace Game
 {
+    /// <summary>
+    /// Personalized clickable to detect if a tile has been clicked on
+    /// Author: Zacharie Lavigne
+    /// </summary>
     public class ClickableObject : MonoBehaviour, IPointerClickHandler
     {
         private Tile tile;
@@ -14,27 +18,16 @@ namespace Game
             tile = GetComponentInParent<Tile>();
         }
 
-        private enum ClickButton
-        {
-            LeftClick,
-            RightClick
-        }
-        
         public void OnPointerClick(PointerEventData eventData)
         {
             ClickButton clickButton = ClickButton.LeftClick;
-            if (eventData.button == PointerEventData.InputButton.Left)
-                Debug.Log("Left click");
-            else if (eventData.button == PointerEventData.InputButton.Right)
+            if (eventData.button == PointerEventData.InputButton.Right)
             {
-                Debug.Log("Right click");
                 clickButton = ClickButton.RightClick;
             }
-
             
             EventSystem.current.SetSelectedGameObject(null);
-
-
+            
             var gridControllerSelectedUnit = tile.GridController.SelectedUnit;
             
             if (tile.LinkedUnitCanBeSelected)
@@ -60,7 +53,7 @@ namespace Game
                 if (tile.LinkedUnitCanBeAttacked)
                 {
                     if (!gridControllerSelectedUnit.Attack(tile.LinkedUnit))
-                        gridControllerSelectedUnit.AttackDistantUnit(tile, tile.LinkedUnit);
+                        gridControllerSelectedUnit.AttackDistantUnit(tile.LinkedUnit);
                     if (tile.LinkedUnit.NoHealthLeft)
                     {
                         tile.LinkedUnit.Die();
