@@ -22,7 +22,9 @@ namespace Game
         private Unit[] units = null;
         
         private UnitOwner currentPlayer;
-        [NonSerialized] private readonly List<UnitOwner> players = new List<UnitOwner>();
+        private readonly List<UnitOwner> players = new List<UnitOwner>();
+        [SerializeField] private bool revertWeaponTriangle = false;
+        public bool RevertWeaponTriangle => revertWeaponTriangle;
 
         private void Start()
         {
@@ -91,14 +93,15 @@ namespace Game
         {
             UnitOwner player1 = HumanPlayer.Instance;
             UnitOwner player2 = ComputerPlayer.Instance;
-            player1.Name = "Leader of Allies";
-            player2.Name = "Leader of Enemies";
 
             units = FindObjectsOfType<Unit>();
 
             GiveUnits(units, false, player1);
             GiveUnits(units, true, player2);
 
+            player1.OnNewLevel();
+            player2.OnNewLevel();
+            
             players.Add(player1);
             players.Add(player2);
         }
