@@ -1,9 +1,7 @@
 ﻿using JetBrains.Annotations;
 using TMPro;
-using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 using Button = UnityEngine.UI.Button;
 
 namespace Game
@@ -11,8 +9,8 @@ namespace Game
     public class NewGameMenuController : MonoBehaviour, IMenuController
     {
         [Header("Buttons")] 
-        [SerializeField] private Dropdown difficultyDropdownMenu;
-        [SerializeField] private InputField playerNameInputField;
+        [SerializeField] private TMP_Dropdown difficultyDropdownMenu;
+        [SerializeField] private TMP_InputField playerNameInputField;
         [SerializeField] private Button startNewGameButton;
         [SerializeField] private Button returnToMainMenuButton;
         
@@ -20,10 +18,12 @@ namespace Game
         [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0;
 
         private MenusController menusController;
+        private SaveController saveController;
 
         private void Awake()
         {
             menusController = Finder.MenusController;
+            saveController = Finder.SaveController;
         }
 
         public void Update()
@@ -35,8 +35,19 @@ namespace Game
         [UsedImplicitly]
         public void StartNewGame()
         {
-            //SAUVEGARDER PRÉFÉRENCES DU JOUEUR
+            //if the player did not enter a name, player name will be Franklem
+            if (playerNameInputField.text == "")
+            {
+                playerNameInputField.text = "Franklem";
+            }
+            
+            saveController.saveInfos.username = playerNameInputField.text;
+            saveController.saveInfos.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+            
+            saveController.CreateSave();
             //CHARGER NOUVELLE SCENE
+            DontDestroyOnLoad(saveController);
+            SceneManager.LoadScene("ParabeneForest");
         }
         
         [UsedImplicitly]

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Mono.Data.Sqlite;
 using UnityEngine;
 
@@ -6,17 +8,18 @@ namespace Game
 {
     public class SaveController : MonoBehaviour
     {
-        private SaveInfos saveInfos;
+        public SaveInfos saveInfos;
+        public PlayerSettings playerSettings;
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
+        private SaveSettingsRepo saveSettingsRepo;
         private SqliteConnection connection;
 
         #region Test
         public void Awake()
         {
             Dictionary<string, bool> temp = new Dictionary<string, bool>{{"Franklem",false}};
-            InitiateSaveController(1,"pluc12345",DifficultyLevel.Medium.ToString(),"village 1",temp);
-            FindAll();
+            InitiateSaveController(1,"pluc12345",DifficultyLevel.Medium.ToString(),Constants.LEVEL_1_SCENE_NAME,temp);
         }
         
         #endregion
@@ -27,14 +30,28 @@ namespace Game
         public void InitiateSaveController(int id, string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
-            string connectionString = "Data Source=C:\\Users\\pierr\\Desktop\\session5\\Synthese\\starter-game\\Assets\\Database\\SaveGame.db; Version=3";
-            connection = new SqliteConnection(connectionString);
+#if UNITY_EDITOR
+            var path = "URI=file:" + Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db");
+#else
+            var path = "URI=file:" + Path.Combine(Application.persistentDataPath, "Database.db");
+#endif
+            
+            connection = new SqliteConnection(path);
             connection.Open();
-            InitiateSaveInfos(id, username, difficultyLevel, levelName, characterStatus);
+            InitiateSaveInfo(id, username, difficultyLevel, levelName, characterStatus);
+            InitiateSettingsInfo();
             InitiateRepos();
+            //Check if there are any settings in the database
+            CheckForExistingSettings();
         }
 
-        private void InitiateSaveInfos(int id, string username, string difficultyLevel, string levelName,
+        private void InitiateSettingsInfo()
+        {
+            playerSettings = new PlayerSettings(0, Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_TOGGLE_VALUE,
+                Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE);
+        }
+
+        private void InitiateSaveInfo(int id, string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
             saveInfos = new SaveInfos(id,username,difficultyLevel,levelName,characterStatus);
@@ -44,10 +61,35 @@ namespace Game
         {
             saveGameRepo = new SaveGameRepo(connection);
             characterStatusRepo = new CharacterStatusRepo(connection);
+            saveSettingsRepo = new SaveSettingsRepo(connection);
         }
 
         #endregion
 
+        //Author : Antoine Lessard
+        /// <summary>
+        /// Checks if there are any settings in the database, if there are, we load those settings and apply them, otherwise, we insert the default settings
+        /// </summary>
+        private void CheckForExistingSettings()
+        {
+            List<PlayerSettings> settings = saveSettingsRepo.FindAll();
+            
+            if (settings.Count == 0)
+            {
+                saveSettingsRepo.Insert(playerSettings);
+            }
+            else
+            {
+                //There should always be only one set of settings
+                playerSettings = settings.First();
+            }
+        }
+
+        public void UpdateSettings()
+        {
+            saveSettingsRepo.Update(playerSettings);
+        }
+        
         #region CreateSave
 
         public void CreateSave()

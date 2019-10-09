@@ -27,5 +27,7 @@
         public const int DEFAULT_CHARACTER_HEALTH_POINTS = 6;
         public const int NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN = 3;
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
+        public const bool DEFAULT_TOGGLE_VALUE = true;
+        public const int DEFAULT_SLIDER_VALUE = 100;
     }
 }
