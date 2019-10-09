@@ -48,7 +48,7 @@ namespace Game
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
-            players[0].OnTurnGiven();
+            OnTurnGiven();
         }
         
         private void Update()
@@ -80,6 +80,12 @@ namespace Game
             Play(currentPlayer);
         }
 
+        private void OnTurnGiven()
+        {
+            if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
+            currentPlayer.OnTurnGiven();
+        }
+
         private void CheckIfLevelEnded()
         {
             CheckIfLevelCompleted();
@@ -96,15 +102,15 @@ namespace Game
             if (completeIfAllEnemiesDefeated)
             {
                 //TODO: Uncomment below when Turns are available
-                /*if(!ComputerPlayer.Instance.HaveAllUnitsDied())*/ firstConditionAchieved = false;
+                if(!ComputerPlayer.Instance.HaveAllUnitsDied()) firstConditionAchieved = false;
             }
             if (completeIfPointAchieved)
             {
-                if (!(GameObject.Find("Franklem").GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
+                if ((GameObject.Find("Franklem") == null) || (GameObject.Find("Franklem").GetComponent<Unit>() == null) || (GameObject.Find("Franklem").GetComponent<Unit>().CurrentTile == null) || !(GameObject.Find("Franklem").GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
             }
             if (completeIfCertainEnemyDefeated)
             {
-                if (!enemyToDefeat.IsDead) thirdConditionAchieved = false;
+                if (!(enemyToDefeat == null || enemyToDefeat.NoHealthLeft)) thirdConditionAchieved = false;
             }
             if (completeIfSurvivedCertainNumberOfTurns)
             {
@@ -119,7 +125,10 @@ namespace Game
             //TODO: Uncomment below when Turns are available
             levelFailed =
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
-                (defeatIfProtectedIsKilled && unitToProtect.IsDead) || (defeatIfAllPlayerUnitsDied /*&& HumanPlayer.Instance.HaveAllUnitsDied()*/) || GameObject.Find("Franklem").GetComponent<Unit>().IsDead;
+                (defeatIfProtectedIsKilled && unitToProtect.NoHealthLeft) ||
+                (defeatIfAllPlayerUnitsDied &&
+                 HumanPlayer.Instance.HaveAllUnitsDied()
+                ) || (GameObject.Find("Franklem") == null || GameObject.Find("Franklem").GetComponent<Unit>().NoHealthLeft);
         }
         
         private void Play(UnitOwner unitOwner)
@@ -139,7 +148,7 @@ namespace Game
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is ComputerPlayer);
-                currentPlayer.OnTurnGiven();
+                OnTurnGiven();
             }
         }
 
@@ -149,7 +158,7 @@ namespace Game
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is HumanPlayer);
-                currentPlayer.OnTurnGiven();
+                OnTurnGiven();
             }
         }
         private void InitializePlayersAndUnits()
@@ -185,7 +194,7 @@ namespace Game
             if (currentPlayer.HasNoMorePlayableUnits)
             {
                 GiveTurnToNextPlayer();
-                currentPlayer.OnTurnGiven();
+                OnTurnGiven();
             }
         }
 

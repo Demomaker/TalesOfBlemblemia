@@ -21,6 +21,7 @@ namespace Game
         private SerializedProperty enemyToDefeat;
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
+        private SerializedProperty revertWeaponTriangle;
 
         private void OnEnable()
         {
@@ -38,6 +39,7 @@ namespace Game
             enemyToDefeat = serializedObject.FindProperty("enemyToDefeat");
             numberOfTurnsBeforeCompletion = serializedObject.FindProperty("numberOfTurnsBeforeCompletion");
             numberOfTurnsBeforeDefeat = serializedObject.FindProperty("numberOfTurnsBeforeDefeat");
+            revertWeaponTriangle = serializedObject.FindProperty("revertWeaponTriangle");
 
         }
 
@@ -48,6 +50,10 @@ namespace Game
             EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
             levelName.stringValue = EditorGUILayout.TextField("Level Name", levelName.stringValue);
+            
+            EditorGUILayout.LabelField("Weapon Transformation", EditorStyles.boldLabel);
+
+            revertWeaponTriangle.boolValue = EditorGUILayout.Toggle("Revert Weapon Triangle", revertWeaponTriangle.boolValue);
             
             EditorGUILayout.LabelField("Conditions For Level Completion", EditorStyles.boldLabel);
 
