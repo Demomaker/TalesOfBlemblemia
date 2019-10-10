@@ -142,19 +142,19 @@
              movesLeft = Stats.MoveSpeed;
          }
 
-         public void MoveTo(Tile tile)
+         public void MoveTo(Tile targetTile)
          {
-             if (tile == null || tile == currentTile || isMoving) return;
+             if (targetTile == null || targetTile == currentTile || isMoving) return;
              if (currentTile == null)
              {
-                 transform.position = tile.WorldPosition;
-                 LinkUnitToTile(tile);
+                 transform.position = targetTile.WorldPosition;
+                 LinkUnitToTile(targetTile);
              }
              else
              {
-                 MoveByAction(new Action(PrepareMove(tile), ActionType.Nothing));
+                 MoveByAction(new Action(PrepareMove(targetTile), ActionType.Nothing));
              }
-             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+             movementCosts = PathFinder.PrepareComputeCost(targetTile.LogicalPosition);
          }
 
          private List<Tile> PrepareMove(Tile tile)
