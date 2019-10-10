@@ -20,6 +20,7 @@ namespace Game
         [SerializeField] private string levelName;
         [SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
+        [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
@@ -59,6 +60,7 @@ namespace Game
 
         protected void Update()
         {
+            if(!doNotEnd)
             CheckIfLevelEnded();
             
             if (Input.GetKeyDown(KeyCode.O))

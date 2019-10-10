@@ -11,6 +11,7 @@ namespace Game
         private SerializedProperty dialogueUi;
         private SerializedProperty dialogueTriggerStartFranklem;
         private SerializedProperty levelName;
+        private SerializedProperty doNotEnd;
         private SerializedProperty completeIfAllEnemiesDefeated;
         private SerializedProperty completeIfPointAchieved;
         private SerializedProperty completeIfSurvivedCertainNumberOfTurns;
@@ -30,6 +31,7 @@ namespace Game
             dialogueUi = serializedObject.FindProperty("dialogueUi");
             dialogueTriggerStartFranklem = serializedObject.FindProperty("dialogueTriggerStartFranklem");
             levelName = serializedObject.FindProperty("levelName");
+            doNotEnd = serializedObject.FindProperty("doNotEnd");
             completeIfAllEnemiesDefeated = serializedObject.FindProperty("completeIfAllEnemiesDefeated");
             completeIfPointAchieved = serializedObject.FindProperty("completeIfPointAchieved");
             completeIfSurvivedCertainNumberOfTurns = serializedObject.FindProperty("completeIfSurvivedCertainNumberOfTurns");
@@ -62,13 +64,17 @@ namespace Game
             EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
             levelName.stringValue = EditorGUILayout.TextField("Level Name", levelName.stringValue);
+            doNotEnd.boolValue = EditorGUILayout.Toggle("Do Not End Level", doNotEnd.boolValue);
             
             EditorGUILayout.LabelField("Weapon Transformation", EditorStyles.boldLabel);
 
             revertWeaponTriangle.boolValue = EditorGUILayout.Toggle("Revert Weapon Triangle", revertWeaponTriangle.boolValue);
             
-            EditorGUILayout.LabelField("Conditions For Level Completion", EditorStyles.boldLabel);
 
+            if (!doNotEnd.boolValue)
+            {
+                EditorGUILayout.LabelField("Conditions For Level Completion", EditorStyles.boldLabel);
+                
             completeIfAllEnemiesDefeated.boolValue =
                 EditorGUILayout.Toggle("Complete If All Enemies Defeated", completeIfAllEnemiesDefeated.boolValue);
             
@@ -104,10 +110,18 @@ namespace Game
             if (defeatIfProtectedIsKilled.boolValue)
                 unitToProtect.objectReferenceValue = EditorGUILayout.ObjectField("Unit To Protect",
                     unitToProtect.objectReferenceValue, typeof(Unit), true);
+            }
+            
                 
             
-            serializedObject.ApplyModifiedProperties();
+            SaveAndReturn();
 
+        }
+
+        public void SaveAndReturn()
+        {
+            serializedObject.ApplyModifiedProperties();
+            return;
         }
     }
 }
