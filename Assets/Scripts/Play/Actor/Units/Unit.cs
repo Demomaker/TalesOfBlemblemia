@@ -19,11 +19,11 @@
          private Tile currentTile = null;
          public Tile CurrentTile => currentTile;
          
-         /// <summary>
-         /// Value of if a unit is an enemy 
-         /// </summary>
-         [SerializeField] private bool isEnemy;
-         public bool IsEnemy => isEnemy;
+         public bool IsEnemy => playerType == PlayerType.Enemy;
+         public bool IsPlayer => playerType == PlayerType.Ally;
+         public bool IsRecruitable => playerType == PlayerType.None;
+
+         [SerializeField] private PlayerType playerType;
 
          /// <summary>
          /// The unit's class stats
@@ -62,26 +62,17 @@
          /// <summary>
          /// The unit's stats
          /// </summary>
-         public UnitStats Stats
-         {
-             get { return classStats + weapon.WeaponStats; }
-         }
+         public UnitStats Stats => classStats + weapon.WeaponStats;
 
          /// <summary>
          /// The unit's weapon type
          /// </summary>
-         public WeaponType WeaponType
-         {
-             get { return weapon.WeaponType; }
-         }
+         public WeaponType WeaponType => weapon.WeaponType;
 
          /// <summary>
          /// The weapon type this unit has advantage on 
          /// </summary>
-         public WeaponType WeaponAdvantage
-         {
-             get { return weapon.Advantage; }
-         }
+         public WeaponType WeaponAdvantage => weapon.Advantage;
 
          /// <summary>
          /// The health points a unit would gain by resting
@@ -100,15 +91,8 @@
 
          private int movesLeft;
          private bool canPlay = true;
-         public int MovesLeft
-         {
-             get => movesLeft;
-         }
-         public bool CanStillMove
-         {
-             get => movesLeft > 0;
-         }
-
+         public int MovesLeft => movesLeft;
+         public bool CanStillMove => movesLeft > 0;
          public bool HasActed { get; set; } = false;
 
          public bool IsCurrentlySelected => gridController.SelectedUnit == this;
@@ -125,7 +109,6 @@
          private void Awake()
          {
              gridController = Finder.GridController;
-             
              classStats = UnitStats.SoldierUnitStats;
              weapon = Sword.BasicWeapon;
              CurrentHealthPoints = Stats.MaxHealthPoints;
@@ -324,10 +307,20 @@
              }
          }
 
+         public bool RecruitUnit()
+         {
+             if (IsRecruitable)
+             {
+                 playerType = PlayerType.Ally;
+                 HumanPlayer.Instance.AddOwnedUnit(this);
+                 Debug.Log(name + " has been recruited!");
+             }
+             return IsRecruitable;
+         }
+
          public void ComputeTilesCosts()
          {
-             if (currentTile != null)
-                 movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
+             if (currentTile != null) movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
          }
          
      } 

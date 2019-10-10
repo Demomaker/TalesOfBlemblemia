@@ -12,12 +12,14 @@ using UnityEngine.UI;
         [SerializeField] private Sprite normalTileSprite = null;
         [SerializeField] private Sprite selectedTileSprite = null;
         [SerializeField] private Sprite attackableTileSprite = null;
+        [SerializeField] private Sprite recruitableTileSprite = null;
 
         public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
         public Sprite AttackableTileSprite => attackableTileSprite;
+        public Sprite RecruitableTileSprite => recruitableTileSprite;
 
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
@@ -63,9 +65,16 @@ using UnityEngine.UI;
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit) && tile.LinkedUnit.IsEnemy)
+                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit))
                         {
-                            tile.DisplayAttackActionPossibility();
+                            if (tile.LinkedUnit.IsEnemy)
+                            {
+                                tile.DisplayAttackActionPossibility();
+                            }
+                            else if (tile.LinkedUnit.IsRecruitable)
+                            {
+                                tile.DisplayRecruitActionPossibility();
+                            }
                         }
                     }
                 }

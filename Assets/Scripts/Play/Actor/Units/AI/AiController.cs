@@ -233,7 +233,7 @@ namespace Game
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
             {
-                if(!enemyUnits[i].IsEnemy)
+                if(enemyUnits[i].IsPlayer)
                     actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, AiControllerValues.BASE_CHOICE_ACTION_SCORE, enemyUnits[i]));
             }
             return actions;

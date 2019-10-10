@@ -17,8 +17,8 @@ namespace Game
         private GridController gridController;
         
         private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
+        private bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        private bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
         private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;
@@ -59,14 +59,14 @@ namespace Game
         {
             EventSystem.current.SetSelectedGameObject(null);
             
-            if (LinkedUnitCanBeSelected)
+            if (LinkedUnitCanBeSelectedByPlayer)
             {
                 gridController.SelectUnit(linkedUnit); 
                 gridController.DisplayPossibleActionsFrom(this);
                 return;
             }
             
-            if (LinkedUnitCanBeAttacked)
+            if (LinkedUnitCanBeAttackedByPlayer)
             {
                 gridController.SelectedUnit.Attack(linkedUnit);
                 if (linkedUnit.NoHealthLeft)
@@ -77,7 +77,10 @@ namespace Game
             }
             else if (IsPossibleAction)
             {
-                gridController.SelectedUnit.MoveTo(this);
+                if (IsOccupiedByAUnit && linkedUnit.IsRecruitable)
+                    linkedUnit.RecruitUnit();
+                else
+                    gridController.SelectedUnit.MoveTo(this);
             }
             gridController.DeselectUnit();
         }
@@ -95,6 +98,11 @@ namespace Game
         public void DisplayAttackActionPossibility()
         {
             tileImage.sprite = gridController.AttackableTileSprite;
+        }
+
+        public void DisplayRecruitActionPossibility()
+        {
+            tileImage.sprite = gridController.RecruitableTileSprite;
         }
         
         public void HideActionPossibility()
