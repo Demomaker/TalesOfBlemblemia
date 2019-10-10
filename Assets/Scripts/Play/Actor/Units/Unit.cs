@@ -142,21 +142,6 @@
              movesLeft = Stats.MoveSpeed;
          }
 
-         public void MoveTo(Tile targetTile)
-         {
-             if (targetTile == null || targetTile == currentTile || isMoving) return;
-             if (currentTile == null)
-             {
-                 transform.position = targetTile.WorldPosition;
-                 LinkUnitToTile(targetTile);
-             }
-             else
-             {
-                 MoveByAction(new Action(PrepareMove(targetTile), ActionType.Nothing));
-             }
-             movementCosts = PathFinder.PrepareComputeCost(targetTile.LogicalPosition);
-         }
-
          private List<Tile> PrepareMove(Tile tile)
          {
              currentTile.UnlinkUnit();
@@ -200,7 +185,7 @@
          private IEnumerator InitPosition()
          {
              yield return new WaitForEndOfFrame();
-             MoveTo(gridController.GetTile(initialPosition.x, initialPosition.y));
+             MoveToTileAndAct(gridController.GetTile(initialPosition.x, initialPosition.y));
          }
          
          public bool Attack(Unit target, bool isCountering = false)
@@ -386,7 +371,7 @@
          /// <param name="tile">The destination</param>
          /// <param name="actionType">The type of action to execute</param>
          /// <param name="target">The target if the action is to attack</param>
-         public void MoveToTileAndAct(Tile tile, ActionType actionType, Unit target = null)
+         public void MoveToTileAndAct(Tile tile, ActionType actionType = ActionType.Nothing, Unit target = null)
          {
              if (tile == null || tile == currentTile || isMoving) return;
              if (currentTile == null)

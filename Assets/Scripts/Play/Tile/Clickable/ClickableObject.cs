@@ -57,7 +57,7 @@ namespace Game
                     if (tile.LinkedUnit.NoHealthLeft)
                     {
                         tile.LinkedUnit.Die();
-                        gridControllerSelectedUnit.MoveTo(tile);
+                        gridControllerSelectedUnit.MoveToTileAndAct(tile);
                     }
                 }
                 else if (tile.IsPossibleAction)
@@ -67,7 +67,7 @@ namespace Game
             }
             else if (tile.IsPossibleAction && tile.IsAvailable)
             {
-                gridControllerSelectedUnit.MoveTo(tile);
+                gridControllerSelectedUnit.MoveToTileAndAct(tile);
             }
 
             tile.GridController.DeselectUnit();
