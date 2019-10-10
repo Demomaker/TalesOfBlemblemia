@@ -18,13 +18,10 @@ public class DialogueManager : MonoBehaviour
     private Texture[] textures;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        sentences = new Queue<string>();
-    }
 
     public void StartDialogue(Dialogue dialogue)
     {
+        sentences = new Queue<string>();
         animator.SetBool("IsOpen",true);
         
         sentences.Clear();
