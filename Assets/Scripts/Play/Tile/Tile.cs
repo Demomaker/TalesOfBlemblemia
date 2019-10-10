@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    //Author: Jérémie Bertrand
+    // <summary>
+    /// Behaviour of a tile
+    /// Author: Jérémie Bertrand
+    /// </summary>
     public abstract class Tile : MonoBehaviour
     {
         private Button tileButton;
@@ -15,10 +18,11 @@ namespace Game
         private Image tileImage;
         private Unit linkedUnit;
         private GridController gridController;
-        
-        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
+        public GridController GridController => gridController;
+
+        public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
+        public bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        public bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
         private bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
         private bool IsOccupiedByAUnit => linkedUnit != null;
@@ -44,7 +48,6 @@ namespace Game
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
-            tileButton.onClick.AddListener(OnCellClick); 
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -55,33 +58,6 @@ namespace Game
             positionInGrid.y = index / Finder.GridController.NbLines;
         }
 
-        private void OnCellClick()
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-            
-            if (LinkedUnitCanBeSelected)
-            {
-                gridController.SelectUnit(linkedUnit); 
-                gridController.DisplayPossibleActionsFrom(this);
-                return;
-            }
-            
-            if (LinkedUnitCanBeAttacked)
-            {
-                gridController.SelectedUnit.Attack(linkedUnit);
-                if (linkedUnit.NoHealthLeft)
-                {
-                    linkedUnit.Die();
-                    gridController.SelectedUnit.MoveTo(this);
-                }
-            }
-            else if (IsPossibleAction)
-            {
-                gridController.SelectedUnit.MoveTo(this);
-            }
-            gridController.DeselectUnit();
-        }
-
         public void DisplayMoveActionPossibility()
         {
             tileImage.sprite = gridController.AvailabilitySprite;
@@ -89,7 +65,7 @@ namespace Game
 
         public void DisplaySelectedTile()
         {
-            tileImage.sprite = gridController.SelectedSprite;
+            tileImage.sprite = gridController.HealableTileSprite;
         }
 
         public void DisplayAttackActionPossibility()
@@ -120,7 +96,7 @@ namespace Game
 
         /// <summary>
         /// Verifies if a tile is adjacent on a X or Y axis to this tile
-        /// Author: Jérémie Bertrand, Zacharie Lavigne
+        /// Authors: Jérémie Bertrand, Zacharie Lavigne
         /// </summary>
         /// <param name="otherTile">The other tile to verify adjacency</param>
         /// <param name="range">The threshold of adjacency</param>

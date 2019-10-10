@@ -1,9 +1,10 @@
 ﻿namespace Game
 {
-    /// Auteur: Zacharie Lavigne
+    /// Author: Zacharie Lavigne
     public enum ActionType
     {
         Rest,
-        Attack
+        Attack,
+        Nothing
     }
 }
