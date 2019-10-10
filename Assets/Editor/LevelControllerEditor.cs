@@ -8,6 +8,8 @@ namespace Game
     [CustomEditor(typeof(LevelController))]
     public class LevelControllerEditor : Editor
     {
+        private SerializedProperty dialogueUi;
+        private SerializedProperty dialogueTriggerStartFranklem;
         private SerializedProperty levelName;
         private SerializedProperty completeIfAllEnemiesDefeated;
         private SerializedProperty completeIfPointAchieved;
@@ -25,6 +27,8 @@ namespace Game
 
         private void OnEnable()
         {
+            dialogueUi = serializedObject.FindProperty("dialogueUi");
+            dialogueTriggerStartFranklem = serializedObject.FindProperty("dialogueTriggerStartFranklem");
             levelName = serializedObject.FindProperty("levelName");
             completeIfAllEnemiesDefeated = serializedObject.FindProperty("completeIfAllEnemiesDefeated");
             completeIfPointAchieved = serializedObject.FindProperty("completeIfPointAchieved");
@@ -46,6 +50,14 @@ namespace Game
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            
+            EditorGUILayout.LabelField("Dialogue", EditorStyles.boldLabel);
+            
+            dialogueUi.objectReferenceValue = EditorGUILayout.ObjectField("Dialogue UI",
+                dialogueUi.objectReferenceValue, typeof(GameObject), true);
+            
+            dialogueTriggerStartFranklem.objectReferenceValue = EditorGUILayout.ObjectField("Dialogue Trigger Start Franklem",
+                dialogueTriggerStartFranklem.objectReferenceValue, typeof(DialogueTrigger), true);
             
             EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 

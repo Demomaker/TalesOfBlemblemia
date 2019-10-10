@@ -28058,6 +28058,28 @@ PrefabInstance:
       propertyPath: revertWeaponTriangle
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: dialogueUi
+      value: 
+      objectReference: {fileID: 1982757202726082796, guid: 58afbb95f2fca194eaa7f106b165ebaa,
+        type: 3}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: dialogueTriggerStartFranklem
+      value: 
+      objectReference: {fileID: 164327426712822109, guid: 9eaa065538e0a134385994f9b87d79db,
+        type: 3}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: completeIfAllEnemiesDefeated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: defeatIfAllPlayerUnitsDied
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
 --- !u!1 &1394164181

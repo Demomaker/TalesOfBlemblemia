@@ -18,8 +18,8 @@ namespace Game
     public class LevelController : MonoBehaviour
     {
         [SerializeField] private string levelName;
-        [SerializeField] private GameObject dialogueUi;
-        [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem;
+        [SerializeField] private GameObject dialogueUi = null;
+        [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
@@ -51,7 +51,8 @@ namespace Game
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             OnTurnGiven();
-            
+
+            if (dialogueUi != null) 
             dialogueUi.SetActive(true);
             dialogueTriggerStartFranklem.TriggerDialogue();
         }
