@@ -36,7 +36,7 @@ using UnityEngine.UI;
         public void SelectUnit(Unit unit)
         {
             if(SelectedUnit != null) DeselectUnit();
-                SelectedUnit = unit;
+            SelectedUnit = unit;
         }
 
         public void DeselectUnit()
