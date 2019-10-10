@@ -8,7 +8,9 @@ namespace Game
 {
     public class SaveController : MonoBehaviour
     {
-        public SaveInfos saveInfos;
+        public SaveInfos saveSlot1;
+        public SaveInfos saveSlot2;
+        public SaveInfos saveSlot3;
         public PlayerSettings playerSettings;
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
@@ -19,7 +21,7 @@ namespace Game
         public void Awake()
         {
             Dictionary<string, bool> temp = new Dictionary<string, bool>{{"Franklem",false}};
-            InitiateSaveController(1,"pluc12345",DifficultyLevel.Medium.ToString(),Constants.LEVEL_1_SCENE_NAME,temp);
+            InitiateSaveController(1,"Franklem",DifficultyLevel.Medium.ToString(),Constants.LEVEL_1_SCENE_NAME,temp);
         }
         
         #endregion
@@ -43,7 +45,11 @@ namespace Game
             InitiateRepos();
             //Check if there are any settings in the database
             CheckForExistingSettings();
+            //Check if saves were already created in the database
+            CheckForExistingSaves();
         }
+
+        
 
         private void InitiateSettingsInfo()
         {
@@ -54,7 +60,9 @@ namespace Game
         private void InitiateSaveInfo(int id, string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
-            saveInfos = new SaveInfos(id,username,difficultyLevel,levelName,characterStatus);
+            saveSlot1 = new SaveInfos(1,username,difficultyLevel,levelName,characterStatus);
+            saveSlot2 = new SaveInfos(2, username, difficultyLevel, levelName, characterStatus);
+            saveSlot3 = new SaveInfos(3, username, difficultyLevel, levelName, characterStatus);
         }
 
         private void InitiateRepos()
@@ -84,6 +92,27 @@ namespace Game
                 playerSettings = settings.First();
             }
         }
+        
+        /// <summary>
+        /// Check for existing saves in the database, if there are, we load those saves, otherwise, we create them as "new saves"
+        /// </summary>
+        private void CheckForExistingSaves()
+        {
+            List<SaveInfos> saves = saveGameRepo.FindAll();
+
+            if (saves.Count == 0)
+            {
+                CreateSave(saveSlot1);
+                CreateSave(saveSlot2);
+                CreateSave(saveSlot3);
+            }
+            else
+            {
+                saveSlot1 = saves[0];
+                saveSlot2 = saves[1];
+                saveSlot3 = saves[2];
+            }
+        }
 
         public void UpdateSettings()
         {
@@ -92,10 +121,10 @@ namespace Game
         
         #region CreateSave
 
-        public void CreateSave()
+        public void CreateSave(SaveInfos saveSlot)
         {
-            saveGameRepo.Insert(saveInfos);
-            foreach (var character in saveInfos.characterInfos)
+            saveGameRepo.Insert(saveSlot);
+            foreach (var character in saveSlot.characterInfos)
             {
                 characterStatusRepo.Insert(character);
             }
@@ -105,26 +134,49 @@ namespace Game
 
         #region DeleteSave
 
-        public void DeleteSave()
+        public void DeleteSave(SaveInfos saveSlot)
         {
-            foreach (var character in saveInfos.characterInfos)
+            foreach (var character in saveSlot.characterInfos)
             {
-                characterStatusRepo.Delete(saveInfos.id);
+                characterStatusRepo.Delete(saveSlot.id);
             }
-            saveGameRepo.Delete(saveInfos.id);
+            saveGameRepo.Delete(saveSlot.id);
         }
 
         #endregion
 
         #region UpdateSave
 
-        public void UpdateSave()
+        public void UpdateSave(int saveSlotNumber)
         {
-            saveGameRepo.Update(saveInfos);
-            foreach (var character in saveInfos.characterInfos)
+            switch (saveSlotNumber)
             {
-                characterStatusRepo.Update(character);
+                case 1:
+                    saveGameRepo.Update(saveSlot1);
+                    foreach (var character in saveSlot1.characterInfos)
+                    {
+                        characterStatusRepo.Update(character);
+                    }
+
+                    break;
+                case 2:
+                    saveGameRepo.Update(saveSlot2);
+                    foreach (var character in saveSlot1.characterInfos)
+                    {
+                        characterStatusRepo.Update(character);
+                    }
+
+                    break;
+                case 3:
+                    saveGameRepo.Update(saveSlot3);
+                    foreach (var character in saveSlot1.characterInfos)
+                    {
+                        characterStatusRepo.Update(character);
+                    }
+
+                    break;
             }
+            
         }
 
         #endregion

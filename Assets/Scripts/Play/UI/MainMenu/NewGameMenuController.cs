@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Button = UnityEngine.UI.Button;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -20,6 +20,14 @@ namespace Game
         private MenusController menusController;
         private SaveController saveController;
 
+        private int saveSlotSelectedNumber;
+
+        public int SaveSlotSelectedNumber
+        {
+            get => saveSlotSelectedNumber;
+            set => saveSlotSelectedNumber = value;
+        }
+
         private void Awake()
         {
             menusController = Finder.MenusController;
@@ -34,11 +42,24 @@ namespace Game
             {
                 playerNameInputField.text = "Franklem";
             }
+
+            switch (saveSlotSelectedNumber)
+            {
+                case 1:
+                    saveController.saveSlot1.username = playerNameInputField.text;
+                    saveController.saveSlot1.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+                    break;
+                case 2:
+                    saveController.saveSlot2.username = playerNameInputField.text;
+                    saveController.saveSlot2.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+                    break;
+                case 3:
+                    saveController.saveSlot3.username = playerNameInputField.text;
+                    saveController.saveSlot3.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+                    break;
+            }
             
-            saveController.saveInfos.username = playerNameInputField.text;
-            saveController.saveInfos.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
-            
-            saveController.CreateSave();
+            saveController.UpdateSave(saveSlotSelectedNumber);
             //CHARGER NOUVELLE SCENE
             DontDestroyOnLoad(saveController);
             SceneManager.LoadScene("ParabeneForest");

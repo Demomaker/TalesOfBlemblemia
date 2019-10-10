@@ -28,7 +28,7 @@ namespace Game
         public void StartNewGame()
         {
             //menu newgame
-            menusController.GoToNewGameMenu();
+            menusController.GoToSaveSelectionMenu();
         }
 
         [UsedImplicitly]

@@ -9,11 +9,13 @@ namespace Game
         [SerializeField] private Canvas loadGameMenuCanvas;
         [SerializeField] private Canvas optionsMenuCanvas;
         [SerializeField] private Canvas creditsMenuCanvas;
+        [SerializeField] private Canvas saveSlotSelectionCanvas;
 
         private MainMenuController mainMenuController;
         private NewGameMenuController newGameMenuController;
         private OptionsMenuController optionsMenuController;
         private CreditsMenuController creditsMenuController;
+        private SaveSlotSelectionController saveSlotSelectionController;
 
         private void Awake()
         {
@@ -31,11 +33,19 @@ namespace Game
             optionsMenuCanvas.enabled = false;
             creditsMenuCanvas.enabled = false;
         }
-        
-        public void GoToNewGameMenu()
+
+        public void GoToSaveSelectionMenu()
         {
             mainMenuCanvas.enabled = false;
+            saveSlotSelectionCanvas.enabled = true;
+
+        }
+        public void GoToNewGameMenu(int saveNumber)
+        {
+            saveSlotSelectionCanvas.enabled = false;
+            newGameMenuController.SaveSlotSelectedNumber = saveNumber;
             newGameMenuCanvas.enabled = true;
+            
         }
         
         public void GoToLoadGameMenu()
