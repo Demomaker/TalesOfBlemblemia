@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Game;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Finder = Harmony.Finder;
@@ -34,8 +35,12 @@ public class LevelEntry : MonoBehaviour
     }
     public void OnLevelEntry()
     {
-        if(CanBeClicked && !string.IsNullOrEmpty(representedLevelName))
-        Finder.GameController.LoadLevel(representedLevelName);
+        if (CanBeClicked && !string.IsNullOrEmpty(representedLevelName))
+        {
+            
+            EventSystem.current.SetSelectedGameObject(null);
+            Finder.GameController.LoadLevel(representedLevelName);
+        }
     }
 
     private void Update()

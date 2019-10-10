@@ -59,7 +59,6 @@ namespace Game
             animator.SetBool("IsOpen",true);
             AchievementBeingShown = true;
             StartCoroutine(TypeAchievementText(achievement.AchievementName));
-            //
         }
 
         IEnumerator TypeAchievementText(string text)

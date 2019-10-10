@@ -27,7 +27,7 @@ namespace Game
             }
             
             EventSystem.current.SetSelectedGameObject(null);
-            
+            if (tile == null) return;
             var gridControllerSelectedUnit = tile.GridController.SelectedUnit;
             
             if (tile.LinkedUnitCanBeSelected)
