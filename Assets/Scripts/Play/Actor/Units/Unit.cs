@@ -142,8 +142,23 @@
              movesLeft = Stats.MoveSpeed;
          }
 
-         public void MoveTo(Tile tile)
+         private List<Tile> PrepareMove(Tile tile)
          {
+             currentTile.UnlinkUnit();
+             isMoving = true;
+             List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
+                 currentTile.LogicalPosition.x,
+                 currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
+             path.Reverse();
+             path.RemoveAt(0);
+             path.Add(tile);
+             movesLeft -= currentTile.CostToMove;
+             return path;
+         }
+         
+         public void MoveToAction(Action action)
+         {
+             var tile = action.Path.Last();
              if (tile == null || tile == currentTile || isMoving) return;
              if (currentTile == null)
              {
@@ -154,14 +169,9 @@
              {
                  currentTile.UnlinkUnit();
                  isMoving = true;
-                 List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
-                     currentTile.LogicalPosition.x,
-                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
-                 path.Reverse();
-                 path.RemoveAt(0);
-                 path.Add(tile);
+                 action.Path.RemoveAt(0);
                  movesLeft -= currentTile.CostToMove;
-                 MoveByPath(path);
+                 MoveByAction(action);
              }
              movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
          }
@@ -171,16 +181,13 @@
              currentTile = tile;
              tile.LinkUnit(this);
          }
-
-
+         
          private IEnumerator InitPosition()
          {
              yield return new WaitForEndOfFrame();
-             MoveTo(gridController.GetTile(initialPosition.x, initialPosition.y));
+             MoveToTileAndAct(gridController.GetTile(initialPosition.x, initialPosition.y));
          }
-
-         //TODO changements pour la mécanique d'attaque
-         //La chance de hit, le coup critique, la riposte ensuite
+         
          public bool Attack(Unit target, bool isCountering = false)
          {
              if (TargetIsInRange(target))
@@ -259,13 +266,28 @@
              Destroy(gameObject);
          }
 
-         private void MoveByPath(List<Tile> path)
+         /// <summary>
+         /// Starts to move following an action path and then executes the action
+         /// Author: Jérémie Bertrand
+         /// </summary>
+         /// <param name="action">The action to execute</param>
+         public void MoveByAction(Action action)
          {
-             StartCoroutine(MoveByPath(path,Constants.MOVEMENT_DURATION));
+             StartCoroutine(MoveByAction(action, Constants.MOVEMENT_DURATION));
          }
 
-         private IEnumerator MoveByPath(List<Tile> path, float duration)
+         /// <summary>
+         /// Moves following an action path and then executes the action
+         /// Author: Jérémie Bertrand
+         /// Contributor: Zacharie Lavigne
+         /// </summary>
+         /// <param name="action">The action to execute</param>
+         /// <param name="duration">The duration in seconds to walk to each tile</param>
+         /// <returns>Is a coroutine</returns>
+         private IEnumerator MoveByAction(Action action, float duration)
          {
+             var path = action.Path;
+             
              Tile finalTile = null;
              for (int i = 0; i < path.Count; i++)
              {
@@ -292,6 +314,18 @@
              LinkUnitToTile(finalTile);
              transform.position = currentTile.WorldPosition;
              isMoving = false;
+             if (action.ActionType != ActionType.Nothing)
+             {
+                 if (action.ActionType == ActionType.Attack && action.Target != null)
+                 {
+                     if (!Attack(action.Target))
+                         Rest();
+                 }
+                 else
+                 {
+                     Rest();
+                 }
+             }
          }
 
          public void Rest()
@@ -302,19 +336,19 @@
          }
          
          /// <summary>
-         /// Executes an action
+         /// Executes an action for the AI
          /// Author: Jérémie Bertrand, Zacharie Lavigne
          /// </summary>
          /// <param name="actionToDo">The action to execute on this turn</param>
          public void ExecuteAction(Action actionToDo)
          {
-             if (!isMoving && movesLeft > 0 && actionToDo.Path.Count > 1 && actionToDo.Path.Last() != currentTile) 
-                 MoveTo(actionToDo.Path.Last());
+             if (!isMoving && movesLeft > 0 && actionToDo.Path.Count > 1 && actionToDo.Path.Last() != currentTile)
+                 MoveToAction(actionToDo);
              else if (!isMoving && !isAttacking)
              {
                  if (actionToDo.ActionType == ActionType.Attack && actionToDo.Target != null)
                  {
-                     if(!Attack(actionToDo.Target))
+                     if (!Attack(actionToDo.Target))
                          Rest();
                  }
                  else
@@ -329,6 +363,39 @@
              if (currentTile != null)
                  movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
          }
-         
+
+         /// <summary>
+         /// Starts a series of action to move to a specific tile and do an action afterwards
+         /// Author: Zacharie Lavigne
+         /// </summary>
+         /// <param name="tile">The destination</param>
+         /// <param name="actionType">The type of action to execute</param>
+         /// <param name="target">The target if the action is to attack</param>
+         public void MoveToTileAndAct(Tile tile, ActionType actionType = ActionType.Nothing, Unit target = null)
+         {
+             if (tile == null || tile == currentTile || isMoving) return;
+             if (currentTile == null)
+             {
+                 transform.position = tile.WorldPosition;
+                 LinkUnitToTile(tile);
+             }
+             else
+             {
+                 MoveByAction(new Action(PrepareMove(tile), actionType, target));
+             }
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+         }
+
+         /// <summary>
+         /// Starts a series of action to move next to an enemy unit and attack it
+         /// Author: Zacharie Lavigne
+         /// </summary>
+         /// <param name="target">The unit to attack</param>
+         public void AttackDistantUnit(Unit target)
+         {
+             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile	, this);
+             if (adjacentTile != null)
+                MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
+         }
      } 
  }
