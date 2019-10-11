@@ -149,10 +149,7 @@ namespace Game
 
         public void DeleteSave(SaveInfos saveSlot)
         {
-            foreach (var character in saveSlot.characterInfos)
-            {
-                characterStatusRepo.Delete(saveSlot.id);
-            }
+            characterStatusRepo.Delete(saveSlot.id);
             saveGameRepo.Delete(saveSlot.id);
         }
 
