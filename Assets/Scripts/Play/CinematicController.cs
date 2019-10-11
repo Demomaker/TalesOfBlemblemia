@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Harmony;
+﻿using System.Collections;
 using Play;
 using UnityEngine;
-using Finder = Game.Finder;
 
 public class CinematicController : MonoBehaviour
 {
+    public const float DEFAULT_CAMERA_ZOOM = 8.5f;
+    public const float DEFAULT_CAMERA_Z_POSITION = -10;
     private Camera camera = null;
     private Transform camTransform = null;
     private DialogueManager dialogueManager;
 
-    [SerializeField] private Vector2Int initialPosition;
+    [SerializeField] private Transform initialPosition;
     [SerializeField] private CameraAction[] startActions;
     [SerializeField] private CameraAction[] endActions;
 
@@ -20,29 +18,23 @@ public class CinematicController : MonoBehaviour
     {
         camera = Camera.main;
         camTransform = camera.gameObject.transform;
+        camTransform.position = initialPosition.position + new Vector3(0,0,DEFAULT_CAMERA_Z_POSITION);
         camera.orthographicSize = 4;
         dialogueManager = FindObjectOfType<DialogueManager>();
     }
 
     private void Start()
     {
-        StartCoroutine(Lerp());
+        StartCoroutine(PlayCameraActions(startActions));
     }
 
-    private Vector3 GetWorldPosition(Vector2Int positionInGrid)
+    private IEnumerator PlayCameraActions(CameraAction[] cameraActions)
     {
-        return Finder.GridController.GetTile(positionInGrid.x, positionInGrid.y).WorldPosition + new Vector3(0, 0, -10);
-    }
-
-    IEnumerator Lerp()
-    {
-        yield return new WaitForEndOfFrame();
-        camera.transform.position = GetWorldPosition(initialPosition);
         for (int i = 0; i < startActions.Length; i++)
         {
-            var target = startActions[i];
+            var target = cameraActions[i];
             var from = camTransform.position;
-            var to = GetWorldPosition(target.CamTarget);
+            var to = target.CameraTarget.position + new Vector3(0, 0, DEFAULT_CAMERA_Z_POSITION);
             var duration = target.Duration;
             for (float t = 0; t < duration; t += Time.deltaTime) {
                 camTransform.position = Vector3.Lerp(from, to, t / duration);
@@ -50,21 +42,22 @@ public class CinematicController : MonoBehaviour
             }
             camTransform.position = to;
             dialogueManager.StartDialogue(target.Dialogue);
-            while (!Input.GetKeyDown(target.KeyToClick))
+            while (dialogueManager.IsDisplayingDialogue)
             {
                 yield return null;
             }
         }
         var startPos = camTransform.position;
         var startSize = camera.orthographicSize;
-        var endSize = 8.5f;
+        var endSize = DEFAULT_CAMERA_ZOOM;
         float dur = 0.5f;
         for (float t = 0; t < dur; t += Time.deltaTime) {
-            camTransform.position = Vector3.Lerp(startPos, GetWorldPosition(new Vector2Int(7, 7)), t / dur);
+            camTransform.position = Vector3.Lerp(startPos,  new Vector3(0,0, DEFAULT_CAMERA_Z_POSITION), t / dur);
             camera.orthographicSize = Mathf.Lerp(startSize, endSize, t / dur);
             yield return null;
         }
-        camTransform.position = GetWorldPosition(new Vector2Int(7, 7));
+
+        camTransform.position = new Vector3(0, 0, DEFAULT_CAMERA_Z_POSITION);
         camera.orthographicSize = endSize;
     }
 }

@@ -1,18 +1,24 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Play
 {
     [System.Serializable]
     public class CameraAction
     {
-        [SerializeField] private Vector2Int camTarget;
+        [Header("Camera Values")]
+        [SerializeField] private Transform cameraTarget;
         [SerializeField] private float duration = 0;
-        [SerializeField] private KeyCode keyToPress;
-        [SerializeField] private Dialogue dialogue;
-        public Vector2Int CamTarget => camTarget;
+        [Range(4f, 8.5f)][SerializeField] private float cameraZoom = CinematicController.DEFAULT_CAMERA_ZOOM;
+
+        [SerializeField] private bool haveADialogue = false;
+        
+        [SerializeField] private Quote[] quotes;
+        public Transform CameraTarget => cameraTarget;
         public float Duration => duration;
-        public KeyCode KeyToClick => keyToPress;
-        public Dialogue Dialogue => dialogue;
+        public Dialogue Dialogue => new Dialogue(quotes);
+        public float CameraZoom => cameraZoom;
     }
-    
 }

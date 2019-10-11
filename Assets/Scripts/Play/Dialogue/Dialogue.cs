@@ -6,9 +6,12 @@
 [System.Serializable]
 public class Dialogue
 {
-    [TextArea(3,2)]
-    public string[] sentences;
+    [SerializeField] private Quote[] sentences;
+    public Quote[] Sentences => sentences;
 
-    public Texture[] texture;
+    public Dialogue(Quote[] sentences)
+    {
+        this.sentences = sentences;
+    }
 
 }
