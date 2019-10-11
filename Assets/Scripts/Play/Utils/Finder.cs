@@ -45,6 +45,7 @@ namespace Game
         
         //Author : Antoine Lessard
         public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);
+        public static SaveController SaveController => FindWithTag<SaveController>(Tags.SAVE_CONTROLLER);
 
         private static T FindWithTag<T>(string tag)
         {

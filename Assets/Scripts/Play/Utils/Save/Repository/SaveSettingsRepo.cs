@@ -18,13 +18,9 @@ namespace Game
         {
             var command = connection.CreateCommand();
             command.CommandText =
-                "INSERT INTO playersettings(playerId, musicToggle, sfxToggle, mainVolume, musicVolume, sfxVolume) VALUES(?,?,?,?,?,?)";
+                "INSERT INTO playersettings(musicToggle, sfxToggle, mainVolume, musicVolume, sfxVolume) VALUES(?,?,?,?,?)";
             
             #region SettingUpParameters
-            var playerIdParameter = command.CreateParameter();
-            playerIdParameter.Value = myObject.PlayerId;
-            command.Parameters.Add(playerIdParameter);
-
             var musicToggleParameter = command.CreateParameter();
             musicToggleParameter.Value = Convert.ToInt32(myObject.MusicToggle);
             command.Parameters.Add(musicToggleParameter);
@@ -47,25 +43,6 @@ namespace Game
             #endregion
             
             command.ExecuteNonQuery();
-        }
-
-        public PlayerSettings Find(long id)
-        {
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM playersettings WHERE playerid = ?";
-
-            var playerIdParameter = command.CreateParameter();
-            playerIdParameter.Value = id;
-            command.Parameters.Add(playerIdParameter);
-
-            DbDataReader reader = command.ExecuteReader();
-            PlayerSettings playerSettings = new PlayerSettings(0,0,true,true,0,0,0);
-            while (reader.Read())
-            {
-                playerSettings = PlayerSettingsBuilder(reader);
-            }
-
-            return playerSettings;
         }
 
         public List<PlayerSettings> FindAll()
@@ -117,15 +94,11 @@ namespace Game
             
             command.ExecuteNonQuery();
         }
-
+        
         public void Delete(int id)
         {
             var command = connection.CreateCommand();
-            command.CommandText = "DELETE FROM playersettings WHERE playerId = ?";
-
-            var playerSettingsToDelete = command.CreateParameter();
-            playerSettingsToDelete.Value = id;
-            command.Parameters.Add(playerSettingsToDelete);
+            command.CommandText = "DELETE * FROM playersettings";
 
             command.ExecuteNonQuery();
         }
@@ -137,11 +110,12 @@ namespace Game
         /// <returns>A new instance of PlayerSetting with the settings in the database for the player</returns>
         private static PlayerSettings PlayerSettingsBuilder(DbDataReader reader)
         {
-            PlayerSettings playerSettings = new PlayerSettings(0,0,true,true,0,0,0);
+            PlayerSettings playerSettings = new PlayerSettings(0, Constants.DEFAULT_TOGGLE_VALUE,
+                Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE,
+                Constants.DEFAULT_SLIDER_VALUE);
             try
             {
                 playerSettings = new PlayerSettings(Convert.ToInt32(reader["id"]),
-                    Convert.ToInt32(reader["playerId"]),
                     Convert.ToBoolean(reader["musicToggle"]),
                     Convert.ToBoolean(reader["sfxToggle"]),
                     Convert.ToInt32(reader["mainVolume"]),

@@ -31,6 +31,20 @@
         public const string ACHIEVEMENT_GET_STRING = "Achievement Get!";
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
 
+        public const bool DEFAULT_TOGGLE_VALUE = true;
+        public const int DEFAULT_SLIDER_VALUE = 100;
+        public const string DEFAULT_USERNAME = "Franklem";
+        
+        //Playable characters
+        public const string FRANKLEM_NAME = "Franklem";
+        public const string MYRIAM_NAME = "Myriam";
+        public const string BRAM_NAME = "Bram";
+        public const string RASS_NAME = "Rass";
+        public const string ULRIC_NAME = "Ulric";
+        public const string JEBEDIAH_NAME = "Jebediah";
+        public const string THOMAS_NAME = "Thomas";
+        public const string ABRAHAM_NAME = "Abraham";
+        
         public static class AchievementName
         {
             public const string COMPLETE_CAMPAIGN_ON_EASY = "Baby Steps";
