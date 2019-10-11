@@ -206,7 +206,7 @@ namespace Game
 
         private static (int,int) CheckDownMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y, bool unitIsEnemy)
         {
-            if (toY + 1 < grid.NbLines && movementCosts[toX, toY + 1] < movementCosts[toX, toY])
+            if (toY + 1 < grid.NbLines && toY + 1 >= 0 && movementCosts[toX, toY + 1] < movementCosts[toX, toY])
             {
                 var tile = grid.GetTile(toX, toY + 1);
                 if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
@@ -223,7 +223,7 @@ namespace Game
 
         private static (int,int) CheckUpMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y, bool unitIsEnemy)
         {
-            if (toY - 1 < grid.NbLines && movementCosts[toX, toY - 1] < movementCosts[toX, toY])
+            if (toY - 1 < grid.NbLines && toY - 1 >= 0 && movementCosts[toX, toY - 1] < movementCosts[toX, toY])
             {
                 var tile = grid.GetTile(toX, toY - 1);
                 if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
@@ -240,7 +240,7 @@ namespace Game
 
         private static (int,int) CheckRightMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y, bool unitIsEnemy)
         {
-            if (toX + 1 < grid.NbColumns && movementCosts[toX + 1, toY] < movementCosts[toX, toY])
+            if (toX + 1 < grid.NbColumns && toX + 1 >= 0 && movementCosts[toX + 1, toY] < movementCosts[toX, toY])
             {
                 var tile = grid.GetTile(toX + 1, toY);
                 if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
@@ -257,7 +257,7 @@ namespace Game
 
         private static (int,int) CheckLeftMovement(GridController grid, int[,] movementCosts, List<Tile> path, int toX, int toY, int x, int y, bool unitIsEnemy)
         {
-            if (toX - 1 < grid.NbColumns && movementCosts[toX - 1, toY] < movementCosts[toX, toY])
+            if (toX - 1 < grid.NbColumns && toX - 1 >= 0 && movementCosts[toX - 1, toY] < movementCosts[toX, toY])
             {
                 var tile = grid.GetTile(toX - 1, toY);
                 if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 

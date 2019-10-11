@@ -32,7 +32,7 @@ namespace Game
         /// </summary>
         public Unit Target => target;
 
-        public Action(List<Tile> path, ActionType actionType, float score, Unit target = null)
+        public Action(List<Tile> path, ActionType actionType, Unit target = null, float score = 0f)
         {
             this.path = path;
             this.actionType = actionType;

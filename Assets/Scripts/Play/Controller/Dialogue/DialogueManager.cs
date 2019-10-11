@@ -21,13 +21,10 @@ public class DialogueManager : MonoBehaviour
     private Queue<Quote> sentences;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        sentences = new Queue<Quote>();
-    }
 
     public void StartDialogue(Dialogue dialogue)
     {
+        sentences = new Queue<Quote>();
         isDisplayingDialogue = true;
         animator.SetBool("IsOpen",true);
         
