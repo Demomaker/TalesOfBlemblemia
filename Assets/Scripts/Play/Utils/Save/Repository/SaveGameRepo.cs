@@ -70,8 +70,16 @@ namespace Game
         {
             var command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = "UPDATE SaveGame SET level_name = ? WHERE savegame_id = ?";
+            command.CommandText = "UPDATE SaveGame SET player_name = ?, difficulty_level = ?, level_name = ? WHERE savegame_id = ?";
 
+            var playerName = command.CreateParameter();
+            playerName.Value = myObject.username;
+            command.Parameters.Add(playerName);
+
+            var difficulty = command.CreateParameter();
+            difficulty.Value = myObject.difficultyLevel;
+            command.Parameters.Add(difficulty);
+            
             var levelName = command.CreateParameter();
             levelName.Value = myObject.levelName;
             command.Parameters.Add(levelName);

@@ -16,20 +16,35 @@ namespace Game
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
         private SqliteConnection connection;
-
-        #region Test
+        
         public void Awake()
         {
-            Dictionary<string, bool> temp = new Dictionary<string, bool>{{"Franklem",false}};
-            InitiateSaveController(1,"Franklem",DifficultyLevel.Medium.ToString(),Constants.LEVEL_1_SCENE_NAME,temp);
+            var playableCharactersDictionary = CreateBaseCharacterDictionary();
+            InitiateSaveController(Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
+                Constants.LEVEL_1_SCENE_NAME, playableCharactersDictionary);
         }
-        
-        #endregion
-        
+
 
         #region Initiate
 
-        public void InitiateSaveController(int id, string username, string difficultyLevel, string levelName,
+        private static Dictionary<string, bool> CreateBaseCharacterDictionary()
+        {
+            Dictionary<string, bool> playableCharactersDictionary = new Dictionary<string, bool>
+            {
+                {Constants.FRANKLEM_NAME, false},
+                {Constants.MYRIAM_NAME, false},
+                {Constants.BRAM_NAME, false},
+                {Constants.RASS_NAME, false},
+                {Constants.ULRIC_NAME, false},
+                {Constants.JEBEDIAH_NAME, false},
+                {Constants.THOMAS_NAME, false},
+                {Constants.ABRAHAM_NAME, false}
+            };
+            return playableCharactersDictionary;
+        }
+        
+        
+        private void InitiateSaveController(string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
 #if UNITY_EDITOR
@@ -40,7 +55,7 @@ namespace Game
             
             connection = new SqliteConnection(path);
             connection.Open();
-            InitiateSaveInfo(id, username, difficultyLevel, levelName, characterStatus);
+            InitiateSaveInfo(username, difficultyLevel, levelName, characterStatus);
             InitiateSettingsInfo();
             InitiateRepos();
             //Check if there are any settings in the database
@@ -49,18 +64,16 @@ namespace Game
             CheckForExistingSaves();
         }
 
-        
-
         private void InitiateSettingsInfo()
         {
-            playerSettings = new PlayerSettings(0, Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_TOGGLE_VALUE,
+            playerSettings = new PlayerSettings(1, Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_TOGGLE_VALUE,
                 Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE);
         }
 
-        private void InitiateSaveInfo(int id, string username, string difficultyLevel, string levelName,
+        private void InitiateSaveInfo(string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
-            saveSlot1 = new SaveInfos(1,username,difficultyLevel,levelName,characterStatus);
+            saveSlot1 = new SaveInfos(1, username, difficultyLevel, levelName, characterStatus);
             saveSlot2 = new SaveInfos(2, username, difficultyLevel, levelName, characterStatus);
             saveSlot3 = new SaveInfos(3, username, difficultyLevel, levelName, characterStatus);
         }
@@ -121,7 +134,7 @@ namespace Game
         
         #region CreateSave
 
-        public void CreateSave(SaveInfos saveSlot)
+        private void CreateSave(SaveInfos saveSlot)
         {
             saveGameRepo.Insert(saveSlot);
             foreach (var character in saveSlot.characterInfos)
@@ -176,7 +189,6 @@ namespace Game
 
                     break;
             }
-            
         }
 
         #endregion
