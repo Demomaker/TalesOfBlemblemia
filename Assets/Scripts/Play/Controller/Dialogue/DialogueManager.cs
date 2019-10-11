@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,22 +13,17 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Text nameText;
     [SerializeField] private Text dialogueText;
     [SerializeField] private Animator animator;
-
+    
     private Queue<string> sentences;
+    private Texture[] textures;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        sentences = new Queue<string>();
-    }
 
     public void StartDialogue(Dialogue dialogue)
     {
+        sentences = new Queue<string>();
         animator.SetBool("IsOpen",true);
         
-        ChangePortrait(dialogue.texture);
-        
-        nameText.text = dialogue.name;
         sentences.Clear();
 
         foreach (string sentence in dialogue.sentences)
@@ -35,6 +31,7 @@ public class DialogueManager : MonoBehaviour
             sentences.Enqueue(sentence);
         }
 
+        textures = dialogue.texture;
         DisplayNextSentence();
     }
 
@@ -51,16 +48,28 @@ public class DialogueManager : MonoBehaviour
             EndDialogue();
             return;
         }
-
         string sentence = sentences.Dequeue();
+
+        string[] infos = sentence.Split(':');
+        
+        nameText.text = infos[0];
+        foreach (var texture in textures)
+        {
+            if (texture.name == infos[0])
+            {
+                ChangePortrait(texture);
+                break;
+            }
+        }
+        
         StopAllCoroutines();
-        StartCoroutine(TypeSentence(sentence));
+        StartCoroutine(TypeSentence(infos[1]));
     }
 
     IEnumerator TypeSentence(string sentence)
     {
         dialogueText.text = "";
-        foreach (char letter in sentence.ToCharArray())
+        foreach (char letter in sentence)
         {
             dialogueText.text += letter;
             yield return null;

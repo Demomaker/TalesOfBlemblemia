@@ -12,12 +12,14 @@ using UnityEngine.UI;
         [SerializeField] private Sprite normalTileSprite = null;
         [SerializeField] private Sprite selectedTileSprite = null;
         [SerializeField] private Sprite attackableTileSprite = null;
+        [SerializeField] private Sprite healableTileSprite = null;
 
         public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
         public Sprite AttackableTileSprite => attackableTileSprite;
+        public Sprite HealableTileSprite => healableTileSprite;
 
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
@@ -63,7 +65,7 @@ using UnityEngine.UI;
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit) && tile.LinkedUnit.IsEnemy)
+                        else if (tile.LinkedUnit != null && (linkedUnit.TargetIsInRange(tile.LinkedUnit) || FindAvailableAdjacentTile(tile, linkedUnit) != null) && tile.LinkedUnit.IsEnemy)
                         {
                             tile.DisplayAttackActionPossibility();
                         }
@@ -71,10 +73,38 @@ using UnityEngine.UI;
                 }
             }
         }
+        
+        public Tile FindAvailableAdjacentTile(Tile tile, Unit unit)
+        {
+            int tilePosX = tile.LogicalPosition.x;
+            int tilePosY = tile.LogicalPosition.y;
+            
+            var unitMovesLeft = unit.MovesLeft;
+            var movementCosts = unit.MovementCosts;
+            
+            Tile tileToLeft = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
+            if (tileToLeft != null && tileToLeft.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
+                return tileToLeft;
+            Tile tileAbove = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
+            if (tileAbove != null && tileAbove.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
+                return tileAbove;
+            Tile tileToRight = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
+            if (tileToRight != null && tileToRight.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
+                return tileToRight;
+            Tile tileUnder = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
+            if (tileUnder != null && tileUnder.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
+                return tileUnder;
+            return null;
+        }
 
         public Tile GetTile(int x, int y)
         {
-            return transform.GetChild(x + y * NbColumns).GetComponent<Tile>();
+            if (IsValidGridPosition(x, y))
+            {
+                return transform.GetChild(x + y * NbColumns).GetComponent<Tile>();
+            }
+
+            return null;
         }
         
         public bool IsValidGridPosition(int x, int y)
