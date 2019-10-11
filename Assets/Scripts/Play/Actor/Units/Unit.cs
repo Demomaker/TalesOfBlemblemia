@@ -3,6 +3,7 @@
  using System.Collections.Generic;
  using System.Linq;
  using DG.Tweening;
+ using Play;
  using UnityEngine;
  using Random = UnityEngine.Random;
 
@@ -347,6 +348,7 @@
              {
                  playerType = PlayerType.Ally;
                  HumanPlayer.Instance.AddOwnedUnit(this);
+                 GetComponent<DialogueTrigger>().TriggerDialogue();
                  Debug.Log(name + " has been recruited!");
              }
              return IsRecruitable;

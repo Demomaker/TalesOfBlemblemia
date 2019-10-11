@@ -67,7 +67,7 @@ using UnityEngine.UI;
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit)  || FindAvailableAdjacentTile(tile, linkedUnit) != null))
+                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit))
                         {
                             if (tile.LinkedUnit.IsEnemy)
                             {

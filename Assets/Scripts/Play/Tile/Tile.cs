@@ -20,12 +20,12 @@ namespace Game
         private GridController gridController;
         public GridController GridController => gridController;
         
-        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
-        private bool IsWalkable => tileType != TileType.Obstacle;
+        public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
+        public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        public bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
+        public bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
-        private bool IsOccupiedByAUnit => linkedUnit != null;
+        public bool IsOccupiedByAUnit => linkedUnit != null;
         private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;

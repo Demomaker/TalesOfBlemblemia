@@ -8,8 +8,6 @@ namespace Game
     [CustomEditor(typeof(LevelController))]
     public class LevelControllerEditor : Editor
     {
-        private SerializedProperty dialogueUi;
-        private SerializedProperty dialogueTriggerStartFranklem;
         private SerializedProperty levelName;
         private SerializedProperty doNotEnd;
         private SerializedProperty completeIfAllEnemiesDefeated;
@@ -28,8 +26,6 @@ namespace Game
 
         private void OnEnable()
         {
-            dialogueUi = serializedObject.FindProperty("dialogueUi");
-            dialogueTriggerStartFranklem = serializedObject.FindProperty("dialogueTriggerStartFranklem");
             levelName = serializedObject.FindProperty("levelName");
             doNotEnd = serializedObject.FindProperty("doNotEnd");
             completeIfAllEnemiesDefeated = serializedObject.FindProperty("completeIfAllEnemiesDefeated");
@@ -54,13 +50,7 @@ namespace Game
             serializedObject.Update();
             
             EditorGUILayout.LabelField("Dialogue", EditorStyles.boldLabel);
-            
-            dialogueUi.objectReferenceValue = EditorGUILayout.ObjectField("Dialogue UI",
-                dialogueUi.objectReferenceValue, typeof(GameObject), true);
-            
-            dialogueTriggerStartFranklem.objectReferenceValue = EditorGUILayout.ObjectField("Dialogue Trigger Start Franklem",
-                dialogueTriggerStartFranklem.objectReferenceValue, typeof(DialogueTrigger), true);
-            
+
             EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
             levelName.stringValue = EditorGUILayout.TextField("Level Name", levelName.stringValue);

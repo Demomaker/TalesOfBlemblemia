@@ -13,8 +13,6 @@ namespace Play
         [SerializeField] private float duration = 0;
         [Range(4f, 8.5f)][SerializeField] private float cameraZoom = CinematicController.DEFAULT_CAMERA_ZOOM;
 
-        [SerializeField] private bool haveADialogue = false;
-        
         [SerializeField] private Quote[] quotes;
         public Transform CameraTarget => cameraTarget;
         public float Duration => duration;

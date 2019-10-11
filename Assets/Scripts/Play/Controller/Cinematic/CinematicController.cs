@@ -9,10 +9,13 @@ public class CinematicController : MonoBehaviour
     private Camera camera = null;
     private Transform camTransform = null;
     private DialogueManager dialogueManager;
+    private bool isPlayingACutScene = false;
 
+    [SerializeField] private GameObject dialogueUI;
     [SerializeField] private Transform initialPosition;
     [SerializeField] private CameraAction[] startActions;
     [SerializeField] private CameraAction[] endActions;
+    public bool IsPlayingACutScene => isPlayingACutScene;
 
     private void Awake()
     {
@@ -25,21 +28,25 @@ public class CinematicController : MonoBehaviour
 
     private void Start()
     {
+        if (dialogueUI != null) dialogueUI.SetActive(true);
         StartCoroutine(PlayCameraActions(startActions));
     }
 
     private IEnumerator PlayCameraActions(CameraAction[] cameraActions)
     {
-        for (int i = 0; i < startActions.Length; i++)
+        isPlayingACutScene = true;
+        for (int i = 0; i < cameraActions.Length; i++)
         {
             var target = cameraActions[i];
             var from = camTransform.position;
             var to = target.CameraTarget.position + new Vector3(0, 0, DEFAULT_CAMERA_Z_POSITION);
             var duration = target.Duration;
+            
             for (float t = 0; t < duration; t += Time.deltaTime) {
                 camTransform.position = Vector3.Lerp(from, to, t / duration);
                 yield return null;
             }
+            
             camTransform.position = to;
             dialogueManager.StartDialogue(target.Dialogue);
             while (dialogueManager.IsDisplayingDialogue)
@@ -59,5 +66,17 @@ public class CinematicController : MonoBehaviour
 
         camTransform.position = new Vector3(0, 0, DEFAULT_CAMERA_Z_POSITION);
         camera.orthographicSize = endSize;
+
+        isPlayingACutScene = false;
+    }
+
+    public void LaunchCinematic(CameraAction[] actions)
+    {
+        StartCoroutine(PlayCameraActions(actions));
+    }
+
+    public void LaunchEndCinematic()
+    {
+        StartCoroutine(PlayCameraActions(endActions));
     }
 }

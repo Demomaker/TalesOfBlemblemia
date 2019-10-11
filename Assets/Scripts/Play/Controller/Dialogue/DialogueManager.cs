@@ -17,6 +17,7 @@ public class DialogueManager : MonoBehaviour
 
     private bool isDisplayingDialogue = false;
     public bool IsDisplayingDialogue => isDisplayingDialogue;
+    private bool isTyping = false;
     
     private Queue<Quote> sentences;
 
@@ -24,8 +25,8 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(Dialogue dialogue)
     {
-        sentences = new Queue<Quote>();
         isDisplayingDialogue = true;
+        sentences = new Queue<Quote>();
         animator.SetBool("IsOpen",true);
         
         sentences.Clear();
@@ -46,6 +47,7 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
+        if(isTyping) return;
         if (sentences.Count == 0)
         {
             EndDialogue();
@@ -63,18 +65,21 @@ public class DialogueManager : MonoBehaviour
             }
         }
         
-        StopAllCoroutines();
+        //StopAllCoroutines();
         StartCoroutine(TypeSentence(quote.Sentence));
     }
 
     IEnumerator TypeSentence(string sentence)
     {
+        isTyping = true;
         dialogueText.text = "";
         foreach (char letter in sentence)
         {
             dialogueText.text += letter;
             yield return null;
         }
+
+        isTyping = false;
     }
     
     private void EndDialogue()
