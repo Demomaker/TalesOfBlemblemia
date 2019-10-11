@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game
 {
@@ -10,14 +9,14 @@ namespace Game
         [SerializeField] private Canvas loadGameMenuCanvas;
         [SerializeField] private Canvas optionsMenuCanvas;
         [SerializeField] private Canvas creditsMenuCanvas;
+        [SerializeField] private Canvas saveSlotSelectionCanvas;
 
         private MainMenuController mainMenuController;
         private NewGameMenuController newGameMenuController;
         private OptionsMenuController optionsMenuController;
         private CreditsMenuController creditsMenuController;
+        private SaveSlotSelectionController saveSlotSelectionController;
 
-        private IMenuController activeMenuController;
-        
         private void Awake()
         {
             mainMenuController = mainMenuCanvas.GetComponent<MainMenuController>();
@@ -33,62 +32,56 @@ namespace Game
             loadGameMenuCanvas.enabled = false;
             optionsMenuCanvas.enabled = false;
             creditsMenuCanvas.enabled = false;
-
-            activeMenuController = mainMenuController;
         }
 
-        private void Update()
-        {
-            activeMenuController.Update();
-        }
-
-        public void GoToNewGameMenu()
+        public void GoToSaveSelectionMenu()
         {
             mainMenuCanvas.enabled = false;
+            saveSlotSelectionCanvas.enabled = true;
+
+        }
+        public void GoToNewGameMenu(int saveNumber)
+        {
+            saveSlotSelectionCanvas.enabled = false;
+            newGameMenuController.SaveSlotSelectedNumber = saveNumber;
             newGameMenuCanvas.enabled = true;
-            activeMenuController = newGameMenuController;
+            
         }
         
         public void GoToLoadGameMenu()
         {
             mainMenuCanvas.enabled = false;
             loadGameMenuCanvas.enabled = true;
-            //activeMenuController = loadGameMenuController;
         }
         
         public void GoToOptionsMenu()
         {
             mainMenuCanvas.enabled = false;
             optionsMenuCanvas.enabled = true;
-            activeMenuController = optionsMenuController;
         }
 
         public void GoToCreditsMenu()
         {
             mainMenuCanvas.enabled = false;
             creditsMenuCanvas.enabled = true;
-            activeMenuController = creditsMenuController;
         }
 
         public void ReturnFromNewGameMenu()
         {
             newGameMenuCanvas.enabled = false;
             mainMenuCanvas.enabled = true;
-            activeMenuController = mainMenuController;
         }
 
         public void ReturnFromOptionsMenu()
         {
             optionsMenuCanvas.enabled = false;
             mainMenuCanvas.enabled = true;
-            activeMenuController = mainMenuController;
         }
 
         public void ReturnFromLoadGameMenu()
         {
             loadGameMenuCanvas.enabled = false;
             mainMenuCanvas.enabled = true;
-            activeMenuController = mainMenuController;
         }
     }
 }

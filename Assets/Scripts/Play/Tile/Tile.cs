@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    //Author: Jérémie Bertrand
+    // <summary>
+    /// Behaviour of a tile
+    /// Author: Jérémie Bertrand
+    /// </summary>
     public abstract class Tile : MonoBehaviour
     {
         private Button tileButton;
@@ -15,33 +18,36 @@ namespace Game
         private Image tileImage;
         private Unit linkedUnit;
         private GridController gridController;
+        public GridController GridController => gridController;
         
-        private bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
-        private bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        private bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
-        private bool IsWalkable => tileType != TileType.Obstacle;
+        public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
+        public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        public bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
+        public bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
-        private bool IsOccupiedByAUnit => linkedUnit != null;
+        public bool IsOccupiedByAUnit => linkedUnit != null;
         private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
-        private int costToMove;
+        private readonly int costToMove;
 
         public int CostToMove => costToMove;
+        private readonly float defenseRate;
+        public float DefenseRate => defenseRate;
         
 
-            protected Tile(TileType tileType, int costToMove = 1)
+        protected Tile(TileType tileType, int costToMove = TileValues.DEFAULT_COST_TO_MOVE, float defenseRate = TileValues.DEFAULT_DEFENSE_RATE)
         {
             this.tileType = tileType;
             this.costToMove = costToMove;
+            this.defenseRate = defenseRate;
         }
         
         protected virtual void Awake()
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
-            tileButton.onClick.AddListener(OnCellClick); 
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -50,33 +56,6 @@ namespace Game
             int index = transform.GetSiblingIndex();
             positionInGrid.x = index % Finder.GridController.NbColumns;
             positionInGrid.y = index / Finder.GridController.NbLines;
-        }
-
-        private void OnCellClick()
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-            
-            if (LinkedUnitCanBeSelected)
-            {
-                gridController.SelectUnit(linkedUnit); 
-                gridController.DisplayPossibleActionsFrom(this);
-                return;
-            }
-            
-            if (LinkedUnitCanBeAttacked)
-            {
-                gridController.SelectedUnit.Attack(linkedUnit);
-                if (linkedUnit.NoHealthLeft)
-                {
-                    linkedUnit.Die();
-                    gridController.SelectedUnit.MoveTo(this);
-                }
-            }
-            else if (IsPossibleAction)
-            {
-                gridController.SelectedUnit.MoveTo(this);
-            }
-            gridController.DeselectUnit();
         }
 
         public void DisplayMoveActionPossibility()
@@ -92,6 +71,16 @@ namespace Game
         public void DisplayAttackActionPossibility()
         {
             tileImage.sprite = gridController.AttackableTileSprite;
+        }
+
+        public void DisplayRecruitActionPossibility()
+        {
+            tileImage.sprite = gridController.RecruitableTileSprite;
+        }
+
+        public void DisplayHealActionPossibility()
+        {
+            tileImage.sprite = gridController.HealableTileSprite;
         }
         
         public void HideActionPossibility()
@@ -117,7 +106,7 @@ namespace Game
 
         /// <summary>
         /// Verifies if a tile is adjacent on a X or Y axis to this tile
-        /// Author: Jérémie Bertrand, Zacharie Lavigne
+        /// Authors: Jérémie Bertrand, Zacharie Lavigne
         /// </summary>
         /// <param name="otherTile">The other tile to verify adjacency</param>
         /// <param name="range">The threshold of adjacency</param>
@@ -129,15 +118,6 @@ namespace Game
                 throw  new ArgumentException("Range should be higher than zero");
             return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
         }
-    }
-
-    public enum TileType 
-    {
-        Empty = 0,
-        Obstacle = 1,
-        Forest = 2,
-        Fortress = 3,
-        Door = 4
     }
 }
 

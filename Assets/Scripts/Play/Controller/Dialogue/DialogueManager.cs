@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,29 +13,29 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Text nameText;
     [SerializeField] private Text dialogueText;
     [SerializeField] private Animator animator;
+    [SerializeField] private Texture[] textures;
 
-    private Queue<string> sentences;
+    private bool isDisplayingDialogue = false;
+    public bool IsDisplayingDialogue => isDisplayingDialogue;
+    private bool isTyping = false;
+    
+    private Queue<Quote> sentences;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        sentences = new Queue<string>();
-    }
 
     public void StartDialogue(Dialogue dialogue)
     {
+        isDisplayingDialogue = true;
+        sentences = new Queue<Quote>();
         animator.SetBool("IsOpen",true);
         
-        ChangePortrait(dialogue.texture);
-        
-        nameText.text = dialogue.name;
         sentences.Clear();
 
-        foreach (string sentence in dialogue.sentences)
+        foreach (Quote sentence in dialogue.Sentences)
         {
             sentences.Enqueue(sentence);
         }
-
+        
         DisplayNextSentence();
     }
 
@@ -46,30 +47,45 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
+        if(isTyping) return;
         if (sentences.Count == 0)
         {
             EndDialogue();
             return;
         }
+        Quote quote = sentences.Dequeue();
 
-        string sentence = sentences.Dequeue();
-        StopAllCoroutines();
-        StartCoroutine(TypeSentence(sentence));
+        nameText.text = quote.Name;
+        foreach (var texture in textures)
+        {
+            if (texture.name == quote.Name)
+            {
+                ChangePortrait(texture);
+                break;
+            }
+        }
+        
+        //StopAllCoroutines();
+        StartCoroutine(TypeSentence(quote.Sentence));
     }
 
     IEnumerator TypeSentence(string sentence)
     {
+        isTyping = true;
         dialogueText.text = "";
-        foreach (char letter in sentence.ToCharArray())
+        foreach (char letter in sentence)
         {
             dialogueText.text += letter;
             yield return null;
         }
+
+        isTyping = false;
     }
     
     private void EndDialogue()
     {
         animator.SetBool("IsOpen",false);
+        isDisplayingDialogue = false;
     }
 
   

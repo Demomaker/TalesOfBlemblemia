@@ -6,11 +6,12 @@
 [System.Serializable]
 public class Dialogue
 {
-    public string name;
-    
-    [TextArea(3,10)]
-    public string[] sentences;
+    [SerializeField] private Quote[] sentences;
+    public Quote[] Sentences => sentences;
 
-    public Texture texture;
+    public Dialogue(Quote[] sentences)
+    {
+        this.sentences = sentences;
+    }
 
 }

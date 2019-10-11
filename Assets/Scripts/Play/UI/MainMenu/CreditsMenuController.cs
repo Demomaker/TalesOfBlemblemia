@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class CreditsMenuController : MonoBehaviour, IMenuController
+    public class CreditsMenuController : MonoBehaviour
     {
         [Header("Buttons")] 
         [SerializeField] private Button returnToMainMenuButton = null;
@@ -18,13 +18,7 @@ namespace Game
         {
             menusController = Finder.MenusController;
         }
-        
-        public void Update()
-        {
-            if (Input.GetKeyDown(confirmKey))
-                UIExtensions.SelectedButton?.Click();
-        }
-        
+
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {

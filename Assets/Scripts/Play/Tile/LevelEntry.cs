@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Game;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Finder = Harmony.Finder;
@@ -10,15 +11,15 @@ using Finder = Harmony.Finder;
 public class LevelEntry : MonoBehaviour
 {
     private List<string> previousLevelNames;
-    private bool IsFirstLevel => RepresentedLevelName == Finder.GameController.StartingLevelName;
+    private bool IsFirstLevel => representedLevelName == Finder.GameController.StartingLevelName;
     private bool CanBeClicked => IsFirstLevel && Finder.GameController.NameOfLevelCompleted == null || PreviousLevelWasCompleted();
-    public string RepresentedLevelName;
+    [SerializeField] string representedLevelName;
     public List<string> PreviousLevelNames
     {
         get
         {
             List<string> retval = new List<string>();
-            List<Level> currentLevels = Finder.GameController.Levels.FindAll(level => level.LevelName == RepresentedLevelName);
+            List<Level> currentLevels = Finder.GameController.Levels.FindAll(level => level.LevelName == representedLevelName);
             if (currentLevels != null)
             {
                 for (int i = 0; i < currentLevels.Count; i++)
@@ -34,14 +35,18 @@ public class LevelEntry : MonoBehaviour
     }
     public void OnLevelEntry()
     {
-        if(CanBeClicked && !string.IsNullOrEmpty(RepresentedLevelName))
-        Finder.GameController.LoadLevel(RepresentedLevelName);
+        if (CanBeClicked && !string.IsNullOrEmpty(representedLevelName))
+        {
+            
+            EventSystem.current.SetSelectedGameObject(null);
+            Finder.GameController.LoadLevel(representedLevelName);
+        }
     }
 
     private void Update()
     {
         var colors = GetComponent<Button>().colors;
-        if (!CanBeClicked || string.IsNullOrEmpty(RepresentedLevelName))
+        if (!CanBeClicked || string.IsNullOrEmpty(representedLevelName))
         {
             colors.pressedColor = Color.red;
         }

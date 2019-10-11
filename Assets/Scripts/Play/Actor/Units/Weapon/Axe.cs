@@ -16,7 +16,7 @@
             }
         }
 
-        public Axe(UnitStats weaponStats = null) : base(weaponStats, WeaponType.Axe, WeaponType.Spear)
+        public Axe(UnitStats weaponStats = null) : base(weaponStats, WeaponType.Axe, AXE_ADVANTAGE)
         {
             if (weaponStats == null)
             {

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Game
+﻿namespace Game
 {
     /// <summary>
     /// A unit or weapon's stats
