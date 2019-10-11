@@ -26615,7 +26615,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1495812027}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -29652,6 +29652,31 @@ PrefabInstance:
       propertyPath: dialogueTriggerStartFranklem
       value: 
       objectReference: {fileID: 1385603863}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: completeIfAllEnemiesDefeated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: defeatIfAllPlayerUnitsDied
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: levelName
+      value: ParabeneForest
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: doNotEnd
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: completeIfPointAchieved
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
 --- !u!1 &1385603862 stripped
