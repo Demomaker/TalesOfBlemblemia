@@ -32,9 +32,12 @@ namespace Game
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             players[0].OnTurnGiven();
-            
-            dialogueUi.SetActive(true);
-            dialogueTriggerStartFranklem.TriggerDialogue();
+            if (dialogueUi != null)
+            {
+                dialogueUi.SetActive(true);
+                dialogueTriggerStartFranklem.TriggerDialogue();
+            }
+            ReevaluateAllMovementCosts();
         }
 
         protected void Update()

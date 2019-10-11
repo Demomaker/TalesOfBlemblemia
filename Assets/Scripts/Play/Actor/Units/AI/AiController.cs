@@ -37,7 +37,8 @@ namespace Game
             AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo);
 
             //The action is randomly selected from the best possible ones
-            return SelectRandomBestAction(bestActions);
+            return bestActions[0];
+            //return SelectRandomBestAction(bestActions);
         }
         /// <summary>
         /// Randomly chooses an action from the best possible actions to do
