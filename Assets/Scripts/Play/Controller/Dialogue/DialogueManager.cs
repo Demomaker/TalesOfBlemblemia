@@ -13,25 +13,29 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Text nameText;
     [SerializeField] private Text dialogueText;
     [SerializeField] private Animator animator;
+    [SerializeField] private Texture[] textures;
+
+    private bool isDisplayingDialogue = false;
+    public bool IsDisplayingDialogue => isDisplayingDialogue;
+    private bool isTyping = false;
     
-    private Queue<string> sentences;
-    private Texture[] textures;
+    private Queue<Quote> sentences;
 
     // Start is called before the first frame update
 
     public void StartDialogue(Dialogue dialogue)
     {
-        sentences = new Queue<string>();
+        isDisplayingDialogue = true;
+        sentences = new Queue<Quote>();
         animator.SetBool("IsOpen",true);
         
         sentences.Clear();
 
-        foreach (string sentence in dialogue.sentences)
+        foreach (Quote sentence in dialogue.Sentences)
         {
             sentences.Enqueue(sentence);
         }
-
-        textures = dialogue.texture;
+        
         DisplayNextSentence();
     }
 
@@ -43,42 +47,45 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
+        if(isTyping) return;
         if (sentences.Count == 0)
         {
             EndDialogue();
             return;
         }
-        string sentence = sentences.Dequeue();
+        Quote quote = sentences.Dequeue();
 
-        string[] infos = sentence.Split(':');
-        
-        nameText.text = infos[0];
+        nameText.text = quote.Name;
         foreach (var texture in textures)
         {
-            if (texture.name == infos[0])
+            if (texture.name == quote.Name)
             {
                 ChangePortrait(texture);
                 break;
             }
         }
         
-        StopAllCoroutines();
-        StartCoroutine(TypeSentence(infos[1]));
+        //StopAllCoroutines();
+        StartCoroutine(TypeSentence(quote.Sentence));
     }
 
     IEnumerator TypeSentence(string sentence)
     {
+        isTyping = true;
         dialogueText.text = "";
         foreach (char letter in sentence)
         {
             dialogueText.text += letter;
             yield return null;
         }
+
+        isTyping = false;
     }
     
     private void EndDialogue()
     {
         animator.SetBool("IsOpen",false);
+        isDisplayingDialogue = false;
     }
 
   

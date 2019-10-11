@@ -19,13 +19,13 @@ namespace Game
         private Unit linkedUnit;
         private GridController gridController;
         public GridController GridController => gridController;
-
+        
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
-        public bool LinkedUnitCanBeAttacked => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        public bool LinkedUnitCanBeSelected => IsOccupiedByAUnit && !linkedUnit.IsEnemy && !linkedUnit.HasActed;
-        private bool IsWalkable => tileType != TileType.Obstacle;
+        public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        public bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
+        public bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
-        private bool IsOccupiedByAUnit => linkedUnit != null;
+        public bool IsOccupiedByAUnit => linkedUnit != null;
         private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
@@ -65,12 +65,22 @@ namespace Game
 
         public void DisplaySelectedTile()
         {
-            tileImage.sprite = gridController.HealableTileSprite;
+            tileImage.sprite = gridController.SelectedSprite;
         }
 
         public void DisplayAttackActionPossibility()
         {
             tileImage.sprite = gridController.AttackableTileSprite;
+        }
+
+        public void DisplayRecruitActionPossibility()
+        {
+            tileImage.sprite = gridController.RecruitableTileSprite;
+        }
+
+        public void DisplayHealActionPossibility()
+        {
+            tileImage.sprite = gridController.HealableTileSprite;
         }
         
         public void HideActionPossibility()
