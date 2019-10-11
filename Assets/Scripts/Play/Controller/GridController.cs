@@ -82,18 +82,22 @@ using UnityEngine.UI;
             var unitMovesLeft = unit.MovesLeft;
             var movementCosts = unit.MovementCosts;
             
-            Tile tileToLeft = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
-            if (tileToLeft != null && tileToLeft.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
-                return tileToLeft;
-            Tile tileAbove = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
-            if (tileAbove != null && tileAbove.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
-                return tileAbove;
-            Tile tileToRight = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
-            if (tileToRight != null && tileToRight.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
-                return tileToRight;
-            Tile tileUnder = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
-            if (tileUnder != null && tileUnder.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
-                return tileUnder;
+            //Check left
+            Tile tileToCheck = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
+                return tileToCheck;
+            //Check up
+            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
+                return tileToCheck;
+            //Check right
+            tileToCheck = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
+                return tileToCheck;
+            //Check down
+            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
+                return tileToCheck;
             return null;
         }
 

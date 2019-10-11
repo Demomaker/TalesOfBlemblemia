@@ -37,8 +37,7 @@ namespace Game
             AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo);
 
             //The action is randomly selected from the best possible ones
-            return bestActions[0];
-            //return SelectRandomBestAction(bestActions);
+            return SelectRandomBestAction(bestActions);
         }
         /// <summary>
         /// Randomly chooses an action from the best possible actions to do
@@ -64,6 +63,7 @@ namespace Game
                     bestAction = bestActions[Finder.Random.Next(0, nbOfChoice)];
                 }
             }
+
             return bestAction;
         }
         /// <summary>
@@ -201,6 +201,7 @@ namespace Game
 
             return FindPathTo(playableUnit, position);
         }
+
         /// <summary>
         /// Finds the shortest path to a target unit
         /// </summary>
@@ -209,9 +210,23 @@ namespace Game
         /// <returns>The path to a target unit</returns>
         private static List<Tile> FindPathTo(Unit playableUnit, Unit potentialTarget)
         {
-            return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-               potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y, playableUnit.IsEnemy);
+            List<Tile> path;
+            if (playableUnit.TargetIsInRange(potentialTarget))
+            {
+                path = new List<Tile>();
+                path.Add(playableUnit.CurrentTile);
+            }
+            else
+            {
+                path =PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(),
+                    playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
+                    potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y,
+                    playableUnit);
+            }
+
+            return path;
         }
+
         /// <summary>
         /// Finds the shortest path to a target position
         /// </summary>
@@ -221,7 +236,7 @@ namespace Game
         private static List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
         {
             return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-                targetPosition.x, targetPosition.y, playableUnit.IsEnemy);
+                targetPosition.x, targetPosition.y, playableUnit);
         }
         /// <summary>
         /// Initializes action based on the unit's enemies

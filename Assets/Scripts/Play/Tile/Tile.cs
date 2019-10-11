@@ -13,7 +13,7 @@ namespace Game
     {
         private Button tileButton;
         [SerializeField] private TileType tileType;
-        public TileType TileType => tileType;
+        public TileType TileType { get; set; }
 
         private Image tileImage;
         private Unit linkedUnit;
@@ -32,7 +32,18 @@ namespace Game
         public Unit LinkedUnit => linkedUnit;
         private readonly int costToMove;
 
-        public int CostToMove => costToMove;
+        public int CostToMove
+        {
+            get
+            {
+                if (tileType == TileType.Obstacle)
+                {
+                    return int.MaxValue;
+                }
+
+                return costToMove;
+            }
+        }
         private readonly float defenseRate;
         public float DefenseRate => defenseRate;
         

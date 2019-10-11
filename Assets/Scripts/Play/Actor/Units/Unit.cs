@@ -148,7 +148,7 @@
              isMoving = true;
              List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
                  currentTile.LogicalPosition.x,
-                 currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
+                 currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, this);
              path.Reverse();
              path.RemoveAt(0);
              path.Add(tile);
@@ -173,7 +173,7 @@
                  movesLeft -= currentTile.CostToMove;
                  MoveByAction(action);
              }
-             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition, IsEnemy);
          }
 
          private void LinkUnitToTile(Tile tile)
@@ -361,7 +361,7 @@
          public void ComputeTilesCosts()
          {
              if (currentTile != null)
-                 movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
+                 movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
          }
 
          /// <summary>
@@ -383,7 +383,7 @@
              {
                  MoveByAction(new Action(PrepareMove(tile), actionType, target));
              }
-             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition, IsEnemy);
          }
 
          /// <summary>
