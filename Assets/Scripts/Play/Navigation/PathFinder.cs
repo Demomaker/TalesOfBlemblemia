@@ -182,28 +182,35 @@ namespace Game
             {
                 path.Remove(null);
                 path.Reverse();
-                Tile lastTileInTurn = null;
-                for (int i = 0; i < path.Count - 1; i++)
+                if (unit.IsEnemy && path != null && path.Count > 0)
                 {
-                    var nexTileLogicalPosition = path[i + 1].LogicalPosition;
-                    if (movementCosts[nexTileLogicalPosition.x, nexTileLogicalPosition.y] > unit.MovesLeft)
+                    Tile lastTileInTurn = path.Last();
+                    for (int i = 0; i < path.Count - 1; i++)
                     {
-                        lastTileInTurn = path[i];
-                        i = path.Count;
+                        var nexTileLogicalPosition = path[i + 1].LogicalPosition;
+                        if (movementCosts[nexTileLogicalPosition.x, nexTileLogicalPosition.y] > unit.MovesLeft)
+                        {
+                            lastTileInTurn = path[i];
+                            i = path.Count;
+                        }
+                    }
+
+                    if (lastTileInTurn != null && !lastTileInTurn.IsAvailable)
+                    {
+                        TileType lastTileType = lastTileInTurn.TileType;
+                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).TileType =
+                            TileType.Obstacle;
+                        PrepareComputeCost(new Vector2Int(fromX, fromY), unit.IsEnemy);
+                        var t = grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y);
+                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).TileType =
+                            lastTileType;
+
+
+                        return FindPath(grid, movementCosts, new List<Tile>(), path[0].LogicalPosition.x,
+                            path[0].LogicalPosition.y, toX, toY, unit);
                     }
                 }
-                if (!lastTileInTurn.IsAvailable)
-                {
-                    TileType lastTileType = lastTileInTurn.TileType;
-                    grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).TileType = TileType.Obstacle;
-                    PrepareComputeCost(new Vector2Int(fromX, fromY), unit.IsEnemy);
-                    var t = grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y);
-                    grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).TileType = lastTileType;
 
-                    
-                    return FindPath(grid, movementCosts, new List<Tile>(), path[0].LogicalPosition.x,
-                        path[0].LogicalPosition.y, toX, toY, unit);
-                }
                 return path;
             }
 
@@ -300,7 +307,7 @@ namespace Game
             int toX, int toY, Unit unit)
         {
             List <Tile> pathInOrder = FindPath(grid, movementCosts, path, fromX, fromY, toX, toY, unit);
-            //pathInOrder.Reverse();
+            pathInOrder.Reverse();
             return pathInOrder;
         }
 

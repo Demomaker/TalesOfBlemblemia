@@ -218,10 +218,11 @@ namespace Game
             }
             else
             {
-                path =PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(),
+                path = PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(),
                     playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
                     potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y,
                     playableUnit);
+                path.Reverse();
             }
 
             return path;
