@@ -198,12 +198,10 @@ namespace Game
                     if (lastTileInTurn != null && !lastTileInTurn.IsAvailable)
                     {
                         TileType lastTileType = lastTileInTurn.TileType;
-                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).TileType =
-                            TileType.Obstacle;
+                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).MakeObstacle();
                         PrepareComputeCost(new Vector2Int(fromX, fromY), unit.IsEnemy);
                         var t = grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y);
-                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).TileType =
-                            lastTileType;
+                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).UnMakeObstacle(lastTileType);
 
 
                         return FindPath(grid, movementCosts, new List<Tile>(), path[0].LogicalPosition.x,

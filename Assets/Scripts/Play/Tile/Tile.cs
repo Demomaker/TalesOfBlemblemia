@@ -13,7 +13,7 @@ namespace Game
     {
         private Button tileButton;
         [SerializeField] private TileType tileType;
-        public TileType TileType { get; set; }
+        public TileType TileType => tileType;
 
         private Image tileImage;
         private Unit linkedUnit;
@@ -118,6 +118,16 @@ namespace Game
             if (range <= 0)
                 throw  new ArgumentException("Range should be higher than zero");
             return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
+        }
+
+        public void MakeObstacle()
+        {
+            tileType = TileType.Obstacle;
+        }
+
+        public void UnMakeObstacle(TileType previousType)
+        {
+            tileType = previousType;
         }
     }
 }
