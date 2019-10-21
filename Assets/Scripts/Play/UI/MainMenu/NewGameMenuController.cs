@@ -63,6 +63,7 @@ namespace Game
             //CHARGER NOUVELLE SCENE
             DontDestroyOnLoad(saveController);
             SceneManager.LoadScene("ParabeneForest");
+            SceneManager.LoadScene("GameUI", LoadSceneMode.Additive);
         }
         
         [UsedImplicitly]
