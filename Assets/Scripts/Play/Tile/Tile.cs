@@ -32,7 +32,18 @@ namespace Game
         public Unit LinkedUnit => linkedUnit;
         private readonly int costToMove;
 
-        public int CostToMove => costToMove;
+        public int CostToMove
+        {
+            get
+            {
+                if (tileType == TileType.Obstacle)
+                {
+                    return int.MaxValue;
+                }
+
+                return costToMove;
+            }
+        }
         private readonly float defenseRate;
         public float DefenseRate => defenseRate;
         
@@ -117,6 +128,16 @@ namespace Game
             if (range <= 0)
                 throw  new ArgumentException("Range should be higher than zero");
             return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
+        }
+
+        public void MakeObstacle()
+        {
+            tileType = TileType.Obstacle;
+        }
+
+        public void UnMakeObstacle(TileType previousType)
+        {
+            tileType = previousType;
         }
     }
 }

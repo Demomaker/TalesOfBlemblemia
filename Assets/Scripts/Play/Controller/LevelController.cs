@@ -19,6 +19,8 @@ namespace Game
     public class LevelController : MonoBehaviour
     {
         [SerializeField] private string levelName;
+        [SerializeField] private GameObject dialogueUi = null;
+        [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
@@ -60,6 +62,12 @@ namespace Game
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             OnTurnGiven();
+            if (dialogueUi != null && dialogueTriggerStartFranklem != null)
+            {
+                dialogueUi.SetActive(true);
+                dialogueTriggerStartFranklem.TriggerDialogue();
+            }
+            ReevaluateAllMovementCosts();
         }
 
         protected void Update()
@@ -94,6 +102,7 @@ namespace Game
             if (levelIsEnding) yield break;
             levelIsEnding = true;
 
+            
             cinematicController.LaunchEndCinematic();
             while (cinematicController.IsPlayingACutScene)
             {
@@ -193,8 +202,7 @@ namespace Game
 
             units = FindObjectsOfType<Unit>();
 
-            GiveUnits(units, false, player1);
-            GiveUnits(units, true, player2);
+            GiveUnits(units, false, player1, player2);
 
             player1.OnNewLevel();
             player2.OnNewLevel();
@@ -203,14 +211,20 @@ namespace Game
             players.Add(player2);
         }
 
-        private void GiveUnits(Unit[] units, bool isEnemy, UnitOwner unitOwner)
+        private void GiveUnits(Unit[] units, bool isEnemy, UnitOwner player, UnitOwner aiPlayer)
         {
             for (int i = 0; i < units.Length; i++)
             {
-                if (units[i].IsEnemy == isEnemy)
-                    unitOwner.AddOwnedUnit(units[i]);
-                else
-                    unitOwner.AddEnemyUnit(units[i]);
+                if (units[i].IsPlayer)
+                {
+                    player.AddOwnedUnit(units[i]);
+                    aiPlayer.AddEnemyUnit(units[i]);
+                }
+                else if (units[i].IsEnemy)
+                {
+                    aiPlayer.AddOwnedUnit(units[i]);
+                    player.AddEnemyUnit(units[i]);
+                }
             }
         }
 

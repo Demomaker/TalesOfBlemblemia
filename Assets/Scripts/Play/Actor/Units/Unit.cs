@@ -95,7 +95,7 @@
          public int MovesLeft => movesLeft;
          public bool CanStillMove => movesLeft > 0;
          public bool HasActed { get; set; } = false;
-
+         
          public bool IsCurrentlySelected => gridController.SelectedUnit == this;
          public bool NoHealthLeft => CurrentHealthPoints <= 0;
          public int MovementRange => Stats.MoveSpeed;
@@ -132,8 +132,7 @@
              isMoving = true;
              List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
                  currentTile.LogicalPosition.x,
-                 currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, IsEnemy);
-             path.Reverse();
+                 currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, this);
              path.RemoveAt(0);
              path.Add(tile);
              movesLeft -= currentTile.CostToMove;
@@ -157,7 +156,7 @@
                  movesLeft -= currentTile.CostToMove;
                  MoveByAction(action);
              }
-             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition, IsEnemy);
          }
 
          private void LinkUnitToTile(Tile tile)
@@ -200,11 +199,6 @@
                  yield return null;
              }
 
-             if (!isCountering)
-             {
-                 HasActed = true;
-             }
-
              Debug.Log(WeaponAdvantage.ToString());
              float hitRate = Stats.HitRate - target.currentTile.DefenseRate;
              int damage = Random.value <= hitRate ? Stats.AttackStrength : 0;
@@ -230,7 +224,12 @@
              //A unit cannot counter on a counter
              if (!isCountering && !target.NoHealthLeft)
                  target.Attack(this, true);
-
+             
+             
+             if (!isCountering)
+             {
+                 HasActed = true;
+             }
          }
 
          private void LookAt(Vector3 target)
@@ -314,9 +313,9 @@
 
          public void Rest()
          {
-             HasActed = true;
              CurrentHealthPoints += HpGainedByResting;
              Debug.Log("Unit rested!");
+             HasActed = true;
          }
          
          /// <summary>
@@ -348,7 +347,7 @@
              {
                  playerType = PlayerType.Ally;
                  HumanPlayer.Instance.AddOwnedUnit(this);
-                 GetComponent<DialogueTrigger>().TriggerDialogue();
+                 GetComponent<DialogueTrigger>()?.TriggerDialogue();
                  Debug.Log(name + " has been recruited!");
              }
              return IsRecruitable;
@@ -356,7 +355,8 @@
 
          public void ComputeTilesCosts()
          {
-             if (currentTile != null) movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition);
+             if (currentTile != null)
+                 movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
          }
 
          /// <summary>
@@ -378,7 +378,7 @@
              {
                  MoveByAction(new Action(PrepareMove(tile), actionType, target));
              }
-             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition);
+             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition, IsEnemy);
          }
 
          /// <summary>
