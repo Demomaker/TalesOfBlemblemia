@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
 using System.Linq;
@@ -34,17 +35,26 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
+        private CinematicController cinematicController;
+        public CinematicController CinematicController => cinematicController;
 
         private bool levelCompleted = false;
         private bool levelFailed = false;
         private bool levelEnded = false;
+        private bool levelIsEnding = false;
         private bool isComputerPlaying;
-        
+
         private Unit[] units = null;
         private UnitOwner currentPlayer;
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
+
+
+        private void Awake()
+        {
+            cinematicController = GetComponent<CinematicController>();
+        }
 
         private void Start()
         {
@@ -62,8 +72,7 @@ namespace Game
 
         protected void Update()
         {
-            if(!doNotEnd)
-            CheckIfLevelEnded();
+            if(!doNotEnd) CheckIfLevelEnded();
             
             if (Input.GetKeyDown(KeyCode.O))
             {
@@ -73,9 +82,7 @@ namespace Game
 
             if (levelEnded)
             {
-                if (levelCompleted)
-                    Finder.GameController.LevelsCompleted.Add(levelName);
-                Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+                StartCoroutine(EndLevel());
             }
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
@@ -88,6 +95,22 @@ namespace Game
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play(currentPlayer);
+        }
+
+        private IEnumerator EndLevel()
+        {
+            if (levelIsEnding) yield break;
+            levelIsEnding = true;
+
+            cinematicController.LaunchEndCinematic();
+            while (cinematicController.IsPlayingACutScene)
+            {
+                yield return null;
+            }
+            
+            if (levelCompleted)
+                Finder.GameController.LevelsCompleted.Add(levelName);
+            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
         private void OnTurnGiven()

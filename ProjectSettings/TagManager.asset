@@ -15,6 +15,7 @@ TagManager:
   - UiPortrait
   - GridController
   - LevelController
+  - SaveController
   layers:
   - Default
   - TransparentFX
