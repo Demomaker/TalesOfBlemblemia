@@ -95,7 +95,7 @@
          public int MovesLeft => movesLeft;
          public bool CanStillMove => movesLeft > 0;
          public bool HasActed { get; set; } = false;
-
+         
          public bool IsCurrentlySelected => gridController.SelectedUnit == this;
          public bool NoHealthLeft => CurrentHealthPoints <= 0;
          public int MovementRange => Stats.MoveSpeed;
@@ -347,7 +347,7 @@
              {
                  playerType = PlayerType.Ally;
                  HumanPlayer.Instance.AddOwnedUnit(this);
-                 GetComponent<DialogueTrigger>().TriggerDialogue();
+                 GetComponent<DialogueTrigger>()?.TriggerDialogue();
                  Debug.Log(name + " has been recruited!");
              }
              return IsRecruitable;
