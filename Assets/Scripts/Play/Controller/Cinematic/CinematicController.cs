@@ -29,7 +29,7 @@ public class CinematicController : MonoBehaviour
         private set 
         { 
             isPlayingACutScene = value;
-            eventSystemGameObject.SetActive(!isPlayingACutScene);
+            camera.GetComponent<CameraController>().enabled = eventSystemGameObject.GetComponent<EventSystem>().enabled = !isPlayingACutScene;
         }
     }
 

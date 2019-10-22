@@ -1478,6 +1478,7 @@ GameObject:
   - component: {fileID: 73006764}
   - component: {fileID: 73006763}
   - component: {fileID: 73006762}
+  - component: {fileID: 73006765}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -1550,6 +1551,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &73006765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73006761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 759cc680b83f8ad4b9353258e4085d49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verticalScrollArea: 10
+  horizontalScrollArea: 10
+  horizontalMoveSpeed: 5
+  verticalMoveSpeed: 5
+  zoomSpeed: 5
+  minZoom: 4.5
+  minX: -14
+  maxX: 14
+  minY: -14
+  maxY: 14
+  moveUpKey: 119
+  moveDownKey: 115
+  moveLeftKey: 97
+  moveRightKey: 100
+  ZoomEnabled: 1
+  MoveEnabled: 1
 --- !u!1 &79801886
 GameObject:
   m_ObjectHideFlags: 0
@@ -61932,46 +61961,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1639890201655499794}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1639890201655499798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1639890201655499795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7dff342097e4d42ab4be9391dac816f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraActions:
-  - cameraTarget: {fileID: 1639890201655499797}
-    duration: 0.3
-    cameraZoom: 4
-    quotes:
-    - name: Bram
-      sentence: 
-    - name: 
-      sentence: 
-    - name: 
-      sentence: 
-  - cameraTarget: {fileID: 1639890201655499797}
-    duration: 0.3
-    cameraZoom: 4
-    quotes:
-    - name: Bram
-      sentence: 
-    - name: 
-      sentence: 
-    - name: 
-      sentence: 
-  - cameraTarget: {fileID: 1639890201655499797}
-    duration: 0.3
-    cameraZoom: 4
-    quotes:
-    - name: Bram
-      sentence: 
-    - name: 
-      sentence: 
-    - name: 
-      sentence: 
