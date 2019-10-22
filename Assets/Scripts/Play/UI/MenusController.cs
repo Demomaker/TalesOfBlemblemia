@@ -4,6 +4,7 @@ namespace Game
 {
     public class MenusController : MonoBehaviour
     {
+        [Header("Canvases")]
         [SerializeField] private Canvas mainMenuCanvas;
         [SerializeField] private Canvas newGameMenuCanvas;
         [SerializeField] private Canvas loadGameMenuCanvas;
@@ -13,6 +14,7 @@ namespace Game
 
         private MainMenuController mainMenuController;
         private NewGameMenuController newGameMenuController;
+        private LoadGameMenuController loadGameMenuController;
         private OptionsMenuController optionsMenuController;
         private CreditsMenuController creditsMenuController;
         private SaveSlotSelectionController saveSlotSelectionController;
@@ -21,6 +23,7 @@ namespace Game
         {
             mainMenuController = mainMenuCanvas.GetComponent<MainMenuController>();
             newGameMenuController = newGameMenuCanvas.GetComponent<NewGameMenuController>();
+            loadGameMenuController = loadGameMenuCanvas.GetComponent<LoadGameMenuController>();
             optionsMenuController = optionsMenuCanvas.GetComponent<OptionsMenuController>();
             creditsMenuController = creditsMenuCanvas.GetComponent<CreditsMenuController>();
         }

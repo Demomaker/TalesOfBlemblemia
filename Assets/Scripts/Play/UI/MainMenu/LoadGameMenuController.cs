@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Harmony;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
 {
-    public class SaveSlotSelectionController : MonoBehaviour
+    public class LoadGameMenuController : MonoBehaviour
     {
         [Header("Buttons")] 
         [SerializeField] private Button saveSlot1;
@@ -15,15 +16,13 @@ namespace Game
 
         private MenusController menusController;
         private SaveController saveController;
-        private int saveNumberSelected;
 
         private void Awake()
         {
             menusController = Finder.MenusController;
             saveController = Finder.SaveController;
-            saveNumberSelected = 0;
         }
-
+        
         private void Start()
         {
             saveSlot1.transform.Find("Name").GetComponent<TMP_Text>().text = saveController.saveSlot1.username;
@@ -45,23 +44,35 @@ namespace Game
         [UsedImplicitly]
         public void SaveSlot1Selected()
         {
-            saveNumberSelected = 1;
-            menusController.GoToNewGameMenu(saveNumberSelected);
+            LoadScenes(1, saveSlot1.name);
         }
 
         [UsedImplicitly]
         public void SaveSlot2Selected()
         {
-            saveNumberSelected = 2;
-            menusController.GoToNewGameMenu(saveNumberSelected);
+            LoadScenes(2, saveSlot2.name);
         }
 
         [UsedImplicitly]
         public void SaveSlot3Selected()
         {
-            saveNumberSelected = 3;
-            menusController.GoToNewGameMenu(saveNumberSelected);
+            LoadScenes(3, saveSlot3.name);
         }
 
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            menusController.ReturnFromLoadGameMenu();
+        }
+
+        private void LoadScenes(int saveSlotNumber, string sceneName)
+        {
+            saveController.SaveSelected = saveSlotNumber;
+            SceneManager.LoadScene(sceneName);
+            if (!SceneManager.GetSceneByName(Constants.GAME_UI_SCENE_NAME).isLoaded)
+            {
+                SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
+            }
+        }
     }
 }

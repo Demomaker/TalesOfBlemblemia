@@ -16,9 +16,6 @@ namespace Game
         [SerializeField] private Button returnToMainMenuButton;
         [SerializeField] private Button applyChangesButton;
 
-        [Header("Controls")] 
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0;
-
         private MenusController menusController;
         private SaveController saveController;
 

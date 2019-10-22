@@ -14,9 +14,6 @@ namespace Game
         [SerializeField] private Button startNewGameButton;
         [SerializeField] private Button returnToMainMenuButton;
         
-        [Header("Controls")]
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0;
-
         private MenusController menusController;
         private SaveController saveController;
 
@@ -69,6 +66,7 @@ namespace Game
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {
+            playerNameInputField.text = "";
             menusController.ReturnFromNewGameMenu();
         }
     }

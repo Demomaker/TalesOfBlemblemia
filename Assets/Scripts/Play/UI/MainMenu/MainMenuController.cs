@@ -13,10 +13,6 @@ namespace Game
         [SerializeField] private Button creditsButton = null;
         [SerializeField] private Button exitGameButton = null;
 
-        [Header("Controls")] 
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0; 
-        [SerializeField] private KeyCode exitKey = KeyCode.Escape;
-
         private MenusController menusController;
 
         private void Awake()
@@ -35,6 +31,7 @@ namespace Game
         public void LoadGame()
         {
             //Interface avec les saves
+            menusController.GoToLoadGameMenu();
         }
 
         [UsedImplicitly]

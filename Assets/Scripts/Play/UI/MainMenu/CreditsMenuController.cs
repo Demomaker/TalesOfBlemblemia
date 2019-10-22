@@ -8,10 +8,7 @@ namespace Game
     {
         [Header("Buttons")] 
         [SerializeField] private Button returnToMainMenuButton = null;
-        
-        [Header("Controls")] 
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0; 
-        
+
         private MenusController menusController;
 
         private void Awake()

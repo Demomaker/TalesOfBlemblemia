@@ -19,6 +19,7 @@
         public const string LEVEL_7_SCENE_NAME = "Level7";
         public const string LEVEL_8_SCENE_NAME = "Level8";
         public const string OVERWORLD_SCENE_NAME = "Overworld";
+        public const string GAME_UI_SCENE_NAME = "GameUI";
         public const string GAME_CONTROLLER_TAG = "GameController";
         public const string GRID_CONTROLLER_TAG = "GridController";
         public const float ATTACK_DURATION = 0.3f;

@@ -16,6 +16,8 @@ TagManager:
   - GridController
   - LevelController
   - SaveController
+  - GameUIController
+  - PauseController
   layers:
   - Default
   - TransparentFX
