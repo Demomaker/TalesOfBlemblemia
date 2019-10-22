@@ -1,6 +1,6 @@
 ﻿namespace Game
 {
-    /// Auteur: Zacharie Lavigne
+    /// Author: Zacharie Lavigne
     public class Spear : Weapon
     {
         private void Awake()
