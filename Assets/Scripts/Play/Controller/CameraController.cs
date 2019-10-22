@@ -115,7 +115,6 @@ public class CameraController : MonoBehaviour {
                 else if (_mousePos.x > screenCenter.x) _xMove = 1;
                 if (_mousePos.y < screenCenter.y) _yMove = -1;
                 else if (_mousePos.y > screenCenter.y) _yMove = 1;
-                Debug.Log(" center y: " + Screen.height / 2 + "mouse y : " + _mousePos.y);
                 MoveMe(_xMove * xFactor, _yMove * yFactor);
             }
         }
