@@ -30,13 +30,6 @@ namespace Game
             if (tile == null) return;
             var gridControllerSelectedUnit = tile.GridController.SelectedUnit;
 
-            if (tile.LinkedUnit != null && tile.IsPossibleAction && tile.LinkedUnit.IsRecruitable)
-            {
-                tile.LinkedUnit.RecruitUnit();
-                tile.GridController.DeselectUnit();
-                return;
-            }
-            
             if (tile.LinkedUnitCanBeSelectedByPlayer)
             {
                 if (clickButton == ClickButton.RightClick && tile.GridController.SelectedUnit == tile.LinkedUnit)
@@ -66,6 +59,11 @@ namespace Game
                         tile.LinkedUnit.Die();
                         gridControllerSelectedUnit.MoveToTileAndAct(tile);
                     }
+                }
+                else if (tile.LinkedUnitCanBeRecruitedByPlayer)
+                {
+                    if (!gridControllerSelectedUnit.RecruitUnit(tile.LinkedUnit))
+                        gridControllerSelectedUnit.RecruitDistantUnit(tile.LinkedUnit);
                 }
                 else if (tile.IsPossibleAction)
                 {
