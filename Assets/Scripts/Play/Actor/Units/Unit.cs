@@ -306,6 +306,11 @@ namespace Game
                     if (!Attack(action.Target))
                         Rest();
                 }
+                if (action.ActionType == ActionType.Recruit && action.Target != null)
+                {
+                    if (!RecruitUnit(action.Target))
+                        Rest();
+                }
                 else
                 {
                     Rest();
@@ -355,6 +360,15 @@ namespace Game
             return IsRecruitable;
         }
 
+        public bool RecruitUnit(Unit unitToRecruit)
+        {
+            if (TargetIsInRange(unitToRecruit))
+            {
+                return unitToRecruit.RecruitUnit();
+            }
+            return false;
+        }
+
         public void ComputeTilesCosts()
         {
             if (currentTile != null)
@@ -367,7 +381,7 @@ namespace Game
         /// </summary>
         /// <param name="tile">The destination</param>
         /// <param name="actionType">The type of action to execute</param>
-        /// <param name="target">The target if the action is to attack</param>
+        /// <param name="target">The target if the action is to attack or recruit</param>
         public void MoveToTileAndAct(Tile tile, ActionType actionType = ActionType.Nothing, Unit target = null)
         {
             if (tile == null || tile == currentTile || isMoving) return;
@@ -390,9 +404,26 @@ namespace Game
         /// <param name="target">The unit to attack</param>
         public void AttackDistantUnit(Unit target)
         {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile	, this);
+            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
             if (adjacentTile != null)
                MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
+        }
+
+        /// <summary>
+        /// Starts a series of action to move next to a recruitable unit and recruit it
+        /// Author: Zacharie Lavigne
+        /// </summary>
+        /// <param name="target">The unit to recruit</param>
+        public void RecruitDistantUnit(Unit target)
+        {
+            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
+            if (adjacentTile != null)
+                MoveToTileAndAct(adjacentTile, ActionType.Recruit, target);
+        }
+
+        public bool TargetIsInMovementRange(Unit target)
+        {
+            return gridController.FindAvailableAdjacentTile(target.currentTile, this) != null;
         }
     } 
 }
