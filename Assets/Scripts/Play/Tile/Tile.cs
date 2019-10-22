@@ -139,6 +139,11 @@ namespace Game
         {
             tileType = previousType;
         }
+
+        public void OnCursorEnter()
+        {
+            Harmony.Finder.UIController.ModifyUI(this);
+        }
     }
 }
 
