@@ -28,7 +28,15 @@ namespace Game
             private set 
             { 
                 isPlayingACutScene = value;
-                camera.GetComponent<Game.CameraController>().enabled = eventSystemGameObject.GetComponent<EventSystem>().enabled = !isPlayingACutScene;
+                if (isPlayingACutScene)
+                {
+                    camera.GetComponent<CameraController>()?.DisableControls();
+                }
+                else
+                {
+                    camera.GetComponent<CameraController>()?.EnableControls();
+                }
+                eventSystemGameObject.GetComponent<EventSystem>().enabled = !isPlayingACutScene;
             }
         }
 
