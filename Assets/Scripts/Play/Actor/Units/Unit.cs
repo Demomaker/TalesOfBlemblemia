@@ -84,6 +84,17 @@ namespace Game
         {
             get
             {
+                int maxGain = Stats.MaxHealthPoints / 4;
+                if (CurrentHealthPoints + maxGain > Stats.MaxHealthPoints)
+                    return Stats.MaxHealthPoints - CurrentHealthPoints;
+                return maxGain;
+            }
+        }
+
+        public int HpGainedByHealing
+        {
+            get
+            {
                 int maxGain = Stats.MaxHealthPoints / 2;
                 if (CurrentHealthPoints + maxGain > Stats.MaxHealthPoints)
                     return Stats.MaxHealthPoints - CurrentHealthPoints;
@@ -311,6 +322,11 @@ namespace Game
                     if (!RecruitUnit(action.Target))
                         Rest();
                 }
+                if (action.ActionType == ActionType.Heal && action.Target != null)
+                {
+                    if (!HealUnit(action.Target))
+                        Rest();
+                }
                 else
                 {
                     Rest();
@@ -419,6 +435,30 @@ namespace Game
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
             if (adjacentTile != null)
                 MoveToTileAndAct(adjacentTile, ActionType.Recruit, target);
+        }
+
+        public bool HealUnit(Unit target)
+        {
+            if (TargetIsInRange(target))
+            {
+                target.Heal();
+                HasActed = true;
+                return true;
+            }
+            return false;
+        }
+
+        private void Heal()
+        {
+            Debug.Log("Unit healed by : " + HpGainedByHealing.ToString());
+            CurrentHealthPoints += HpGainedByHealing;
+        }
+
+        public void HealDistantUnit(Unit target)
+        {
+            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
+            if (adjacentTile != null)
+                MoveToTileAndAct(adjacentTile, ActionType.Heal, target);
         }
 
         public bool TargetIsInMovementRange(Unit target)

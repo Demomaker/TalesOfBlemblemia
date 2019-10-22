@@ -6,6 +6,7 @@
         Rest,
         Attack,
         Nothing,
-        Recruit
+        Recruit,
+        Heal
     }
 }
