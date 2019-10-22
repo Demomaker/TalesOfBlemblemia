@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9184210282831072268}
   - component: {fileID: 9184210282831072271}
   - component: {fileID: 21817845905552890}
+  - component: {fileID: 809897665472831707}
   m_Layer: 0
   m_Name: Franklem
   m_TagString: Untagged
@@ -96,3 +97,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialPosition: {x: 0, y: 0}
   playerType: 1
+  classStats: {fileID: 11400000, guid: 7fcdbc72d4cf4df47bf6fa99b4d293e6, type: 2}
+--- !u!114 &809897665472831707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184210282831072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77eb5db73a5c1a3469081f5cb93e702e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponStats: {fileID: 11400000, guid: a4c975b43d2f4aa4d98a8168e216c82d, type: 2}

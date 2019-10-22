@@ -5,6 +5,7 @@
     {
         Rest,
         Attack,
-        Nothing
+        Nothing,
+        Recruit
     }
 }

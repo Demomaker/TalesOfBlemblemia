@@ -1,6 +1,9 @@
 ﻿using System.Collections;
+using Harmony;
 using Play;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using Finder = Game.Finder;
 
 public class CinematicController : MonoBehaviour
 {
@@ -10,12 +13,25 @@ public class CinematicController : MonoBehaviour
     private Transform camTransform = null;
     private DialogueManager dialogueManager;
     private bool isPlayingACutScene = false;
+    private GameObject eventSystemGameObject;
 
     [SerializeField] private GameObject dialogueUI;
     [SerializeField] private Transform initialPosition;
     [SerializeField] private CameraAction[] startActions;
     [SerializeField] private CameraAction[] endActions;
-    public bool IsPlayingACutScene => isPlayingACutScene;
+
+    public bool IsPlayingACutScene
+    {
+        get
+        {
+            return isPlayingACutScene;
+        }
+        private set 
+        { 
+            isPlayingACutScene = value;
+            eventSystemGameObject.SetActive(!isPlayingACutScene);
+        }
+    }
 
     private void Awake()
     {
@@ -24,6 +40,7 @@ public class CinematicController : MonoBehaviour
         camTransform.position = initialPosition.position + new Vector3(0,0,DEFAULT_CAMERA_Z_POSITION);
         camera.orthographicSize = 4;
         dialogueManager = FindObjectOfType<DialogueManager>();
+        eventSystemGameObject = EventSystem.current.gameObject;
     }
 
     private void Start()
@@ -34,7 +51,7 @@ public class CinematicController : MonoBehaviour
 
     private IEnumerator PlayCameraActions(CameraAction[] cameraActions)
     {
-        isPlayingACutScene = true;
+        IsPlayingACutScene = true;
         for (int i = 0; i < cameraActions.Length; i++)
         {
             var target = cameraActions[i];
@@ -67,7 +84,7 @@ public class CinematicController : MonoBehaviour
         camTransform.position = new Vector3(0, 0, DEFAULT_CAMERA_Z_POSITION);
         camera.orthographicSize = endSize;
 
-        isPlayingACutScene = false;
+        IsPlayingACutScene = false;
     }
 
     public void LaunchCinematic(CameraAction[] actions)
