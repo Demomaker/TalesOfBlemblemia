@@ -1,7 +1,6 @@
-﻿using Harmony;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Play
+namespace Game
 {
     public class CinematicTrigger : MonoBehaviour
     {
@@ -9,7 +8,7 @@ namespace Play
 
         public void TriggerDialogue()
         {
-            Finder.LevelController.CinematicController.LaunchCinematic(cameraActions);
+            Harmony.Finder.LevelController.CinematicController.LaunchCinematic(cameraActions);
         }
     }
 }
