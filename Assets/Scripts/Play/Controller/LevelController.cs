@@ -63,6 +63,7 @@ namespace Game
         private void Awake()
         {
             cinematicController = GetComponent<CinematicController>();
+            Debug.Log("Level name : " + levelName);
         }
 
         private void Start()
@@ -120,6 +121,10 @@ namespace Game
             levelIsEnding = true;
 
             
+            if (levelCompleted)
+            {
+                Finder.GameController.LevelsCompleted.Add(levelName);
+            }
             cinematicController.LaunchEndCinematic();
             while (cinematicController.IsPlayingACutScene)
             {
@@ -127,8 +132,6 @@ namespace Game
             }
             
             Finder.SoundManager.StopCurrentMusic();
-            if (levelCompleted)
-                Finder.GameController.LevelsCompleted.Add(levelName);
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
