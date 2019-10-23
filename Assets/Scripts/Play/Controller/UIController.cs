@@ -28,6 +28,12 @@ namespace Game
         [SerializeField] private TMP_Text mouvement;
         [SerializeField] private TMP_Text atk;
         [SerializeField] private TMP_Text hp;
+
+        [Header("Texture")] 
+        [SerializeField] private Sprite grassTexture;
+        [SerializeField] private Sprite mountainTexture;
+        [SerializeField] private Sprite fortressTexture;
+        [SerializeField] private Sprite forestTexture;
     
         private Canvas canvas;
         
@@ -43,18 +49,50 @@ namespace Game
             canvas.enabled = true;
         }
 
-        public void ModifyUI(Tile tile)
+        public void ModifyPlayerUI(Tile tile)
         {
             tileType.text = tile.TileType.ToString();
-            tileDefense.text = (tile.DefenseRate * 100).ToString();
+            tileDefense.text = (tile.DefenseRate * 100) + "%";
             tileMouvementEffect.text = tile.CostToMove.ToString();
-            //todo change the texture;
+            if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = "Unreachable";
 
-            if (tile.LinkedUnit != null)
+            if (tileType.text == "Obstacle")
             {
-                //characterName = tile.LinkedUnit.
-                //characterClass = tile.LinkedUnit.
+                tileTexture.sprite = mountainTexture;
             }
+            else if (tileType.text == "Forest")
+            {
+                tileTexture.sprite = forestTexture;
+            }
+            else if (tileType.text == "Fortress")
+            {
+                tileTexture.sprite = fortressTexture;
+            }
+            else if (tileType.text == "Empty")
+            {
+                tileTexture.sprite = grassTexture;
+            }
+            
+
+            if (tile.LinkedUnit != null && tile.LinkedUnit.UnitInfos != null)
+            {
+                characterName.text = tile.LinkedUnit.UnitInfos.characterName;
+                characterClass.text = tile.LinkedUnit.UnitInfos.className;
+                weapon.text = tile.LinkedUnit.UnitInfos.weaponName;
+                mouvement.text = tile.LinkedUnit.MovementRange.ToString();
+                atk.text = tile.LinkedUnit.Stats.AttackStrength.ToString();
+                hp.text = tile.LinkedUnit.CurrentHealthPoints.ToString();
+            }
+        }
+
+        public void ModifyTurnCounter(int turns)
+        {
+            turnCounter.text = turns.ToString(("00"));
+        }
+
+        public void ModifyVictoryCondition(string victoryCondition)
+        {
+            this.victoryCondition.text = victoryCondition;
         }
     }
 }

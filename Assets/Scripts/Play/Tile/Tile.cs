@@ -16,6 +16,7 @@ namespace Game
         public TileType TileType => tileType;
 
         private Image tileImage;
+
         private Unit linkedUnit;
         private GridController gridController;
         public GridController GridController => gridController;
@@ -143,7 +144,7 @@ namespace Game
 
         public void OnCursorEnter()
         {
-            Harmony.Finder.UIController.ModifyUI(this);
+            Harmony.Finder.UIController.ModifyPlayerUI(this);
         }
     }
 }

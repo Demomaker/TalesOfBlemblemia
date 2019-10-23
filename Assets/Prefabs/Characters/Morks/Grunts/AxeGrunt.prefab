@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialPosition: {x: 7, y: 7}
+  unitInfos: {fileID: 11400000, guid: 14b82892ffbf7ef40b85a7a1b88f28fa, type: 2}
   playerType: 2
   classStats: {fileID: 11400000, guid: 4c7f10602b3245541836a9c82e85be9c, type: 2}
 --- !u!114 &3358766009886993445

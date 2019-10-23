@@ -35,6 +35,12 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
+
+        private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
+        private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
+
+
+
         private CinematicController cinematicController;
         public CinematicController CinematicController => cinematicController;
 
@@ -68,6 +74,27 @@ namespace Game
                 dialogueTriggerStartFranklem.TriggerDialogue();
             }
             ReevaluateAllMovementCosts();
+            PrepareVictoryConditionForUI();
+        }
+
+        private void PrepareVictoryConditionForUI()
+        {
+            if (completeIfPointAchieved)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+            }
+            else if (completeIfAllEnemiesDefeated)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
+            }
+            else if (completeIfCertainEnemyDefeated)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + enemyToDefeat);
+            }
+            else if (completeIfSurvivedCertainNumberOfTurns)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
+            }
         }
 
         protected void Update()
@@ -117,6 +144,7 @@ namespace Game
         private void OnTurnGiven()
         {
             if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
+            Harmony.Finder.UIController.ModifyTurnCounter(numberOfPlayerTurns);
             currentPlayer.OnTurnGiven();
         }
 

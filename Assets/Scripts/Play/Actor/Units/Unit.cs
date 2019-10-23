@@ -11,6 +11,10 @@ namespace Game
     public class Unit : MonoBehaviour
     {
         [SerializeField] private Vector2Int initialPosition;
+        [SerializeField] private UnitInfos unitInfos;
+
+        public UnitInfos UnitInfos => unitInfos;
+
         private GridController gridController;
         /// <summary>
         /// The tile the unit is on
