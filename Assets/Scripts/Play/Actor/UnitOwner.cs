@@ -71,10 +71,9 @@ namespace Game
 
         private void MakeOwnedUnitsPlayable()
         {
-            for (int i = 0; i < ownedUnits.Count; i++)
+            foreach (var unit in ownedUnits)
             {
-                ownedUnits[i].HasActed = false;
-                ownedUnits[i].ResetNumberOfMovesLeft();
+                unit.ResetTurnStats();
             }
         }
 

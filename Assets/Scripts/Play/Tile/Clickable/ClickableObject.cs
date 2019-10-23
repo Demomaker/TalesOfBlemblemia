@@ -57,7 +57,7 @@ namespace Game
                     if (tile.LinkedUnit.NoHealthLeft)
                     {
                         tile.LinkedUnit.Die();
-                        gridControllerSelectedUnit.MoveToTileAndAct(tile);
+                        gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
                     }
                 }
                 else if (tile.LinkedUnitCanBeRecruitedByPlayer)
@@ -72,12 +72,14 @@ namespace Game
                 }
                 else if (tile.IsPossibleAction)
                 {
-                    gridControllerSelectedUnit.MoveToTileAndAct(tile, ActionType.Rest);
+                    gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile), ActionType.Rest));
+                    //gridControllerSelectedUnit.MoveToTileAndAct(tile, ActionType.Rest);
                 }
             }
             else if (tile.IsPossibleAction && tile.IsAvailable)
             {
-                gridControllerSelectedUnit.MoveToTileAndAct(tile);
+                gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
+                //gridControllerSelectedUnit.MoveToTileAndAct(tile);
             }
 
             tile.GridController.DeselectUnit();
