@@ -13,6 +13,7 @@
      public class Unit : MonoBehaviour
      {
          [SerializeField] private Vector2Int initialPosition;
+         [SerializeField] private Gender gender = Gender.Male;
          private GridController gridController;
          /// <summary>
          /// The tile the unit is on
@@ -206,7 +207,7 @@
              {
                  damage *= Random.value <= Stats.CritRate ? 2 : 1;
              }
-             
+             Finder.SoundManager.PlaySingle(Finder.SoundClips.HurtSound);
              target.CurrentHealthPoints -= damage;
              counter = 0;
              
@@ -246,6 +247,7 @@
          {
              currentTile.UnlinkUnit();
              Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
+             Finder.SoundManager.PlaySingle(Finder.SoundClips.UnitDeathSound);
              Destroy(gameObject);
          }
 
@@ -296,13 +298,35 @@
              }
              LinkUnitToTile(finalTile);
              transform.position = currentTile.WorldPosition;
+             
+             Finder.SoundManager.PlaySingle(Finder.SoundClips.UnitMoveSound);
              isMoving = false;
              if (action.ActionType != ActionType.Nothing)
              {
                  if (action.ActionType == ActionType.Attack && action.Target != null)
                  {
                      if (!Attack(action.Target))
+                     {
                          Rest();
+                     }
+                     else
+                     {
+                         switch (gender)
+                         {
+                             case Gender.Male :
+                                 
+                                 Finder.SoundManager.PlaySingle(Finder.SoundClips.MaleAttackSound);
+                                 break;
+                             case Gender.Female :
+
+                                 Finder.SoundManager.PlaySingle(Finder.SoundClips.FemaleAttackSound);
+                                 break;
+                             case Gender.Mork :
+                                 
+                                 Finder.SoundManager.PlaySingle(Finder.SoundClips.MorkAttackSound);
+                                 break;
+                         }
+                     }
                  }
                  else
                  {
@@ -391,6 +415,13 @@
              var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile	, this);
              if (adjacentTile != null)
                 MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
+         }
+
+         public enum Gender
+         {
+             Male,
+             Female,
+             Mork
          }
      } 
  }

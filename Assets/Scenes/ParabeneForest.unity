@@ -46560,6 +46560,21 @@ PrefabInstance:
       propertyPath: defeatIfAllPlayerUnitsDied
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: levelName
+      value: ParabeneForest
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: backgroundMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: c6e248cdad8e380479ebea095a0a7d69, type: 3}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: backgroundMusicOption
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
 --- !u!1 &1391627738

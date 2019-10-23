@@ -19,6 +19,8 @@ namespace Game
     public class LevelController : MonoBehaviour
     {
         [SerializeField] private string levelName;
+        [SerializeField] private AudioClip backgroundMusic;
+        [SerializeField] private BACKGROUND_MUSIC_OPTIONS backgroundMusicOption;
         [SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
@@ -43,6 +45,7 @@ namespace Game
         private bool levelEnded = false;
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
+        private bool victoryMusicIsPlaying = false;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -50,6 +53,12 @@ namespace Game
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
 
+        public enum BACKGROUND_MUSIC_OPTIONS
+        {
+            Forest = 0,
+            Castle = 1,
+            Boss = 2
+        }
 
         private void Awake()
         {
@@ -58,6 +67,8 @@ namespace Game
 
         private void Start()
         {
+            Finder.SoundManager.StopCurrentMusic();
+            Finder.SoundManager.PlayMusic(backgroundMusic);
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -82,6 +93,12 @@ namespace Game
 
             if (levelEnded)
             {
+                if (levelCompleted && !victoryMusicIsPlaying)
+                {
+                    victoryMusicIsPlaying = true;
+                    Finder.SoundManager.StopCurrentMusic();
+                    Finder.SoundManager.PlayMusic(Finder.SoundClips.LevelVictoryMusic);
+                }
                 StartCoroutine(EndLevel());
             }
 
@@ -109,6 +126,7 @@ namespace Game
                 yield return null;
             }
             
+            Finder.SoundManager.StopCurrentMusic();
             if (levelCompleted)
                 Finder.GameController.LevelsCompleted.Add(levelName);
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
@@ -204,6 +222,7 @@ namespace Game
 
             GiveUnits(units, false, player1, player2);
 
+            player1.UpdateNumberOfStartingOwnedUnits();
             player1.OnNewLevel();
             player2.OnNewLevel();
             

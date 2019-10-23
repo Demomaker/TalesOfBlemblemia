@@ -28,6 +28,7 @@ namespace Game
         public void StartNewGame()
         {
             //menu newgame
+            //Finder.SoundManager.PlaySingle(Finder.SoundClips.ButtonClickSound);
             menusController.GoToSaveSelectionMenu();
         }
 
