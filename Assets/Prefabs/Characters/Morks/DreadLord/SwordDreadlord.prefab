@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 7286828170236941369}
   - component: {fileID: 7286828170236941374}
   - component: {fileID: 7098078026787903970}
+  - component: {fileID: 5420197933692493177}
   m_Layer: 0
-  m_Name: Dreadlords
+  m_Name: SwordDreadlord
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,5 +95,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb984848d5b1460591abed472fca1966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosition: {x: 0, y: 0}
-  playerType: 1
+  initialPosition: {x: 7, y: 7}
+  playerType: 2
+  classStats: {fileID: 11400000, guid: a59c99018abf1cd40a93b7d9e3849805, type: 2}
+--- !u!114 &5420197933692493177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7286828170236941372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77eb5db73a5c1a3469081f5cb93e702e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponStats: {fileID: 11400000, guid: a4c975b43d2f4aa4d98a8168e216c82d, type: 2}

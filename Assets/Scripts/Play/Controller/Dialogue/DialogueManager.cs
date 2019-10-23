@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-//this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
+//Parts of this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
 //https://www.youtube.com/watch?v=_nRzoTzeyxU
-//The main difference is that i made the field private and serializable.
 public class DialogueManager : MonoBehaviour
 {
 
@@ -15,13 +13,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Texture[] textures;
 
+    private bool skipTypingCoroutine = false;
     private bool isDisplayingDialogue = false;
     public bool IsDisplayingDialogue => isDisplayingDialogue;
     private bool isTyping = false;
     
     private Queue<Quote> sentences;
-
-    // Start is called before the first frame update
 
     public void StartDialogue(Dialogue dialogue)
     {
@@ -45,6 +42,19 @@ public class DialogueManager : MonoBehaviour
         portrait.texture = texture;
     }
 
+    private void Update()
+    {
+        if (!isDisplayingDialogue) return;
+        if (Input.anyKeyDown)
+        {
+            if (isTyping) skipTypingCoroutine = true;
+            else
+            {
+                DisplayNextSentence();
+            }
+        }
+    }
+
     public void DisplayNextSentence()
     {
         if(isTyping) return;
@@ -65,7 +75,6 @@ public class DialogueManager : MonoBehaviour
             }
         }
         
-        //StopAllCoroutines();
         StartCoroutine(TypeSentence(quote.Sentence));
     }
 
@@ -75,10 +84,16 @@ public class DialogueManager : MonoBehaviour
         dialogueText.text = "";
         foreach (char letter in sentence)
         {
+            if (skipTypingCoroutine)
+            {
+                dialogueText.text = sentence;
+                skipTypingCoroutine = false;
+                break;
+            }
             dialogueText.text += letter;
             yield return null;
         }
-
+        
         isTyping = false;
     }
     

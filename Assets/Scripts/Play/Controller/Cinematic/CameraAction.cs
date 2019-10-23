@@ -1,9 +1,6 @@
-﻿using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine;
 
-namespace Play
+namespace Game
 {
     [System.Serializable]
     public class CameraAction

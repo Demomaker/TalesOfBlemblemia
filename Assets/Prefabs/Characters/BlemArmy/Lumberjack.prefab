@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7617506599882242046}
   - component: {fileID: 7617506599882242045}
   - component: {fileID: 1625672215002910216}
+  - component: {fileID: 7442661831812603119}
   m_Layer: 0
   m_Name: Lumberjack
   m_TagString: Untagged
@@ -95,3 +96,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialPosition: {x: 7, y: 7}
   playerType: 0
+  classStats: {fileID: 11400000, guid: 143503c0a7f07fe42bfde1c238f309b1, type: 2}
+--- !u!114 &7442661831812603119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7617506599882242044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a40ba46ea5b4f4588b6eb1db2b9313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponStats: {fileID: 11400000, guid: 2407e281ef2d3f04ca4f2987a674e807, type: 2}

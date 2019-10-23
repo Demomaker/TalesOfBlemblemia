@@ -67,15 +67,19 @@ using UnityEngine.UI;
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit))
+                        else if (tile.LinkedUnit != null && (linkedUnit.TargetIsInMovementRange(tile.LinkedUnit) || linkedUnit.TargetIsInRange(tile.LinkedUnit)))
                         {
-                            if (tile.LinkedUnit.IsEnemy)
+                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
                             else if (tile.LinkedUnit.IsRecruitable)
                             {
                                 tile.DisplayRecruitActionPossibility();
+                            }
+                            else if (linkedUnit.WeaponType == WeaponType.HealingStaff && !tile.LinkedUnit.IsEnemy)
+                            {
+                                tile.DisplayHealActionPossibility();
                             }
                         }
                     }

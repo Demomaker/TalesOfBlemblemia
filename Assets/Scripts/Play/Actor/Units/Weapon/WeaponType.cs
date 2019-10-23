@@ -1,11 +1,12 @@
 ﻿namespace Game
 {
-    /// Auteur: Zacharie Lavigne
+    /// Author: Zacharie Lavigne
     public enum WeaponType
     {
         None,
         Sword,
         Spear,
-        Axe
+        Axe,
+        HealingStaff
     }
 }

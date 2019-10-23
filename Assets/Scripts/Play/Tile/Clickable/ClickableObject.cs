@@ -30,14 +30,7 @@ namespace Game
             if (tile == null) return;
             var gridControllerSelectedUnit = tile.GridController.SelectedUnit;
 
-            if (tile.LinkedUnit != null && tile.IsPossibleAction && tile.LinkedUnit.IsRecruitable)
-            {
-                tile.LinkedUnit.RecruitUnit();
-                tile.GridController.DeselectUnit();
-                return;
-            }
-            
-            if (tile.LinkedUnitCanBeSelectedByPlayer)
+            if (clickButton == ClickButton.LeftClick && tile.LinkedUnitCanBeSelectedByPlayer)
             {
                 if (clickButton == ClickButton.RightClick && tile.GridController.SelectedUnit == tile.LinkedUnit)
                 {
@@ -66,6 +59,16 @@ namespace Game
                         tile.LinkedUnit.Die();
                         gridControllerSelectedUnit.MoveToTileAndAct(tile);
                     }
+                }
+                else if (tile.LinkedUnitCanBeRecruitedByPlayer)
+                {
+                    if (!gridControllerSelectedUnit.RecruitUnit(tile.LinkedUnit))
+                        gridControllerSelectedUnit.RecruitDistantUnit(tile.LinkedUnit);
+                }
+                else if (gridControllerSelectedUnit.WeaponType == WeaponType.HealingStaff && tile.LinkedUnitCanBeHealedByPlayer)
+                {
+                    if (!gridControllerSelectedUnit.HealUnit(tile.LinkedUnit))
+                        gridControllerSelectedUnit.HealDistantUnit(tile.LinkedUnit);
                 }
                 else if (tile.IsPossibleAction)
                 {
