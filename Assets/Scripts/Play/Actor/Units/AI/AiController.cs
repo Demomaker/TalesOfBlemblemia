@@ -218,10 +218,14 @@ namespace Game
             }
             else
             {
-                path = PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(),
-                    playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-                    potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y,
-                    playableUnit);
+                path = PathFinder.GetPath(
+                    Finder.GridController, 
+                    playableUnit.MovementCosts, 
+                    new List<Tile>(), 
+                    new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
+                    new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y), 
+                    playableUnit
+                );
                 path.Reverse();
             }
 
@@ -236,8 +240,14 @@ namespace Game
         /// <returns>The shortest path to a target position</returns>
         private static List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
         {
-            return PathFinder.GetPath(Finder.GridController, playableUnit.MovementCosts, new List<Tile>(), playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y,
-                targetPosition.x, targetPosition.y, playableUnit);
+            return PathFinder.GetPath(
+                Finder.GridController, 
+                playableUnit.MovementCosts, 
+                new List<Tile>(), 
+                new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
+                new Vector2Int(targetPosition.x, targetPosition.y),
+                playableUnit
+            );
         }
         /// <summary>
         /// Initializes action based on the unit's enemies

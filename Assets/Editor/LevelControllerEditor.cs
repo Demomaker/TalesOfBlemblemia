@@ -9,6 +9,8 @@ namespace Game
     public class LevelControllerEditor : Editor
     {
         private SerializedProperty levelName;
+        private SerializedProperty backgroundMusic;
+        private SerializedProperty backgroundMusicOptionProperty;
         private SerializedProperty doNotEnd;
         private SerializedProperty completeIfAllEnemiesDefeated;
         private SerializedProperty completeIfPointAchieved;
@@ -23,10 +25,15 @@ namespace Game
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
         private SerializedProperty revertWeaponTriangle;
+        
+        LevelBackgroundMusicType backgroundMusicOption;
 
         private void OnEnable()
         {
             levelName = serializedObject.FindProperty("levelName");
+            backgroundMusic = serializedObject.FindProperty("backgroundMusic");
+            backgroundMusicOptionProperty = serializedObject.FindProperty("backgroundMusicOption");
+            backgroundMusicOption = (LevelBackgroundMusicType)backgroundMusicOptionProperty.enumValueIndex;
             doNotEnd = serializedObject.FindProperty("doNotEnd");
             completeIfAllEnemiesDefeated = serializedObject.FindProperty("completeIfAllEnemiesDefeated");
             completeIfPointAchieved = serializedObject.FindProperty("completeIfPointAchieved");
@@ -54,6 +61,20 @@ namespace Game
             EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
             levelName.stringValue = EditorGUILayout.TextField("Level Name", levelName.stringValue);
+            backgroundMusicOption = (LevelBackgroundMusicType)EditorGUILayout.EnumPopup("Background Music Type", backgroundMusicOption);
+            backgroundMusicOptionProperty.enumValueIndex = (int)backgroundMusicOption;
+            switch (backgroundMusicOption)
+            {
+                case LevelBackgroundMusicType.Forest :
+                    backgroundMusic.objectReferenceValue = Finder.SoundClips.ForestMusic;
+                    break;
+                case LevelBackgroundMusicType.Castle :
+                    backgroundMusic.objectReferenceValue = Finder.SoundClips.CastleMusic;
+                    break;
+                case LevelBackgroundMusicType.Boss :
+                    backgroundMusic.objectReferenceValue = Finder.SoundClips.BossMusic;
+                    break;
+            }
             doNotEnd.boolValue = EditorGUILayout.Toggle("Do Not End Level", doNotEnd.boolValue);
             
             EditorGUILayout.LabelField("Weapon Transformation", EditorStyles.boldLabel);
@@ -65,41 +86,41 @@ namespace Game
             {
                 EditorGUILayout.LabelField("Conditions For Level Completion", EditorStyles.boldLabel);
                 
-            completeIfAllEnemiesDefeated.boolValue =
-                EditorGUILayout.Toggle("Complete If All Enemies Defeated", completeIfAllEnemiesDefeated.boolValue);
-            
-            completeIfPointAchieved.boolValue = EditorGUILayout.Toggle( "Complete If Point Achieved", completeIfPointAchieved.boolValue);
-            if (completeIfPointAchieved.boolValue) pointToAchieve.vector2IntValue = EditorGUILayout.Vector2IntField("Point To Achieve", pointToAchieve.vector2IntValue);
+                completeIfAllEnemiesDefeated.boolValue =
+                    EditorGUILayout.Toggle("Complete If All Enemies Defeated", completeIfAllEnemiesDefeated.boolValue);
+                
+                completeIfPointAchieved.boolValue = EditorGUILayout.Toggle( "Complete If Point Achieved", completeIfPointAchieved.boolValue);
+                if (completeIfPointAchieved.boolValue) pointToAchieve.vector2IntValue = EditorGUILayout.Vector2IntField("Point To Achieve", pointToAchieve.vector2IntValue);
 
-            completeIfSurvivedCertainNumberOfTurns.boolValue = EditorGUILayout.Toggle(
-                "Complete If Survived Certain Number Of Turns", completeIfSurvivedCertainNumberOfTurns.boolValue);
-            if (completeIfSurvivedCertainNumberOfTurns.boolValue)
-                numberOfTurnsBeforeCompletion.intValue = EditorGUILayout.IntField("Number Of Turns Before Completion",
-                    numberOfTurnsBeforeCompletion.intValue);
+                completeIfSurvivedCertainNumberOfTurns.boolValue = EditorGUILayout.Toggle(
+                    "Complete If Survived Certain Number Of Turns", completeIfSurvivedCertainNumberOfTurns.boolValue);
+                if (completeIfSurvivedCertainNumberOfTurns.boolValue)
+                    numberOfTurnsBeforeCompletion.intValue = EditorGUILayout.IntField("Number Of Turns Before Completion",
+                        numberOfTurnsBeforeCompletion.intValue);
 
-            completeIfCertainEnemyDefeated.boolValue =
-                EditorGUILayout.Toggle("Complete If Certain Enemy Defeated", completeIfCertainEnemyDefeated.boolValue);
-            if (completeIfCertainEnemyDefeated.boolValue)
-                enemyToDefeat.objectReferenceValue =
-                    EditorGUILayout.ObjectField("Enemy to Defeat", enemyToDefeat.objectReferenceValue, typeof(Unit),true );
-            
-            EditorGUILayout.LabelField("Conditions For Level Defeat", EditorStyles.boldLabel);
+                completeIfCertainEnemyDefeated.boolValue =
+                    EditorGUILayout.Toggle("Complete If Certain Enemy Defeated", completeIfCertainEnemyDefeated.boolValue);
+                if (completeIfCertainEnemyDefeated.boolValue)
+                    enemyToDefeat.objectReferenceValue =
+                        EditorGUILayout.ObjectField("Enemy to Defeat", enemyToDefeat.objectReferenceValue, typeof(Unit),true );
+                
+                EditorGUILayout.LabelField("Conditions For Level Defeat", EditorStyles.boldLabel);
 
-            defeatIfAllPlayerUnitsDied.boolValue = EditorGUILayout.Toggle("Defeat If All Player Units Died",
-                defeatIfAllPlayerUnitsDied.boolValue);
+                defeatIfAllPlayerUnitsDied.boolValue = EditorGUILayout.Toggle("Defeat If All Player Units Died",
+                    defeatIfAllPlayerUnitsDied.boolValue);
 
-            defeatIfNotCompleteLevelInCertainAmountOfTurns.boolValue = EditorGUILayout.Toggle(
-                "Defeat If Not Complete Level In Certain Amount Of Turns",
-                defeatIfNotCompleteLevelInCertainAmountOfTurns.boolValue);
-            if (defeatIfNotCompleteLevelInCertainAmountOfTurns.boolValue)
-                numberOfTurnsBeforeDefeat.intValue = EditorGUILayout.IntField("Number Of Turns Before Defeat",
-                    numberOfTurnsBeforeDefeat.intValue);
+                defeatIfNotCompleteLevelInCertainAmountOfTurns.boolValue = EditorGUILayout.Toggle(
+                    "Defeat If Not Complete Level In Certain Amount Of Turns",
+                    defeatIfNotCompleteLevelInCertainAmountOfTurns.boolValue);
+                if (defeatIfNotCompleteLevelInCertainAmountOfTurns.boolValue)
+                    numberOfTurnsBeforeDefeat.intValue = EditorGUILayout.IntField("Number Of Turns Before Defeat",
+                        numberOfTurnsBeforeDefeat.intValue);
 
-            defeatIfProtectedIsKilled.boolValue =
-                EditorGUILayout.Toggle("Defeat If Protected Is Killed", defeatIfProtectedIsKilled.boolValue);
-            if (defeatIfProtectedIsKilled.boolValue)
-                unitToProtect.objectReferenceValue = EditorGUILayout.ObjectField("Unit To Protect",
-                    unitToProtect.objectReferenceValue, typeof(Unit), true);
+                defeatIfProtectedIsKilled.boolValue =
+                    EditorGUILayout.Toggle("Defeat If Protected Is Killed", defeatIfProtectedIsKilled.boolValue);
+                if (defeatIfProtectedIsKilled.boolValue)
+                    unitToProtect.objectReferenceValue = EditorGUILayout.ObjectField("Unit To Protect",
+                        unitToProtect.objectReferenceValue, typeof(Unit), true);
             }
             
                 

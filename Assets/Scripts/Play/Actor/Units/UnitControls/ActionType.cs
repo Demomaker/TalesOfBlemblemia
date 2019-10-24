@@ -5,6 +5,8 @@
     {
         Rest,
         Attack,
-        Nothing
+        Nothing,
+        Recruit,
+        Heal
     }
 }

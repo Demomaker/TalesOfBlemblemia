@@ -6,5 +6,6 @@
         public const string SAVE_CONTROLLER = "SaveController";
         public const string PAUSE_CONTROLLER = "PauseController";
         public const string NAVIGATOR = "Navigator";
+        public const string SOUND_MANAGER = "SoundManager";
     }
 }

@@ -1,28 +1,12 @@
 ﻿namespace Game
 {
-    /// Auteur: Zacharie Lavigne
+    /// Author: Zacharie Lavigne
     public class Sword : Weapon
     {
-        private static Sword basicWeapon = new Sword();
-
-        public static Sword BasicWeapon
+        private void Awake()
         {
-            get
-            {
-                if (basicWeapon == null)
-                {
-                    return new Sword();
-                }
-                return basicWeapon;
-            }
-        }
-
-        public Sword(UnitStats weaponStats = null) : base(weaponStats, WeaponType.Sword, SWORD_ADVANTAGE)
-        {
-            if (weaponStats == null)
-            {
-                this.weaponStats = new UnitStats(SWORD_MAX_HEALTH_POINTS, SWORD_MOVE_SPEED, SWORD_ATTACK_STRENGTH, SWORD_HIT_RATE, SWORD_CRIT_RATE);
-            }
+            weaponType = WeaponType.Sword;
+            advantage = SWORD_ADVANTAGE;
         }
     }
 }

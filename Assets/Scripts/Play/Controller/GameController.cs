@@ -37,7 +37,6 @@ namespace Game
          {
              InstantiateLevelList();
              ResetCompletedLevels();
-             LoadLevel(Constants.OVERWORLD_SCENE_NAME);
          }
 
          private void InstantiateLevelList()
@@ -78,7 +77,7 @@ namespace Game
          private IEnumerator LoadLevelCoroutine(string levelname)
          {
              if(!SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
+                 yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Single);
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
          }
 
@@ -104,6 +103,7 @@ namespace Game
          {
              choiceRange = choiceRangePerDifficulty[difficultyLevel];
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
+             DontDestroyOnLoad(gameObject);
          }
      }
 
