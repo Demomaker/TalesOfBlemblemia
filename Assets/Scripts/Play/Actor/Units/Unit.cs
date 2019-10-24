@@ -9,17 +9,21 @@ namespace Game
     //Authors: Jérémie Bertrand, Zacharie Lavigne
     public class Unit : MonoBehaviour
     {
+        #region Serialized fields
         [SerializeField] private Vector2Int initialPosition;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
+        #endregion
         
+        #region Fields
         private GridController gridController;
         private Tile currentTile;
         private Weapon weapon;
         private int[,] movementCosts;
         private int currentHealthPoints;
         private int movesLeft;
-
+        #endregion
+        
         #region Properties
         public int CurrentHealthPoints
         {
@@ -116,6 +120,7 @@ namespace Game
             transform.localRotation = Quaternion.Euler(0, target.x < transform.position.x ? 180 : 0, 0);
         }
 
+        #region Movements
         public List<Tile> PrepareMove(Tile tile)
         {
             currentTile.UnlinkUnit();
@@ -193,7 +198,8 @@ namespace Game
                 }
             }
         }
-
+        #endregion
+        
         #region Action controlls
         public void Rest()
         {
