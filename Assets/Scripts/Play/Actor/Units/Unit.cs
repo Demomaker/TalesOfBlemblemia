@@ -141,8 +141,8 @@ namespace Game
             {
                 currentTile.UnlinkUnit();
                 List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
-                    currentTile.LogicalPosition.x,
-                    currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, this);
+                    new Vector2Int(currentTile.LogicalPosition.x, currentTile.LogicalPosition.y), 
+                    new Vector2Int(tile.LogicalPosition.x, tile.LogicalPosition.y), this);
                 path.RemoveAt(0);
                 path.Add(tile);
                 movesLeft -= currentTile.CostToMove;
