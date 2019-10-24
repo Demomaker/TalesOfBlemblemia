@@ -22,6 +22,7 @@ namespace Game
         private int[,] movementCosts;
         private int currentHealthPoints;
         private int movesLeft;
+        private int tileUpdateKeeper;
         #endregion
         
         #region Properties
@@ -57,7 +58,24 @@ namespace Game
                 return maxGain;
             }
         }
-        public int[,] MovementCosts => movementCosts;
+
+        public int[,] MovementCosts
+        {
+            get
+            {
+                if (tileUpdateKeeper != Harmony.Finder.LevelController.LevelTileUpdateKeeper)
+                {
+                    if (currentTile != null)
+                        MovementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
+                }
+                return movementCosts;
+            }
+            set
+            {
+                movementCosts = value;
+                tileUpdateKeeper = Harmony.Finder.LevelController.LevelTileUpdateKeeper;
+            }
+        }
         public Tile CurrentTile
         {
             get => currentTile;
@@ -65,7 +83,8 @@ namespace Game
             {
                 if (currentTile != null) currentTile.UnlinkUnit();
                 currentTile = value;
-                value.LinkUnit(this);
+                if (value != null) value.LinkUnit(this);
+                Harmony.Finder.LevelController.IncrementTileUpdate();
             }
         }
         public bool IsEnemy => playerType == PlayerType.Enemy;
@@ -103,12 +122,6 @@ namespace Game
             transform.position = tile.WorldPosition;
             CurrentTile = tile;
         }
-        public void ComputeTilesCosts()
-        {
-            // TODO changer ça en propriété qui s'auto-changera au besoin
-            if (currentTile != null)
-                movementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
-        }
         public void ResetTurnStats()
         {
             HasActed = false;
@@ -123,10 +136,10 @@ namespace Game
         #region Movements
         public List<Tile> PrepareMove(Tile tile)
         {
-            currentTile.UnlinkUnit();
             isMoving = true;
             if (tile != currentTile)
             {
+                currentTile.UnlinkUnit();
                 List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
                     currentTile.LogicalPosition.x,
                     currentTile.LogicalPosition.y, tile.LogicalPosition.x, tile.LogicalPosition.y, this);
@@ -211,7 +224,6 @@ namespace Game
         public void Die()
         {
             currentTile.UnlinkUnit();
-            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
             Destroy(gameObject);
         }
         
@@ -220,7 +232,6 @@ namespace Game
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
             if (adjacentTile != null)
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Attack, target));
-            //MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
         }
         public bool Attack(Unit target, bool isCountering = false)
         {
@@ -287,7 +298,6 @@ namespace Game
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
             if (adjacentTile != null)
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Recruit, target));
-            //MoveToTileAndAct(adjacentTile, ActionType.Recruit, target);
         }
         public bool RecruitUnit()
         {
@@ -329,7 +339,6 @@ namespace Game
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
             if (adjacentTile != null)
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Heal, target));
-            //MoveToTileAndAct(adjacentTile, ActionType.Heal, target);
         }
 
         public bool TargetIsInMovementRange(Unit target)

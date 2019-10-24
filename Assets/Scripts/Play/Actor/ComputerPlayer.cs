@@ -40,7 +40,6 @@ namespace Game
                 var currentUnit = ownedUnits[i];
                 if (!currentUnit.HasActed)
                 {
-                    currentUnit.ComputeTilesCosts();
                     var action = AiController.DetermineAction(currentUnit, enemyUnits);
                     while (!currentUnit.HasActed)
                     {

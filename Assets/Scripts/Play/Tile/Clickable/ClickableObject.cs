@@ -47,8 +47,7 @@ namespace Game
                 }
                 return;
             }
-            
-            if (clickButton == ClickButton.RightClick)
+            if (clickButton == ClickButton.RightClick && gridControllerSelectedUnit != null)
             {
                 if (tile.LinkedUnitCanBeAttackedByPlayer)
                 {
@@ -73,13 +72,11 @@ namespace Game
                 else if (tile.IsPossibleAction)
                 {
                     gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile), ActionType.Rest));
-                    //gridControllerSelectedUnit.MoveToTileAndAct(tile, ActionType.Rest);
                 }
             }
             else if (tile.IsPossibleAction && tile.IsAvailable)
             {
                 gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
-                //gridControllerSelectedUnit.MoveToTileAndAct(tile);
             }
 
             tile.GridController.DeselectUnit();
