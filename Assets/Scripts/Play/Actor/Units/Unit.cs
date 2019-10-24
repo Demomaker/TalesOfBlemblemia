@@ -11,6 +11,7 @@ namespace Game
     public class Unit : MonoBehaviour
     {
         [SerializeField] private Vector2Int initialPosition;
+        [SerializeField] private Gender gender = Gender.Male;
         private GridController gridController;
         /// <summary>
         /// The tile the unit is on
@@ -220,7 +221,7 @@ namespace Game
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
-            
+            Finder.SoundManager.PlaySingle(Finder.SoundClips.HurtSound);
             target.CurrentHealthPoints -= damage;
             counter = 0;
             
@@ -256,12 +257,13 @@ namespace Game
             return currentTile.IsWithinRange(target.currentTile, AttackRange);
         }
 
-        public void Die()
-        {
-            currentTile.UnlinkUnit();
-            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
-            Destroy(gameObject);
-        }
+         public void Die()
+         {
+             currentTile.UnlinkUnit();
+             Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
+             Finder.SoundManager.PlaySingle(Finder.SoundClips.UnitDeathSound);
+             Destroy(gameObject);
+         }
 
         /// <summary>
         /// Starts to move following an action path and then executes the action
@@ -310,13 +312,30 @@ namespace Game
             }
             LinkUnitToTile(finalTile);
             transform.position = currentTile.WorldPosition;
+            Finder.SoundManager.PlaySingle(Finder.SoundClips.UnitMoveSound);
             isMoving = false;
             if (action.ActionType != ActionType.Nothing)
             {
                 if (action.ActionType == ActionType.Attack && action.Target != null)
                 {
+                    switch (gender)
+                    {
+                        case Gender.Male :
+                                 
+                            Finder.SoundManager.PlaySingle(Finder.SoundClips.MaleAttackSound);
+                            break;
+                        case Gender.Female :
+
+                            Finder.SoundManager.PlaySingle(Finder.SoundClips.FemaleAttackSound);
+                            break;
+                        case Gender.Mork :
+                                 
+                            Finder.SoundManager.PlaySingle(Finder.SoundClips.MorkAttackSound);
+                            break;
+                    }
                     if (!Attack(action.Target))
                         Rest();
+                    
                 }
                 if (action.ActionType == ActionType.Recruit && action.Target != null)
                 {
@@ -414,17 +433,17 @@ namespace Game
             movementCosts = PathFinder.PrepareComputeCost(tile.LogicalPosition, IsEnemy);
         }
 
-        /// <summary>
-        /// Starts a series of action to move next to an enemy unit and attack it
-        /// Author: Zacharie Lavigne
-        /// </summary>
-        /// <param name="target">The unit to attack</param>
-        public void AttackDistantUnit(Unit target)
-        {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
-            if (adjacentTile != null)
-               MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
-        }
+         /// <summary>
+         /// Starts a series of action to move next to an enemy unit and attack it
+         /// Author: Zacharie Lavigne
+         /// </summary>
+         /// <param name="target">The unit to attack</param>
+         public void AttackDistantUnit(Unit target)
+         {
+             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile	, this);
+             if (adjacentTile != null)
+                MoveToTileAndAct(adjacentTile, ActionType.Attack, target);
+         }
 
         /// <summary>
         /// Starts a series of action to move next to a recruitable unit and recruit it
@@ -465,6 +484,14 @@ namespace Game
         public bool TargetIsInMovementRange(Unit target)
         {
             return gridController.FindAvailableAdjacentTile(target.currentTile, this) != null;
+        }
+        
+        
+        public enum Gender
+        {
+            Male,
+            Female,
+            Mork
         }
     } 
 }
