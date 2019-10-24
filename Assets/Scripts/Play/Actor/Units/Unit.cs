@@ -267,7 +267,7 @@ namespace Game
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
-            
+            Finder.SoundManager.PlaySingle(Finder.SoundClips.HurtSound);
             target.CurrentHealthPoints -= damage;
             counter = 0;
             
@@ -350,6 +350,12 @@ namespace Game
             return currentTile.IsWithinRange(target.currentTile, AttackRange);
         }
         #endregion
-
+        
+        public enum Gender
+        {
+            Male,
+            Female,
+            Mork
+        }
     } 
 }

@@ -13,7 +13,7 @@
         public const string LEVEL_1_SCENE_NAME = "Level1";
         public const string LEVEL_2_SCENE_NAME = "Level2";
         public const string LEVEL_3_SCENE_NAME = "ParabeneForest";
-        public const string LEVEL_4_SCENE_NAME = "Level4";
+        public const string LEVEL_4_SCENE_NAME = "TestLevel";
         public const string LEVEL_5_SCENE_NAME = "Level5";
         public const string LEVEL_6_SCENE_NAME = "Level6";
         public const string LEVEL_7_SCENE_NAME = "Level7";

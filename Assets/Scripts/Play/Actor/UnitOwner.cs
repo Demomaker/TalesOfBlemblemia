@@ -13,6 +13,7 @@ namespace Game
     {
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
+        protected int numberOfStartingOwnedUnits;
         private bool hasLost = false;
         private string name = "";
         public string Name => name;
@@ -92,11 +93,18 @@ namespace Game
             ownedUnits.Add(unit);
         }
 
+        public void UpdateNumberOfStartingOwnedUnits()
+        {
+            numberOfStartingOwnedUnits = ownedUnits.Count;
+        }
+
         public virtual void RemoveOwnedUnit(Unit unit)
         {
             unit.HasActed = true;
             if (ownedUnits.Contains(unit))
+            {
                 ownedUnits.Remove(unit);
+            }
         }
         
         public void AddEnemyUnit(Unit enemy)
