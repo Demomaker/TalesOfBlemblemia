@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace Game
@@ -39,12 +40,10 @@ namespace Game
                 var currentUnit = ownedUnits[i];
                 if (!currentUnit.HasActed)
                 {
-                    currentUnit.ComputeTilesCosts();
                     var action = AiController.DetermineAction(currentUnit, enemyUnits);
                     while (!currentUnit.HasActed)
                     {
-                        currentUnit.ExecuteAction(action);
-                        yield return null;
+                        yield return currentUnit.MoveByAction(action);
                     }
                     base.CheckUnitDeaths();
                 }
