@@ -1,10 +1,16 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game
 {
     public class PauseController : MonoBehaviour
     {
+        [Header("Controller")] 
+        [SerializeField] private PauseMenuController pauseMenuController;
+        
         [Header("Canvases")] 
         [SerializeField] private Canvas pauseMenuCanvas;
         [SerializeField] private Canvas optionsMenuCanvas;
@@ -14,9 +20,12 @@ namespace Game
 
         private bool isPaused;
 
+        private Navigator navigator;
+
         private void Awake()
         {
             isPaused = false;
+            navigator = Finder.Navigator;
         }
 
         private void Start()
@@ -34,29 +43,23 @@ namespace Game
             }
             else
             {
-                if (Input.GetKeyDown(pauseButton)) 
+                if (Input.GetKeyDown(pauseButton) && pauseMenuCanvas.enabled) 
                     Resume();
             }
         }
 
         private void Pause()
         {
-            pauseMenuCanvas.enabled = true;
+            pauseMenuController.Enter();
             Time.timeScale = 0;
             isPaused = true;
         }
 
         public void Resume()
         {
-            pauseMenuCanvas.enabled = false;
+            pauseMenuController.Leave();
             Time.timeScale = 1;
             isPaused = false;
-        }
-
-        public void GoToOptions()
-        {
-            pauseMenuCanvas.enabled = false;
-            optionsMenuCanvas.enabled = true;
         }
     }
 }

@@ -530,7 +530,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   returnToMainMenuButton: {fileID: 1298120671}
-  confirmKey: 323
 --- !u!1 &118349944
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +908,7 @@ PrefabInstance:
     - target: {fileID: 4866346866540218443, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReturnToMainMenu
+      value: Leave
       objectReference: {fileID: 0}
     - target: {fileID: 4866346866540218443, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
@@ -1118,9 +1117,8 @@ MonoBehaviour:
   mainVolumeSlider: {fileID: 421416200}
   musicVolumeSlider: {fileID: 1938538638}
   sfxVolumeSlider: {fileID: 1485241768}
-  returnToMainMenuButton: {fileID: 534579811}
+  returnButton: {fileID: 534579811}
   applyChangesButton: {fileID: 364171522}
-  confirmKey: 323
 --- !u!1 &185395910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1388,12 +1386,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf55e6788bf4d2d908c63eb1701e211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuCanvas: {fileID: 1432789877}
-  newGameMenuCanvas: {fileID: 1862113972}
-  loadGameMenuCanvas: {fileID: 1864627645}
-  optionsMenuCanvas: {fileID: 184726437}
-  creditsMenuCanvas: {fileID: 97813862}
-  saveSlotSelectionCanvas: {fileID: 536055745}
+  mainScreen: {fileID: 1432789879}
+  newGameScreen: {fileID: 1862113972}
+  loadGameScreen: {fileID: 1864627645}
+  optionsScreen: {fileID: 184726437}
+  creditsScreen: {fileID: 97813862}
+  saveSlotSelectionScreen: {fileID: 536055745}
 --- !u!114 &222186334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2610,6 +2608,7 @@ MonoBehaviour:
   saveSlot1: {fileID: 1663492203}
   saveSlot2: {fileID: 70871310}
   saveSlot3: {fileID: 636171611}
+  newGameScreen: {fileID: 1862113974}
 --- !u!1 &542995244
 GameObject:
   m_ObjectHideFlags: 0
@@ -6494,6 +6493,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1171181268}
   m_CullTransparentMesh: 0
+--- !u!1 &1226503800
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1226503802}
+  - component: {fileID: 1226503801}
+  m_Layer: 0
+  m_Name: Navigator
+  m_TagString: Navigator
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1226503801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226503800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e1ddfe83ab4a178d19c7070f9f6671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1226503802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226503800}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 914.205, y: 480.9868, z: -1142.6152}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1227261100
 GameObject:
   m_ObjectHideFlags: 0
@@ -8089,13 +8131,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64934d8f92d2b3e4c9f447b70d1e4a72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveSlotSelectionController: {fileID: 536055747}
+  loadGameMenuController: {fileID: 1864627642}
+  optionsMenuController: {fileID: 184726439}
+  creditsMenuController: {fileID: 97813864}
   newGameButton: {fileID: 8150905910047968795}
   loadGameButton: {fileID: 1754109632}
   optionsButton: {fileID: 1699225889}
   creditsButton: {fileID: 1314637026}
   exitGameButton: {fileID: 1009944646}
-  confirmKey: 323
-  exitKey: 27
 --- !u!1 &1439044090
 GameObject:
   m_ObjectHideFlags: 0
@@ -11268,7 +11312,6 @@ MonoBehaviour:
   playerNameInputField: {fileID: 2003256274}
   startNewGameButton: {fileID: 1586003529}
   returnToMainMenuButton: {fileID: 341002967}
-  confirmKey: 323
 --- !u!1 &1864627641
 GameObject:
   m_ObjectHideFlags: 0

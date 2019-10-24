@@ -6,6 +6,12 @@ namespace Game
 {
     public class MainMenuController : MonoBehaviour
     {
+        [Header("Controllers")] 
+        [SerializeField] private SaveSlotSelectionController saveSlotSelectionController;
+        [SerializeField] private LoadGameMenuController loadGameMenuController;
+        [SerializeField] private OptionsMenuController optionsMenuController;
+        [SerializeField] private CreditsMenuController creditsMenuController;
+
         [Header("Buttons")] 
         [SerializeField] private Button newGameButton = null;
         [SerializeField] private Button loadGameButton = null;
@@ -13,39 +19,47 @@ namespace Game
         [SerializeField] private Button creditsButton = null;
         [SerializeField] private Button exitGameButton = null;
 
-        private MenusController menusController;
+        private Canvas mainMenuCanvas;
+        private Navigator navigator;
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
+            mainMenuCanvas = GetComponent<Canvas>();
+        }
+
+        public void Enter()
+        {
+            navigator.Enter(mainMenuCanvas);
+        }
+
+        public void Leave()
+        {
+            navigator.Leave();
         }
 
         [UsedImplicitly]
         public void StartNewGame()
         {
-            //menu newgame
-            menusController.GoToSaveSelectionMenu();
+            saveSlotSelectionController.Enter();
         }
 
         [UsedImplicitly]
         public void LoadGame()
         {
-            //Interface avec les saves
-            menusController.GoToLoadGameMenu();
+            loadGameMenuController.Enter();
         }
 
         [UsedImplicitly]
         public void Options()
         {
-            //Interface d'options;
-            menusController.GoToOptionsMenu();
+            optionsMenuController.Enter();
         }
 
         [UsedImplicitly]
         public void Credits()
         {
-            //Interface de credits
-            menusController.GoToCreditsMenu();
+            creditsMenuController.Enter();
         }
 
         [UsedImplicitly]

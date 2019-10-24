@@ -13,15 +13,24 @@ namespace Game
         [SerializeField] private Button saveSlot2;
         [SerializeField] private Button saveSlot3;
 
-        private MenusController menusController;
+        [Header("Canvas")] 
+        [SerializeField] private NewGameMenuController newGameScreen;
+
+        private Navigator navigator;
         private SaveController saveController;
-        private int saveNumberSelected;
+
+        private Canvas saveSelectionScreen;
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
             saveController = Finder.SaveController;
-            saveNumberSelected = 0;
+            saveSelectionScreen = GetComponent<Canvas>();
+        }
+
+        public void Enter()
+        {
+            navigator.Enter(saveSelectionScreen);
         }
 
         private void Start()
@@ -45,22 +54,19 @@ namespace Game
         [UsedImplicitly]
         public void SaveSlot1Selected()
         {
-            saveNumberSelected = 1;
-            menusController.GoToNewGameMenu(saveNumberSelected);
+            newGameScreen.Enter(Constants.SAVE_SLOT_ONE);
         }
 
         [UsedImplicitly]
         public void SaveSlot2Selected()
         {
-            saveNumberSelected = 2;
-            menusController.GoToNewGameMenu(saveNumberSelected);
+            newGameScreen.Enter(Constants.SAVE_SLOT_TWO);
         }
 
         [UsedImplicitly]
         public void SaveSlot3Selected()
         {
-            saveNumberSelected = 3;
-            menusController.GoToNewGameMenu(saveNumberSelected);
+            newGameScreen.Enter(Constants.SAVE_SLOT_THREE);
         }
 
     }

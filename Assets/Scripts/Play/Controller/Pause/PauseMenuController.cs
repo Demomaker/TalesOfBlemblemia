@@ -12,22 +12,40 @@ namespace Game
         [SerializeField] private Button optionsButton;
         [SerializeField] private Button returnToOverworldButton;
 
+        [Header("Controller")] 
+        [SerializeField] private OptionsMenuController optionsMenuController;
+        
+        private Navigator navigator;
+        private Canvas pauseMenuScreen;
         private PauseController pauseController;
 
         private void Start()
         {
+            navigator = Finder.Navigator;
+            pauseMenuScreen = GetComponent<Canvas>();
             pauseController = Finder.PauseController;
         }
 
+        public void Enter()
+        {
+            navigator.Enter(pauseMenuScreen);
+        }
+
+        public void Leave()
+        {
+            navigator.Leave();
+        }
+        
         [UsedImplicitly]
-        private void ResumeGame()
+        public void ResumeGame()
         {
             pauseController.Resume();
         }
 
-        private void GoToOptionsMenu()
+        [UsedImplicitly]
+        public void GoToOptionsMenu()
         {
-            pauseController.GoToOptions();
+            optionsMenuController.Enter();
         }
     }
 }

@@ -35,6 +35,9 @@
         public const bool DEFAULT_TOGGLE_VALUE = true;
         public const int DEFAULT_SLIDER_VALUE = 100;
         public const string DEFAULT_USERNAME = "Franklem";
+        public const int SAVE_SLOT_ONE = 1;
+        public const int SAVE_SLOT_TWO = 2;
+        public const int SAVE_SLOT_THREE = 3;
         
         //Playable characters
         public const string FRANKLEM_NAME = "Franklem";

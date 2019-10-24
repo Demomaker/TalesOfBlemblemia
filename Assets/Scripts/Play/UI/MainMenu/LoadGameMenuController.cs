@@ -3,7 +3,8 @@ using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 namespace Game
 {
@@ -14,13 +15,15 @@ namespace Game
         [SerializeField] private Button saveSlot2;
         [SerializeField] private Button saveSlot3;
 
-        private MenusController menusController;
+        private Navigator navigator;
         private SaveController saveController;
+        private Canvas loadGameScreen;
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
             saveController = Finder.SaveController;
+            loadGameScreen = GetComponent<Canvas>();
         }
         
         private void Start()
@@ -39,6 +42,11 @@ namespace Game
             saveSlot3.transform.Find("Stage").GetComponent<TMP_Text>().text = saveController.saveSlot3.levelName;
             saveSlot3.transform.Find("Difficulty").GetComponent<TMP_Text>().text =
                 saveController.saveSlot3.difficultyLevel;
+        }
+
+        public void Enter()
+        {
+            navigator.Enter(loadGameScreen);
         }
 
         [UsedImplicitly]
@@ -62,7 +70,7 @@ namespace Game
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {
-            menusController.ReturnFromLoadGameMenu();
+            navigator.Leave();
         }
 
         private void LoadScenes(int saveSlotNumber, string sceneName)

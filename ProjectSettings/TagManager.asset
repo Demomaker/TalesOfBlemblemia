@@ -18,6 +18,7 @@ TagManager:
   - SaveController
   - GameUIController
   - PauseController
+  - Navigator
   layers:
   - Default
   - TransparentFX
