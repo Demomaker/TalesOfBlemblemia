@@ -32,6 +32,7 @@ namespace Game
                 return gridController;
             }
         }
+
         //Author: Zacharie Lavigne
         public static Random Random
         {

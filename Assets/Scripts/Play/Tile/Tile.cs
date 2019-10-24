@@ -79,6 +79,7 @@ namespace Game
         public void DisplaySelectedTile()
         {
             tileImage.sprite = gridController.SelectedSprite;
+            Debug.Log("Current Sprite : " + gameObject.GetComponent<TileSprite>().GetSprite());
         }
 
         public void DisplayAttackActionPossibility()
