@@ -26,14 +26,14 @@ namespace Game
         private SerializedProperty numberOfTurnsBeforeDefeat;
         private SerializedProperty revertWeaponTriangle;
         
-        BACKGROUND_MUSIC_OPTIONS backgroundMusicOption;
+        LevelBackgroundMusicType backgroundMusicOption;
 
         private void OnEnable()
         {
             levelName = serializedObject.FindProperty("levelName");
             backgroundMusic = serializedObject.FindProperty("backgroundMusic");
             backgroundMusicOptionProperty = serializedObject.FindProperty("backgroundMusicOption");
-            backgroundMusicOption = (BACKGROUND_MUSIC_OPTIONS)backgroundMusicOptionProperty.enumValueIndex;
+            backgroundMusicOption = (LevelBackgroundMusicType)backgroundMusicOptionProperty.enumValueIndex;
             doNotEnd = serializedObject.FindProperty("doNotEnd");
             completeIfAllEnemiesDefeated = serializedObject.FindProperty("completeIfAllEnemiesDefeated");
             completeIfPointAchieved = serializedObject.FindProperty("completeIfPointAchieved");
@@ -51,13 +51,6 @@ namespace Game
             revertWeaponTriangle = serializedObject.FindProperty("revertWeaponTriangle");
 
         }
-        
-        public enum BACKGROUND_MUSIC_OPTIONS
-        {
-            Forest = 0,
-            Castle = 1,
-            Boss = 2
-        }
 
         public override void OnInspectorGUI()
         {
@@ -68,17 +61,17 @@ namespace Game
             EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
             levelName.stringValue = EditorGUILayout.TextField("Level Name", levelName.stringValue);
-            backgroundMusicOption = (BACKGROUND_MUSIC_OPTIONS)EditorGUILayout.EnumPopup("Background Music Type", backgroundMusicOption);
+            backgroundMusicOption = (LevelBackgroundMusicType)EditorGUILayout.EnumPopup("Background Music Type", backgroundMusicOption);
             backgroundMusicOptionProperty.enumValueIndex = (int)backgroundMusicOption;
             switch (backgroundMusicOption)
             {
-                case BACKGROUND_MUSIC_OPTIONS.Forest :
+                case LevelBackgroundMusicType.Forest :
                     backgroundMusic.objectReferenceValue = Finder.SoundClips.ForestMusic;
                     break;
-                case BACKGROUND_MUSIC_OPTIONS.Castle :
+                case LevelBackgroundMusicType.Castle :
                     backgroundMusic.objectReferenceValue = Finder.SoundClips.CastleMusic;
                     break;
-                case BACKGROUND_MUSIC_OPTIONS.Boss :
+                case LevelBackgroundMusicType.Boss :
                     backgroundMusic.objectReferenceValue = Finder.SoundClips.BossMusic;
                     break;
             }

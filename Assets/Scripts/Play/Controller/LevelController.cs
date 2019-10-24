@@ -20,7 +20,7 @@ namespace Game
     {
         [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
-        [SerializeField] private BACKGROUND_MUSIC_OPTIONS backgroundMusicOption;
+        [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
         [SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
@@ -52,13 +52,6 @@ namespace Game
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
-
-        public enum BACKGROUND_MUSIC_OPTIONS
-        {
-            Forest = 0,
-            Castle = 1,
-            Boss = 2
-        }
 
         private void Awake()
         {
