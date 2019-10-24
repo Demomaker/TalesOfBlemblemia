@@ -107,7 +107,6 @@ namespace Game
             if (!IsWalkable) 
                 return false;
             this.linkedUnit = unit;
-            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
             return IsOccupiedByAUnit;
         }
 
