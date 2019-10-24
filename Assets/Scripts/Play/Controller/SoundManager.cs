@@ -4,12 +4,12 @@ namespace Game
 {
     public class SoundManager : MonoBehaviour
     {
-        public AudioSource efxSource;                    //Drag a reference to the audio source which will play the sound effects.
-        public AudioSource musicSource;                    //Drag a reference to the audio source which will play the music.
-        public static SoundManager instance = null;        //Allows other scripts to call functions from SoundManager.                
-        public float lowPitchRange = .95f;                //The lowest a sound effect will be randomly pitched.
-        public float highPitchRange = 1.05f;            //The highest a sound effect will be randomly pitched.
-
+        [SerializeField] private AudioSource efxSource;                    //Drag a reference to the audio source which will play the sound effects.
+        [SerializeField] private AudioSource musicSource;                    //Drag a reference to the audio source which will play the music.
+        [SerializeField] private float lowPitchRange = .95f;                //The lowest a sound effect will be randomly pitched.
+        [SerializeField] private float highPitchRange = 1.05f;            //The highest a sound effect will be randomly pitched.
+        
+        public static SoundManager instance = null;        //Allows other scripts to call functions from SoundManager.   
 
         void Awake ()
         {
