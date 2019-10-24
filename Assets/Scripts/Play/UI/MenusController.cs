@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game
 {
@@ -32,6 +33,7 @@ namespace Game
             loadGameMenuCanvas.enabled = false;
             optionsMenuCanvas.enabled = false;
             creditsMenuCanvas.enabled = false;
+            Finder.SoundManager.PlayMusic(Finder.SoundClips.MainMenuMusic);
         }
 
         public void GoToSaveSelectionMenu()
@@ -82,6 +84,11 @@ namespace Game
         {
             loadGameMenuCanvas.enabled = false;
             mainMenuCanvas.enabled = true;
+        }
+
+        private void OnDestroy()
+        {
+            Finder.SoundManager.StopCurrentMusic();
         }
     }
 }
