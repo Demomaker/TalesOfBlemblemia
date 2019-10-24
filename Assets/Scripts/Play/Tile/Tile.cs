@@ -24,6 +24,7 @@ namespace Game
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedUnitCanBeRecruitedByPlayer => IsOccupiedByAUnit && linkedUnit.IsRecruitable && IsPossibleAction;
+        public bool LinkedUnitCanBeHealedByPlayer => IsOccupiedByAUnit && !linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
         public bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
@@ -48,7 +49,7 @@ namespace Game
         }
         private readonly float defenseRate;
         public float DefenseRate => defenseRate;
-        
+
 
         protected Tile(TileType tileType, int costToMove = TileValues.DEFAULT_COST_TO_MOVE, float defenseRate = TileValues.DEFAULT_DEFENSE_RATE)
         {

@@ -19,6 +19,8 @@ namespace Game
     public class LevelController : MonoBehaviour
     {
         [SerializeField] private string levelName;
+        [SerializeField] private AudioClip backgroundMusic;
+        [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
         [SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
@@ -49,6 +51,7 @@ namespace Game
         private bool levelEnded = false;
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
+        private bool victoryMusicIsPlaying = false;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -56,14 +59,16 @@ namespace Game
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
 
-
         private void Awake()
         {
             cinematicController = GetComponent<CinematicController>();
+            Debug.Log("Level name : " + levelName);
         }
 
         private void Start()
         {
+            Finder.SoundManager.StopCurrentMusic();
+            Finder.SoundManager.PlayMusic(backgroundMusic);
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -109,6 +114,12 @@ namespace Game
 
             if (levelEnded)
             {
+                if (levelCompleted && !victoryMusicIsPlaying)
+                {
+                    victoryMusicIsPlaying = true;
+                    Finder.SoundManager.StopCurrentMusic();
+                    Finder.SoundManager.PlayMusic(Finder.SoundClips.LevelVictoryMusic);
+                }
                 StartCoroutine(EndLevel());
             }
 
@@ -130,14 +141,17 @@ namespace Game
             levelIsEnding = true;
 
             
+            if (levelCompleted)
+            {
+                Finder.GameController.LevelsCompleted.Add(levelName);
+            }
             cinematicController.LaunchEndCinematic();
             while (cinematicController.IsPlayingACutScene)
             {
                 yield return null;
             }
             
-            if (levelCompleted)
-                Finder.GameController.LevelsCompleted.Add(levelName);
+            Finder.SoundManager.StopCurrentMusic();
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
@@ -232,6 +246,7 @@ namespace Game
 
             GiveUnits(units, false, player1, player2);
 
+            player1.UpdateNumberOfStartingOwnedUnits();
             player1.OnNewLevel();
             player2.OnNewLevel();
             

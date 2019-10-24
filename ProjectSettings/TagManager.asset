@@ -16,7 +16,7 @@ TagManager:
   - GridController
   - LevelController
   - SaveController
-  - UIController
+  - SoundManager
   layers:
   - Default
   - TransparentFX
