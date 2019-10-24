@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ae361f60e5e4f045871ba281a2d6c81, type: 3}
-  m_Name: New Unit Stats
+  m_Name: BaseHealingStaffStats
   m_EditorClassIdentifier: 
   maxHealthPoints: 0
   moveSpeed: 0
