@@ -38,6 +38,9 @@
         public const int SAVE_SLOT_ONE = 1;
         public const int SAVE_SLOT_TWO = 2;
         public const int SAVE_SLOT_THREE = 3;
+        public const string NAME_STRING = "Name";
+        public const string STAGE_STRING = "Stage";
+        public const string DIFFICULTY_STRING = "Difficulty";
         
         //Playable characters
         public const string FRANKLEM_NAME = "Franklem";

@@ -183,12 +183,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 536055747}
-        m_MethodName: SaveSlot2Selected
-        m_Mode: 1
+        m_MethodName: SaveSlotSelected
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1117,7 +1117,7 @@ MonoBehaviour:
   mainVolumeSlider: {fileID: 421416200}
   musicVolumeSlider: {fileID: 1938538638}
   sfxVolumeSlider: {fileID: 1485241768}
-  returnButton: {fileID: 534579811}
+  returnButton: {fileID: 0}
   applyChangesButton: {fileID: 364171522}
 --- !u!1 &185395910
 GameObject:
@@ -1270,12 +1270,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1864627642}
-        m_MethodName: SaveSlot2Selected
-        m_Mode: 1
+        m_MethodName: SaveSlotSelected
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2621,18 +2621,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511739567}
   m_CullTransparentMesh: 0
---- !u!114 &534579811 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4866346866540218443, guid: f71eadbc065baf14aa4d11249b55841d,
-    type: 3}
-  m_PrefabInstance: {fileID: 138360071}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &536055742
 GameObject:
   m_ObjectHideFlags: 0
@@ -2749,9 +2737,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9148940b3d450793ee36f61cc6c420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveSlot1: {fileID: 1663492203}
-  saveSlot2: {fileID: 70871310}
-  saveSlot3: {fileID: 636171611}
+  saveSlots:
+  - {fileID: 1663492203}
+  - {fileID: 70871310}
+  - {fileID: 636171611}
   newGameScreen: {fileID: 1862113974}
 --- !u!1 &542995244
 GameObject:
@@ -3341,12 +3330,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 536055747}
-        m_MethodName: SaveSlot3Selected
-        m_Mode: 1
+        m_MethodName: SaveSlotSelected
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -9285,12 +9274,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1864627642}
-        m_MethodName: SaveSlot3Selected
-        m_Mode: 1
+        m_MethodName: SaveSlotSelected
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -9984,12 +9973,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 536055747}
-        m_MethodName: SaveSlot1Selected
-        m_Mode: 1
+        m_MethodName: SaveSlotSelected
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -11488,9 +11477,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be7d79ee09a34864968c5acf5d2bd877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveSlot1: {fileID: 2088843888}
-  saveSlot2: {fileID: 201876990}
-  saveSlot3: {fileID: 1543650252}
+  saveSlots:
+  - {fileID: 2088843888}
+  - {fileID: 201876990}
+  - {fileID: 1543650252}
 --- !u!114 &1864627643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13621,8 +13611,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1864627642}
-        m_MethodName: SaveSlot1Selected
-        m_Mode: 1
+        m_MethodName: SaveSlotSelected
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

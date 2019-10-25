@@ -37,6 +37,7 @@ namespace Game
         public void Enter()
         {
             navigator.Enter(optionsScreen);
+            InitializeSettingsValues();
         }
 
         [UsedImplicitly]
@@ -54,22 +55,23 @@ namespace Game
         #region ValuesSetup
         private void InitializeSettingsValues()
         {
-            musicToggle.isOn = saveController.playerSettings.MusicToggle;
-            sfxToggle.isOn = saveController.playerSettings.SfxToggle;
-            mainVolumeSlider.value = saveController.playerSettings.MainVolume;
-            musicVolumeSlider.value = saveController.playerSettings.MusicVolume;
-            sfxVolumeSlider.value = saveController.playerSettings.SfxVolume;
+            musicToggle.isOn = saveController.PlayerSettings.MusicToggle;
+            sfxToggle.isOn = saveController.PlayerSettings.SfxToggle;
+            mainVolumeSlider.value = saveController.PlayerSettings.MainVolume;
+            musicVolumeSlider.value = saveController.PlayerSettings.MusicVolume;
+            sfxVolumeSlider.value = saveController.PlayerSettings.SfxVolume;
         }
         
         private void UpdateSettings()
         {
-            saveController.playerSettings.MusicToggle = musicToggle.isOn;
-            saveController.playerSettings.SfxToggle = sfxToggle.isOn;
-            saveController.playerSettings.MainVolume = (int) mainVolumeSlider.value;
-            saveController.playerSettings.MusicVolume = (int) musicVolumeSlider.value;
-            saveController.playerSettings.SfxVolume = (int) sfxVolumeSlider.value;
+            PlayerSettings playerSettings = saveController.PlayerSettings;
+            playerSettings.MusicToggle = musicToggle.isOn;
+            playerSettings.SfxToggle = sfxToggle.isOn;
+            playerSettings.MainVolume = (int) mainVolumeSlider.value;
+            playerSettings.MusicVolume = (int) musicVolumeSlider.value;
+            playerSettings.SfxVolume = (int) sfxVolumeSlider.value;
             
-            saveController.UpdateSettings();
+            saveController.UpdateSettings(playerSettings);
         }
         #endregion
         

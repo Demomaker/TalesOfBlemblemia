@@ -8,10 +8,10 @@ namespace Game
 {
     public class SaveController : MonoBehaviour
     {
-        public SaveInfos saveSlot1;
-        public SaveInfos saveSlot2;
-        public SaveInfos saveSlot3;
-        public PlayerSettings playerSettings;
+        private SaveInfos saveSlot1;
+        private SaveInfos saveSlot2;
+        private SaveInfos saveSlot3;
+        private PlayerSettings playerSettings;
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
@@ -23,6 +23,8 @@ namespace Game
             get => saveSelected;
             set => saveSelected = value;
         }
+
+        public PlayerSettings PlayerSettings => playerSettings;
 
         public void Awake()
         {
@@ -134,9 +136,10 @@ namespace Game
             }
         }
 
-        public void UpdateSettings()
+        public void UpdateSettings(PlayerSettings playerSettings)
         {
-            saveSettingsRepo.Update(playerSettings);
+            this.playerSettings = playerSettings;
+            saveSettingsRepo.Update(this.playerSettings);
         }
         
         #region CreateSave
@@ -220,6 +223,11 @@ namespace Game
                 }
             }
             return result;
+        }
+        
+        public SaveInfos[] GetSaves()
+        {
+            return new SaveInfos[]{saveSlot1, saveSlot2, saveSlot3};
         }
 
         #endregion

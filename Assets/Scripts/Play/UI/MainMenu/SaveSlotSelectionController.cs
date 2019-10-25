@@ -9,9 +9,7 @@ namespace Game
     public class SaveSlotSelectionController : MonoBehaviour
     {
         [Header("Buttons")] 
-        [SerializeField] private Button saveSlot1;
-        [SerializeField] private Button saveSlot2;
-        [SerializeField] private Button saveSlot3;
+        [SerializeField] private Button[] saveSlots;
 
         [Header("Canvas")] 
         [SerializeField] private NewGameMenuController newGameScreen;
@@ -35,39 +33,25 @@ namespace Game
 
         private void Start()
         {
-            saveSlot1.transform.Find("Name").GetComponent<TMP_Text>().text = saveController.saveSlot1.username;
-            saveSlot1.transform.Find("Stage").GetComponent<TMP_Text>().text = saveController.saveSlot1.levelName;
-            saveSlot1.transform.Find("Difficulty").GetComponent<TMP_Text>().text =
-                saveController.saveSlot1.difficultyLevel;
+            int saveCounter = 0;
+
+            SaveInfos[] saves = saveController.GetSaves();
             
-            saveSlot2.transform.Find("Name").GetComponent<TMP_Text>().text = saveController.saveSlot2.username;
-            saveSlot2.transform.Find("Stage").GetComponent<TMP_Text>().text = saveController.saveSlot2.levelName;
-            saveSlot2.transform.Find("Difficulty").GetComponent<TMP_Text>().text =
-                saveController.saveSlot2.difficultyLevel;
-            
-            saveSlot3.transform.Find("Name").GetComponent<TMP_Text>().text = saveController.saveSlot3.username;
-            saveSlot3.transform.Find("Stage").GetComponent<TMP_Text>().text = saveController.saveSlot3.levelName;
-            saveSlot3.transform.Find("Difficulty").GetComponent<TMP_Text>().text =
-                saveController.saveSlot3.difficultyLevel;
+            foreach (var saveSlot in saveSlots)
+            {
+                saveSlot.transform.Find(Constants.NAME_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].username;
+                saveSlot.transform.Find(Constants.STAGE_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].levelName;
+                saveSlot.transform.Find(Constants.DIFFICULTY_STRING).GetComponent<TMP_Text>().text =
+                    saves[saveCounter].difficultyLevel;
+                
+                ++saveCounter;
+            }
         }
 
         [UsedImplicitly]
-        public void SaveSlot1Selected()
+        public void SaveSlotSelected(int saveSlotId)
         {
-            newGameScreen.Enter(Constants.SAVE_SLOT_ONE);
+            newGameScreen.Enter(saveSlotId);
         }
-
-        [UsedImplicitly]
-        public void SaveSlot2Selected()
-        {
-            newGameScreen.Enter(Constants.SAVE_SLOT_TWO);
-        }
-
-        [UsedImplicitly]
-        public void SaveSlot3Selected()
-        {
-            newGameScreen.Enter(Constants.SAVE_SLOT_THREE);
-        }
-
     }
 }

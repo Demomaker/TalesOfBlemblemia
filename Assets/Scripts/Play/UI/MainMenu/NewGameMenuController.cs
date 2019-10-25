@@ -22,12 +22,6 @@ namespace Game
 
         private int saveSlotSelectedNumber;
 
-        public int SaveSlotSelectedNumber
-        {
-            get => saveSlotSelectedNumber;
-            set => saveSlotSelectedNumber = value;
-        }
-
         private void Awake()
         {
             navigator = Finder.Navigator;
@@ -39,6 +33,7 @@ namespace Game
         public void Enter(int saveSlotNumber)
         {
             navigator.Enter(newGameScreen);
+            saveSlotSelectedNumber = saveSlotNumber;
         }
         
         [UsedImplicitly]
@@ -50,27 +45,17 @@ namespace Game
                 playerNameInputField.text = "Franklem";
             }
 
-            switch (saveSlotSelectedNumber)
-            {
-                case 1:
-                    saveController.saveSlot1.username = playerNameInputField.text;
-                    saveController.saveSlot1.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
-                    break;
-                case 2:
-                    saveController.saveSlot2.username = playerNameInputField.text;
-                    saveController.saveSlot2.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
-                    break;
-                case 3:
-                    saveController.saveSlot3.username = playerNameInputField.text;
-                    saveController.saveSlot3.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
-                    break;
-            }
+            var saves = saveController.GetSaves();
             
+            saves[saveSlotSelectedNumber - 1].username = playerNameInputField.text;
+            saves[saveSlotSelectedNumber - 1].username = playerNameInputField.text;
+            saves[saveSlotSelectedNumber - 1].difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+
             saveController.UpdateSave(saveSlotSelectedNumber);
             //CHARGER NOUVELLE SCENE
             DontDestroyOnLoad(saveController);
             SceneManager.LoadScene("ParabeneForest");
-            SceneManager.LoadScene("GameUI", LoadSceneMode.Additive);
+            SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
         }
         
         [UsedImplicitly]
