@@ -1,38 +1,31 @@
-﻿using System;
+﻿using Harmony;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 namespace Game
 {
-    public class SaveSlotSelectionController : MonoBehaviour
+    public class LoadGameMenuController : MonoBehaviour
     {
         [Header("Buttons")] 
         [SerializeField] private Button saveSlot1;
         [SerializeField] private Button saveSlot2;
         [SerializeField] private Button saveSlot3;
 
-        [Header("Canvas")] 
-        [SerializeField] private NewGameMenuController newGameScreen;
-
         private Navigator navigator;
         private SaveController saveController;
-
-        private Canvas saveSelectionScreen;
+        private Canvas loadGameScreen;
 
         private void Awake()
         {
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
-            saveSelectionScreen = GetComponent<Canvas>();
+            loadGameScreen = GetComponent<Canvas>();
         }
-
-        public void Enter()
-        {
-            navigator.Enter(saveSelectionScreen);
-        }
-
+        
         private void Start()
         {
             saveSlot1.transform.Find("Name").GetComponent<TMP_Text>().text = saveController.saveSlot1.username;
@@ -51,23 +44,43 @@ namespace Game
                 saveController.saveSlot3.difficultyLevel;
         }
 
+        public void Enter()
+        {
+            navigator.Enter(loadGameScreen);
+        }
+
         [UsedImplicitly]
         public void SaveSlot1Selected()
         {
-            newGameScreen.Enter(Constants.SAVE_SLOT_ONE);
+            LoadScenes(1, saveSlot1.name);
         }
 
         [UsedImplicitly]
         public void SaveSlot2Selected()
         {
-            newGameScreen.Enter(Constants.SAVE_SLOT_TWO);
+            LoadScenes(2, saveSlot2.name);
         }
 
         [UsedImplicitly]
         public void SaveSlot3Selected()
         {
-            newGameScreen.Enter(Constants.SAVE_SLOT_THREE);
+            LoadScenes(3, saveSlot3.name);
         }
 
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            navigator.Leave();
+        }
+
+        private void LoadScenes(int saveSlotNumber, string sceneName)
+        {
+            saveController.SaveSelected = saveSlotNumber;
+            SceneManager.LoadScene(sceneName);
+            if (!SceneManager.GetSceneByName(Constants.GAME_UI_SCENE_NAME).isLoaded)
+            {
+                SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
+            }
+        }
     }
 }

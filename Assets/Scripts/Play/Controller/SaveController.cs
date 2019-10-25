@@ -16,7 +16,14 @@ namespace Game
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
         private SqliteConnection connection;
-        
+        private int saveSelected;
+
+        public int SaveSelected
+        {
+            get => saveSelected;
+            set => saveSelected = value;
+        }
+
         public void Awake()
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
