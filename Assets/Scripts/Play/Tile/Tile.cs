@@ -14,6 +14,7 @@ namespace Game
         private Button tileButton;
         [SerializeField] private TileType tileType;
         public TileType TileType => tileType;
+        private TileSprite tileSprite;
 
         private Image tileImage;
         private Unit linkedUnit;
@@ -61,6 +62,7 @@ namespace Game
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
+            tileSprite = GetComponent<TileSprite>();
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -76,10 +78,14 @@ namespace Game
             tileImage.sprite = gridController.AvailabilitySprite;
         }
 
+        public Sprite GetSprite()
+        {
+            return tileSprite.GetSprite();
+        }
+
         public void DisplaySelectedTile()
         {
             tileImage.sprite = gridController.SelectedSprite;
-            Debug.Log("Current Sprite : " + gameObject.GetComponent<TileSprite>().GetSprite());
         }
 
         public void DisplayAttackActionPossibility()
