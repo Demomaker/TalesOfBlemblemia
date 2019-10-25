@@ -8,21 +8,25 @@ namespace Game
     {
         [Header("Buttons")] 
         [SerializeField] private Button returnToMainMenuButton = null;
-        
-        [Header("Controls")] 
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0; 
-        
-        private MenusController menusController;
+
+        private Navigator navigator;
+        private Canvas creditsScreen;
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
+            creditsScreen = GetComponent<Canvas>();
         }
 
+        public void Enter()
+        {
+            navigator.Enter(creditsScreen);
+        }
+        
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {
-            menusController.ReturnFromNewGameMenu();
+            navigator.Leave();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Harmony;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,24 +14,29 @@ namespace Game
         [SerializeField] private Slider mainVolumeSlider;
         [SerializeField] private Slider musicVolumeSlider;
         [SerializeField] private Slider sfxVolumeSlider;
-        [SerializeField] private Button returnToMainMenuButton;
+        [SerializeField] private Button returnButton;
         [SerializeField] private Button applyChangesButton;
-
-        [Header("Controls")] 
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0;
-
-        private MenusController menusController;
+        
         private SaveController saveController;
+        private Navigator navigator;
+
+        private Canvas optionsScreen;
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
             saveController = Finder.SaveController;
+            optionsScreen = GetComponent<Canvas>();
         }
 
         private void Start()
         {
             InitializeSettingsValues();
+        }
+
+        public void Enter()
+        {
+            navigator.Enter(optionsScreen);
         }
 
         [UsedImplicitly]
@@ -40,9 +46,9 @@ namespace Game
         }
         
         [UsedImplicitly]
-        public void ReturnToMainMenu()
+        public void Leave()
         {
-            menusController.ReturnFromOptionsMenu();
+            navigator.Leave();
         }
 
         #region ValuesSetup
