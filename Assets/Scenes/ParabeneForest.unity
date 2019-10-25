@@ -9234,7 +9234,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1725715927
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: -4
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -29836,7 +29836,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1725715927
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: -2
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -44125,7 +44125,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1725715927
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: -3
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -48868,7 +48868,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1725715927
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -59595,7 +59595,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1725715927
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -68911,7 +68911,7 @@ MonoBehaviour:
   fortressTile: {fileID: 11400000, guid: 9bf6760c17cc79d4ca4d59e61b4c4fd7, type: 2}
   interactiveTilemap: {fileID: 1324797967}
   backgroundTilemap: {fileID: 518641929}
-  tilemapOfTilesToIncludeIfEmptyTile: {fileID: 963611497}
+  tilemapOfTileToIncludeIfEmptyTile: {fileID: 963611497}
 --- !u!1 &1719303285
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,13 +24,13 @@ namespace Game
 
         [Header("Tilemap")] [SerializeField] private Tilemap interactiveTilemap = null;
         [SerializeField] private Tilemap backgroundTilemap = null;
-        [SerializeField] private Tilemap tilemapOfTilesToIncludeIfEmptyTile;
+        [SerializeField] private Tilemap tilemapOfTileToIncludeIfEmptyTile;
 
         public void CreateGridCells()
         {
             BoundsInt bounds = backgroundTilemap.cellBounds;
             TileBase[] allTiles = interactiveTilemap.GetTilesBlock(bounds);
-            TileBase[] emptyTiles = tilemapOfTilesToIncludeIfEmptyTile.GetTilesBlock(bounds);
+            TileBase[] emptyTiles = tilemapOfTileToIncludeIfEmptyTile.GetTilesBlock(bounds);
             TileBase[] backgroundTiles = backgroundTilemap.GetTilesBlock(bounds);
             Rect cellGridRectangle = GetComponent<RectTransform>().rect;
 
