@@ -33,11 +33,6 @@ namespace Game
         public override void RemoveOwnedUnit(Unit unit)
         {
             base.RemoveOwnedUnit(unit);
-            if (!hasLostAUnitInCurrentLevel)
-            {
-                Finder.SoundManager.StopCurrentMusic();
-                Finder.SoundManager.PlayMusic(Finder.SoundClips.SadMusic);
-            }
             hasLostAUnitInCurrentLevel = true;
             hasEverLostAUnit = true;
         }

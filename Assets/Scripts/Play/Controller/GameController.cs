@@ -76,9 +76,20 @@ namespace Game
     
          private IEnumerator LoadLevelCoroutine(string levelname)
          {
+             GameObject temp = GameObject.FindWithTag(Tags.SOUND_MANAGER);
+             GameObject temp2 = GameObject.FindWithTag(Constants.GAME_CONTROLLER_TAG);
+             string lastSceneName = SceneManager.GetActiveScene().name;
              if(!SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Single);
+                 yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
+             SceneManager.MoveGameObjectToScene(temp, SceneManager.GetSceneByName(levelname));
+             SceneManager.MoveGameObjectToScene(temp2, SceneManager.GetSceneByName(levelname));
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
+             GameObject[] lastObjects = SceneManager.GetSceneByName(lastSceneName).GetRootGameObjects();
+             
+             foreach (GameObject gameObject in lastObjects)
+             {
+                 gameObject.SetActive(false);
+             }
          }
 
          private IEnumerator UnloadLevelCoroutine(string levelname)
@@ -103,7 +114,6 @@ namespace Game
          {
              choiceRange = choiceRangePerDifficulty[difficultyLevel];
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
-             DontDestroyOnLoad(gameObject);
          }
      }
 

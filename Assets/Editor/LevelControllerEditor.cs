@@ -66,13 +66,13 @@ namespace Game
             switch (backgroundMusicOption)
             {
                 case LevelBackgroundMusicType.Forest :
-                    backgroundMusic.objectReferenceValue = Finder.SoundClips.ForestMusic;
+                    backgroundMusic.objectReferenceValue = Finder.AudioClips.ForestMusic;
                     break;
                 case LevelBackgroundMusicType.Castle :
-                    backgroundMusic.objectReferenceValue = Finder.SoundClips.CastleMusic;
+                    backgroundMusic.objectReferenceValue = Finder.AudioClips.CastleMusic;
                     break;
                 case LevelBackgroundMusicType.Boss :
-                    backgroundMusic.objectReferenceValue = Finder.SoundClips.BossMusic;
+                    backgroundMusic.objectReferenceValue = Finder.AudioClips.BossMusic;
                     break;
             }
             doNotEnd.boolValue = EditorGUILayout.Toggle("Do Not End Level", doNotEnd.boolValue);
