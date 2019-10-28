@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
+    [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour {
      
         [Range(5, 20)][SerializeField] private float scrollArea = 10f;
@@ -27,9 +28,7 @@ namespace Game
         private float targetOrtho = 0;
         private Vector3 targetPos;
 
-        private bool zoomEnabled = true;
-        private bool moveEnabled = true;
-        private bool dragEnabled = true;
+        private bool controlsEnabled = true;
 
         private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(moveLeftKey);
         private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(moveRightKey);
@@ -41,10 +40,6 @@ namespace Game
 
         private Camera camera;
 
-        public bool ZoomEnabled => zoomEnabled;
-        public bool MoveEnabled => moveEnabled;
-        public bool DragEnabled => dragEnabled;
-
         private void Awake()
         {
             camera = GetComponent<Camera>();
@@ -55,26 +50,23 @@ namespace Game
 
         private void LateUpdate()
         {
+            if (!controlsEnabled) return;
             if (lastScreenSize.x != Screen.width ||  lastScreenSize.y != Screen.height)
             {
                 OnScreenSizeChanged();
             }
             
-            if (ZoomEnabled)
+            if (Input.mouseScrollDelta.y > 0)
             {
-                if (Input.mouseScrollDelta.y > 0)
-                {
-                    ZoomIn();
-                }
-
-                if (Input.mouseScrollDelta.y < 0)
-                {
-                    ZoomOut();
-                }
-
+                ZoomIn();
             }
-
-            if (MoveEnabled && !Input.GetKey(dragKey))
+            if (Input.mouseScrollDelta.y < 0)
+            {
+                ZoomOut();
+            }
+                
+                
+            if (!Input.GetKey(dragKey))
             {
                 if (IsMovingLeft && !IsMovingRight)
                 {
@@ -113,14 +105,11 @@ namespace Game
                 }
                 targetPos += moveSpeed * Time.deltaTime * new Vector3(xMovement, yMovement, 0);
             }
-
+            
             UpdateMovement();
             UpdateZoom();
 
-            if (DragEnabled)
-            {
-                if (Input.GetKeyDown(dragKey)) StartCoroutine(Drag());
-            }
+            if (Input.GetKeyDown(dragKey)) StartCoroutine(Drag());
         }
 
         private IEnumerator Drag()
@@ -196,54 +185,20 @@ namespace Game
 
         public void EnableControls()
         {
-            EnableZoom();
-            EnableMove();
-            EnableDrag();
+            controlsEnabled = true;
         }
 
-        public void EnableZoom()
-        {
-            zoomEnabled = true;
-        }
-
-        public void EnableMove()
-        {
-            moveEnabled = true;
-        }
-
-        public void EnableDrag()
-        {
-            dragEnabled = true;
-        }
-        
         public void DisableControls()
         {
-            DisableZoom();
-            DisableMove();
-            DisableDrag();
+            controlsEnabled = false;
         }
 
-        public void DisableZoom()
-        {
-            zoomEnabled = false;
-        }
-
-        public void DisableMove()
-        {
-            moveEnabled = false;
-        }
-
-        public void DisableDrag()
-        {
-            dragEnabled = false;
-        }
-        
 
         private void OnScreenSizeChanged()
         {
             lastScreenSize = new Vector2Int(Screen.width, Screen.height);
             var screenAspectRatio = lastScreenSize.x / (float) lastScreenSize.y;
-            var worldAspectRatio = (maxX - minX) / (maxY - minY);
+            var worldAspectRatio = (maxX - minX) / (float)(maxY - minY);
             maxZoom = Math.Min((maxY - minY) * worldAspectRatio / screenAspectRatio, maxY - minY) / 2f;
             ClampCameraPosition();
         }
