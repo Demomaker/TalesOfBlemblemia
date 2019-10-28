@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class SoundManager : MonoBehaviour
+    public class AudioManager : MonoBehaviour
     {
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
         [SerializeField] private float lowPitchRange = .95f;               
-        [SerializeField] private float highPitchRange = 1.05f;          
+        [SerializeField] private float highPitchRange = 1.05f;
+        private AudioClips audioClips;
         private AudioSource[] sfxSources;
         private AudioSource musicSource;
         private bool playSFX;
@@ -26,6 +27,9 @@ namespace Game
             {
                 sfxSources[i] = gameObject.AddComponent<AudioSource>();
             }
+
+            audioClips = Finder.AudioClips;
+            if(audioClips == null) audioClips = new NullAudioClips();
         }
 
         private void OnEnable()
@@ -130,6 +134,7 @@ namespace Game
         //Used to play single sound clips.
         private void PlaySFX(AudioClip clip, Vector2 position = new Vector2())
         {
+            if (audioClips is NullAudioClips) return;
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
             {
                 if (sfxSources[i].isPlaying == false)
@@ -150,6 +155,7 @@ namespace Game
         //Used to play music clips
         private void PlayMusic(AudioClip clip)
         {
+            if (audioClips is NullAudioClips) return;
             StopCurrentMusic();
             
             //Set the clip of our musicSource audio source to the clip passed in as a parameter.
@@ -173,7 +179,7 @@ namespace Game
 
         private void PlayHurtSound(Unit unit)
         {
-            PlaySFX(Finder.AudioClips.HurtSound, unit.transform.position);
+            PlaySFX(audioClips.HurtSound, unit.transform.position);
         }
 
         private void PlayAttackSound(Unit unit)
@@ -181,47 +187,47 @@ namespace Game
             switch (unit.Gender)
             {
                 case UnitGender.Male :
-                    PlaySFX(Finder.AudioClips.MaleAttackSound, unit.transform.position);
+                    PlaySFX(audioClips.MaleAttackSound, unit.transform.position);
                     break;
                 case UnitGender.Female :
-                    PlaySFX(Finder.AudioClips.FemaleAttackSound, unit.transform.position);
+                    PlaySFX(audioClips.FemaleAttackSound, unit.transform.position);
                     break;
                 case UnitGender.Mork :
-                    PlaySFX(Finder.AudioClips.MorkAttackSound, unit.transform.position);
+                    PlaySFX(audioClips.MorkAttackSound, unit.transform.position);
                     break;
             }
         }
 
         private void PlayDodgeSound(Unit unit)
         {
-            PlaySFX(Finder.AudioClips.DodgeSound, unit.transform.position);
+            PlaySFX(audioClips.DodgeSound, unit.transform.position);
         }
 
         private void PlayUnitMovementSound(Unit unit)
         {
-            PlaySFX(Finder.AudioClips.UnitMoveSound, unit.transform.position);
+            PlaySFX(audioClips.UnitMoveSound, unit.transform.position);
         }
 
         private void PlayUnitDeathSound(Unit unit)
         {
-            PlaySFX(Finder.AudioClips.UnitDeathSound, unit.transform.position);
+            PlaySFX(audioClips.UnitDeathSound, unit.transform.position);
         }
 
         private void PlayButtonClickSound(Button button)
         {
-            PlaySFX(Finder.AudioClips.ButtonClickSound, button.transform.position);
+            PlaySFX(audioClips.ButtonClickSound, button.transform.position);
         }
 
         private void PlayUnitLossMusic(Unit unit)
         {
-            if(musicSource.clip != Finder.AudioClips.SadMusic)
-            PlayMusic(Finder.AudioClips.SadMusic);
+            if(musicSource.clip != audioClips.SadMusic)
+            PlayMusic(audioClips.SadMusic);
         }
 
         private void PlayLevelVictoryMusic(LevelController levelController)
         {
-            if(musicSource.clip != Finder.AudioClips.LevelVictoryMusic)
-            PlayMusic(Finder.AudioClips.LevelVictoryMusic);
+            if(musicSource.clip != audioClips.LevelVictoryMusic)
+            PlayMusic(audioClips.LevelVictoryMusic);
         }
 
         private void PlayBackgroundMusicOfLevel(LevelController level)
@@ -233,13 +239,13 @@ namespace Game
         private void PlayOverworldBackgroundMusic(OverworldController overworld)
         {
             StopCurrentMusic();
-            PlayMusic(Finder.AudioClips.OverworldMusic);
+            PlayMusic(audioClips.OverworldMusic);
         }
 
         private void PlayMainMenuBackgroundMusic(MainMenuController mainMenu)
         {
             StopCurrentMusic();
-            PlayMusic(Finder.AudioClips.MainMenuMusic);
+            PlayMusic(audioClips.MainMenuMusic);
         }
     }
 }

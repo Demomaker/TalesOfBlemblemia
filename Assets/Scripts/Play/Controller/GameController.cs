@@ -81,7 +81,9 @@ namespace Game
              string lastSceneName = SceneManager.GetActiveScene().name;
              if(!SceneManager.GetSceneByName(levelname).isLoaded)
                  yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
+             if (temp != null)
              SceneManager.MoveGameObjectToScene(temp, SceneManager.GetSceneByName(levelname));
+             if (temp2 != null)
              SceneManager.MoveGameObjectToScene(temp2, SceneManager.GetSceneByName(levelname));
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
              GameObject[] lastObjects = SceneManager.GetSceneByName(lastSceneName).GetRootGameObjects();

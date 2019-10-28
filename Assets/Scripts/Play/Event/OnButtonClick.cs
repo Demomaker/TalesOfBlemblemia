@@ -8,7 +8,7 @@ namespace Game
         public static event EventHandler<Button> Notify; 
         public override void Publish(Button eventParam)
         {
-            Notify(eventParam);
+            Notify?.Invoke(eventParam);
         }
     }
 }

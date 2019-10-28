@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using JetBrains.Annotations;
 
 namespace Game
 {
@@ -7,7 +8,7 @@ namespace Game
         public static event EventHandler<MainMenuController> Notify;
         public override void Publish(MainMenuController eventParam)
         {
-            Notify(eventParam);
+            Notify?.Invoke(eventParam);
         }
     }
 }

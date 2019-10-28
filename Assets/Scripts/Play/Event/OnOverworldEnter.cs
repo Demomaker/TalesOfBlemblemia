@@ -7,7 +7,7 @@ namespace Game
         public static event EventHandler<OverworldController> Notify;
         public override void Publish(OverworldController eventParam)
         {
-            Notify(eventParam);
+            Notify?.Invoke(eventParam);
         }
     }
 }

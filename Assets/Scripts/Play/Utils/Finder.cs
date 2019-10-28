@@ -43,8 +43,6 @@ namespace Game
                 return random;
             }
         }
-
-        public static SoundManager SoundManager => FindWithTag<SoundManager>(Tags.SOUND_MANAGER);
         public static AudioClips AudioClips => FindWithTag<AudioClips>(Tags.SOUND_MANAGER);
         
         //Author : Antoine Lessard
