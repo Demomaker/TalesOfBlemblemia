@@ -30,7 +30,7 @@ namespace Game
             if (tile == null) return;
             var gridControllerSelectedUnit = tile.GridController.SelectedUnit;
 
-            if (tile.LinkedUnitCanBeSelectedByPlayer)
+            if (clickButton == ClickButton.LeftClick && tile.LinkedUnitCanBeSelectedByPlayer)
             {
                 if (clickButton == ClickButton.RightClick && tile.GridController.SelectedUnit == tile.LinkedUnit)
                 {
@@ -47,8 +47,7 @@ namespace Game
                 }
                 return;
             }
-            
-            if (clickButton == ClickButton.RightClick)
+            if (clickButton == ClickButton.RightClick && gridControllerSelectedUnit != null)
             {
                 if (tile.LinkedUnitCanBeAttackedByPlayer)
                 {
@@ -57,7 +56,7 @@ namespace Game
                     if (tile.LinkedUnit.NoHealthLeft)
                     {
                         tile.LinkedUnit.Die();
-                        gridControllerSelectedUnit.MoveToTileAndAct(tile);
+                        gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
                     }
                 }
                 else if (tile.LinkedUnitCanBeRecruitedByPlayer)
@@ -65,14 +64,19 @@ namespace Game
                     if (!gridControllerSelectedUnit.RecruitUnit(tile.LinkedUnit))
                         gridControllerSelectedUnit.RecruitDistantUnit(tile.LinkedUnit);
                 }
+                else if (gridControllerSelectedUnit.WeaponType == WeaponType.HealingStaff && tile.LinkedUnitCanBeHealedByPlayer)
+                {
+                    if (!gridControllerSelectedUnit.HealUnit(tile.LinkedUnit))
+                        gridControllerSelectedUnit.HealDistantUnit(tile.LinkedUnit);
+                }
                 else if (tile.IsPossibleAction)
                 {
-                    gridControllerSelectedUnit.MoveToTileAndAct(tile, ActionType.Rest);
+                    gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile), ActionType.Rest));
                 }
             }
             else if (tile.IsPossibleAction && tile.IsAvailable)
             {
-                gridControllerSelectedUnit.MoveToTileAndAct(tile);
+                gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
             }
 
             tile.GridController.DeselectUnit();

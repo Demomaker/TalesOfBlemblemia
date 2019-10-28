@@ -14,6 +14,7 @@ namespace Game
         private Button tileButton;
         [SerializeField] private TileType tileType;
         public TileType TileType => tileType;
+        private TileSprite tileSprite;
 
         private Image tileImage;
         private Unit linkedUnit;
@@ -23,6 +24,7 @@ namespace Game
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedUnitCanBeRecruitedByPlayer => IsOccupiedByAUnit && linkedUnit.IsRecruitable && IsPossibleAction;
+        public bool LinkedUnitCanBeHealedByPlayer => IsOccupiedByAUnit && !linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
         public bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
@@ -47,7 +49,7 @@ namespace Game
         }
         private readonly float defenseRate;
         public float DefenseRate => defenseRate;
-        
+
 
         protected Tile(TileType tileType, int costToMove = TileValues.DEFAULT_COST_TO_MOVE, float defenseRate = TileValues.DEFAULT_DEFENSE_RATE)
         {
@@ -60,6 +62,7 @@ namespace Game
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
+            tileSprite = GetComponent<TileSprite>();
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -73,6 +76,11 @@ namespace Game
         public void DisplayMoveActionPossibility()
         {
             tileImage.sprite = gridController.AvailabilitySprite;
+        }
+
+        public Sprite GetSprite()
+        {
+            return tileSprite.GetSprite();
         }
 
         public void DisplaySelectedTile()
@@ -105,7 +113,6 @@ namespace Game
             if (!IsWalkable) 
                 return false;
             this.linkedUnit = unit;
-            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
             return IsOccupiedByAUnit;
         }
 

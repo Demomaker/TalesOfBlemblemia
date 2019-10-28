@@ -5,19 +5,25 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/Main.unity
-    guid: 7be28cd1688e6f448bdfad562ab55df1
   - enabled: 1
     path: Assets/Scenes/Overworld.unity
     guid: f9f811e731d70d44aaea609d9c802999
   - enabled: 1
-    path: Assets/Scenes/ParabeneForest.unity
-    guid: eeb9ca22a990b994f941bc0d920904c0
+    path: Assets/Scenes/Main.unity
+    guid: d540e464439e9b844bb331f27aa87fca
   - enabled: 1
-    path: Assets/Scenes/BaseLevel.unity
-    guid: 79db9560d269e944c896d6737d66890e
+    path: Assets/Scenes/TestLevel.unity
+    guid: 9c8481558e0ac5244953d4768aadc379
+  - enabled: 1
+    path: Assets/Scenes/ParabeneForest.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/DialogueTest.unity
+    guid: 69ef3201d9ce4ef428a2f98ff05eed74
+  - enabled: 1
+    path: Assets/Scenes/GameUI.unity
+    guid: 2ab0deadae940a9409062d4fda43193f
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: bb678c5030d9c714484f0f6e9ce3dc3f
   m_configObjects: {}

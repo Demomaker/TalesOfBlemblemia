@@ -1,5 +1,4 @@
-﻿﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
@@ -14,7 +13,6 @@ using UnityEngine.UI;
         [SerializeField] private Sprite attackableTileSprite = null;
         [SerializeField] private Sprite healableTileSprite = null;
         [SerializeField] private Sprite recruitableTileSprite = null;
-
         public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
@@ -67,15 +65,19 @@ using UnityEngine.UI;
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInMovementRange(tile.LinkedUnit))
+                        else if (tile.LinkedUnit != null && (linkedUnit.TargetIsInMovementRange(tile.LinkedUnit) || linkedUnit.TargetIsInRange(tile.LinkedUnit)))
                         {
-                            if (tile.LinkedUnit.IsEnemy)
+                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
                             else if (tile.LinkedUnit.IsRecruitable)
                             {
                                 tile.DisplayRecruitActionPossibility();
+                            }
+                            else if (linkedUnit.WeaponType == WeaponType.HealingStaff && !tile.LinkedUnit.IsEnemy)
+                            {
+                                tile.DisplayHealActionPossibility();
                             }
                         }
                     }

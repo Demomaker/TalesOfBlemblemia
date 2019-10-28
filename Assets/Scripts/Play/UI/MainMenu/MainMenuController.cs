@@ -1,11 +1,18 @@
 ﻿using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
 {
     public class MainMenuController : MonoBehaviour
     {
+        [Header("Controllers")] 
+        [SerializeField] private SaveSlotSelectionController saveSlotSelectionController;
+        [SerializeField] private LoadGameMenuController loadGameMenuController;
+        [SerializeField] private OptionsMenuController optionsMenuController;
+        [SerializeField] private CreditsMenuController creditsMenuController;
+
         [Header("Buttons")] 
         [SerializeField] private Button newGameButton = null;
         [SerializeField] private Button loadGameButton = null;
@@ -13,42 +20,50 @@ namespace Game
         [SerializeField] private Button creditsButton = null;
         [SerializeField] private Button exitGameButton = null;
 
-        [Header("Controls")] 
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0; 
-        [SerializeField] private KeyCode exitKey = KeyCode.Escape;
-
-        private MenusController menusController;
+        private Canvas mainMenuCanvas;
+        private Navigator navigator;
+        private OnMainMenuEnter onMainMenuEnter;
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
+            mainMenuCanvas = GetComponent<Canvas>();
+            onMainMenuEnter = new OnMainMenuEnter();
+        }
+
+        public void Enter()
+        {
+            onMainMenuEnter.Publish(this);
+            navigator.Enter(mainMenuCanvas);
+        }
+
+        public void Leave()
+        {
+            navigator.Leave();
         }
 
         [UsedImplicitly]
         public void StartNewGame()
         {
-            //menu newgame
-            menusController.GoToSaveSelectionMenu();
+            saveSlotSelectionController.Enter();
         }
 
         [UsedImplicitly]
         public void LoadGame()
         {
-            //Interface avec les saves
+            loadGameMenuController.Enter();
         }
 
         [UsedImplicitly]
         public void Options()
         {
-            //Interface d'options;
-            menusController.GoToOptionsMenu();
+            optionsMenuController.Enter();
         }
 
         [UsedImplicitly]
         public void Credits()
         {
-            //Interface de credits
-            menusController.GoToCreditsMenu();
+            creditsMenuController.Enter();
         }
 
         [UsedImplicitly]
