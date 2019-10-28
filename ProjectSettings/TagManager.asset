@@ -17,6 +17,8 @@ TagManager:
   - LevelController
   - SaveController
   - SoundManager
+  - UIController
+  - BattleReport
   layers:
   - Default
   - TransparentFX

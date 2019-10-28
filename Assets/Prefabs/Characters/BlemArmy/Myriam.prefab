@@ -96,6 +96,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialPosition: {x: 1, y: 8}
+  gender: 0
+  unitInfos: {fileID: 11400000, guid: ec55555915da11343a1442cf9c7b18fa, type: 2}
   playerType: 1
   classStats: {fileID: 11400000, guid: 143503c0a7f07fe42bfde1c238f309b1, type: 2}
 --- !u!114 &8029639965240488654

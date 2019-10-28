@@ -34,19 +34,52 @@ namespace Game
         [SerializeField] private Sprite mountainTexture;
         [SerializeField] private Sprite fortressTexture;
         [SerializeField] private Sprite forestTexture;
+
+        [Header("Battle Report")]
+        [SerializeField] private TMP_Text dmgGiven;
+        [SerializeField] private TMP_Text allyStatus;
+        [SerializeField] private TMP_Text dmgTaken;
+        [SerializeField] private TMP_Text enemyStatus;
     
         private Canvas canvas;
-        
+        private GameObject battleReport;
+
         //todo load the ui texture.
 
         private void Awake()
         {
             canvas = GetComponent<Canvas>();
+            battleReport = GameObject.FindWithTag("BattleReport");
         }
 
         private void Start()
         {
             canvas.enabled = true;
+            battleReport.SetActive(false);
+        }
+
+        public void PrepareBattleReport(int dmg, bool status, bool isEnemy)
+        {
+            if (isEnemy)
+            {
+                dmgTaken.text = dmg.ToString();
+                allyStatus.text = status ? "Alive" : "Dead";
+            }
+            else
+            {
+                dmgGiven.text = dmg.ToString();
+                enemyStatus.text = status ? "Alive" : "Dead";
+            }
+        }
+        
+        public void LaunchBattleReport()
+        {
+            battleReport.SetActive(true);
+        }
+
+        public void DeactivateBattleReport()
+        {
+            battleReport.SetActive(false);
         }
 
         public void ModifyPlayerUI(Tile tile)

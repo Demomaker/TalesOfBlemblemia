@@ -12,6 +12,7 @@ namespace Game
     {
         [SerializeField] private Vector2Int initialPosition;
         [SerializeField] private Gender gender = Gender.Male;
+        [SerializeField] private UnitInfos unitInfos;
         private GridController gridController;
         /// <summary>
         /// The tile the unit is on
@@ -24,6 +25,12 @@ namespace Game
         public bool IsRecruitable => playerType == PlayerType.None;
 
         [SerializeField] private PlayerType playerType;
+        
+        public UnitInfos UnitInfos
+        {
+            get => unitInfos;
+            set => unitInfos = value;
+        }
 
         /// <summary>
         /// The unit's class stats
@@ -34,6 +41,8 @@ namespace Game
         /// The unit's weapon
         /// </summary>
         private Weapon weapon;
+
+        private UIController uiController;
 
         /// <summary>
         /// Array representing the movement cost needed to move to every tile on the grid
@@ -129,6 +138,7 @@ namespace Game
 
         protected void Start()
         {
+            uiController = Harmony.Finder.UIController;
             StartCoroutine(InitPosition());
         }
 
@@ -230,7 +240,7 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
-            
+            uiController.PrepareBattleReport(damage,IsEnemy,target.CurrentHealthPoints > 0);
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
             if (!isCountering && !target.NoHealthLeft)
@@ -240,6 +250,11 @@ namespace Game
             if (!isCountering)
             {
                 HasActed = true;
+            }
+
+            if ((!isCountering && target.CurrentHealthPoints <= 0) || (isCountering))
+            {
+                uiController.LaunchBattleReport();
             }
         }
 

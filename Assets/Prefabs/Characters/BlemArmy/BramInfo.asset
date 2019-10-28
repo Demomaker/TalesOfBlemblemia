@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BramInfo
   m_EditorClassIdentifier: 
   characterName: Bram
-  className: Lumberjack
+  className: Soldier Axeman
   weaponName: Axe
