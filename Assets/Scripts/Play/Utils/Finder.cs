@@ -32,6 +32,7 @@ namespace Game
                 return gridController;
             }
         }
+
         //Author: Zacharie Lavigne
         public static Random Random
         {
@@ -42,13 +43,13 @@ namespace Game
                 return random;
             }
         }
-
-        public static SoundManager SoundManager => FindWithTag<SoundManager>(Tags.SOUND_MANAGER);
-        public static SoundClips SoundClips => FindWithTag<SoundClips>(Tags.SOUND_MANAGER);
+        public static AudioClips AudioClips => FindWithTag<AudioClips>(Tags.SOUND_MANAGER);
         
         //Author : Antoine Lessard
         public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);
         public static SaveController SaveController => FindWithTag<SaveController>(Tags.SAVE_CONTROLLER);
+        public static PauseController PauseController => FindWithTag<PauseController>(Tags.PAUSE_CONTROLLER);
+        public static Navigator Navigator => FindWithTag<Navigator>(Tags.NAVIGATOR);
 
         private static T FindWithTag<T>(string tag)
         {

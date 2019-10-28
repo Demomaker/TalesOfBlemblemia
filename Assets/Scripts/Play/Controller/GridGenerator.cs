@@ -24,11 +24,14 @@ namespace Game
 
         [Header("Tilemap")] [SerializeField] private Tilemap interactiveTilemap = null;
         [SerializeField] private Tilemap backgroundTilemap = null;
+        [SerializeField] private Tilemap tilemapOfTileToIncludeIfEmptyTile;
 
         public void CreateGridCells()
         {
             BoundsInt bounds = backgroundTilemap.cellBounds;
             TileBase[] allTiles = interactiveTilemap.GetTilesBlock(bounds);
+            TileBase[] emptyTiles = tilemapOfTileToIncludeIfEmptyTile.GetTilesBlock(bounds);
+            TileBase[] backgroundTiles = backgroundTilemap.GetTilesBlock(bounds);
             Rect cellGridRectangle = GetComponent<RectTransform>().rect;
 
             int minX = GetMinX(bounds, cellGridRectangle);
@@ -42,7 +45,14 @@ namespace Game
             {
                 for (int x = minX; x < maxX; x++)
                 {
-                    InstantiateCellPrefabFrom(allTiles[x + y * bounds.size.x]);
+                    TileBase currentTile = allTiles[x + y * bounds.size.x];
+                    GameObject createdGameObject = InstantiateCellPrefabFrom(currentTile);
+                    if (currentTile == null)
+                        currentTile = emptyTiles[x + y * bounds.size.x];
+                    if (currentTile == null)
+                        currentTile = backgroundTiles[x + y * bounds.size.x];
+                    if (createdGameObject != null)
+                        createdGameObject.AddComponent<TileSprite>().SetSprite(((UnityEngine.Tilemaps.Tile)currentTile).sprite);
                 }
             }
         }
@@ -76,7 +86,7 @@ namespace Game
         }
 
 
-        private void InstantiateCellPrefabFrom(TileBase tile)
+        private GameObject InstantiateCellPrefabFrom(TileBase tile)
         {
             var spawningPrefab = emptyCellPrefab;
             if (tile == forestTile)
@@ -92,7 +102,7 @@ namespace Game
                 spawningPrefab = fortressCellPrefab;
             }
 
-            Instantiate(spawningPrefab, transform);
+            return Instantiate(spawningPrefab, transform);
         }
 
         public void ClearGrid()

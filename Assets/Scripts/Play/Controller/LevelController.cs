@@ -18,6 +18,9 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
+        
+        private const string PROTAGONIST_NAME = "Franklem";
+        
         [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
@@ -37,6 +40,8 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
+        private int levelTileUpdateKeeper = 0;
+        
 
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
@@ -51,24 +56,26 @@ namespace Game
         private bool levelEnded = false;
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
-        private bool victoryMusicIsPlaying = false;
+        private OnLevelVictory onLevelVictory;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
+        public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
+
+        public AudioClip BackgroundMusic => backgroundMusic;
 
         private void Awake()
         {
             cinematicController = GetComponent<CinematicController>();
+            onLevelVictory = new OnLevelVictory();
             Debug.Log("Level name : " + levelName);
         }
 
         private void Start()
         {
-            Finder.SoundManager.StopCurrentMusic();
-            Finder.SoundManager.PlayMusic(backgroundMusic);
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -114,11 +121,9 @@ namespace Game
 
             if (levelEnded)
             {
-                if (levelCompleted && !victoryMusicIsPlaying)
+                if (levelCompleted)
                 {
-                    victoryMusicIsPlaying = true;
-                    Finder.SoundManager.StopCurrentMusic();
-                    Finder.SoundManager.PlayMusic(Finder.SoundClips.LevelVictoryMusic);
+                    onLevelVictory.Publish(this);
                 }
                 StartCoroutine(EndLevel());
             }
@@ -151,7 +156,6 @@ namespace Game
                 yield return null;
             }
             
-            Finder.SoundManager.StopCurrentMusic();
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
@@ -182,7 +186,10 @@ namespace Game
             }
             if (completeIfPointAchieved)
             {
-                if ((GameObject.Find("Franklem") == null) || (GameObject.Find("Franklem").GetComponent<Unit>() == null) || (GameObject.Find("Franklem").GetComponent<Unit>().CurrentTile == null) || !(GameObject.Find("Franklem").GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
+                if ((GameObject.Find(PROTAGONIST_NAME) == null) 
+                || (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() == null) 
+                || (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile == null) 
+                || !(GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
             }
             if (completeIfCertainEnemyDefeated)
             {
@@ -204,7 +211,7 @@ namespace Game
                 (defeatIfProtectedIsKilled && unitToProtect.NoHealthLeft) ||
                 (defeatIfAllPlayerUnitsDied &&
                  HumanPlayer.Instance.HaveAllUnitsDied()
-                ) || (GameObject.Find("Franklem") == null || GameObject.Find("Franklem").GetComponent<Unit>().NoHealthLeft);
+                ) || (GameObject.Find(PROTAGONIST_NAME) == null || GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
         }
         
         private void Play(UnitOwner unitOwner)
@@ -305,7 +312,6 @@ namespace Game
 
         public void GiveTurnToNextPlayer()
         {
-            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
             isComputerPlaying = false;
             currentPlayer.MakeOwnedUnitsUnplayable();
             int nextPlayerIndex = (players.IndexOf(currentPlayer) + 1) % 2;
@@ -313,13 +319,10 @@ namespace Game
             if (players.ElementAt(nextPlayerIndex) != null)
                 currentPlayer = players.ElementAt(nextPlayerIndex);
         }
-
-        public void ReevaluateAllMovementCosts()
+        
+        public void IncrementTileUpdate()
         {
-            for (int i = 0; i < units.Length; i++)
-            {
-                units[i].ComputeTilesCosts();
-            }
+            levelTileUpdateKeeper++;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
@@ -14,7 +13,6 @@ using UnityEngine.UI;
         [SerializeField] private Sprite attackableTileSprite = null;
         [SerializeField] private Sprite healableTileSprite = null;
         [SerializeField] private Sprite recruitableTileSprite = null;
-
         public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;

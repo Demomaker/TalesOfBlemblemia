@@ -19,6 +19,8 @@
         public const string LEVEL_7_SCENE_NAME = "Level7";
         public const string LEVEL_8_SCENE_NAME = "Level8";
         public const string OVERWORLD_SCENE_NAME = "Overworld";
+        public const string MAINMENU_SCENE_NAME = "Main";
+        public const string GAME_UI_SCENE_NAME = "GameUI";
         public const string GAME_CONTROLLER_TAG = "GameController";
         public const string GRID_CONTROLLER_TAG = "GridController";
         public const float ATTACK_DURATION = 0.3f;
@@ -28,12 +30,16 @@
         public const int DEFAULT_CHARACTER_HEALTH_POINTS = 6;
         public const int NUMBER_OF_MOVES_PER_CHARACTER_PER_TURN = 3;
         public const int NUMBER_OF_RECRUITABLES_ON_ALTERNATE_PATH = 8;
+        public const int PERCENT = 100;
         public const string ACHIEVEMENT_GET_STRING = "Achievement Get!";
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
 
         public const bool DEFAULT_TOGGLE_VALUE = true;
         public const int DEFAULT_SLIDER_VALUE = 100;
         public const string DEFAULT_USERNAME = "Franklem";
+        public const int SAVE_SLOT_ONE = 1;
+        public const int SAVE_SLOT_TWO = 2;
+        public const int SAVE_SLOT_THREE = 3;
         
         //Playable characters
         public const string FRANKLEM_NAME = "Franklem";

@@ -14,6 +14,7 @@ namespace Game
         private Button tileButton;
         [SerializeField] private TileType tileType;
         public TileType TileType => tileType;
+        private TileSprite tileSprite;
 
         private Image tileImage;
 
@@ -62,6 +63,7 @@ namespace Game
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
+            tileSprite = GetComponent<TileSprite>();
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -75,6 +77,11 @@ namespace Game
         public void DisplayMoveActionPossibility()
         {
             tileImage.sprite = gridController.AvailabilitySprite;
+        }
+
+        public Sprite GetSprite()
+        {
+            return tileSprite.GetSprite();
         }
 
         public void DisplaySelectedTile()
@@ -107,7 +114,6 @@ namespace Game
             if (!IsWalkable) 
                 return false;
             this.linkedUnit = unit;
-            Harmony.Finder.LevelController.ReevaluateAllMovementCosts();
             return IsOccupiedByAUnit;
         }
 
