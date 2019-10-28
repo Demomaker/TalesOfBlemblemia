@@ -47,9 +47,8 @@ namespace Game
 
             var saves = saveController.GetSaves();
             
-            saves[saveSlotSelectedNumber - 1].username = playerNameInputField.text;
-            saves[saveSlotSelectedNumber - 1].username = playerNameInputField.text;
-            saves[saveSlotSelectedNumber - 1].difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+            saves[saveSlotSelectedNumber - 1].Username = playerNameInputField.text;
+            saves[saveSlotSelectedNumber - 1].DifficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
 
             saveController.UpdateSave(saveSlotSelectedNumber);
             //CHARGER NOUVELLE SCENE

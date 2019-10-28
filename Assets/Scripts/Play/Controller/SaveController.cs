@@ -24,6 +24,25 @@ namespace Game
             set => saveSelected = value;
         }
 
+        public SaveInfos GetCurrentSaveSelectedInfos()
+        {
+            SaveInfos currentSave = new SaveInfos();
+            switch (saveSelected)
+            {
+                case 1:
+                    currentSave = saveSlot1;
+                    break;
+                case 2:
+                    currentSave = saveSlot2;
+                    break;
+                case 3:
+                    currentSave = saveSlot3;
+                    break;
+            }
+
+            return currentSave;
+        }
+
         public PlayerSettings PlayerSettings => playerSettings;
 
         public void Awake()
@@ -147,7 +166,7 @@ namespace Game
         private void CreateSave(SaveInfos saveSlot)
         {
             saveGameRepo.Insert(saveSlot);
-            foreach (var character in saveSlot.characterInfos)
+            foreach (var character in saveSlot.CharacterInfos)
             {
                 characterStatusRepo.Insert(character);
             }
@@ -159,8 +178,8 @@ namespace Game
 
         public void DeleteSave(SaveInfos saveSlot)
         {
-            characterStatusRepo.Delete(saveSlot.id);
-            saveGameRepo.Delete(saveSlot.id);
+            characterStatusRepo.Delete(saveSlot.Id);
+            saveGameRepo.Delete(saveSlot.Id);
         }
 
         #endregion
@@ -173,7 +192,7 @@ namespace Game
             {
                 case 1:
                     saveGameRepo.Update(saveSlot1);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -181,7 +200,7 @@ namespace Game
                     break;
                 case 2:
                     saveGameRepo.Update(saveSlot2);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -189,7 +208,7 @@ namespace Game
                     break;
                 case 3:
                     saveGameRepo.Update(saveSlot3);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -209,16 +228,16 @@ namespace Game
 
             foreach (var characterInfo in characterInfos)
             {
-                switch (characterInfo.saveId)
+                switch (characterInfo.SaveId)
                 {
                     case 1:
-                        result[0].characterInfos.Add(characterInfo);
+                        result[0].CharacterInfos.Add(characterInfo);
                         break;
                     case 2:
-                        result[1].characterInfos.Add(characterInfo);
+                        result[1].CharacterInfos.Add(characterInfo);
                         break;
                     default:
-                        result[2].characterInfos.Add(characterInfo);
+                        result[2].CharacterInfos.Add(characterInfo);
                         break;
                 }
             }

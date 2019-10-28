@@ -104,6 +104,7 @@ namespace Game
             if (ownedUnits.Contains(unit))
             {
                 ownedUnits.Remove(unit);
+                
             }
         }
         

@@ -128,6 +128,21 @@ namespace Game
                 yield return null;
             }
             
+            List<Unit> defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
+            List<CharacterInfo> characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+            
+            foreach (var unit in defeatedPlayerUnits)
+            {
+                foreach (var character in characterInfos)
+                {
+                    if (character.CharacterName == unit.name)
+                    {
+                        character.CharacterStatus = false;
+                    }
+                }
+            }
+            
+            
             Finder.SoundManager.StopCurrentMusic();
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }

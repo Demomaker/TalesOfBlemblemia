@@ -39,10 +39,10 @@ namespace Game
             
             foreach (var saveSlot in saveSlots)
             {
-                saveSlot.transform.Find(Constants.NAME_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].username;
-                saveSlot.transform.Find(Constants.STAGE_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].levelName;
+                saveSlot.transform.Find(Constants.NAME_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
+                saveSlot.transform.Find(Constants.STAGE_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
                 saveSlot.transform.Find(Constants.DIFFICULTY_STRING).GetComponent<TMP_Text>().text =
-                    saves[saveCounter].difficultyLevel;
+                    saves[saveCounter].DifficultyLevel;
                 
                 ++saveCounter;
             }

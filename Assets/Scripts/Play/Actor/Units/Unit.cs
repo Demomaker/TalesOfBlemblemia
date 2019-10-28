@@ -224,9 +224,9 @@ namespace Game
         public void Die()
         {
             currentTile.UnlinkUnit();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
-        
+
         public void AttackDistantUnit(Unit target)
         {
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
