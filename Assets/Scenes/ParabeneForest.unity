@@ -1503,7 +1503,7 @@ Camera:
   m_GameObject: {fileID: 73006761}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 4
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1563,20 +1563,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 759cc680b83f8ad4b9353258e4085d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalScrollArea: 10
-  horizontalScrollArea: 10
-  horizontalMoveSpeed: 5
-  verticalMoveSpeed: 5
-  zoomSpeed: 5
+  scrollArea: 10
+  moveSpeed: 20
+  zoomSpeed: 10
   minZoom: 4.5
-  minX: -18
-  maxX: 18
-  minY: -10
-  maxY: 10
+  minX: -14
+  maxX: 14
+  minY: -14
+  maxY: 14
   moveUpKey: 119
   moveDownKey: 115
   moveLeftKey: 97
   moveRightKey: 100
+  dragKey: 325
 --- !u!1 &79801886
 GameObject:
   m_ObjectHideFlags: 0
@@ -41090,12 +41089,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 386cff33803d9e742ab386963032c720, type: 3}
---- !u!4 &896080598 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9184210282831072268, guid: 386cff33803d9e742ab386963032c720,
-    type: 3}
-  m_PrefabInstance: {fileID: 896080597}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &938657316
 GameObject:
   m_ObjectHideFlags: 0
@@ -63057,16 +63050,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89f9c7698f94eb6bd6e12adf26939f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementTileSprite: {fileID: 3843192763952212679, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
-    type: 3}
+  movementTileSprite: {fileID: 0}
   normalTileSprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
-  selectedTileSprite: {fileID: -9127714096467619421, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
-    type: 3}
-  attackableTileSprite: {fileID: 9200194514127077615, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
-    type: 3}
+  selectedTileSprite: {fileID: 0}
+  attackableTileSprite: {fileID: 0}
   healableTileSprite: {fileID: 0}
-  recruitableTileSprite: {fileID: 4060697602963108084, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
-    type: 3}
+  recruitableTileSprite: {fileID: 0}
 --- !u!114 &1713535633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63111,20 +63100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a1ce9c027975b469243f81edd146fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emptyCellPrefab: {fileID: 822714897129928834, guid: 3bdb9660ef9417a478ad50ec75f1f4b7,
-    type: 3}
-  forestCellPrefab: {fileID: 822714897129928834, guid: 16aa02c08a3a3744f81a0451e8ad92be,
-    type: 3}
-  obstacleCellPrefab: {fileID: 822714897129928834, guid: 3bfc6c9ae5c85ec42b034d690b01f717,
-    type: 3}
-  fortressCellPrefab: {fileID: 822714897129928834, guid: e00a0c6283e1d2a4fb4018a77d8b5e48,
-    type: 3}
-  forestTile: {fileID: 11400000, guid: da33a05bc10443b4295864e385f9048c, type: 2}
-  obstacleTiles:
-  - {fileID: 11400000, guid: fc1229021a596244e8ea1bb071527846, type: 2}
-  fortressTile: {fileID: 11400000, guid: 9bf6760c17cc79d4ca4d59e61b4c4fd7, type: 2}
-  interactiveTilemap: {fileID: 1324797967}
-  backgroundTilemap: {fileID: 518641929}
+  emptyCellPrefab: {fileID: 0}
+  forestCellPrefab: {fileID: 0}
+  obstacleCellPrefab: {fileID: 0}
+  fortressCellPrefab: {fileID: 0}
+  forestTile: {fileID: 0}
+  obstacleTiles: []
+  fortressTile: {fileID: 0}
+  interactiveTilemap: {fileID: 0}
+  backgroundTilemap: {fileID: 0}
 --- !u!1 &1714220733
 GameObject:
   m_ObjectHideFlags: 0
@@ -68819,65 +68803,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueUI: {fileID: 27686938}
   initialPosition: {fileID: 1200009458}
-  startActions:
-  - cameraTarget: {fileID: 2147117697}
-    duration: 2
-    cameraZoom: 6.21
-    quotes:
-    - name: Story
-      sentence: Our heroes have now finally reached the forest of Parabene.
-    - name: Story
-      sentence: The forest which neighbours the Capital of Blemblemia is a very dense
-        forest
-    - name: Story
-      sentence: which is being exploited in order to collect the very unique trees
-        that grows in it and which produce very sturdy wood.
-    - name: Story
-      sentence: "Sadly our heroes have no time to rest and marvel at the sight of
-        the forest as they are still being chased by Morks\u2026"
-  - cameraTarget: {fileID: 896080598}
-    duration: 0.2
-    cameraZoom: 4
-    quotes:
-    - name: Franklem
-      sentence: "Hurry up Myriam. We\u2019re almost there\u2026"
-  - cameraTarget: {fileID: 1983102087}
-    duration: 0.2
-    cameraZoom: 4
-    quotes:
-    - name: Myriam
-      sentence: "*heavy breathing* I\u2019m\u2026right\u2026behind\u2026you!"
-    - name: Myriam
-      sentence: Look Franklem! This man looks like he need our help.
-  - cameraTarget: {fileID: 1639890201655499797}
-    duration: 2
-    cameraZoom: 5.17
-    quotes:
-    - name: Bram
-      sentence: Argh you darn creature! You think a small cut like that will stop
-        me?!
-  - cameraTarget: {fileID: 896080598}
-    duration: 0.4
-    cameraZoom: 4
-    quotes:
-    - name: Franklem
-      sentence: "You\u2019re right let\u2019s go help him quick!"
-  endActions:
-  - cameraTarget: {fileID: 896080598}
-    duration: 0.3
-    cameraZoom: 4
-    quotes:
-    - name: Franklem
-      sentence: "there\u2019s to many of them\u2026We have to go warn the king!"
-    - name: Story
-      sentence: Having pushed back the hordes for as long as possible,
-    - name: Story
-      sentence: Franklem and Myriam make there way toward the forest,
-    - name: Story
-      sentence: running toward the forest of Parabene and leaving behind he city,
-    - name: Story
-      sentence: hoping the could hold back the swarm long enough for Franklem to seek
-        aid.
+  startActions: []
+  endActions: []
 --- !u!1001 &1983102086
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -68952,12 +68879,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b572034a329bf2e4fb68fd20bacb6189, type: 3}
---- !u!4 &1983102087 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8211765993680045796, guid: b572034a329bf2e4fb68fd20bacb6189,
-    type: 3}
-  m_PrefabInstance: {fileID: 1983102086}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1984560540
 GameObject:
   m_ObjectHideFlags: 0
@@ -72915,17 +72836,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogue:
-    sentences:
-    - name: Bram
-      sentence: Thank you mam! It feels good as new.
-    - name: Franklem
-      sentence: We could use the help of a strong man like you in order to reach the
-        castle!
-    - name: Bram
-      sentence: You save me life my prince. My axe is yours!
---- !u!4 &1639890201655499797 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7617506599882242046, guid: f9341cfb1ebb657419148032b51ab674,
-    type: 3}
-  m_PrefabInstance: {fileID: 1639890201655499794}
-  m_PrefabAsset: {fileID: 0}
+    sentences: []
