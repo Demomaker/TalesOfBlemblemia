@@ -13,9 +13,16 @@ namespace Game
         [SerializeField] private Vector2Int initialPosition;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
+        [SerializeField] private UnitGender gender;
         #endregion
         
         #region Fields
+        private OnHurt onHurt;
+        private OnAttack onAttack;
+        private OnDodge onDodge;
+        private OnUnitMove onUnitMove;
+        private OnUnitDeath onUnitDeath;
+        private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private Tile currentTile;
         private Weapon weapon;
@@ -23,6 +30,8 @@ namespace Game
         private int currentHealthPoints;
         private int movesLeft;
         private int tileUpdateKeeper;
+        private bool isMoving;
+        private bool isAttacking;
         #endregion
         
         #region Properties
@@ -97,8 +106,9 @@ namespace Game
         public bool HasActed { get; set; }
         public bool NoHealthLeft => CurrentHealthPoints <= 0;
         public int AttackRange => 1;
-        private bool isMoving;
-        private bool isAttacking;
+
+        public UnitGender Gender => gender;
+
         #endregion
         
         private void Awake()
@@ -109,6 +119,12 @@ namespace Game
             gridController = Finder.GridController;
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
+            onHurt = new OnHurt();
+            onAttack = new OnAttack();
+            onDodge = new OnDodge();
+            onUnitMove = new OnUnitMove();
+            onUnitDeath = new OnUnitDeath();
+            onPlayerUnitLoss = new OnPlayerUnitLoss();
         }
         protected void Start()
         {
@@ -182,6 +198,8 @@ namespace Game
                         i = path.Count;
                     }
                 }
+                
+                onUnitMove.Publish(this);
 
                 CurrentTile = finalTile;
                 transform.position = currentTile.WorldPosition;
@@ -192,6 +210,7 @@ namespace Game
             {
                 if (action.ActionType == ActionType.Attack && action.Target != null)
                 {
+                    onAttack.Publish(this);
                     if (!Attack(action.Target))
                         Rest();
                 }
@@ -223,6 +242,9 @@ namespace Game
         
         public void Die()
         {
+            onUnitDeath.Publish(this);
+            if(playerType == PlayerType.Ally)
+                onPlayerUnitLoss.Publish(this);
             currentTile.UnlinkUnit();
             Destroy(gameObject);
         }
@@ -259,15 +281,23 @@ namespace Game
                 transform.position = Vector3.Lerp(startPos, targetPos, counter / duration);
                 yield return null;
             }
-
-            Debug.Log(WeaponAdvantage.ToString());
+            
             float hitRate = Stats.HitRate - target.currentTile.DefenseRate;
-            int damage = Random.value <= hitRate ? Stats.AttackStrength : 0;
+            int damage = 0;
+            if (Random.value <= hitRate)
+            {
+                damage = Stats.AttackStrength;
+                onDodge.Publish(this);
+            }
+            else
+            {
+                onHurt.Publish(this);
+            }
             if (!isCountering && target.WeaponType == WeaponAdvantage)
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
-            Finder.SoundManager.PlaySingle(Finder.SoundClips.HurtSound);
+            
             target.CurrentHealthPoints -= damage;
             counter = 0;
             
@@ -351,11 +381,5 @@ namespace Game
         }
         #endregion
         
-        public enum Gender
-        {
-            Male,
-            Female,
-            Mork
-        }
     } 
 }

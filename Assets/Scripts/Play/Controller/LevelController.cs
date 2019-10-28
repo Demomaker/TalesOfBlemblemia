@@ -50,7 +50,7 @@ namespace Game
         private bool levelEnded = false;
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
-        private bool victoryMusicIsPlaying = false;
+        private OnLevelVictory onLevelVictory;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -58,16 +58,18 @@ namespace Game
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
+
+        public AudioClip BackgroundMusic => backgroundMusic;
+
         private void Awake()
         {
             cinematicController = GetComponent<CinematicController>();
+            onLevelVictory = new OnLevelVictory();
             Debug.Log("Level name : " + levelName);
         }
 
         private void Start()
         {
-            Finder.SoundManager.StopCurrentMusic();
-            Finder.SoundManager.PlayMusic(backgroundMusic);
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -91,11 +93,9 @@ namespace Game
 
             if (levelEnded)
             {
-                if (levelCompleted && !victoryMusicIsPlaying)
+                if (levelCompleted)
                 {
-                    victoryMusicIsPlaying = true;
-                    Finder.SoundManager.StopCurrentMusic();
-                    Finder.SoundManager.PlayMusic(Finder.SoundClips.LevelVictoryMusic);
+                    onLevelVictory.Publish(this);
                 }
                 StartCoroutine(EndLevel());
             }
@@ -128,7 +128,6 @@ namespace Game
                 yield return null;
             }
             
-            Finder.SoundManager.StopCurrentMusic();
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 

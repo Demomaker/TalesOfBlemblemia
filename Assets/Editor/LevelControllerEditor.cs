@@ -25,6 +25,7 @@ namespace Game
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
         private SerializedProperty revertWeaponTriangle;
+        private AudioClips audioClips;
         
         LevelBackgroundMusicType backgroundMusicOption;
 
@@ -49,6 +50,8 @@ namespace Game
             numberOfTurnsBeforeCompletion = serializedObject.FindProperty("numberOfTurnsBeforeCompletion");
             numberOfTurnsBeforeDefeat = serializedObject.FindProperty("numberOfTurnsBeforeDefeat");
             revertWeaponTriangle = serializedObject.FindProperty("revertWeaponTriangle");
+            audioClips = Finder.AudioClips;
+            if(audioClips == null) audioClips = new NullAudioClips();
 
         }
 
@@ -66,13 +69,13 @@ namespace Game
             switch (backgroundMusicOption)
             {
                 case LevelBackgroundMusicType.Forest :
-                    backgroundMusic.objectReferenceValue = Finder.SoundClips.ForestMusic;
+                    backgroundMusic.objectReferenceValue = audioClips.ForestMusic;
                     break;
                 case LevelBackgroundMusicType.Castle :
-                    backgroundMusic.objectReferenceValue = Finder.SoundClips.CastleMusic;
+                    backgroundMusic.objectReferenceValue = audioClips.CastleMusic;
                     break;
                 case LevelBackgroundMusicType.Boss :
-                    backgroundMusic.objectReferenceValue = Finder.SoundClips.BossMusic;
+                    backgroundMusic.objectReferenceValue = audioClips.BossMusic;
                     break;
             }
             doNotEnd.boolValue = EditorGUILayout.Toggle("Do Not End Level", doNotEnd.boolValue);
