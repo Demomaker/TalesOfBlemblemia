@@ -94,7 +94,7 @@ namespace Game
                 {
                     targetUnit = (Unit) action.Target;
                     action.Score += HpChoiceMod(playableUnit, targetUnit.CurrentHealthPoints) +
-                                    DistanceChoiceMod(playableUnit, actionsToDo[i].Path) +
+                                    DistanceChoiceMod(playableUnit, action.Path) +
                                     WeaponTypeChoiceMod(playableUnit, targetUnit.WeaponType) +
                                     EnvironmentChoiceMod(playableUnit, targetUnit.CurrentTile) +
                                     HarmChoiceMod(playableUnit, targetUnit);
