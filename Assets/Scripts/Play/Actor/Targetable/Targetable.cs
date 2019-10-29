@@ -39,7 +39,7 @@ namespace Game
 
         public virtual void Die()
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         
         protected virtual void Start()
