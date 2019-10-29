@@ -51,6 +51,7 @@ namespace Game
             saves[saveSlotSelectedNumber - 1].DifficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
 
             saveController.UpdateSave(saveSlotSelectedNumber);
+            saveController.SaveSelected = saveSlotSelectedNumber;
             //CHARGER NOUVELLE SCENE
             DontDestroyOnLoad(saveController);
             SceneManager.LoadScene("ParabeneForest");

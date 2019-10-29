@@ -227,6 +227,14 @@ namespace Game
             gameObject.SetActive(false);
         }
 
+        private void OnDisable()
+        {
+            if (currentTile != null)
+            {
+                currentTile.UnlinkUnit();
+            }
+        }
+
         public void AttackDistantUnit(Unit target)
         {
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);

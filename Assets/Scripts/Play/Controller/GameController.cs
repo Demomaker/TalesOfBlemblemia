@@ -59,32 +59,32 @@ namespace Game
              LevelsCompleted.Clear();
          }
 
-         public void UnloadLevel(string levelname)
+         public void UnloadLevel(string levelName)
          {
-             StartCoroutine(UnloadLevelCoroutine(levelname));
+             StartCoroutine(UnloadLevelCoroutine(levelName));
          }
          
-         public void LoadLevel(string levelname)
+         public void LoadLevel(string levelName)
          {
              if(lastLoadedLevelName != null)
                  UnloadLevel(lastLoadedLevelName);
-             lastLoadedLevelName = levelname;
+             lastLoadedLevelName = levelName;
              if(lastLevelCoroutine != null)
                  StopCoroutine(lastLevelCoroutine);
-             lastLevelCoroutine = StartCoroutine(LoadLevelCoroutine(levelname));
+             lastLevelCoroutine = StartCoroutine(LoadLevelCoroutine(levelName));
          }
     
-         private IEnumerator LoadLevelCoroutine(string levelname)
+         private IEnumerator LoadLevelCoroutine(string levelName)
          {
-             if(!SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Single);
-             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
+             if(!SceneManager.GetSceneByName(levelName).isLoaded)
+                 yield return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Single);
+             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelName));
          }
 
-         private IEnumerator UnloadLevelCoroutine(string levelname)
+         private IEnumerator UnloadLevelCoroutine(string levelName)
          {
-             if (SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.UnloadSceneAsync(levelname);
+             if (SceneManager.GetSceneByName(levelName).isLoaded)
+                 yield return SceneManager.UnloadSceneAsync(levelName);
          }
 
          public GameController() : this(DifficultyLevel.Easy)

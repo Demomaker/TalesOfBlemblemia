@@ -77,6 +77,26 @@ namespace Game
                 dialogueUi.SetActive(true);
                 dialogueTriggerStartFranklem.TriggerDialogue();
             }
+            
+            //Activating only the units that are not marked as defeated in the save file of the player
+            var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+            
+            foreach (var gameUnit in currentPlayer.OwnedUnits)
+            {
+                foreach (var saveUnit in characterInfos)
+                {
+                    if (gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus)
+                    {
+                        gameUnit.gameObject.SetActive(false);
+                        if (gameUnit.name == PROTAGONIST_NAME)
+                        {
+                            levelEnded = true;
+                            levelFailed = true;
+                            //StartCoroutine(EndLevel());
+                        }
+                    }
+                }
+            }
         }
 
         protected void Update()
@@ -116,32 +136,59 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-
             
-            if (levelCompleted)
-            {
-                Finder.GameController.LevelsCompleted.Add(levelName);
-            }
             cinematicController.LaunchEndCinematic();
             while (cinematicController.IsPlayingACutScene)
             {
                 yield return null;
             }
             
-            List<Unit> defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
-            List<CharacterInfo> characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-            
-            foreach (var unit in defeatedPlayerUnits)
+            //Check the list of defeated units during the level and mark them as dead in the save file of the player if the difficulty is medium or hard
+            var defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
+
+            if (defeatedPlayerUnits.Any())
             {
-                foreach (var character in characterInfos)
+                var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+            
+                foreach (var unit in defeatedPlayerUnits)
                 {
-                    if (character.CharacterName == unit.name)
+                    //if Franklem dies, the player has to start the game from the beginning
+                    if (unit.name == Constants.FRANKLEM_NAME)
                     {
-                        character.CharacterStatus = false;
+                        Finder.SaveController.ResetSave();
+                        break;
+                    }
+
+                    if (Finder.GameController.DifficultyLevel != DifficultyLevel.Easy && levelCompleted)
+                    {
+                        foreach (var character in characterInfos)
+                        {
+                            if (character.CharacterName == unit.name)
+                            {
+                                character.CharacterStatus = false;
+                            }
+                        }
                     }
                 }
             }
             
+            //If the level was successfully completed, mark it as completed
+            if (levelCompleted)
+            {
+                Finder.GameController.LevelsCompleted.Add(levelName);
+                
+                var levels = Finder.GameController.Levels;
+                foreach (var level in levels)
+                {
+                    if (level.PreviousLevel == levelName)
+                    {
+                        Finder.SaveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
+                        break;
+                    }
+                }
+                
+                Finder.SaveController.UpdateSave(Finder.SaveController.SaveSelected);
+            }
             
             Finder.SoundManager.StopCurrentMusic();
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);

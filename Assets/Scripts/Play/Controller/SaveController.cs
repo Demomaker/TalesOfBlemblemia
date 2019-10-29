@@ -59,14 +59,14 @@ namespace Game
         {
             Dictionary<string, bool> playableCharactersDictionary = new Dictionary<string, bool>
             {
-                {Constants.FRANKLEM_NAME, false},
-                {Constants.MYRIAM_NAME, false},
-                {Constants.BRAM_NAME, false},
-                {Constants.RASS_NAME, false},
-                {Constants.ULRIC_NAME, false},
-                {Constants.JEBEDIAH_NAME, false},
-                {Constants.THOMAS_NAME, false},
-                {Constants.ABRAHAM_NAME, false}
+                {Constants.FRANKLEM_NAME, true},
+                {Constants.MYRIAM_NAME, true},
+                {Constants.BRAM_NAME, true},
+                {Constants.RASS_NAME, true},
+                {Constants.ULRIC_NAME, true},
+                {Constants.JEBEDIAH_NAME, true},
+                {Constants.THOMAS_NAME, true},
+                {Constants.ABRAHAM_NAME, true}
             };
             return playableCharactersDictionary;
         }
@@ -139,7 +139,7 @@ namespace Game
         /// </summary>
         private void CheckForExistingSaves()
         {
-            List<SaveInfos> saves = saveGameRepo.FindAll();
+            List<SaveInfos> saves = FindAll();
 
             if (saves.Count == 0)
             {
@@ -251,6 +251,33 @@ namespace Game
 
         #endregion
 
+
+        public void ResetSave()
+        {
+            var playableCharactersDictionary = CreateBaseCharacterDictionary();
+
+            SaveInfos cleanSave = new SaveInfos(1, Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
+                Constants.LEVEL_1_SCENE_NAME, playableCharactersDictionary);
+            
+            switch (saveSelected)
+            {
+                case 1:
+                    saveSlot1 = cleanSave;
+                    UpdateSave(saveSelected);
+                    break;
+                case 2:
+                    cleanSave.Id = 2;
+                    saveSlot2 = cleanSave;
+                    UpdateSave(saveSelected);
+                    break;
+                case 3:
+                    cleanSave.Id = 3;
+                    saveSlot3 = cleanSave;
+                    UpdateSave(saveSelected);
+                    break;
+            }
+        }
+        
         public void OnDestroy()
         {
             connection.Close();
