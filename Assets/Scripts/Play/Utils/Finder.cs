@@ -15,7 +15,7 @@ namespace Game
             get
             {
                 if (gameController == null)
-                    gameController = GameObject.FindWithTag(Constants.GAME_CONTROLLER_TAG)
+                    gameController = GameObject.FindWithTag(Tags.GAME_CONTROLLER_TAG)
                         .GetComponent<GameController>();
                 return gameController;
             }
@@ -27,7 +27,7 @@ namespace Game
             get
             {
                 if (gridController == null)
-                    gridController = GameObject.FindWithTag(Constants.GRID_CONTROLLER_TAG)
+                    gridController = GameObject.FindWithTag(Tags.GRID_CONTROLLER_TAG)
                         .GetComponent<GridController>();
                 return gridController;
             }
@@ -44,6 +44,7 @@ namespace Game
             }
         }
         public static AudioClips AudioClips => FindWithTag<AudioClips>(Tags.SOUND_MANAGER);
+        public static AnimationManager AnimationManager => FindWithTag<AnimationManager>(Tags.ANIMATION_MANAGER);
         
         //Author : Antoine Lessard
         public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);

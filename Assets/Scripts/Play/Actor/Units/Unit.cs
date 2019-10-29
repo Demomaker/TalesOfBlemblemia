@@ -30,8 +30,13 @@ namespace Game
         private int currentHealthPoints;
         private int movesLeft;
         private int tileUpdateKeeper;
-        private bool isMoving;
-        private bool isAttacking;
+        private bool isMoving = false;
+        private bool isAttacking = false;
+        private bool isDodging = false;
+        private bool isBeingHurt = false;
+        private bool isResting = false;
+        private bool isGoingToDie = false;
+        private Animator animator;
         #endregion
         
         #region Properties
@@ -125,10 +130,56 @@ namespace Game
             onUnitMove = new OnUnitMove();
             onUnitDeath = new OnUnitDeath();
             onPlayerUnitLoss = new OnPlayerUnitLoss();
+            animator = GetComponent<Animator>();
+
         }
+
+        private void OnEnable()
+        {
+            OnHurt.Notify += Hurt;
+            OnDodge.Notify += MakeDodge;
+        }
+
+        private void OnDisable()
+        {
+            OnHurt.Notify -= Hurt;
+            OnDodge.Notify -= MakeDodge;
+        }
+
+        public void Hurt(Unit unit)
+        {
+            unit.SetIsBeingHurt(true);
+        }
+
+        public void MakeDodge(Unit unit)
+        {
+            unit.SetIsDodging(true);
+        }
+
+        public void SetIsBeingHurt(bool isBeingHurt)
+        {
+            this.isBeingHurt = isBeingHurt;
+        }
+
+        public void SetIsDodging(bool isDodging)
+        {
+            this.isDodging = isDodging;
+        }
+
         protected void Start()
         {
             StartCoroutine(InitPosition());
+        }
+
+        private void FixedUpdate()
+        {
+            if (animator == null) return;
+            animator.SetBool(Constants.AnimationProperties.IS_MOVING, isMoving);
+            animator.SetBool(Constants.AnimationProperties.IS_ATTACKING, isAttacking);
+            animator.SetBool(Constants.AnimationProperties.IS_DODGING, isDodging);
+            animator.SetBool(Constants.AnimationProperties.IS_BEING_HURT, isBeingHurt);
+            animator.SetBool(Constants.AnimationProperties.IS_RESTING, isResting);
+            animator.SetBool(Constants.AnimationProperties.IS_GOING_TO_DIE, isGoingToDie);
         }
         
         private IEnumerator InitPosition()
@@ -153,6 +204,9 @@ namespace Game
         public List<Tile> PrepareMove(Tile tile)
         {
             isMoving = true;
+            Animator animator = GetComponent<Animator>();
+            if(animator != null)
+            animator.SetBool(Constants.AnimationProperties.IS_MOVING, isMoving);
             if (tile != currentTile)
             {
                 currentTile.UnlinkUnit();
@@ -204,6 +258,9 @@ namespace Game
                 CurrentTile = finalTile;
                 transform.position = currentTile.WorldPosition;
                 isMoving = false;
+                Animator animator = GetComponent<Animator>();
+                if(animator != null)
+                animator.SetBool(Constants.AnimationProperties.IS_MOVING, isMoving);
             }
 
             if (action.ActionType != ActionType.Nothing)
@@ -236,16 +293,19 @@ namespace Game
         public void Rest()
         {
             CurrentHealthPoints += HpGainedByResting;
+            isResting = true;
             Debug.Log("Unit rested!");
             HasActed = true;
         }
         
         public void Die()
         {
+            isGoingToDie = true;
             onUnitDeath.Publish(this);
             if(playerType == PlayerType.Ally)
                 onPlayerUnitLoss.Publish(this);
             currentTile.UnlinkUnit();
+            isGoingToDie = false;
             Destroy(gameObject);
         }
         
@@ -268,7 +328,7 @@ namespace Game
         {
             if (isAttacking) yield break;
             isAttacking = true;
-            
+
             float counter = 0;
             Vector3 startPos = transform.position;
             Vector3 targetPos = (target.CurrentTile.WorldPosition + startPos) / 2f;
@@ -287,12 +347,13 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                onDodge.Publish(this);
+                onDodge.Publish(target);
             }
             else
             {
-                onHurt.Publish(this);
+                onHurt.Publish(target);
             }
+            
             if (!isCountering && target.WeaponType == WeaponAdvantage)
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
@@ -310,6 +371,8 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
+            target.SetIsBeingHurt(false);
+            target.SetIsDodging(false);
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
