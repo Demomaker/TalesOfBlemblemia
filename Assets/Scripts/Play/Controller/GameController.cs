@@ -77,7 +77,7 @@ namespace Game
          private IEnumerator LoadLevelCoroutine(string levelname)
          {
              GameObject temp = GameObject.FindWithTag(Tags.SOUND_MANAGER);
-             GameObject temp2 = GameObject.FindWithTag(Constants.GAME_CONTROLLER_TAG);
+             GameObject temp2 = GameObject.FindWithTag(Tags.GAME_CONTROLLER_TAG);
              string lastSceneName = SceneManager.GetActiveScene().name;
              if(!SceneManager.GetSceneByName(levelname).isLoaded)
                  yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
