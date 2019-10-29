@@ -88,16 +88,16 @@ namespace Game
         private static void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
             Unit targetUnit;
-            for(int i = 0; i < actionsToDo.Count; i++)
+            foreach (var action in actionsToDo)
             {
-                if (actionsToDo[i].Target.GetType() == typeof(Unit))
+                if (action.Target.GetType() == typeof(Unit))
                 {
-                    targetUnit = (Unit) actionsToDo[i].Target;
-                    actionsToDo[i].Score += HpChoiceMod(playableUnit, targetUnit.CurrentHealthPoints) +
-                                            DistanceChoiceMod(playableUnit, actionsToDo[i].Path) +
-                                            WeaponTypeChoiceMod(playableUnit, targetUnit.WeaponType) +
-                                            EnvironmentChoiceMod(playableUnit, targetUnit.CurrentTile) +
-                                            HarmChoiceMod(playableUnit, targetUnit);
+                    targetUnit = (Unit) action.Target;
+                    action.Score += HpChoiceMod(playableUnit, targetUnit.CurrentHealthPoints) +
+                                    DistanceChoiceMod(playableUnit, actionsToDo[i].Path) +
+                                    WeaponTypeChoiceMod(playableUnit, targetUnit.WeaponType) +
+                                    EnvironmentChoiceMod(playableUnit, targetUnit.CurrentTile) +
+                                    HarmChoiceMod(playableUnit, targetUnit);
                 }
             }
         }
