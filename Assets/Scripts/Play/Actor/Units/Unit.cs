@@ -11,30 +11,8 @@ namespace Game
     {
         #region Serialized fields
         [SerializeField] private Vector2Int initialPosition;
-        [SerializeField] private Gender gender = Gender.Male;
         [SerializeField] private UnitInfos unitInfos;
-        private GridController gridController;
-        /// <summary>
-        /// The tile the unit is on
-        /// </summary>
-        private Tile currentTile = null;
-        public Tile CurrentTile => currentTile;
-        
-        public bool IsEnemy => playerType == PlayerType.Enemy;
-        public bool IsPlayer => playerType == PlayerType.Ally;
-        public bool IsRecruitable => playerType == PlayerType.None;
-
         [SerializeField] private PlayerType playerType;
-        
-        public UnitInfos UnitInfos
-        {
-            get => unitInfos;
-            set => unitInfos = value;
-        }
-
-        /// <summary>
-        /// The unit's class stats
-        /// </summary>
         [SerializeField] private UnitStats classStats;
         [SerializeField] private UnitGender gender;
         #endregion
@@ -64,6 +42,13 @@ namespace Game
         #endregion
         
         #region Properties
+        
+        public UnitInfos UnitInfos
+        {
+            get => unitInfos;
+            set => unitInfos = value;
+        }
+        
         public int CurrentHealthPoints
         {
             get { return currentHealthPoints; }
@@ -289,6 +274,16 @@ namespace Game
         {
             if (TargetIsInRange(target))
             {
+                if (!isCountering)
+                {
+                    uiController.PrepareBattleReport(
+                        this.Stats.maxHealthPoints, 
+                        this.CurrentHealthPoints,
+                        target.Stats.maxHealthPoints,
+                        target.CurrentHealthPoints, 
+                        IsEnemy
+                    );
+                }
                 StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
                 return true;
             }
@@ -329,6 +324,7 @@ namespace Game
             }
             
             target.CurrentHealthPoints -= damage;
+            uiController.LaunchBattleReport(IsEnemy, target.Stats.maxHealthPoints, target.CurrentHealthPoints);
             counter = 0;
             
             while (counter < duration)
@@ -340,7 +336,6 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
-            uiController.PrepareBattleReport(damage,IsEnemy,target.CurrentHealthPoints > 0);
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
             if (!isCountering && !target.NoHealthLeft)
@@ -350,11 +345,6 @@ namespace Game
             if (!isCountering)
             {
                 HasActed = true;
-            }
-
-            if ((!isCountering && target.CurrentHealthPoints <= 0) || (isCountering))
-            {
-                uiController.LaunchBattleReport();
             }
         }
         

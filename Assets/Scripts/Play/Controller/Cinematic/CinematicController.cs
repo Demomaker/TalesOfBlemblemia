@@ -13,8 +13,9 @@ namespace Game
         private DialogueManager dialogueManager;
         private bool isPlayingACutScene = false;
         private GameObject eventSystemGameObject;
+        private GameObject dialogueUI;
 
-        [SerializeField] private GameObject dialogueUI;
+        //[SerializeField] private GameObject dialogueUI;
         [SerializeField] private Transform initialPosition;
         [SerializeField] private CameraAction[] startActions;
         [SerializeField] private CameraAction[] endActions;
@@ -46,7 +47,8 @@ namespace Game
             camTransform = camera.gameObject.transform;
             camTransform.position = initialPosition.position + new Vector3(0,0,DEFAULT_CAMERA_Z_POSITION);
             camera.orthographicSize = 4;
-            dialogueManager = FindObjectOfType<DialogueManager>();
+            dialogueManager = Harmony.Finder.DialogueManager;
+            dialogueUI = GameObject.Find("DialogueUI");
             eventSystemGameObject = EventSystem.current.gameObject;
         }
 

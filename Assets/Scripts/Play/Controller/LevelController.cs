@@ -24,7 +24,7 @@ namespace Game
         [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
-        [SerializeField] private GameObject dialogueUi = null;
+        //[SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
@@ -57,6 +57,7 @@ namespace Game
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
+        private GameObject dialogueUi;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -69,6 +70,7 @@ namespace Game
 
         private void Awake()
         {
+            dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
             onLevelVictory = new OnLevelVictory();
             Debug.Log("Level name : " + levelName);
@@ -85,7 +87,6 @@ namespace Game
                 dialogueUi.SetActive(true);
                 dialogueTriggerStartFranklem.TriggerDialogue();
             }
-            ReevaluateAllMovementCosts();
             PrepareVictoryConditionForUI();
         }
 

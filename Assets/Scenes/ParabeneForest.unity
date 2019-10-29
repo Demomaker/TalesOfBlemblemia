@@ -56395,7 +56395,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1205432946
 GameObject:
@@ -67255,7 +67255,7 @@ PrefabInstance:
     - target: {fileID: 1982757202726082796, guid: 58afbb95f2fca194eaa7f106b165ebaa,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5041692217103150493, guid: 58afbb95f2fca194eaa7f106b165ebaa,
         type: 3}
@@ -73370,7 +73370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b3f078b512f584fab740b15a882f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueUI: {fileID: 27686938}
   initialPosition: {fileID: 1200009458}
   startActions:
   - cameraTarget: {fileID: 2147117697}
@@ -76436,7 +76435,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1639890201655499794
 PrefabInstance:

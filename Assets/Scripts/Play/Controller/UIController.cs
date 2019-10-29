@@ -10,6 +10,8 @@ namespace Game
     [Findable("UIController")]
     public class UIController : MonoBehaviour
     {
+
+        [Header("Canvas")] [SerializeField] private Canvas canvas;
         [Header("TileInfo")] 
         [SerializeField] private TMP_Text tileType;
         [SerializeField] private TMP_Text tileDefense;
@@ -35,51 +37,105 @@ namespace Game
         [SerializeField] private Sprite fortressTexture;
         [SerializeField] private Sprite forestTexture;
 
-        [Header("Battle Report")]
-        [SerializeField] private TMP_Text dmgGiven;
-        [SerializeField] private TMP_Text allyStatus;
-        [SerializeField] private TMP_Text dmgTaken;
-        [SerializeField] private TMP_Text enemyStatus;
-    
-        private Canvas canvas;
-        private GameObject battleReport;
+        [Header("Battle Report")] 
+        [SerializeField] private GameObject battleReports;
+        
+        [SerializeField] private GameObject battleReportAlly;
+        [SerializeField] private LayoutGroup playerHealthBar;
+        [SerializeField] private GameObject playerDeathSymbol;
+        
+        [SerializeField] private GameObject battleReportEnemy;
+        [SerializeField] private LayoutGroup enemyHealthBar;
+        [SerializeField] private GameObject enemyDeathSymbol;
+
+        [Header("Colors")] 
+        [SerializeField] private Color green;
+        [SerializeField] private Color red;
+        [SerializeField] private Color grey;
+
+
+        private const string UNREACHABLE_TILE_TEXT = "Unreachable";
+
+
 
         //todo load the ui texture.
-
-        private void Awake()
-        {
-            canvas = GetComponent<Canvas>();
-            battleReport = GameObject.FindWithTag("BattleReport");
-        }
 
         private void Start()
         {
             canvas.enabled = true;
-            battleReport.SetActive(false);
+            DeactivateBattleReport();
         }
 
-        public void PrepareBattleReport(int dmg, bool status, bool isEnemy)
+        public void PrepareBattleReport(int maxHealthPoints, 
+        int currentHealthPoint, int targetMaxHealthPoint, int targetCurrentHealthPoint, bool isEnemy)
         {
             if (isEnemy)
             {
-                dmgTaken.text = dmg.ToString();
-                allyStatus.text = status ? "Alive" : "Dead";
+                EnemyHealthBarSetup(maxHealthPoints, currentHealthPoint, grey);
+                PlayerHealthBarSetup(targetMaxHealthPoint, targetCurrentHealthPoint, grey);
             }
             else
             {
-                dmgGiven.text = dmg.ToString();
-                enemyStatus.text = status ? "Alive" : "Dead";
+                PlayerHealthBarSetup(maxHealthPoints, currentHealthPoint,grey);
+                EnemyHealthBarSetup(targetMaxHealthPoint, targetCurrentHealthPoint, grey);
             }
         }
-        
-        public void LaunchBattleReport()
+
+        private void PlayerHealthBarSetup(int maxHealthPoints, int currentHealthPoint, Color color)
         {
-            battleReport.SetActive(true);
+            GameObject[] healthBar = playerHealthBar.Children();
+            for (int i = healthBar.Length; i > maxHealthPoints; i--)
+            {
+                healthBar[i - 1].SetActive(false);
+            }
+
+            for (int i = maxHealthPoints; i > currentHealthPoint; i--)
+            {
+                RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
+                healthBarImage.color = color;
+            }
+        }
+
+        private void EnemyHealthBarSetup(int maxHealthPoints, int currentHealthPoint, Color color)
+        {
+            GameObject[] healthBar = enemyHealthBar.Children();
+            for (int i = healthBar.Length; i > maxHealthPoints; i--)
+            {
+                healthBar[i - 1].SetActive(false);
+            }
+
+            for (int i = maxHealthPoints; i > currentHealthPoint; i--)
+            {
+                RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
+                healthBarImage.color = color;
+            }
+        }
+
+        public void LaunchBattleReport(bool isEnemy, int maxHealthPoint, int currentHealthPoint)
+        {
+            battleReports.SetActive(true);
+            if (isEnemy)
+            {
+                PlayerHealthBarSetup(maxHealthPoint,currentHealthPoint, red);
+            }
+            else
+            {
+                EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
+            }
+
+            playerDeathSymbol.SetActive(false);
+            enemyDeathSymbol.SetActive(false);
+            
+            if (currentHealthPoint <= 0)
+            {
+                if (isEnemy) playerDeathSymbol.SetActive(true);
+                else enemyDeathSymbol.SetActive(true);
+            }
         }
 
         public void DeactivateBattleReport()
         {
-            battleReport.SetActive(false);
+            battleReports.SetActive(false);
         }
 
         public void ModifyPlayerUI(Tile tile)
@@ -87,24 +143,9 @@ namespace Game
             tileType.text = tile.TileType.ToString();
             tileDefense.text = (tile.DefenseRate * 100) + "%";
             tileMouvementEffect.text = tile.CostToMove.ToString();
-            if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = "Unreachable";
+            if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
 
-            if (tileType.text == "Obstacle")
-            {
-                tileTexture.sprite = mountainTexture;
-            }
-            else if (tileType.text == "Forest")
-            {
-                tileTexture.sprite = forestTexture;
-            }
-            else if (tileType.text == "Fortress")
-            {
-                tileTexture.sprite = fortressTexture;
-            }
-            else if (tileType.text == "Empty")
-            {
-                tileTexture.sprite = grassTexture;
-            }
+            tileTexture.sprite = tile.GetSprite();
             
 
             if (tile.LinkedUnit != null && tile.LinkedUnit.UnitInfos != null)
@@ -112,7 +153,7 @@ namespace Game
                 characterName.text = tile.LinkedUnit.UnitInfos.characterName;
                 characterClass.text = tile.LinkedUnit.UnitInfos.className;
                 weapon.text = tile.LinkedUnit.UnitInfos.weaponName;
-                mouvement.text = tile.LinkedUnit.MovementRange.ToString();
+                mouvement.text = tile.LinkedUnit.MovesLeft.ToString();
                 atk.text = tile.LinkedUnit.Stats.AttackStrength.ToString();
                 hp.text = tile.LinkedUnit.CurrentHealthPoints.ToString();
             }

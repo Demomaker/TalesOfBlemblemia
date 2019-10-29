@@ -3,12 +3,16 @@
 //this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
 //https://www.youtube.com/watch?v=_nRzoTzeyxU
 //The main difference is that I made the field private and serializable.
-public class DialogueTrigger : MonoBehaviour
+namespace Game
 {
-    [SerializeField] private Dialogue dialogue;
-
-    public void TriggerDialogue()
+    public class DialogueTrigger : MonoBehaviour
     {
-        FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+        [SerializeField] private Dialogue dialogue;
+
+        public void TriggerDialogue()
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+        }
     }
 }
+
