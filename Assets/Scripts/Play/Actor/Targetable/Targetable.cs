@@ -39,6 +39,7 @@ namespace Game
 
         public virtual void Die()
         {
+            currentTile.UnlinkUnit();
             gameObject.SetActive(false);
         }
         

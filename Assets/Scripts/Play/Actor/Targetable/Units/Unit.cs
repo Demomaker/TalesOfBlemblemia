@@ -198,8 +198,6 @@ namespace Game
             onUnitDeath.Publish(this);
             if(playerType == PlayerType.Ally)
                 onPlayerUnitLoss.Publish(this);
-            currentTile.UnlinkUnit();
-            Destroy(gameObject);
             base.Die();
         }
         #endregion
