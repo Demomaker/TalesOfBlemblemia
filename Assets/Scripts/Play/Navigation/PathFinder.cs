@@ -405,7 +405,6 @@ namespace Game
         )
         {
             List <Tile> pathInOrder = FindPath(grid, PrepareComputeCost(from, unit.IsEnemy), new List<Tile>(), from, to, unit);
-            //List <Tile> pathInOrder = PrepareFindPath(grid, movementCosts, from, to, unit);
             if (path != null)
                 pathInOrder.Reverse();
             return pathInOrder;

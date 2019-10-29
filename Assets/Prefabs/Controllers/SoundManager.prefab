@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1268969281238496394}
-  - component: {fileID: 1268969281238496397}
   - component: {fileID: -3413932158639265391}
   - component: {fileID: 1268969281238496395}
   m_Layer: 0
@@ -33,22 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1268969281238496397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1268969281238496396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1c18afe331a40859358e08bd5508556, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  efxSource: {fileID: 1268969281238496395}
-  musicSource: {fileID: 1268969281238496395}
-  lowPitchRange: 0.95
-  highPitchRange: 1.05
 --- !u!114 &-3413932158639265391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,11 +44,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c689726e8a931d74d9f66d43f065cd1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackSound: {fileID: 0}
+  maleAttackSound: {fileID: 0}
+  femaleAttackSound: {fileID: 0}
+  morkAttackSound: {fileID: 0}
+  hurtSound: {fileID: 0}
   dodgeSound: {fileID: 0}
   unitMoveSound: {fileID: 0}
   unitDeathSound: {fileID: 0}
   buttonClickSound: {fileID: 0}
+  overworldMusic: {fileID: 0}
+  forestMusic: {fileID: 0}
+  castleMusic: {fileID: 0}
+  bossMusic: {fileID: 0}
+  sadMusic: {fileID: 0}
+  levelVictoryMusic: {fileID: 0}
+  mainMenuMusic: {fileID: 0}
 --- !u!82 &1268969281238496395
 AudioSource:
   m_ObjectHideFlags: 0

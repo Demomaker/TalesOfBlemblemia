@@ -36,7 +36,7 @@ namespace Game
                 Harmony.Finder.LevelController.IncrementTileUpdate();
             }
         }
-        
+
         public virtual void Die()
         {
             Destroy(gameObject);

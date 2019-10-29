@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
@@ -21,15 +22,18 @@ namespace Game
 
         private Canvas mainMenuCanvas;
         private Navigator navigator;
+        private OnMainMenuEnter onMainMenuEnter;
 
         private void Awake()
         {
             navigator = Finder.Navigator;
             mainMenuCanvas = GetComponent<Canvas>();
+            onMainMenuEnter = new OnMainMenuEnter();
         }
 
         public void Enter()
         {
+            onMainMenuEnter.Publish(this);
             navigator.Enter(mainMenuCanvas);
         }
 

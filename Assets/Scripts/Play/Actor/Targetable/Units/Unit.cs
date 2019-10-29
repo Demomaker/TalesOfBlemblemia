@@ -9,19 +9,26 @@ namespace Game
     //Authors: Jérémie Bertrand, Zacharie Lavigne
     public class Unit : Targetable
     {
-        public Vector2Int Position => currentTile.LogicalPosition;
-        
         #region Serialized fields
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
+        [SerializeField] private UnitGender gender;
         #endregion
         
         #region Fields
+        private OnHurt onHurt;
+        private OnAttack onAttack;
+        private OnDodge onDodge;
+        private OnUnitMove onUnitMove;
+        private OnUnitDeath onUnitDeath;
+        private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private Weapon weapon;
         private int[,] movementCosts;
         private int movesLeft;
         private int tileUpdateKeeper;
+        private bool isMoving;
+        private bool isAttacking;
         #endregion
         
         #region Properties
@@ -72,8 +79,9 @@ namespace Game
         public int MovesLeft => movesLeft;
         public bool HasActed { get; set; }
         public int AttackRange => 1;
-        private bool isMoving;
-        private bool isAttacking;
+
+        public UnitGender Gender => gender;
+
         #endregion
         
         private void Awake()
@@ -84,6 +92,12 @@ namespace Game
             gridController = Finder.GridController;
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
+            onHurt = new OnHurt();
+            onAttack = new OnAttack();
+            onDodge = new OnDodge();
+            onUnitMove = new OnUnitMove();
+            onUnitDeath = new OnUnitDeath();
+            onPlayerUnitLoss = new OnPlayerUnitLoss();
         }
         
         public void ResetTurnStats()
@@ -121,7 +135,7 @@ namespace Game
         private IEnumerator MoveByAction(Action action, float duration)
         {
             var path = action.Path;
-            if (path != null /*&& ((IsEnemy && path.Count > 1) || !IsEnemy)*/)
+            if (path != null)
             {
                 Tile finalTile = null;
                 for (int i = 0; i < path.Count; i++)
@@ -147,6 +161,8 @@ namespace Game
                         i = path.Count;
                     }
                 }
+                
+                onUnitMove.Publish(this);
 
                 CurrentTile = finalTile;
                 if (currentTile != null) transform.position = currentTile.WorldPosition;
@@ -157,6 +173,7 @@ namespace Game
             {
                 if (action.ActionType == ActionType.Attack && action.Target != null)
                 {
+                    onAttack.Publish(this);
                     if (!Attack(action.Target))
                         Rest();
                 }
@@ -176,10 +193,13 @@ namespace Game
                 }
             }
         }
-
         public override void Die()
         {
+            onUnitDeath.Publish(this);
+            if(playerType == PlayerType.Ally)
+                onPlayerUnitLoss.Publish(this);
             currentTile.UnlinkUnit();
+            Destroy(gameObject);
             base.Die();
         }
         #endregion
@@ -191,6 +211,7 @@ namespace Game
             Debug.Log("Unit rested!");
             HasActed = true;
         }
+        
         
         public void AttackDistantTargetable(Targetable target)
         {
@@ -224,17 +245,22 @@ namespace Game
                 transform.position = Vector3.Lerp(startPos, targetPos, counter / duration);
                 yield return null;
             }
-
-            Debug.Log(WeaponAdvantage.ToString());
             
             float hitRate = Stats.HitRate - target.CurrentTile.DefenseRate;
-            int damage = Random.value <= hitRate ? Stats.AttackStrength : 0;
-            
-            if (target.GetType() == typeof(Unit) && !isCountering && ((Unit)target).WeaponType == WeaponAdvantage)
+            int damage = 0;
+            if (Random.value <= hitRate)
+            {
+                damage = Stats.AttackStrength;
+                onDodge.Publish(this);
+            }
+            else
+            {
+                onHurt.Publish(this);
+            }
+            if (!isCountering && ((Unit)target).WeaponType == WeaponAdvantage)
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
-            Finder.SoundManager.PlaySingle(Finder.SoundClips.HurtSound);
             
             target.CurrentHealthPoints -= damage;
             
@@ -324,11 +350,5 @@ namespace Game
         }
         #endregion
         
-        public enum Gender
-        {
-            Male,
-            Female,
-            Mork
-        }
     } 
 }
