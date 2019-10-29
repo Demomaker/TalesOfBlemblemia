@@ -28,11 +28,6 @@ namespace Game
         {
         }
 
-        public override void CheckUnitDeaths()
-        {
-            base.CheckUnitDeaths();
-        }
-
         public IEnumerator PlayUnits()
         {
             for (int i = 0; i < ownedUnits.Count; i++)

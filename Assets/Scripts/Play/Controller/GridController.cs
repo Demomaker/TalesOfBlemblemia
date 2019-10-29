@@ -65,9 +65,9 @@ using UnityEngine.UI;
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && (linkedUnit.TargetIsInMovementRange(tile.LinkedUnit) || linkedUnit.TargetIsInRange(tile.LinkedUnit)))
+                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInMovementRange(tile.LinkedUnit))
                         {
-                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && tile.LinkedUnit.IsEnemy)
+                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy || tile.IsOccupiedByADoor))
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
@@ -79,6 +79,11 @@ using UnityEngine.UI;
                             {
                                 tile.DisplayHealActionPossibility();
                             }
+                        }
+                        //TODO portes a distance apparaissent rouge
+                        else if (tile.LinkedDoor != null  || linkedUnit.TargetIsInRange(tile.LinkedDoor))
+                        {
+                            tile.DisplayAttackActionPossibility();
                         }
                     }
                 }

@@ -87,13 +87,18 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         private static void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
-            for(int i = 0; i < actionsToDo.Count; i++)
+            Unit targetUnit;
+            foreach (var action in actionsToDo)
             {
-                actionsToDo[i].Score += HpChoiceMod(playableUnit, actionsToDo[i].Target.CurrentHealthPoints) +
-                                        DistanceChoiceMod(playableUnit, actionsToDo[i].Path) +
-                                        WeaponTypeChoiceMod(playableUnit, actionsToDo[i].Target.WeaponType) +
-                                        EnvironmentChoiceMod(playableUnit, actionsToDo[i].Target.CurrentTile) +
-                                        HarmChoiceMod(playableUnit, actionsToDo[i].Target);
+                if (action.Target.GetType() == typeof(Unit))
+                {
+                    targetUnit = (Unit) action.Target;
+                    action.Score += HpChoiceMod(playableUnit, targetUnit.CurrentHealthPoints) +
+                                    DistanceChoiceMod(playableUnit, action.Path) +
+                                    WeaponTypeChoiceMod(playableUnit, targetUnit.WeaponType) +
+                                    EnvironmentChoiceMod(playableUnit, targetUnit.CurrentTile) +
+                                    HarmChoiceMod(playableUnit, targetUnit);
+                }
             }
         }
         /// <summary>
@@ -170,16 +175,19 @@ namespace Game
                 }
             }
 
-            Unit ennemy = null;
+            Unit enemy = null;
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
                 for (int j = 0; j < optionMap.GetLength(1); j++)
                 {
                     for (int k = 0; k < potentialActions.Count; k++)
                     {
-                        ennemy = potentialActions[k].Target;
-                        //Each tile has a score based on the added number of turns it would take each player's unit to get there
-                        optionMap[i, j] += (int)Math.Ceiling(((double)(ennemy.MovementCosts[i, j] - 1) / (double)ennemy.Stats.MoveSpeed));
+                        if (enemy.GetType() == typeof(Unit))
+                        {
+                            enemy = (Unit)potentialActions[k].Target;
+                            //Each tile has a score based on the added number of turns it would take each player's unit to get there
+                            optionMap[i, j] += (int)Math.Ceiling(((double)(enemy.MovementCosts[i, j] - 1) / (double)enemy.Stats.MoveSpeed));
+                        }
                     }
                 }
             }
