@@ -90,9 +90,9 @@ namespace Game
                         gameUnit.gameObject.SetActive(false);
                         if (gameUnit.name == PROTAGONIST_NAME)
                         {
+                            //TODO: réussir à ne pas faire commencer la cinématique de début de niveau après celle de fin de niveau si Franklem est mort et faire finir le niveau
                             levelEnded = true;
                             levelFailed = true;
-                            //StartCoroutine(EndLevel());
                         }
                     }
                 }
@@ -269,7 +269,7 @@ namespace Game
             }
         }
 
-        public void CheckForComputerTurnSkip()
+        private void CheckForComputerTurnSkip()
         {
             if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is ComputerPlayer)
             {
@@ -312,7 +312,7 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerEndOfTurn()
+        private void CheckForCurrentPlayerEndOfTurn()
         {
             if (currentPlayer.HasNoMorePlayableUnits)
             {
@@ -321,7 +321,7 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerWin()
+        private void CheckForCurrentPlayerWin()
         {
             if (HasWon(currentPlayer))
             {
@@ -329,7 +329,7 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerLoss()
+        private void CheckForCurrentPlayerLoss()
         {
             if (currentPlayer.HaveAllUnitsDied())
             {
@@ -339,12 +339,12 @@ namespace Game
             }
         }
 
-        public bool HasWon(UnitOwner unitOwner)
+        private bool HasWon(UnitOwner unitOwner)
         {
             return players.Contains(unitOwner) && players.Count <= 1;
         }
 
-        public void GiveTurnToNextPlayer()
+        private void GiveTurnToNextPlayer()
         {
             isComputerPlaying = false;
             currentPlayer.MakeOwnedUnitsUnplayable();
