@@ -40,6 +40,7 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
+        
         private int levelTileUpdateKeeper = 0;
         
         private CinematicController cinematicController;
@@ -67,7 +68,10 @@ namespace Game
         private void Start()
         {
             Finder.SoundManager.StopCurrentMusic();
-            Finder.SoundManager.PlayMusic(backgroundMusic);
+            if (backgroundMusic != null)
+            {
+                Finder.SoundManager.PlayMusic(backgroundMusic);
+            }
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];

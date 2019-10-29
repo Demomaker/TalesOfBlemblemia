@@ -25,7 +25,6 @@ namespace Game
             movementCosts[from.x, from.y] = 0;
             return ComputeCosts(grid, movementCosts, from, unitIsEnemy);
         }
-        
         private static int[,] ComputeCosts(GridController grid, int[,] movementCosts, Vector2Int from, bool unitIsEnemy)
         {
             int costToMove = grid.GetTile(from.x, from.y).CostToMove;
@@ -42,7 +41,8 @@ namespace Game
             //Once all movements are calculated, the array with the cost to move to every cell is returned
             return movementCosts;
         }
-        
+
+        #region IsMovementPossible
         private static void IsRightMovementPossible(
             GridController grid, 
             int[,] movementCosts, 
@@ -116,9 +116,8 @@ namespace Game
                 ComputeCosts(grid, movementCosts, new Vector2Int(from.x,from.y-1), unitIsEnemy);
             }
         }
-
-
-
+        #endregion
+        
         public static List<Tile> PrepareFindPath(
             GridController grid, 
             int[,] movementCosts, 
@@ -134,7 +133,7 @@ namespace Game
                 //check for the closest available tile to target
                 
                 //Check left
-                currentPath = CheckLeftOfTarget(grid, movementCosts, from, to ,currentPath, unit);
+                currentPath = CheckLeftOfTarget(grid, movementCosts, from, to, currentPath, unit);
                 //Check right
                 currentPath = CheckRightOfTarget(grid, movementCosts, from, to, currentPath, unit);
                 //Check up
@@ -151,6 +150,7 @@ namespace Game
             
         }
 
+        #region CheckTargets
         private static List<Tile> CheckLeftOfTarget(
             GridController grid, 
             int[,] movementCosts, 
@@ -235,6 +235,7 @@ namespace Game
             }
             return currentPath;
         }
+        #endregion
 
         private static List<Tile> FindPath(
             GridController grid, 
@@ -245,7 +246,14 @@ namespace Game
             Unit unit
         )
         {
-            //Exit statement
+            //Exit statement if path impossible
+            if (CheckIfTileInaccessible(to, movementCosts))
+            {
+                List<Tile> emptyPath = new List<Tile>();
+                emptyPath.Add(grid.GetTile(from.x, from.y));
+                return emptyPath;
+            }
+            //Exit statement when path is found
             if (grid.GetTile(from.x, from.y).Equals(grid.GetTile(to.x, to.y)))
             {
                 path.Remove(null);
@@ -267,13 +275,15 @@ namespace Game
                     {
                         TileType lastTileType = lastTileInTurn.TileType;
                         grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).MakeObstacle();
-                        PrepareComputeCost(from, unit.IsEnemy);
+                        movementCosts = PrepareComputeCost(from, unit.IsEnemy);
                         var t = grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y);
                         grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).UnMakeObstacle(lastTileType);
-
-
-                        return FindPath(grid, movementCosts, new List<Tile>(), new Vector2Int(path[0].LogicalPosition.x,
-                            path[0].LogicalPosition.y), to, unit);
+                        int lastIndex = path.Count - 1;
+                        
+                        return FindPath(grid, movementCosts, new List<Tile>(), 
+                            new Vector2Int(path[0].LogicalPosition.x,path[0].LogicalPosition.y), 
+                            new Vector2Int(path[lastIndex].LogicalPosition.x,path[lastIndex].LogicalPosition.y), 
+                            unit);
                     }
                 }
 
@@ -281,26 +291,35 @@ namespace Game
             }
 
             path.Add(null);
-
-            int x = 0;
-            int y = 0;
             
-            //Check Left
-            (x,y) = CheckLeftMovement(grid, movementCosts, path, to, new Vector2Int(x,y), unit.IsEnemy);
+            Vector2Int target = Vector2Int.zero;
             
             //Check Right
-            (x,y) = CheckRightMovement(grid, movementCosts, path, to, new Vector2Int(x,y), unit.IsEnemy);
+            target = CheckRightMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
             
             //Check Up
-            (x,y) = CheckUpMovement(grid, movementCosts, path, to, new Vector2Int(x,y), unit.IsEnemy);
+            target = CheckUpMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
+            
+            //Check Left
+            target = CheckLeftMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
             
             //Check Down
-            (x,y) = CheckDownMovement(grid, movementCosts, path, to, new Vector2Int(x,y), unit.IsEnemy);
+            target = CheckDownMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
 
-            return FindPath(grid, movementCosts, path, from, new Vector2Int(x,y), unit);
+            return FindPath(grid, movementCosts, path, from, target, unit);
         }
 
-        private static (int,int) CheckDownMovement(
+        private static bool CheckIfTileInaccessible(Vector2Int to, int[,] movementCosts)
+        {
+            return movementCosts[to.x - 1, to.y] == Int32.MaxValue 
+                   && movementCosts[to.x, to.y - 1] == Int32.MaxValue 
+                   && movementCosts[to.x + 1, to.y] == Int32.MaxValue 
+                   && movementCosts[to.x, to.y + 1] == Int32.MaxValue;
+        }
+
+        #region CheckMovements
+        
+        private static Vector2Int CheckDownMovement(
             GridController grid, 
             int[,] movementCosts, 
             List<Tile> path, 
@@ -321,10 +340,10 @@ namespace Game
                     newPosition.y = to.y + 1;
                 }
             }
-            return (newPosition.x,newPosition.y);
+            return newPosition;
         }
 
-        private static (int,int) CheckUpMovement(
+        private static Vector2Int CheckUpMovement(
             GridController grid, 
             int[,] movementCosts, 
             List<Tile> path, 
@@ -345,10 +364,10 @@ namespace Game
                     newPosition.y = to.y - 1;
                 }
             }
-            return (newPosition.x, newPosition.y);
+            return newPosition;
         }
 
-        private static (int,int) CheckRightMovement(
+        private static Vector2Int CheckRightMovement(
             GridController grid, 
             int[,] movementCosts, 
             List<Tile> path, 
@@ -369,10 +388,10 @@ namespace Game
                     newPosition.y = to.y;
                 }
             }
-            return (newPosition.x,newPosition.y);
+            return newPosition;
         }
 
-        private static (int,int) CheckLeftMovement(
+        private static Vector2Int CheckLeftMovement(
             GridController grid, 
             int[,] movementCosts, 
             List<Tile> path, 
@@ -393,10 +412,107 @@ namespace Game
                     newPosition.y = to.y;
                 }
             }
-            return (newPosition.x, newPosition.y);
+            return newPosition;
+        }
+        
+        /*
+        private static Vector2Int CheckDownMovement(
+            GridController grid, 
+            int[,] movementCosts, 
+            List<Tile> path, 
+            Vector2Int to,
+            Vector2Int newPosition, 
+            bool unitIsEnemy
+        )
+        {
+            if (to.y + 1 < grid.NbLines && to.y + 1 >= 0 && movementCosts[to.x, to.y + 1] < movementCosts[to.x, to.y])
+            {
+                var tile = grid.GetTile(to.x, to.y + 1);
+                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
+                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                {
+                    path[path.Count - 1] = tile;
+
+                    newPosition.x = to.x;
+                    newPosition.y = to.y + 1;
+                }
+            }
+            return newPosition;
         }
 
+        private static Vector2Int CheckUpMovement(
+            GridController grid, 
+            int[,] movementCosts, 
+            List<Tile> path, 
+            Vector2Int to, 
+            Vector2Int newPosition, 
+            bool unitIsEnemy
+        )
+        {
+            if (to.y - 1 < grid.NbLines && to.y - 1 >= 0 && movementCosts[to.x, to.y - 1] < movementCosts[to.x, to.y])
+            {
+                var tile = grid.GetTile(to.x, to.y - 1);
+                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
+                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                {
+                    path[path.Count - 1] = tile;
 
+                    newPosition.x = to.x;
+                    newPosition.y = to.y - 1;
+                }
+            }
+            return newPosition;
+        }
+
+        private static Vector2Int CheckRightMovement(
+            GridController grid, 
+            int[,] movementCosts, 
+            List<Tile> path, 
+            Vector2Int to, 
+            Vector2Int newPosition, 
+            bool unitIsEnemy
+        )
+        {
+            if (to.x + 1 < grid.NbColumns && to.x + 1 >= 0 && movementCosts[to.x + 1, to.y] < movementCosts[to.x, to.y])
+            {
+                var tile = grid.GetTile(to.x + 1, to.y);
+                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
+                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                {
+                    path[path.Count - 1] = tile;
+
+                    newPosition.x = to.x + 1;
+                    newPosition.y = to.y;
+                }
+            }
+            return newPosition;
+        }
+
+        private static Vector2Int CheckLeftMovement(
+            GridController grid, 
+            int[,] movementCosts, 
+            List<Tile> path, 
+            Vector2Int to, 
+            Vector2Int newPosition, 
+            bool unitIsEnemy
+        )
+        {
+            if (to.x - 1 < grid.NbColumns && to.x - 1 >= 0 && movementCosts[to.x - 1, to.y] < movementCosts[to.x, to.y])
+            {
+                var tile = grid.GetTile(to.x - 1, to.y);
+                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
+                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                {
+                    path[path.Count - 1] = tile;
+
+                    newPosition.x = to.x - 1;
+                    newPosition.y = to.y;
+                }
+            }
+            return newPosition;
+        }*/
+        #endregion
+        
         public static List<Tile> GetPath(
             GridController grid, 
             int[,] movementCosts, 
@@ -406,8 +522,10 @@ namespace Game
             Unit unit
         )
         {
-            List <Tile> pathInOrder = FindPath(grid, movementCosts, path, from, to, unit);
-            pathInOrder.Reverse();
+            List <Tile> pathInOrder = FindPath(grid, PrepareComputeCost(from, unit.IsEnemy), new List<Tile>(), from, to, unit);
+            //List <Tile> pathInOrder = PrepareFindPath(grid, movementCosts, from, to, unit);
+            if (path != null)
+                pathInOrder.Reverse();
             return pathInOrder;
         }
 
