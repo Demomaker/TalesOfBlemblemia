@@ -292,8 +292,11 @@ namespace Game
 
             path.Add(null);
             
-            Vector2Int target = Vector2Int.zero;
-            
+            Vector2Int target = new Vector2Int(-1, -1);
+           
+            //Check Down
+            target = CheckDownMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
+
             //Check Right
             target = CheckRightMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
             
@@ -303,9 +306,6 @@ namespace Game
             //Check Left
             target = CheckLeftMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
             
-            //Check Down
-            target = CheckDownMovement(grid, movementCosts, path, to, target, unit.IsEnemy);
-
             return FindPath(grid, movementCosts, path, from, target, unit);
         }
 
@@ -318,21 +318,15 @@ namespace Game
         }
 
         #region CheckMovements
-        
-        private static Vector2Int CheckDownMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to,
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
+        private static Vector2Int CheckDownMovement(GridController grid, int[,] movementCosts, List<Tile> path, Vector2Int to, Vector2Int newPosition, bool unitIsEnemy)
         {
             if (to.y + 1 < grid.NbLines && to.y + 1 >= 0 && movementCosts[to.x, to.y + 1] < movementCosts[to.x, to.y])
             {
                 var tile = grid.GetTile(to.x, to.y + 1);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                //The first tile in the path should be available
+                if (path.Count == 1 && !tile.IsAvailable)
+                    return newPosition;
+                if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {
                     path[path.Count - 1] = tile;
 
@@ -343,20 +337,15 @@ namespace Game
             return newPosition;
         }
 
-        private static Vector2Int CheckUpMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to, 
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
+        private static Vector2Int CheckUpMovement(GridController grid, int[,] movementCosts, List<Tile> path, Vector2Int to, Vector2Int newPosition, bool unitIsEnemy)
         {
             if (to.y - 1 < grid.NbLines && to.y - 1 >= 0 && movementCosts[to.x, to.y - 1] < movementCosts[to.x, to.y])
             {
                 var tile = grid.GetTile(to.x, to.y - 1);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                //The first tile in the path should be available
+                if (path.Count == 1 && !tile.IsAvailable)
+                    return newPosition;
+                if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {
                     path[path.Count - 1] = tile;
 
@@ -367,20 +356,15 @@ namespace Game
             return newPosition;
         }
 
-        private static Vector2Int CheckRightMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to, 
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
+        private static Vector2Int CheckRightMovement(GridController grid, int[,] movementCosts, List<Tile> path, Vector2Int to, Vector2Int newPosition, bool unitIsEnemy)
         {
             if (to.x + 1 < grid.NbColumns && to.x + 1 >= 0 && movementCosts[to.x + 1, to.y] < movementCosts[to.x, to.y])
             {
                 var tile = grid.GetTile(to.x + 1, to.y);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                //The first tile in the path should be available
+                if (path.Count == 1 && !tile.IsAvailable)
+                    return newPosition;
+                if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {
                     path[path.Count - 1] = tile;
 
@@ -391,20 +375,15 @@ namespace Game
             return newPosition;
         }
 
-        private static Vector2Int CheckLeftMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to, 
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
+        private static Vector2Int CheckLeftMovement(GridController grid, int[,] movementCosts, List<Tile> path, Vector2Int to, Vector2Int newPosition, bool unitIsEnemy)
         {
             if (to.x - 1 < grid.NbColumns && to.x - 1 >= 0 && movementCosts[to.x - 1, to.y] < movementCosts[to.x, to.y])
             {
                 var tile = grid.GetTile(to.x - 1, to.y);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
+                //The first tile in the path should be available
+                if (path.Count == 1 && !tile.IsAvailable)
+                    return newPosition;
+                if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {
                     path[path.Count - 1] = tile;
 
@@ -414,103 +393,6 @@ namespace Game
             }
             return newPosition;
         }
-        
-        /*
-        private static Vector2Int CheckDownMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to,
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
-        {
-            if (to.y + 1 < grid.NbLines && to.y + 1 >= 0 && movementCosts[to.x, to.y + 1] < movementCosts[to.x, to.y])
-            {
-                var tile = grid.GetTile(to.x, to.y + 1);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
-                {
-                    path[path.Count - 1] = tile;
-
-                    newPosition.x = to.x;
-                    newPosition.y = to.y + 1;
-                }
-            }
-            return newPosition;
-        }
-
-        private static Vector2Int CheckUpMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to, 
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
-        {
-            if (to.y - 1 < grid.NbLines && to.y - 1 >= 0 && movementCosts[to.x, to.y - 1] < movementCosts[to.x, to.y])
-            {
-                var tile = grid.GetTile(to.x, to.y - 1);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
-                {
-                    path[path.Count - 1] = tile;
-
-                    newPosition.x = to.x;
-                    newPosition.y = to.y - 1;
-                }
-            }
-            return newPosition;
-        }
-
-        private static Vector2Int CheckRightMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to, 
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
-        {
-            if (to.x + 1 < grid.NbColumns && to.x + 1 >= 0 && movementCosts[to.x + 1, to.y] < movementCosts[to.x, to.y])
-            {
-                var tile = grid.GetTile(to.x + 1, to.y);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
-                {
-                    path[path.Count - 1] = tile;
-
-                    newPosition.x = to.x + 1;
-                    newPosition.y = to.y;
-                }
-            }
-            return newPosition;
-        }
-
-        private static Vector2Int CheckLeftMovement(
-            GridController grid, 
-            int[,] movementCosts, 
-            List<Tile> path, 
-            Vector2Int to, 
-            Vector2Int newPosition, 
-            bool unitIsEnemy
-        )
-        {
-            if (to.x - 1 < grid.NbColumns && to.x - 1 >= 0 && movementCosts[to.x - 1, to.y] < movementCosts[to.x, to.y])
-            {
-                var tile = grid.GetTile(to.x - 1, to.y);
-                if (path.Last() == null || path.Last().CostToMove > tile.CostToMove 
-                    && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy))
-                {
-                    path[path.Count - 1] = tile;
-
-                    newPosition.x = to.x - 1;
-                    newPosition.y = to.y;
-                }
-            }
-            return newPosition;
-        }*/
         #endregion
         
         public static List<Tile> GetPath(
