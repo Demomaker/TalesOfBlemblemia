@@ -31,10 +31,5 @@ namespace Game
             mainScreen.Enter();
             Finder.SoundManager.PlayMusic(Finder.SoundClips.MainMenuMusic);
         }
-
-        private void OnDestroy()
-        {
-            Finder.SoundManager.StopCurrentMusic();
-        }
     }
 }

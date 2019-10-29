@@ -88,7 +88,7 @@ namespace Game
                     if (gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus)
                     {
                         gameUnit.gameObject.SetActive(false);
-                        if (gameUnit.name == PROTAGONIST_NAME)
+                        if (gameUnit.name == Constants.FRANKLEM_NAME)
                         {
                             //TODO: réussir à ne pas faire commencer la cinématique de début de niveau après celle de fin de niveau si Franklem est mort et faire finir le niveau
                             levelEnded = true;
