@@ -40,6 +40,7 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
+        
         private int levelTileUpdateKeeper = 0;
         
         private CinematicController cinematicController;
