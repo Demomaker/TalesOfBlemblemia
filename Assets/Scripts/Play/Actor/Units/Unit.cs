@@ -28,7 +28,7 @@ namespace Game
         #region Properties
         public int CurrentHealthPoints
         {
-            get { return currentHealthPoints; }
+            get => currentHealthPoints;
             private set
             {
                 currentHealthPoints = value;
@@ -307,7 +307,7 @@ namespace Game
             if (adjacentTile != null)
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Recruit, target));
         }
-        public bool RecruitUnit()
+        private bool RecruitUnit()
         {
             if (IsRecruitable)
             {
