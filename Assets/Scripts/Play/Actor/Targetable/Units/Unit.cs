@@ -27,8 +27,13 @@ namespace Game
         private int[,] movementCosts;
         private int movesLeft;
         private int tileUpdateKeeper;
-        private bool isMoving;
-        private bool isAttacking;
+        private bool isMoving = false;
+        private bool isAttacking = false;
+        private bool isDodging = false;
+        private bool isBeingHurt = false;
+        private bool isResting = false;
+        private bool isGoingToDie = false;
+        private Animator animator;
         #endregion
         
         #region Properties
@@ -98,6 +103,52 @@ namespace Game
             onUnitMove = new OnUnitMove();
             onUnitDeath = new OnUnitDeath();
             onPlayerUnitLoss = new OnPlayerUnitLoss();
+            animator = GetComponent<Animator>();
+
+        }
+
+        private void OnEnable()
+        {
+            OnHurt.Notify += Hurt;
+            OnDodge.Notify += MakeDodge;
+        }
+
+        private void OnDisable()
+        {
+            OnHurt.Notify -= Hurt;
+            OnDodge.Notify -= MakeDodge;
+        }
+
+        public void Hurt(Unit unit)
+        {
+            unit.SetIsBeingHurt(true);
+        }
+
+        public void MakeDodge(Unit unit)
+        {
+            unit.SetIsDodging(true);
+        }
+
+        public void SetIsBeingHurt(bool isBeingHurt)
+        {
+            this.isBeingHurt = isBeingHurt;
+        }
+
+        public void SetIsDodging(bool isDodging)
+        {
+            this.isDodging = isDodging;
+        }
+
+        private void FixedUpdate()
+        {
+            if (isMoving) isResting = false;
+            if (animator == null) return;
+            animator.SetBool(Constants.AnimationProperties.IS_MOVING, isMoving);
+            animator.SetBool(Constants.AnimationProperties.IS_ATTACKING, isAttacking);
+            animator.SetBool(Constants.AnimationProperties.IS_DODGING, isDodging);
+            animator.SetBool(Constants.AnimationProperties.IS_BEING_HURT, isBeingHurt);
+            animator.SetBool(Constants.AnimationProperties.IS_RESTING, isResting);
+            animator.SetBool(Constants.AnimationProperties.IS_GOING_TO_DIE, isGoingToDie);
         }
         
         public void ResetTurnStats()
@@ -195,9 +246,11 @@ namespace Game
         }
         public override void Die()
         {
+            isGoingToDie = true;
             onUnitDeath.Publish(this);
             if(playerType == PlayerType.Ally)
                 onPlayerUnitLoss.Publish(this);
+            isGoingToDie = false;
             base.Die();
         }
         #endregion
@@ -206,7 +259,8 @@ namespace Game
         public void Rest()
         {
             CurrentHealthPoints += HpGainedByResting;
-            Debug.Log("Unit rested!");
+            isResting = true;
+            
             HasActed = true;
         }
 
@@ -248,11 +302,11 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                onDodge.Publish(this);
+                onDodge.Publish((Unit)target);
             }
             else
             {
-                onHurt.Publish(this);
+                onHurt.Publish((Unit)target);
             }
             if (!isCountering && ((Unit)target).WeaponType == WeaponAdvantage)
             {
@@ -260,7 +314,6 @@ namespace Game
             }
             
             target.CurrentHealthPoints -= damage;
-            
             counter = 0;
             
             while (counter < duration)
@@ -272,6 +325,8 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
+            ((Unit)target).SetIsBeingHurt(false);
+            ((Unit)target).SetIsDodging(false);
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
@@ -298,7 +353,7 @@ namespace Game
                 playerType = PlayerType.Ally;
                 HumanPlayer.Instance.AddOwnedUnit(this);
                 GetComponent<DialogueTrigger>()?.TriggerDialogue();
-                Debug.Log(name + " has been recruited!");
+                
             }
             return IsRecruitable;
         }
@@ -323,7 +378,7 @@ namespace Game
         }
         private void Heal()
         {
-            Debug.Log("Unit healed by : " + HpGainedByHealing.ToString());
+            
             CurrentHealthPoints += HpGainedByHealing;
         }
         public void HealDistantUnit(Unit target)
