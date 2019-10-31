@@ -66,12 +66,13 @@ namespace Game
          
          public void LoadLevel(string levelname)
          {
-             if(lastLoadedLevelName != null)
-                 UnloadLevel(lastLoadedLevelName);
-             lastLoadedLevelName = levelname;
              if(lastLevelCoroutine != null)
                  StopCoroutine(lastLevelCoroutine);
              lastLevelCoroutine = StartCoroutine(LoadLevelCoroutine(levelname));
+             
+             if(lastLoadedLevelName != null)
+                 UnloadLevel(lastLoadedLevelName);
+             lastLoadedLevelName = levelname;
          }
     
          private IEnumerator LoadLevelCoroutine(string levelname)
@@ -81,11 +82,11 @@ namespace Game
              string lastSceneName = SceneManager.GetActiveScene().name;
              if(!SceneManager.GetSceneByName(levelname).isLoaded)
                  yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
-             if (temp != null)
-             SceneManager.MoveGameObjectToScene(temp, SceneManager.GetSceneByName(levelname));
-             if (temp2 != null)
-             SceneManager.MoveGameObjectToScene(temp2, SceneManager.GetSceneByName(levelname));
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
+             if (temp != null)
+                 SceneManager.MoveGameObjectToScene(temp, SceneManager.GetSceneByName(levelname));
+             if (temp2 != null)
+                 SceneManager.MoveGameObjectToScene(temp2, SceneManager.GetSceneByName(levelname));
              GameObject[] lastObjects = SceneManager.GetSceneByName(lastSceneName).GetRootGameObjects();
              
              foreach (GameObject gameObject in lastObjects)
