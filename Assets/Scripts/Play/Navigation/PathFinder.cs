@@ -311,10 +311,17 @@ namespace Game
 
         private static bool CheckIfTileInaccessible(Vector2Int to, int[,] movementCosts)
         {
-            return movementCosts[to.x - 1, to.y] == Int32.MaxValue 
-                   && movementCosts[to.x, to.y - 1] == Int32.MaxValue 
-                   && movementCosts[to.x + 1, to.y] == Int32.MaxValue 
-                   && movementCosts[to.x, to.y + 1] == Int32.MaxValue;
+            bool tileIsInaccessible = true;
+            if (tileIsInaccessible && to.x > 0)
+                tileIsInaccessible = movementCosts[to.x - 1, to.y] == Int32.MaxValue;
+            if (tileIsInaccessible && to.y > 0)
+                tileIsInaccessible = movementCosts[to.x, to.y - 1] == Int32.MaxValue;
+            if (tileIsInaccessible && to.x < movementCosts.GetLength(0) - 1)
+                tileIsInaccessible = movementCosts[to.x + 1, to.y] == Int32.MaxValue;
+            if (tileIsInaccessible && to.y < movementCosts.GetLength(1) - 1)
+                tileIsInaccessible = movementCosts[to.x, to.y + 1] == Int32.MaxValue;
+            
+            return tileIsInaccessible;
         }
 
         #region CheckMovements
