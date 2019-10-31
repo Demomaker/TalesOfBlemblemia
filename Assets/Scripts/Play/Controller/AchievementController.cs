@@ -27,7 +27,7 @@ namespace Game
             Achievements.Add(new Achievement(Constants.AchievementName.SAVE_ALL_RECRUITABLES_FROM_ALTERNATE_PATH,  () => HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >= Constants.NUMBER_OF_RECRUITABLES_ON_ALTERNATE_PATH));
             Achievements.Add(new Achievement(Constants.AchievementName.FINISH_CAMPAIGN_WITHOUT_UNIT_LOSS,  () => !HumanPlayer.Instance.HasEverLostAUnit && Harmony.Finder.GameController.LevelsCompleted.Count >= Harmony.Finder.GameController.Levels.Count ));
             //Achievement de test, TODO: Enlever dans la version officielle
-            //Achievements.Add(new Achievement("1 == 1!",  () => 1 == 1));
+            Achievements.Add(new Achievement("1 == 1!",  () => 1 == 1));
             nameText.text = Constants.ACHIEVEMENT_GET_STRING;
         }
 
