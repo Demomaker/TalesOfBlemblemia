@@ -141,6 +141,7 @@ namespace Game
 
         private void FixedUpdate()
         {
+            if (isMoving) isResting = false;
             if (animator == null) return;
             animator.SetBool(Constants.AnimationProperties.IS_MOVING, isMoving);
             animator.SetBool(Constants.AnimationProperties.IS_ATTACKING, isAttacking);
@@ -259,7 +260,7 @@ namespace Game
         {
             CurrentHealthPoints += HpGainedByResting;
             isResting = true;
-            Debug.Log("Unit rested!");
+            
             HasActed = true;
         }
         
@@ -302,11 +303,11 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                onDodge.Publish(target);
+                onDodge.Publish((Unit)target);
             }
             else
             {
-                onHurt.Publish(target);
+                onHurt.Publish((Unit)target);
             }
             if (!isCountering && ((Unit)target).WeaponType == WeaponAdvantage)
             {
@@ -325,8 +326,8 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
-            target.SetIsBeingHurt(false);
-            target.SetIsDodging(false);
+            ((Unit)target).SetIsBeingHurt(false);
+            ((Unit)target).SetIsDodging(false);
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
@@ -353,7 +354,7 @@ namespace Game
                 playerType = PlayerType.Ally;
                 HumanPlayer.Instance.AddOwnedUnit(this);
                 GetComponent<DialogueTrigger>()?.TriggerDialogue();
-                Debug.Log(name + " has been recruited!");
+                
             }
             return IsRecruitable;
         }
@@ -378,7 +379,7 @@ namespace Game
         }
         private void Heal()
         {
-            Debug.Log("Unit healed by : " + HpGainedByHealing.ToString());
+            
             CurrentHealthPoints += HpGainedByHealing;
         }
         public void HealDistantUnit(Unit target)

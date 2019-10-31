@@ -44,7 +44,6 @@ namespace Game
             }
         }
         public static AudioClips AudioClips => FindWithTag<AudioClips>(Tags.SOUND_MANAGER);
-        public static AnimationManager AnimationManager => FindWithTag<AnimationManager>(Tags.ANIMATION_MANAGER);
         
         //Author : Antoine Lessard
         public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);

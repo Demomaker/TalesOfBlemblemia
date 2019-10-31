@@ -45,10 +45,6 @@ public class LevelEntry : MonoBehaviour
 
     private void Update()
     {
-        if (representedLevelName == Constants.LEVEL_3_SCENE_NAME)
-        {
-            //Debug.Log("Name of level completed is null? : " + (Finder.GameController.NameOfLevelCompleted == null) + " -> CanBeClicked = " + (CanBeClicked));
-        }
         var colors = GetComponent<Button>().colors;
         if (!CanBeClicked || string.IsNullOrEmpty(representedLevelName))
         {

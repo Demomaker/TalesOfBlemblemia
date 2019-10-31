@@ -7,7 +7,6 @@
         public const string PAUSE_CONTROLLER = "PauseController";
         public const string NAVIGATOR = "Navigator";
         public const string SOUND_MANAGER = "SoundManager";
-        public const string ANIMATION_MANAGER = "AnimationManager";
         public const string GAME_CONTROLLER_TAG = "GameController";
         public const string GRID_CONTROLLER_TAG = "GridController";
     }
