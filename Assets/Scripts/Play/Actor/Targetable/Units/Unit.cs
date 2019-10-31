@@ -263,8 +263,7 @@ namespace Game
             
             HasActed = true;
         }
-        
-        
+
         public void AttackDistantTargetable(Targetable target)
         {
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);

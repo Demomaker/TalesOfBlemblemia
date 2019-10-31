@@ -13,9 +13,7 @@ namespace Game
         protected const WeaponType SPEAR_ADVANTAGE = WeaponType.Sword;
         
         [SerializeField] UnitStats weaponStats;
-        /// <summary>
-        /// Les bonus que l'arme va offrir à une unité
-        /// </summary>
+        
         public UnitStats WeaponStats => weaponStats;
 
         /// <summary>
