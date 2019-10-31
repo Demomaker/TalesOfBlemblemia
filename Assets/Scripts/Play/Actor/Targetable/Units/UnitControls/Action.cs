@@ -13,10 +13,10 @@ namespace Game
         
         public float Score { get; set; }
         
-        private Unit target;
-        public Unit Target => target;
+        private Targetable target;
+        public Targetable Target => target;
 
-        public Action(List<Tile> path, ActionType actionType = ActionType.Nothing, Unit target = null, float score = 0f)
+        public Action(List<Tile> path, ActionType actionType = ActionType.Nothing, Targetable target = null, float score = 0f)
         {
             this.path = path;
             this.actionType = actionType;

@@ -7,10 +7,9 @@ using Random = UnityEngine.Random;
 namespace Game
 {
     //Authors: Jérémie Bertrand, Zacharie Lavigne
-    public class Unit : MonoBehaviour
+    public class Unit : Targetable
     {
         #region Serialized fields
-        [SerializeField] private Vector2Int initialPosition;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
         [SerializeField] private UnitGender gender;
@@ -24,10 +23,8 @@ namespace Game
         private OnUnitDeath onUnitDeath;
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
-        private Tile currentTile;
         private Weapon weapon;
         private int[,] movementCosts;
-        private int currentHealthPoints;
         private int movesLeft;
         private int tileUpdateKeeper;
         private bool isMoving;
@@ -35,18 +32,6 @@ namespace Game
         #endregion
         
         #region Properties
-        public int CurrentHealthPoints
-        {
-            get { return currentHealthPoints; }
-            private set
-            {
-                currentHealthPoints = value;
-                if (NoHealthLeft)
-                {
-                    Die();
-                }
-            }
-        }
         public int HpGainedByResting
         {
             get
@@ -85,17 +70,6 @@ namespace Game
                 tileUpdateKeeper = Harmony.Finder.LevelController.LevelTileUpdateKeeper;
             }
         }
-        public Tile CurrentTile
-        {
-            get => currentTile;
-            set
-            {
-                if (currentTile != null) currentTile.UnlinkUnit();
-                currentTile = value;
-                if (value != null) value.LinkUnit(this);
-                Harmony.Finder.LevelController.IncrementTileUpdate();
-            }
-        }
         public bool IsEnemy => playerType == PlayerType.Enemy;
         public bool IsPlayer => playerType == PlayerType.Ally;
         public bool IsRecruitable => playerType == PlayerType.None;
@@ -104,7 +78,6 @@ namespace Game
         public WeaponType WeaponAdvantage => weapon.Advantage;
         public int MovesLeft => movesLeft;
         public bool HasActed { get; set; }
-        public bool NoHealthLeft => CurrentHealthPoints <= 0;
         public int AttackRange => 1;
 
         public UnitGender Gender => gender;
@@ -126,18 +99,7 @@ namespace Game
             onUnitDeath = new OnUnitDeath();
             onPlayerUnitLoss = new OnPlayerUnitLoss();
         }
-        protected void Start()
-        {
-            StartCoroutine(InitPosition());
-        }
         
-        private IEnumerator InitPosition()
-        {
-            yield return new WaitForEndOfFrame();
-            var tile = gridController.GetTile(initialPosition.x, initialPosition.y);
-            transform.position = tile.WorldPosition;
-            CurrentTile = tile;
-        }
         public void ResetTurnStats()
         {
             HasActed = false;
@@ -178,7 +140,8 @@ namespace Game
                 Tile finalTile = null;
                 for (int i = 0; i < path.Count; i++)
                 {
-                    finalTile = path[i];
+                    if (path[i] != null)
+                        finalTile = path[i];
                     float counter = 0;
 
                     if (path.IndexOf(finalTile) != path.Count - 1)
@@ -202,7 +165,7 @@ namespace Game
                 onUnitMove.Publish(this);
 
                 CurrentTile = finalTile;
-                transform.position = currentTile.WorldPosition;
+                if (currentTile != null) transform.position = currentTile.WorldPosition;
                 isMoving = false;
             }
 
@@ -216,12 +179,12 @@ namespace Game
                 }
                 if (action.ActionType == ActionType.Recruit && action.Target != null)
                 {
-                    if (!RecruitUnit(action.Target))
+                    if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit)action.Target))
                         Rest();
                 }
                 if (action.ActionType == ActionType.Heal && action.Target != null)
                 {
-                    if (!HealUnit(action.Target))
+                    if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit)action.Target))
                         Rest();
                 }
                 else
@@ -229,6 +192,13 @@ namespace Game
                     Rest();
                 }
             }
+        }
+        public override void Die()
+        {
+            onUnitDeath.Publish(this);
+            if(playerType == PlayerType.Ally)
+                onPlayerUnitLoss.Publish(this);
+            base.Die();
         }
         #endregion
         
@@ -240,22 +210,14 @@ namespace Game
             HasActed = true;
         }
         
-        public void Die()
-        {
-            onUnitDeath.Publish(this);
-            if(playerType == PlayerType.Ally)
-                onPlayerUnitLoss.Publish(this);
-            currentTile.UnlinkUnit();
-            Destroy(gameObject);
-        }
         
-        public void AttackDistantUnit(Unit target)
+        public void AttackDistantTargetable(Targetable target)
         {
             var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
             if (adjacentTile != null)
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Attack, target));
         }
-        public bool Attack(Unit target, bool isCountering = false)
+        public bool Attack(Targetable target, bool isCountering = false)
         {
             if (TargetIsInRange(target))
             {
@@ -264,7 +226,7 @@ namespace Game
             }
             return false;
         }
-        private IEnumerator Attack(Unit target, bool isCountering, float duration)
+        private IEnumerator Attack(Targetable target, bool isCountering, float duration)
         {
             if (isAttacking) yield break;
             isAttacking = true;
@@ -282,7 +244,7 @@ namespace Game
                 yield return null;
             }
             
-            float hitRate = Stats.HitRate - target.currentTile.DefenseRate;
+            float hitRate = Stats.HitRate - target.CurrentTile.DefenseRate;
             int damage = 0;
             if (Random.value <= hitRate)
             {
@@ -293,12 +255,13 @@ namespace Game
             {
                 onHurt.Publish(this);
             }
-            if (!isCountering && target.WeaponType == WeaponAdvantage)
+            if (!isCountering && ((Unit)target).WeaponType == WeaponAdvantage)
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
             
             target.CurrentHealthPoints -= damage;
+            
             counter = 0;
             
             while (counter < duration)
@@ -313,8 +276,8 @@ namespace Game
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
-            if (!isCountering && !target.NoHealthLeft)
-                target.Attack(this, true);
+            if (target.GetType() == typeof(Unit) && !isCountering && !target.NoHealthLeft)
+                ((Unit)target).Attack(this, true);
             
             
             if (!isCountering)
@@ -371,13 +334,17 @@ namespace Game
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Heal, target));
         }
 
-        public bool TargetIsInMovementRange(Unit target)
+        public bool TargetIsInMovementRange(Targetable target)
         {
-            return gridController.FindAvailableAdjacentTile(target.currentTile, this) != null;
+            if (currentTile.IsWithinRange(target.CurrentTile, 1))
+                return true;
+            return gridController.FindAvailableAdjacentTile(target.CurrentTile, this) != null;
         }
-        public bool TargetIsInRange(Unit target)
+        public bool TargetIsInRange(Targetable target)
         {
-            return currentTile.IsWithinRange(target.currentTile, AttackRange);
+            if (target != null && currentTile != null)
+                return currentTile.IsWithinRange(target.CurrentTile, AttackRange);
+            return false;
         }
         #endregion
         
