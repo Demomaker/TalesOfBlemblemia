@@ -4,15 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MainController
-  - Navigator
-  - SaveController
-  - AnimationManager
+  - SoundManager
   - GridController
   - LevelController
   - DialogueUi
   - UiPortrait
-  - SoundManager
   layers:
   - Default
   - TransparentFX
@@ -49,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Characters
+    uniqueID: 18170363
     locked: 0
