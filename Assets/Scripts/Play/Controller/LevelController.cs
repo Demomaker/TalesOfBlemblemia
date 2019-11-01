@@ -156,7 +156,6 @@ namespace Game
             bool fourthConditionAchieved = true;
             if (completeIfAllEnemiesDefeated)
             {
-                //TODO: Uncomment below when Turns are available
                 if(!ComputerPlayer.Instance.HaveAllUnitsDied()) firstConditionAchieved = false;
             }
             if (completeIfPointAchieved)
@@ -180,7 +179,6 @@ namespace Game
 
         private void CheckIfLevelFailed()
         {
-            //TODO: Uncomment below when Turns are available
             levelFailed =
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
                 (defeatIfProtectedIsKilled && TargetToProtectHasDied()) ||
