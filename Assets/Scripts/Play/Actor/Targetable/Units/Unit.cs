@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +11,7 @@ namespace Game
     public class Unit : Targetable
     {
         #region Serialized fields
+        [SerializeField] private UnitInfos unitInfos;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
         [SerializeField] private UnitGender gender;
@@ -24,6 +26,12 @@ namespace Game
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private Weapon weapon;
+
+        private UIController uiController;
+
+        /// <summary>
+        /// Array representing the movement cost needed to move to every tile on the grid
+        /// </summary>
         private int[,] movementCosts;
         private int movesLeft;
         private int tileUpdateKeeper;
@@ -87,10 +95,13 @@ namespace Game
 
         public UnitGender Gender => gender;
 
+        public UnitInfos UnitInfos => unitInfos;
+
         #endregion
         
         private void Awake()
         {
+            uiController = Harmony.Finder.UIController;
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -119,21 +130,25 @@ namespace Game
             OnDodge.Notify -= MakeDodge;
         }
 
+        [UsedImplicitly]
         public void Hurt(Unit unit)
         {
             unit.SetIsBeingHurt(true);
         }
 
+        [UsedImplicitly]
         public void MakeDodge(Unit unit)
         {
             unit.SetIsDodging(true);
         }
 
+        [UsedImplicitly]
         public void SetIsBeingHurt(bool isBeingHurt)
         {
             this.isBeingHurt = isBeingHurt;
         }
 
+        [UsedImplicitly]
         public void SetIsDodging(bool isDodging)
         {
             this.isDodging = isDodging;
@@ -225,8 +240,14 @@ namespace Game
                 if (action.ActionType == ActionType.Attack && action.Target != null)
                 {
                     onAttack.Publish(this);
-                    if (!Attack(action.Target))
+                    if (TargetIsInRange(action.Target))
+                    {
+                        yield return Attack((Unit)action.Target);
+                    }
+                    else
+                    {
                         Rest();
+                    }
                 }
                 if (action.ActionType == ActionType.Recruit && action.Target != null)
                 {
@@ -270,16 +291,36 @@ namespace Game
             if (adjacentTile != null)
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Attack, target));
         }
-        public bool Attack(Targetable target, bool isCountering = false)
+        public Coroutine Attack(Targetable target, bool isCountering = false)
         {
-            if (TargetIsInRange(target))
+            Coroutine AttackRoutineHandle;
+            
+            if(target.GetType() == typeof(Door))
             {
-                StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
-                return true;
+                uiController.PrepareBattleReport(
+                    this.Stats.maxHealthPoints, 
+                    this.CurrentHealthPoints,
+                    ((Door)target).BaseHealth,
+                    target.CurrentHealthPoints, 
+                    IsEnemy
+                );
             }
-            return false;
+            else
+            {
+                uiController.PrepareBattleReport(
+                    this.Stats.maxHealthPoints, 
+                    this.CurrentHealthPoints,
+                    ((Unit)target).classStats.maxHealthPoints,
+                    target.CurrentHealthPoints, 
+                    IsEnemy
+                );
+            }
+            
+            AttackRoutineHandle = StartCoroutine(Attack((Unit)target, isCountering, Constants.ATTACK_DURATION));
+            return AttackRoutineHandle;
         }
-        private IEnumerator Attack(Targetable target, bool isCountering, float duration)
+
+        private IEnumerator Attack(Unit target, bool isCountering, float duration)
         {
             if (isAttacking) yield break;
             isAttacking = true;
@@ -314,6 +355,7 @@ namespace Game
             }
             
             target.CurrentHealthPoints -= damage;
+            yield return uiController.LaunchBattleReport(IsEnemy, target.Stats.maxHealthPoints, target.CurrentHealthPoints);
             counter = 0;
             
             while (counter < duration)
@@ -330,9 +372,8 @@ namespace Game
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
-            if (target.GetType() == typeof(Unit) && !isCountering && !target.NoHealthLeft)
-                ((Unit)target).Attack(this, true);
-            
+            if (!isCountering && !target.NoHealthLeft)
+                StartCoroutine(target.Attack(this, true, Constants.ATTACK_DURATION));
             
             if (!isCountering)
             {
