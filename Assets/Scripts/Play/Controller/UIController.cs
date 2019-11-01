@@ -62,7 +62,7 @@ namespace Game
         private Animator enemyAnimator;
         private static readonly int IS_ATTACKING = Animator.StringToHash("IsAttacking");
 
-        private bool animationIsplaying = false;
+        private bool animationIsPlaying = false;
 
         public bool IsBattleReportActive => battleReports.activeSelf;
 
@@ -147,34 +147,34 @@ namespace Game
 
         private IEnumerator EnemyAttackAnimation(int maxHealthPoint, int currentHealthPoint)
         {
-            while (animationIsplaying)
+            while (animationIsPlaying)
             {
                 yield return null;
             }
-            animationIsplaying = true;
+            animationIsPlaying = true;
             enemyAnimator.SetBool(IS_ATTACKING, true);
             yield return new WaitForSeconds(0.5f);
             EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
             yield return  new WaitForSeconds(0.5f);
             enemyAnimator.SetBool(IS_ATTACKING, false);
             yield return new WaitForSeconds(0.5f);
-            animationIsplaying = false;
+            animationIsPlaying = false;
         }
 
         private IEnumerator PlayerAttackAnimation(int maxHealthPoint, int currentHealthPoint)
         {
-            while (animationIsplaying)
+            while (animationIsPlaying)
             {
                 yield return null;
             } 
-            animationIsplaying = true;
+            animationIsPlaying = true;
             playerAnimator.SetBool(IS_ATTACKING,true);
             yield return new WaitForSeconds(0.5f);
             EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
             yield return new WaitForSeconds(0.5f);
             playerAnimator.SetBool(IS_ATTACKING,false);
             yield return new WaitForSeconds(0.5f);
-            animationIsplaying = false;
+            animationIsPlaying = false;
         }
 
         private void LaunchEnemyAttackAnimation()
