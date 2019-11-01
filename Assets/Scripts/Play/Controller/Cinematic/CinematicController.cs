@@ -1,51 +1,45 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Game
 {
+    // Authors: Jérémie Bertrand
     public class CinematicController : MonoBehaviour
     {
-        public const float DEFAULT_CAMERA_ZOOM = 8.5f;
-        public const float DEFAULT_CAMERA_Z_POSITION = -10;
-        private Camera camera = null;
-        private Transform camTransform = null;
-        private DialogueManager dialogueManager;
-        private bool isPlayingACutScene = false;
-        private GameObject eventSystemGameObject;
-
         [SerializeField] private GameObject dialogueUI;
-        [SerializeField] private Transform initialPosition;
-        [SerializeField] private CameraAction[] startActions;
-        [SerializeField] private CameraAction[] endActions;
 
-        public bool IsPlayingACutScene
+        private Camera camera;
+        private DialogueManager dialogueManager;
+        private bool isPlayingACinematic = false;
+        private GameObject eventSystemGameObject;
+        private CameraController cameraController;
+        private Transform camTransform;
+
+        public bool IsPlayingACinematic
         {
-            get
-            {
-                return isPlayingACutScene;
-            }
+            get => isPlayingACinematic;
             private set 
             { 
-                isPlayingACutScene = value;
-                if (isPlayingACutScene)
+                isPlayingACinematic = value;
+                if (isPlayingACinematic)
                 {
-                    camera.GetComponent<CameraController>()?.DisableControls();
+                    cameraController.DisableControls();
                 }
                 else
                 {
-                    camera.GetComponent<CameraController>()?.EnableControls();
+                    cameraController.EnableControls();
                 }
-                eventSystemGameObject.GetComponent<EventSystem>().enabled = !isPlayingACutScene;
+                eventSystemGameObject.GetComponent<EventSystem>().enabled = !isPlayingACinematic;
             }
         }
 
         private void Awake()
         {
             camera = Camera.main;
-            camTransform = camera.gameObject.transform;
-            camTransform.position = initialPosition.position + new Vector3(0,0,DEFAULT_CAMERA_Z_POSITION);
-            camera.orthographicSize = 4;
+            cameraController = camera.GetComponent<CameraController>();
+            camTransform = camera.transform;
             dialogueManager = FindObjectOfType<DialogueManager>();
             eventSystemGameObject = EventSystem.current.gameObject;
         }
@@ -53,55 +47,59 @@ namespace Game
         private void Start()
         {
             if (dialogueUI != null) dialogueUI.SetActive(true);
-            StartCoroutine(PlayCameraActions(startActions));
         }
 
-        private IEnumerator PlayCameraActions(CameraAction[] cameraActions)
+        private IEnumerator PlayCameraActions(IEnumerable<CameraAction> cameraActions)
         {
-            IsPlayingACutScene = true;
-            for (int i = 0; i < cameraActions.Length; i++)
+            IsPlayingACinematic = true;
+
+            foreach (var cameraAction in cameraActions)
             {
-                var target = cameraActions[i];
-                var from = camTransform.position;
-                var to = target.CameraTarget.position + new Vector3(0, 0, DEFAULT_CAMERA_Z_POSITION);
-                var duration = target.Duration;
-                
-                for (float t = 0; t < duration; t += Time.deltaTime) {
-                    camTransform.position = Vector3.Lerp(from, to, t / duration);
-                    yield return null;
-                }
-                
-                camTransform.position = to;
-                dialogueManager.StartDialogue(target.Dialogue);
-                while (dialogueManager.IsDisplayingDialogue)
-                {
-                    yield return null;
-                }
+                yield return StartCoroutine(PlayCameraAction(cameraAction));
             }
-            var startPos = camTransform.position;
-            var startSize = camera.orthographicSize;
-            var endSize = DEFAULT_CAMERA_ZOOM;
-            float dur = 0.5f;
-            for (float t = 0; t < dur; t += Time.deltaTime) {
-                camTransform.position = Vector3.Lerp(startPos,  new Vector3(0,0, DEFAULT_CAMERA_Z_POSITION), t / dur);
-                camera.orthographicSize = Mathf.Lerp(startSize, endSize, t / dur);
+
+            IsPlayingACinematic = false;
+        }
+
+
+        private IEnumerator PlayCameraAction(CameraAction cameraAction)
+        {
+            if (cameraAction.CameraTarget == null) yield break;
+
+            var startPosition = camTransform.position;
+            var endPosition = new Vector3(cameraAction.CameraTarget.position.x, cameraAction.CameraTarget.position.y, startPosition.z);
+            var startZoom = camera.orthographicSize;
+            var endZoom = cameraAction.CameraZoom;
+            var duration = cameraAction.Duration;
+
+            for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
+            {
+                camTransform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
+                camera.orthographicSize = Mathf.Lerp(startZoom, endZoom, elapsedTime / duration);
                 yield return null;
             }
 
-            camTransform.position = new Vector3(0, 0, DEFAULT_CAMERA_Z_POSITION);
-            camera.orthographicSize = endSize;
+            camTransform.position = endPosition;
+            camera.orthographicSize = endZoom;
 
-            IsPlayingACutScene = false;
+            if (cameraAction.HasADialog)
+            {
+                yield return StartCoroutine(StartCinematicDialogue(cameraAction.Dialogue));
+            }
         }
 
-        public void LaunchCinematic(CameraAction[] actions)
+        private IEnumerator StartCinematicDialogue(Dialogue dialogue)
         {
-            StartCoroutine(PlayCameraActions(actions));
+            dialogueManager.StartDialogue(dialogue);
+            while (dialogueManager.IsDisplayingDialogue)
+            {
+                yield return null;
+            }
         }
 
-        public void LaunchEndCinematic()
+        public void LaunchCinematic(Cinematic cinematic)
         {
-            StartCoroutine(PlayCameraActions(endActions));
+            StartCoroutine(PlayCameraActions(cinematic.CameraActions));
         }
     }
 }
