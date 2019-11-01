@@ -1,73 +1,52 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Game;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Finder = Harmony.Finder;
 
+[RequireComponent(typeof(Button))]
 public class LevelEntry : MonoBehaviour
 {
-    private List<string> previousLevelNames;
-    private bool IsFirstLevel => representedLevelName == Finder.GameController.StartingLevelName;
-    private bool CanBeClicked => IsFirstLevel && Finder.GameController.NameOfLevelCompleted == null || PreviousLevelWasCompleted();
-    [SerializeField] string representedLevelName;
-    public List<string> PreviousLevelNames
+    [SerializeField] private string representedLevelName;
+    private Button levelEntryButton = null;
+    private bool isFirstLevel => representedLevelName == Finder.GameController.StartingLevelName;
+    private bool canBeClicked => (isFirstLevel && Finder.GameController.NameOfLevelCompleted == null || PreviousLevelWasCompleted()) && !string.IsNullOrEmpty(representedLevelName);
+    
+    private void Awake()
     {
-        get
-        {
-            List<string> retval = new List<string>();
-            List<Level> currentLevels = Finder.GameController.Levels.FindAll(level => level.LevelName == representedLevelName);
-            if (currentLevels != null)
-            {
-                for (int i = 0; i < currentLevels.Count; i++)
-                {
-                    if (currentLevels[i] != null)
-                        retval.Add(currentLevels[i].PreviousLevel);
-                }
-                return retval;
-            }
-
-            return null;
-        }
+        levelEntryButton = GetComponent<Button>();
+        if(levelEntryButton == null) UnityEngine.Debug.LogError(name + ": Button is null!");
     }
+    
+    private void Start()
+    {
+        var colors = levelEntryButton.colors;
+        colors.highlightedColor = !canBeClicked ? Color.red : Color.green;
+        levelEntryButton.colors = colors;
+    }
+
+    private List<string> GetPreviousLevelNames()
+    {
+        var currentLevels = Finder.GameController.Levels.FindAll(level => level.LevelName == representedLevelName);
+        if (currentLevels == null) return null;
+        var returnValue = new List<string>();
+        currentLevels.ForEach(currentLevel => returnValue.Add(currentLevel.PreviousLevel));
+        return returnValue;
+    }
+    
     public void OnLevelEntry()
     {
-        if (CanBeClicked && !string.IsNullOrEmpty(representedLevelName))
+        if (canBeClicked)
         {
-            
             EventSystem.current.SetSelectedGameObject(null);
             Finder.GameController.LoadLevel(representedLevelName);
         }
     }
-
-    private void Update()
-    {
-        var colors = GetComponent<Button>().colors;
-        if (!CanBeClicked || string.IsNullOrEmpty(representedLevelName))
-        {
-            colors.pressedColor = Color.red;
-        }
-        else
-        {
-            colors.pressedColor = Color.green;
-        }
-        GetComponent<Button>().colors = colors;
-    }
-
+    
     private bool PreviousLevelWasCompleted()
     {
-        if(PreviousLevelNames != null)
-        for (int i = 0; i < PreviousLevelNames.Count; i++)
-        {
-            if (PreviousLevelNames[i] == Finder.GameController.NameOfLevelCompleted)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        var previousLevelNames = GetPreviousLevelNames();
+        return previousLevelNames != null && previousLevelNames.Any(previousLevelName => previousLevelName == Finder.GameController.NameOfLevelCompleted);
     }
 }
