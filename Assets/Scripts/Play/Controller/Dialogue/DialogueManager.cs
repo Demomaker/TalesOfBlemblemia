@@ -102,6 +102,4 @@ public class DialogueManager : MonoBehaviour
         animator.SetBool("IsOpen",false);
         isDisplayingDialogue = false;
     }
-
-  
 }

@@ -123,8 +123,7 @@ namespace Game
             {
                 Finder.GameController.LevelsCompleted.Add(levelName);
             }
-            cinematicController.LaunchEndCinematic();
-            while (cinematicController.IsPlayingACutScene)
+            while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
             }
@@ -173,6 +172,7 @@ namespace Game
             }
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
+            if (levelCompleted) onLevelVictory.Publish(this);
         }
 
         private void CheckIfLevelFailed()

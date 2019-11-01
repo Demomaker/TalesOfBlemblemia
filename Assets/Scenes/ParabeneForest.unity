@@ -9593,6 +9593,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 466477352}
   m_CullTransparentMesh: 0
+--- !u!1001 &473409139
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1268969281238496396, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_Name
+      value: SoundManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f183aca2613f51148ae7f62fdf261a94, type: 3}
 --- !u!1 &473613524
 GameObject:
   m_ObjectHideFlags: 0
@@ -41999,7 +42068,7 @@ PrefabInstance:
     - target: {fileID: 7654283363107742311, guid: 61f0a95a01dd3f649824ca9d243b63b1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 7654283363107742311, guid: 61f0a95a01dd3f649824ca9d243b63b1,
         type: 3}
@@ -42788,12 +42857,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 386cff33803d9e742ab386963032c720, type: 3}
---- !u!4 &896080598 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9184210282831072268, guid: 386cff33803d9e742ab386963032c720,
-    type: 3}
-  m_PrefabInstance: {fileID: 896080597}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &896192805
 GameObject:
   m_ObjectHideFlags: 0
@@ -61299,7 +61362,7 @@ PrefabInstance:
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: pointToAchieve.x
-      value: 14
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
@@ -61320,7 +61383,7 @@ PrefabInstance:
         type: 3}
       propertyPath: backgroundMusic
       value: 
-      objectReference: {fileID: 8300000, guid: 663e35c2820ba764ebac852c75d67895, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: backgroundMusicOption
@@ -74579,66 +74642,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueUI: {fileID: 27686938}
-  initialPosition: {fileID: 1200009458}
-  startActions:
-  - cameraTarget: {fileID: 2147117697}
-    duration: 2
-    cameraZoom: 6.21
-    quotes:
-    - name: Story
-      sentence: Our heroes have now finally reached the forest of Parabene.
-    - name: Story
-      sentence: The forest which neighbours the Capital of Blemblemia is a very dense
-        forest
-    - name: Story
-      sentence: which is being exploited in order to collect the very unique trees
-        that grows in it and which produce very sturdy wood.
-    - name: Story
-      sentence: "Sadly our heroes have no time to rest and marvel at the sight of
-        the forest as they are still being chased by Morks\u2026"
-  - cameraTarget: {fileID: 896080598}
-    duration: 0.2
-    cameraZoom: 4
-    quotes:
-    - name: Franklem
-      sentence: "Hurry up Myriam. We\u2019re almost there\u2026"
-  - cameraTarget: {fileID: 1983102087}
-    duration: 0.2
-    cameraZoom: 4
-    quotes:
-    - name: Myriam
-      sentence: "*heavy breathing* I\u2019m\u2026right\u2026behind\u2026you!"
-    - name: Myriam
-      sentence: Look Franklem! This man looks like he need our help.
-  - cameraTarget: {fileID: 1639890201655499797}
-    duration: 2
-    cameraZoom: 5.17
-    quotes:
-    - name: Bram
-      sentence: Argh you darn creature! You think a small cut like that will stop
-        me?!
-  - cameraTarget: {fileID: 896080598}
-    duration: 0.4
-    cameraZoom: 4
-    quotes:
-    - name: Franklem
-      sentence: "You\u2019re right let\u2019s go help him quick!"
-  endActions:
-  - cameraTarget: {fileID: 896080598}
-    duration: 0.3
-    cameraZoom: 4
-    quotes:
-    - name: Franklem
-      sentence: "there\u2019s to many of them\u2026We have to go warn the king!"
-    - name: Story
-      sentence: Having pushed back the hordes for as long as possible,
-    - name: Story
-      sentence: Franklem and Myriam make there way toward the forest,
-    - name: Story
-      sentence: running toward the forest of Parabene and leaving behind he city,
-    - name: Story
-      sentence: hoping the could hold back the swarm long enough for Franklem to seek
-        aid.
 --- !u!1001 &1983102086
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74723,12 +74726,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b572034a329bf2e4fb68fd20bacb6189, type: 3}
---- !u!4 &1983102087 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8211765993680045796, guid: b572034a329bf2e4fb68fd20bacb6189,
-    type: 3}
-  m_PrefabInstance: {fileID: 1983102086}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1987966355
 GameObject:
   m_ObjectHideFlags: 0
@@ -76619,9 +76616,3 @@ MonoBehaviour:
         castle!
     - name: Bram
       sentence: You save me life my prince. My axe is yours!
---- !u!4 &1639890201655499797 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7617506599882242046, guid: f9341cfb1ebb657419148032b51ab674,
-    type: 3}
-  m_PrefabInstance: {fileID: 1639890201655499794}
-  m_PrefabAsset: {fileID: 0}
