@@ -19,6 +19,7 @@ namespace Game
         private Navigator navigator;
         private SaveController saveController;
         private Canvas newGameScreen;
+        private GameController gameController;
 
         private int saveSlotSelectedNumber;
 
@@ -26,6 +27,7 @@ namespace Game
         {
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
+            gameController = Finder.GameController;
             newGameScreen = GetComponent<Canvas>();
             saveSlotSelectedNumber = 0;
         }
@@ -52,8 +54,8 @@ namespace Game
 
             saveController.UpdateSave(saveSlotSelectedNumber);
             saveController.SaveSelected = saveSlotSelectedNumber;
-            //CHARGER NOUVELLE SCENE
             DontDestroyOnLoad(saveController);
+            DontDestroyOnLoad(gameController);
             SceneManager.LoadScene("ParabeneForest");
             SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
         }

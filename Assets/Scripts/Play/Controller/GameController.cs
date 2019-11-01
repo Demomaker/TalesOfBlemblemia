@@ -105,7 +105,6 @@ namespace Game
          {
              choiceRange = choiceRangePerDifficulty[difficultyLevel];
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
-             DontDestroyOnLoad(gameObject);
          }
      }
 
