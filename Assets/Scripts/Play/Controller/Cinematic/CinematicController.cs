@@ -8,14 +8,12 @@ namespace Game
     // Authors: Jérémie Bertrand
     public class CinematicController : MonoBehaviour
     {
-        [SerializeField] private GameObject dialogueUI;
-
         private Camera camera;
         private DialogueManager dialogueManager;
-        private bool isPlayingACinematic = false;
-        private GameObject eventSystemGameObject;
+        private bool isPlayingACinematic;
         private CameraController cameraController;
         private Transform camTransform;
+        private GameObject dialogueUI;
 
         public bool IsPlayingACinematic
         {
@@ -31,17 +29,16 @@ namespace Game
                 {
                     cameraController.EnableControls();
                 }
-                eventSystemGameObject.GetComponent<EventSystem>().enabled = !isPlayingACinematic;
             }
         }
 
         private void Awake()
         {
+            dialogueUI = GameObject.FindWithTag("DialogueUi");
             camera = Camera.main;
             cameraController = camera.GetComponent<CameraController>();
             camTransform = camera.transform;
-            dialogueManager = FindObjectOfType<DialogueManager>();
-            eventSystemGameObject = EventSystem.current.gameObject;
+            dialogueManager = Harmony.Finder.DialogueManager;
         }
 
         private void Start()

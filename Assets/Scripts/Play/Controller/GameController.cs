@@ -38,6 +38,7 @@ namespace Game
          {
              InstantiateLevelList();
              ResetCompletedLevels();
+             DontDestroyOnLoad(this);
          }
 
          private void InstantiateLevelList()
@@ -78,14 +79,16 @@ namespace Game
     
          private IEnumerator LoadLevelCoroutine(string levelname)
          {
+             if (levelname != Constants.OVERWORLD_SCENE_NAME)
+             {
+                 SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME);
+             }
              List<GameObject> gameObjectsToKeep = GetObjectsToAlwaysKeep();
-             string lastSceneName = SceneManager.GetActiveScene().name;
              if(!SceneManager.GetSceneByName(levelname).isLoaded)
                  yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
              MoveObjectsToScene(gameObjectsToKeep, SceneManager.GetSceneByName(levelname));
              MakeSceneObjectsActive(SceneManager.GetSceneByName(levelname));
-             MakeSceneObjectsActive(SceneManager.GetSceneByName(lastSceneName), false);
          }
 
          private void MakeSceneObjectsActive(Scene scene, bool active = true)

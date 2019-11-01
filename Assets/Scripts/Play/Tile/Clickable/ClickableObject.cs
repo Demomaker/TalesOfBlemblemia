@@ -20,6 +20,7 @@ namespace Game
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic) return;
             ClickButton clickButton = ClickButton.LeftClick;
             if (eventData.button == PointerEventData.InputButton.Right)
             {
