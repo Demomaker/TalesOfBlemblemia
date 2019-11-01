@@ -302,13 +302,13 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                onDodge.Publish((Unit)target);
+                //onDodge.Publish((Unit)target);
             }
             else
             {
-                onHurt.Publish((Unit)target);
+                //onHurt.Publish((Unit)target);
             }
-            if (!isCountering && ((Unit)target).WeaponType == WeaponAdvantage)
+            if (!isCountering && target.GetType() == typeof(Unit) && ((Unit)target).WeaponType == WeaponAdvantage)
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
@@ -325,8 +325,8 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
-            ((Unit)target).SetIsBeingHurt(false);
-            ((Unit)target).SetIsDodging(false);
+            //TODO verifier si cast est valide ((Unit)target).SetIsBeingHurt(false);
+            //TODO verifier si cast est valide ((Unit)target).SetIsDodging(false);
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter

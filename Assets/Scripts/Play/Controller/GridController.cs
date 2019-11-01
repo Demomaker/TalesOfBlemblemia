@@ -13,6 +13,7 @@ using UnityEngine.UI;
         [SerializeField] private Sprite attackableTileSprite = null;
         [SerializeField] private Sprite healableTileSprite = null;
         [SerializeField] private Sprite recruitableTileSprite = null;
+        [SerializeField] private Sprite protectableTileSprite = null;
         public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
@@ -20,6 +21,7 @@ using UnityEngine.UI;
         public Sprite AttackableTileSprite => attackableTileSprite;
         public Sprite HealableTileSprite => healableTileSprite;
         public Sprite RecruitableTileSprite => recruitableTileSprite;
+        public Sprite ProtectableTileSprite => protectableTileSprite;
 
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
@@ -79,10 +81,12 @@ using UnityEngine.UI;
                                 tile.DisplayHealActionPossibility();
                             }
                         }
-                        //TODO portes a distance apparaissent rouge
-                        else if (tile.LinkedDoor != null  || linkedUnit.TargetIsInRange(tile.LinkedDoor))
+                        else if (tile.LinkedDoor != null)
                         {
-                            tile.DisplayAttackActionPossibility();
+                            if (!tile.LinkedDoor.IsEnemyTarget)
+                                tile.DisplayAttackActionPossibility();
+                            else
+                                tile.DisplayProtectable();
                         }
                     }
                 }

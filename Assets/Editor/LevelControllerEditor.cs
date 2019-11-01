@@ -20,7 +20,7 @@ namespace Game
         private SerializedProperty defeatIfProtectedIsKilled;
         private SerializedProperty defeatIfNotCompleteLevelInCertainAmountOfTurns;
         private SerializedProperty pointToAchieve;
-        private SerializedProperty unitToProtect;
+        private SerializedProperty targetsToProtect;
         private SerializedProperty enemyToDefeat;
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
@@ -41,11 +41,10 @@ namespace Game
             completeIfSurvivedCertainNumberOfTurns = serializedObject.FindProperty("completeIfSurvivedCertainNumberOfTurns");
             completeIfCertainEnemyDefeated = serializedObject.FindProperty("completeIfCertainEnemyDefeated");
             defeatIfAllPlayerUnitsDied = serializedObject.FindProperty("defeatIfAllPlayerUnitsDied");
-            defeatIfNotCompleteLevelInCertainAmountOfTurns =
-                serializedObject.FindProperty("defeatIfNotCompleteLevelInCertainAmountOfTurns");
+            defeatIfNotCompleteLevelInCertainAmountOfTurns = serializedObject.FindProperty("defeatIfNotCompleteLevelInCertainAmountOfTurns");
             defeatIfProtectedIsKilled = serializedObject.FindProperty("defeatIfProtectedIsKilled");
             pointToAchieve = serializedObject.FindProperty("pointToAchieve");
-            unitToProtect = serializedObject.FindProperty("unitToProtect");
+            targetsToProtect = serializedObject.FindProperty("targetsToProtect");
             enemyToDefeat = serializedObject.FindProperty("enemyToDefeat");
             numberOfTurnsBeforeCompletion = serializedObject.FindProperty("numberOfTurnsBeforeCompletion");
             numberOfTurnsBeforeDefeat = serializedObject.FindProperty("numberOfTurnsBeforeDefeat");
@@ -122,8 +121,7 @@ namespace Game
                 defeatIfProtectedIsKilled.boolValue =
                     EditorGUILayout.Toggle("Defeat If Protected Is Killed", defeatIfProtectedIsKilled.boolValue);
                 if (defeatIfProtectedIsKilled.boolValue)
-                    unitToProtect.objectReferenceValue = EditorGUILayout.ObjectField("Unit To Protect",
-                        unitToProtect.objectReferenceValue, typeof(Unit), true);
+                    EditorGUILayout.PropertyField(targetsToProtect,true);
             }
             
                 

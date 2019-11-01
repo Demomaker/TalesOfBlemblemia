@@ -26,7 +26,7 @@ namespace Game
         
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
-        public bool LinkedDoorCanBeAttackedByPlayer => IsOccupiedByADoor && IsPossibleAction;
+        public bool LinkedDoorCanBeAttackedByPlayer => IsOccupiedByADoor && IsPossibleAction && !linkedDoor.IsEnemyTarget;
         public bool LinkedUnitCanBeRecruitedByPlayer => IsOccupiedByAUnit && linkedUnit.IsRecruitable && IsPossibleAction;
         public bool LinkedUnitCanBeHealedByPlayer => IsOccupiedByAUnit && !linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
@@ -106,6 +106,11 @@ namespace Game
         {
             tileImage.sprite = gridController.HealableTileSprite;
         }
+
+        public void DisplayProtectable()
+        {
+            tileImage.sprite = gridController.ProtectableTileSprite;
+        }
         
         public void HideActionPossibility()
         {
@@ -172,7 +177,6 @@ namespace Game
             linkedUnit = null;
             return true;
         }
-
     }
 }
 
