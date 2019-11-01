@@ -52,6 +52,7 @@ namespace Game
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
+        private OnLevelChange onLevelChange;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -66,11 +67,12 @@ namespace Game
         {
             cinematicController = GetComponent<CinematicController>();
             onLevelVictory = new OnLevelVictory();
-            Debug.Log("Level name : " + levelName);
+            onLevelChange = new OnLevelChange();
         }
 
         private void Start()
         {
+            onLevelChange.Publish(this);
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -152,7 +154,6 @@ namespace Game
             bool fourthConditionAchieved = true;
             if (completeIfAllEnemiesDefeated)
             {
-                //TODO: Uncomment below when Turns are available
                 if(!ComputerPlayer.Instance.HaveAllUnitsDied()) firstConditionAchieved = false;
             }
             if (completeIfPointAchieved)
@@ -177,7 +178,6 @@ namespace Game
 
         private void CheckIfLevelFailed()
         {
-            //TODO: Uncomment below when Turns are available
             levelFailed =
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
                 (defeatIfProtectedIsKilled && unitToProtect.NoHealthLeft) ||
