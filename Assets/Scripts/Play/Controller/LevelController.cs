@@ -6,6 +6,7 @@ using System.Linq;
 using Game;
 using Harmony;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Finder = Harmony.Finder;
 
@@ -34,7 +35,7 @@ namespace Game
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
         [SerializeField] private Unit enemyToDefeat = null;
-        [SerializeField] private Unit unitToProtect = null;
+        [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
@@ -260,12 +261,21 @@ namespace Game
         {
             levelFailed =
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
-                (defeatIfProtectedIsKilled && unitToProtect.NoHealthLeft) ||
+                (defeatIfProtectedIsKilled && TargetToProtectHasDied()) ||
                 (defeatIfAllPlayerUnitsDied &&
                  HumanPlayer.Instance.HaveAllUnitsDied()
                 ) || (GameObject.Find(PROTAGONIST_NAME) == null || GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
         }
-        
+
+        private bool TargetToProtectHasDied()
+        {
+            foreach (var target in targetsToProtect)
+            {
+                if (target != null && target.NoHealthLeft) return true;
+            }
+            return false;
+        }
+
         private void Play(UnitOwner unitOwner)
         {
             unitOwner.CheckUnitDeaths();
@@ -296,14 +306,15 @@ namespace Game
                 OnTurnGiven();
             }
         }
+        
         private void InitializePlayersAndUnits()
         {
-            UnitOwner player1 = HumanPlayer.Instance;
-            UnitOwner player2 = ComputerPlayer.Instance;
+            HumanPlayer player1 = HumanPlayer.Instance;
+            ComputerPlayer player2 = ComputerPlayer.Instance;
 
             units = FindObjectsOfType<Unit>();
 
-            GiveUnits(units, false, player1, player2);
+            GiveUnits(units, player1, player2);
 
             player1.UpdateNumberOfStartingOwnedUnits();
             player1.OnNewLevel();
@@ -313,7 +324,7 @@ namespace Game
             players.Add(player2);
         }
 
-        private void GiveUnits(Unit[] units, bool isEnemy, UnitOwner player, UnitOwner aiPlayer)
+        private void GiveUnits(Unit[] units, HumanPlayer player, ComputerPlayer aiPlayer)
         {
             for (int i = 0; i < units.Length; i++)
             {
@@ -327,6 +338,10 @@ namespace Game
                     aiPlayer.AddOwnedUnit(units[i]);
                     player.AddEnemyUnit(units[i]);
                 }
+            }
+            foreach (var target in targetsToProtect)
+            {
+                aiPlayer.AddTarget(target);
             }
         }
 
