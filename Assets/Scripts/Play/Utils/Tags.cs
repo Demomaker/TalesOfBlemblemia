@@ -9,5 +9,6 @@
         public const string SOUND_MANAGER = "SoundManager";
         public const string GAME_CONTROLLER_TAG = "GameController";
         public const string GRID_CONTROLLER_TAG = "GridController";
+        public const string ACHIEVEMENT_CONTROLLER_TAG = "AchievementController";
     }
 }

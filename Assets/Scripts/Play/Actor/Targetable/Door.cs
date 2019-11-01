@@ -7,6 +7,8 @@ namespace Game
     {
         [SerializeField] private int baseHealth = 1;
 
+        public int BaseHealth => baseHealth;
+
         protected override void Start()
         {
             if (baseHealth < 1)

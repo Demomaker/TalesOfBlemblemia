@@ -9,6 +9,11 @@ TagManager:
   - LevelController
   - DialogueUi
   - UiPortrait
+  - MainController
+  - Navigator
+  - SaveController
+  - PauseController
+  - AchievementController
   layers:
   - Default
   - TransparentFX
@@ -18,7 +23,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Achievements
   - 
   - 
   - 

@@ -14,6 +14,8 @@ namespace Game
         private static ComputerPlayer instance = null;
         private List<Targetable> targetsToDestroy;
         
+        private UIController uiController;
+
         public static ComputerPlayer Instance
         {
             get
@@ -28,6 +30,7 @@ namespace Game
 
         private ComputerPlayer()
         {
+            uiController = Harmony.Finder.UIController;
             targetsToDestroy = new List<Targetable>();  
         }
 
@@ -38,9 +41,14 @@ namespace Game
         
         public IEnumerator PlayUnits()
         {
-            for (int i = 0; i < ownedUnits.Count; i++)
+            foreach (var unit in ownedUnits)
             {
-                var currentUnit = ownedUnits[i];
+                while (uiController.IsBattleReportActive)
+                {
+                    yield return null;
+                } 
+                var currentUnit = unit;
+                     
                 if (!currentUnit.HasActed)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
@@ -50,7 +58,7 @@ namespace Game
                     }
                     base.CheckUnitDeaths();
                 }
-            } 
+            }
         }
     }
 }

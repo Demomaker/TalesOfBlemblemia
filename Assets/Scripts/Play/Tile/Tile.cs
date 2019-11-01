@@ -142,6 +142,11 @@ namespace Game
             tileType = previousType;
         }
 
+        public void OnCursorEnter()
+        {
+            Harmony.Finder.UIController.ModifyPlayerUi(this);
+        }
+
         public void LinkTargetable(Targetable targetable)
         {
             if (targetable.GetType() == typeof(Unit))
