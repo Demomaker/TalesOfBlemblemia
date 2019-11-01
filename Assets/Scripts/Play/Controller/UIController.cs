@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Threading.Tasks;
 using Harmony;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -57,6 +58,7 @@ namespace Game
 
 
         private const string UNREACHABLE_TILE_TEXT = "Unreachable";
+        private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
 
         private Animator playerAnimator;
         private Animator enemyAnimator;
@@ -153,11 +155,11 @@ namespace Game
             }
             animationIsPlaying = true;
             enemyAnimator.SetBool(IS_ATTACKING, true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
-            yield return  new WaitForSeconds(0.5f);
+            yield return  new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             enemyAnimator.SetBool(IS_ATTACKING, false);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             animationIsPlaying = false;
         }
 
@@ -169,24 +171,15 @@ namespace Game
             } 
             animationIsPlaying = true;
             playerAnimator.SetBool(IS_ATTACKING,true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             playerAnimator.SetBool(IS_ATTACKING,false);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             animationIsPlaying = false;
         }
 
-        private void LaunchEnemyAttackAnimation()
-        {
-            enemyAnimator.SetBool(IS_ATTACKING,false);
-        }
-
-        private void StopPlayerAttackAnimation()
-        {
-            playerAnimator.SetBool(IS_ATTACKING, false);
-        }
-
+        [UsedImplicitly]
         public void DeactivateBattleReport()
         {
             battleReports.SetActive(false);
