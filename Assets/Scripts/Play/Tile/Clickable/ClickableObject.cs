@@ -53,7 +53,7 @@ namespace Game
                 {
                     if (!gridControllerSelectedUnit.TargetIsInRange(tile.LinkedUnit))
                     {
-                        gridControllerSelectedUnit.AttackDistantUnit(tile.LinkedUnit);
+                        gridControllerSelectedUnit.AttackDistantTargetable(tile.LinkedUnit);
                     }
                     else
                     {
@@ -67,7 +67,7 @@ namespace Game
                 }
                 else if (tile.LinkedDoorCanBeAttackedByPlayer)
                 {
-                    if (!gridControllerSelectedUnit.Attack(tile.LinkedDoor))
+                    if (gridControllerSelectedUnit.TargetIsInRange(tile.LinkedDoor))
                         gridControllerSelectedUnit.AttackDistantTargetable(tile.LinkedDoor);
                     if (tile.LinkedDoor.NoHealthLeft)
                     {

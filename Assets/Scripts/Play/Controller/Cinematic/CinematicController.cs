@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace Game
 {
@@ -16,7 +17,8 @@ namespace Game
         private GameObject dialogueUI;
 
         //[SerializeField] private GameObject dialogueUI;
-        [SerializeField] private Transform initialPosition;
+        [FormerlySerializedAs("initialPosition")] 
+        [SerializeField] private Transform initialPositionCam;
         [SerializeField] private CameraAction[] startActions;
         [SerializeField] private CameraAction[] endActions;
 
@@ -45,7 +47,7 @@ namespace Game
         {
             camera = Camera.main;
             camTransform = camera.gameObject.transform;
-            camTransform.position = initialPosition.position + new Vector3(0,0,DEFAULT_CAMERA_Z_POSITION);
+            camTransform.position = initialPositionCam.position + new Vector3(0,0,DEFAULT_CAMERA_Z_POSITION);
             camera.orthographicSize = 4;
             dialogueManager = Harmony.Finder.DialogueManager;
             dialogueUI = GameObject.Find("DialogueUI");
