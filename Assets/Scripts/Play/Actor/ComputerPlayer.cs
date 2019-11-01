@@ -11,7 +11,8 @@ namespace Game
     public class ComputerPlayer : UnitOwner
     {
         private static ComputerPlayer instance = null;
-        
+        private UIController uiController;
+
         public static ComputerPlayer Instance
         {
             get
@@ -26,18 +27,19 @@ namespace Game
 
         private ComputerPlayer()
         {
-        }
-
-        public override void CheckUnitDeaths()
-        {
-            base.CheckUnitDeaths();
+            uiController = Harmony.Finder.UIController;
         }
 
         public IEnumerator PlayUnits()
         {
-            for (int i = 0; i < ownedUnits.Count; i++)
+            foreach (var unit in ownedUnits)
             {
-                var currentUnit = ownedUnits[i];
+                while (uiController.IsBattleReportActive)
+                {
+                    yield return null;
+                } 
+                var currentUnit = unit;
+                     
                 if (!currentUnit.HasActed)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits);
@@ -47,7 +49,7 @@ namespace Game
                     }
                     base.CheckUnitDeaths();
                 }
-            } 
+            }
         }
     }
 }

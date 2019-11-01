@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Harmony;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Author: Pierre-Luc Maltais et Jérémie Bertrand
 //Parts of this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
 //https://www.youtube.com/watch?v=_nRzoTzeyxU
 namespace Game
@@ -12,34 +13,17 @@ namespace Game
     [Findable("DialogueManager")]
     public class DialogueManager : MonoBehaviour
     {
-
-        /*[SerializeField] private Text nameText;
-        [SerializeField] private Text dialogueText;
-        [SerializeField] private Animator animator;*/
         [SerializeField] private Texture[] textures;
-
-        private bool skipTypingCoroutine = false;
-        private bool isDisplayingDialogue = false;
-        private bool isTyping = false;
+        [SerializeField] private Text nameText;
+        [SerializeField] private Text dialogueText;
+        [SerializeField] private Animator animator;
+        [SerializeField] private RawImage portrait;
+        
+        private bool skipTypingCoroutine;
+        private bool isDisplayingDialogue;
+        private bool isTyping;
         private Queue<Quote> sentences;
-        private Text nameText;
-        private Text dialogueText;
-        private Animator animator;
-
-        public void Start()
-        {
-            try
-            {
-                nameText = GameObject.Find("DialogueName").GetComponent<Text>();
-                dialogueText = GameObject.Find("DialogueText").GetComponent<Text>();
-                animator = GameObject.Find("DialogueBox").GetComponent<Animator>();
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Couldn't find the component");
-            }
-            
-        }
+        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
 
         public bool IsDisplayingDialogue => isDisplayingDialogue;
 
@@ -47,7 +31,7 @@ namespace Game
         {
             isDisplayingDialogue = true;
             sentences = new Queue<Quote>();
-            animator.SetBool("IsOpen",true);
+            animator.SetBool(IS_OPEN,true);
             
             sentences.Clear();
 
@@ -61,7 +45,6 @@ namespace Game
 
         private void ChangePortrait(Texture texture)
         {
-            RawImage portrait = GameObject.FindWithTag("UiPortrait").GetComponent<RawImage>();
             portrait.texture = texture;
         }
 
@@ -78,6 +61,7 @@ namespace Game
             }
         }
 
+        [UsedImplicitly]
         public void DisplayNextSentence()
         {
             if(isTyping) return;
@@ -97,7 +81,6 @@ namespace Game
                     break;
                 }
             }
-            
             StartCoroutine(TypeSentence(quote.Sentence));
         }
 
@@ -122,7 +105,7 @@ namespace Game
         
         private void EndDialogue()
         {
-            animator.SetBool("IsOpen",false);
+            animator.SetBool(IS_OPEN,false);
             isDisplayingDialogue = false;
         }
     }

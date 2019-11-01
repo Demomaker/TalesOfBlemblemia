@@ -226,8 +226,14 @@ namespace Game
                 if (action.ActionType == ActionType.Attack && action.Target != null)
                 {
                     onAttack.Publish(this);
-                    if (!Attack(action.Target))
+                    if (TargetIsInRange(action.Target))
+                    {
+                        yield return Attack(action.Target);
+                    }
+                    else
+                    {
                         Rest();
+                    }
                 }
                 if (action.ActionType == ActionType.Recruit && action.Target != null)
                 {
@@ -270,25 +276,21 @@ namespace Game
             if (adjacentTile != null)
                 MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Attack, target));
         }
-        public bool Attack(Unit target, bool isCountering = false)
+        public Coroutine Attack(Unit target, bool isCountering = false)
         {
-            if (TargetIsInRange(target))
-            {
-                if (!isCountering)
-                {
-                    uiController.PrepareBattleReport(
-                        this.Stats.maxHealthPoints, 
-                        this.CurrentHealthPoints,
-                        target.Stats.maxHealthPoints,
-                        target.CurrentHealthPoints, 
-                        IsEnemy
-                    );
-                }
-                StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
-                return true;
-            }
-            return false;
+            Coroutine AttackRoutineHandle;
+            
+            uiController.PrepareBattleReport(
+                this.Stats.maxHealthPoints, 
+                this.CurrentHealthPoints,
+                target.Stats.maxHealthPoints,
+                target.CurrentHealthPoints, 
+                IsEnemy
+            );
+            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
+            return AttackRoutineHandle;
         }
+
         private IEnumerator Attack(Unit target, bool isCountering, float duration)
         {
             if (isAttacking) yield break;
@@ -324,7 +326,7 @@ namespace Game
             }
             
             target.CurrentHealthPoints -= damage;
-            uiController.LaunchBattleReport(IsEnemy, target.Stats.maxHealthPoints, target.CurrentHealthPoints);
+            yield return uiController.LaunchBattleReport(IsEnemy, target.Stats.maxHealthPoints, target.CurrentHealthPoints);
             counter = 0;
             
             while (counter < duration)
@@ -339,8 +341,7 @@ namespace Game
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
             if (!isCountering && !target.NoHealthLeft)
-                target.Attack(this, true);
-            
+                StartCoroutine(target.Attack(this, true, Constants.ATTACK_DURATION));
             
             if (!isCountering)
             {

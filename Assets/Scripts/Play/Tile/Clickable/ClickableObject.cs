@@ -51,8 +51,15 @@ namespace Game
             {
                 if (tile.LinkedUnitCanBeAttackedByPlayer)
                 {
-                    if (!gridControllerSelectedUnit.Attack(tile.LinkedUnit))
+                    if (!gridControllerSelectedUnit.TargetIsInRange(tile.LinkedUnit))
+                    {
                         gridControllerSelectedUnit.AttackDistantUnit(tile.LinkedUnit);
+                    }
+                    else
+                    {
+                       gridControllerSelectedUnit.Attack(tile.LinkedUnit);
+                    }
+                        
                     if (tile.LinkedUnit.NoHealthLeft)
                     {
                         tile.LinkedUnit.Die();

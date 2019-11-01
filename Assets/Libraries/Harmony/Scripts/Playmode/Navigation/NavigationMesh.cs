@@ -8,7 +8,7 @@ namespace Harmony
     ///
     /// This does not autogenerates the mesh. You must give it a graph to work with.
     /// </summary>
-    [Findable(R.S.Tag.NavigationMesh)]
+    //[Findable(R.S.Tag.NavigationMesh)]
     public class NavigationMesh : MonoBehaviour
     {
 #if UNITY_EDITOR

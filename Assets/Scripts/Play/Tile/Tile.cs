@@ -151,7 +151,7 @@ namespace Game
 
         public void OnCursorEnter()
         {
-            Harmony.Finder.UIController.ModifyPlayerUI(this);
+            Harmony.Finder.UIController.ModifyPlayerUi(this);
         }
     }
 }

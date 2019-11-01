@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
 using Harmony;
 using TMPro;
 using UnityEngine;
@@ -56,13 +58,19 @@ namespace Game
 
         private const string UNREACHABLE_TILE_TEXT = "Unreachable";
 
+        private Animator playerAnimator;
+        private Animator enemyAnimator;
+        private static readonly int IS_ATTACKING = Animator.StringToHash("IsAttacking");
 
+        private bool animationIsplaying = false;
 
-        //todo load the ui texture.
+        public bool IsBattleReportActive => battleReports.activeSelf;
 
         private void Start()
         {
             canvas.enabled = true;
+            playerAnimator = battleReportAlly.GetComponent<Animator>();
+            enemyAnimator = battleReportEnemy.GetComponent<Animator>();
             DeactivateBattleReport();
         }
 
@@ -111,16 +119,18 @@ namespace Game
             }
         }
 
-        public void LaunchBattleReport(bool isEnemy, int maxHealthPoint, int currentHealthPoint)
+        public Coroutine LaunchBattleReport(bool isEnemy, int maxHealthPoint, int currentHealthPoint)
         {
+            Coroutine battleReportHandle;
+            
             battleReports.SetActive(true);
             if (isEnemy)
             {
-                PlayerHealthBarSetup(maxHealthPoint,currentHealthPoint, red);
+                battleReportHandle = StartCoroutine(EnemyAttackAnimation(maxHealthPoint, currentHealthPoint));
             }
             else
             {
-                EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
+                battleReportHandle = StartCoroutine(PlayerAttackAnimation(maxHealthPoint,currentHealthPoint));
             }
 
             playerDeathSymbol.SetActive(false);
@@ -131,6 +141,50 @@ namespace Game
                 if (isEnemy) playerDeathSymbol.SetActive(true);
                 else enemyDeathSymbol.SetActive(true);
             }
+            
+            return battleReportHandle;
+        }
+
+        private IEnumerator EnemyAttackAnimation(int maxHealthPoint, int currentHealthPoint)
+        {
+            while (animationIsplaying)
+            {
+                yield return null;
+            }
+            animationIsplaying = true;
+            enemyAnimator.SetBool(IS_ATTACKING, true);
+            yield return new WaitForSeconds(0.5f);
+            EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
+            yield return  new WaitForSeconds(0.5f);
+            enemyAnimator.SetBool(IS_ATTACKING, false);
+            yield return new WaitForSeconds(0.5f);
+            animationIsplaying = false;
+        }
+
+        private IEnumerator PlayerAttackAnimation(int maxHealthPoint, int currentHealthPoint)
+        {
+            while (animationIsplaying)
+            {
+                yield return null;
+            } 
+            animationIsplaying = true;
+            playerAnimator.SetBool(IS_ATTACKING,true);
+            yield return new WaitForSeconds(0.5f);
+            EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
+            yield return new WaitForSeconds(0.5f);
+            playerAnimator.SetBool(IS_ATTACKING,false);
+            yield return new WaitForSeconds(0.5f);
+            animationIsplaying = false;
+        }
+
+        private void LaunchEnemyAttackAnimation()
+        {
+            enemyAnimator.SetBool(IS_ATTACKING,false);
+        }
+
+        private void StopPlayerAttackAnimation()
+        {
+            playerAnimator.SetBool(IS_ATTACKING, false);
         }
 
         public void DeactivateBattleReport()
@@ -138,7 +192,7 @@ namespace Game
             battleReports.SetActive(false);
         }
 
-        public void ModifyPlayerUI(Tile tile)
+        public void ModifyPlayerUi(Tile tile)
         {
             tileType.text = tile.TileType.ToString();
             tileDefense.text = (tile.DefenseRate * 100) + "%";
