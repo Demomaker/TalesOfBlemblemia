@@ -24,7 +24,6 @@ namespace Game
         [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
-        [SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
@@ -43,6 +42,12 @@ namespace Game
         
         private int levelTileUpdateKeeper = 0;
         
+
+        private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
+        private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
+
+
+
         private CinematicController cinematicController;
         public CinematicController CinematicController => cinematicController;
 
@@ -52,6 +57,7 @@ namespace Game
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
+        private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
 
         private Unit[] units = null;
@@ -65,6 +71,7 @@ namespace Game
 
         private void Awake()
         {
+            dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
             onLevelVictory = new OnLevelVictory();
             onLevelChange = new OnLevelChange();
@@ -81,6 +88,27 @@ namespace Game
             {
                 dialogueUi.SetActive(true);
                 dialogueTriggerStartFranklem.TriggerDialogue();
+            }
+            PrepareVictoryConditionForUI();
+        }
+
+        private void PrepareVictoryConditionForUI()
+        {
+            if (completeIfPointAchieved)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+            }
+            else if (completeIfAllEnemiesDefeated)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
+            }
+            else if (completeIfCertainEnemyDefeated)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + enemyToDefeat);
+            }
+            else if (completeIfSurvivedCertainNumberOfTurns)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
             }
         }
 
@@ -125,8 +153,7 @@ namespace Game
             {
                 Finder.GameController.LevelsCompleted.Add(levelName);
             }
-            cinematicController.LaunchEndCinematic();
-            while (cinematicController.IsPlayingACutScene)
+            while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
             }
@@ -137,6 +164,7 @@ namespace Game
         private void OnTurnGiven()
         {
             if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
+            Harmony.Finder.UIController.ModifyTurnCounter(numberOfPlayerTurns);
             currentPlayer.OnTurnGiven();
         }
 
@@ -174,6 +202,7 @@ namespace Game
             }
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
+            if (levelCompleted) onLevelVictory.Publish(this);
         }
 
         private void CheckIfLevelFailed()

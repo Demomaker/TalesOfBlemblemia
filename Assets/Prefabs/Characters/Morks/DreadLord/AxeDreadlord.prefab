@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialPosition: {x: 7, y: 7}
+  unitInfos: {fileID: 11400000, guid: 7b1d4d96b761f614cbd0c27f5b4a63d7, type: 2}
   playerType: 2
   classStats: {fileID: 11400000, guid: a59c99018abf1cd40a93b7d9e3849805, type: 2}
   gender: 0

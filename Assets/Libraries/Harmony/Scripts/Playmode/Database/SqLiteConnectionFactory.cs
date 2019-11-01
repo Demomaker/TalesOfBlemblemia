@@ -9,7 +9,7 @@ namespace Harmony
     /// <summary>
     /// SqLite DbConnection factory.
     /// </summary>
-    [Findable(R.S.Tag.MainController)]
+    [Findable("MainController")]
     public class SqLiteConnectionFactory : MonoBehaviour
     {
         //#Dirty Fix : Unity player (not Editor) does not load DLLs that depends on other DLLs
