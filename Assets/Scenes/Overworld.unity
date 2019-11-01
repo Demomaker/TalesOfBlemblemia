@@ -3293,7 +3293,8 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: ParabeneForest
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -6279038472582155038, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &502664927 stripped
 RectTransform:
