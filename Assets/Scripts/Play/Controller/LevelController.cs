@@ -209,8 +209,6 @@ namespace Game
                 
                 Finder.SaveController.UpdateSave(Finder.SaveController.SaveSelected);
             }
-            
-            Finder.SoundManager.StopCurrentMusic();
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 

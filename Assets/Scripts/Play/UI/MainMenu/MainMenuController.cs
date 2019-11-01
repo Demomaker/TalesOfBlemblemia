@@ -69,7 +69,6 @@ namespace Game
         [UsedImplicitly]
         public void Exit()
         {
-            Finder.SoundManager.StopCurrentMusic();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else

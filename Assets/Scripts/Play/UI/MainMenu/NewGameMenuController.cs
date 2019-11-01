@@ -56,8 +56,8 @@ namespace Game
             saveController.SaveSelected = saveSlotSelectedNumber;
             DontDestroyOnLoad(saveController);
             DontDestroyOnLoad(gameController);
-            SceneManager.LoadScene("ParabeneForest");
-            SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME);
+            SceneManager.LoadScene("ParabeneForest", LoadSceneMode.Additive);
         }
         
         [UsedImplicitly]
