@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Dreadlord
+  m_Controller: {fileID: 9100000, guid: 58091ac5b88f90347899d432de1f5227, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: a3a8a52248f20464f889f18a2a44861b, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 3058eeaf242aa714da518eacc91220bf, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ff085cb26932d89458334d30a165b426, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bc4c89756f0848645b5e9325c058e338, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: d40dfc9f29481364f97aa0ef57f22b9c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f7da8311330ccdd47b08b29ae02ebb96, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 5c0717f311420aa4f860d6319710a98b, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d4423853ccdc36241bfdbd28c92e02d8, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 80569ed8d8a3b67499cab486690c7a50, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c992028a4d4553143a210b81a0c58176, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 998f5f8d68740a3448f2e1fc2148944d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bffcaa7fd9199c84b91f6aff551b43d3, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 2027e329d7953334091355573bb5cfb4, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6ef212eef2c2d404bafc995c956e8675, type: 2}

@@ -19,6 +19,11 @@ namespace Game
         
         private SaveController saveController;
         private Navigator navigator;
+        private OnSFXToggle onSfxToggle;
+        private OnSFXVolumeChange onSfxVolumeChange;
+        private OnMusicToggle onMusicToggle;
+        private OnMusicVolumeChange onMusicVolumeChange;
+        private OnMainVolumeChange onMainVolumeChange;
 
         private Canvas optionsScreen;
 
@@ -27,6 +32,11 @@ namespace Game
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
             optionsScreen = GetComponent<Canvas>();
+            onSfxToggle = new OnSFXToggle();
+            onMusicToggle = new OnMusicToggle();
+            onMainVolumeChange = new OnMainVolumeChange();
+            onMusicVolumeChange = new OnMusicVolumeChange();
+            onSfxVolumeChange = new OnSFXVolumeChange();
         }
 
         private void Start()
@@ -60,11 +70,23 @@ namespace Game
             mainVolumeSlider.value = saveController.PlayerSettings.MainVolume;
             musicVolumeSlider.value = saveController.PlayerSettings.MusicVolume;
             sfxVolumeSlider.value = saveController.PlayerSettings.SfxVolume;
+            onMusicToggle.Publish(musicToggle.isOn);
+            onSfxToggle.Publish(sfxToggle.isOn);
+            onMainVolumeChange.Publish(mainVolumeSlider.value);
+            onMusicVolumeChange.Publish(musicVolumeSlider.value);
+            onSfxVolumeChange.Publish(sfxVolumeSlider.value);
         }
         
         private void UpdateSettings()
         {
             PlayerSettings playerSettings = saveController.PlayerSettings;
+            
+            if(playerSettings.MusicToggle != musicToggle.isOn) onMusicToggle.Publish(musicToggle.isOn);
+            if(playerSettings.SfxToggle != sfxToggle.isOn) onSfxToggle.Publish(sfxToggle.isOn);
+            if(playerSettings.MainVolume != (int) mainVolumeSlider.value) onMainVolumeChange.Publish(mainVolumeSlider.value);
+            if(playerSettings.MusicVolume != (int) musicVolumeSlider.value) onMusicVolumeChange.Publish(musicVolumeSlider.value);
+            if(playerSettings.SfxVolume != (int) sfxVolumeSlider.value) onSfxVolumeChange.Publish(sfxVolumeSlider.value);
+            
             playerSettings.MusicToggle = musicToggle.isOn;
             playerSettings.SfxToggle = sfxToggle.isOn;
             playerSettings.MainVolume = (int) mainVolumeSlider.value;

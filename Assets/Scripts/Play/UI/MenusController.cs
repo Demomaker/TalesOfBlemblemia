@@ -29,7 +29,6 @@ namespace Game
             creditsScreen.enabled = false;
             saveSlotSelectionScreen.enabled = false;
             mainScreen.Enter();
-            Finder.SoundManager.PlayMusic(Finder.SoundClips.MainMenuMusic);
         }
     }
 }

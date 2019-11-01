@@ -23,6 +23,7 @@ namespace Game
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
          private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
+         private List<string> tagsOfObjectsToAlwaysKeep = new List<string>();
 
          public string NameOfLevelCompleted => nameOfLevelCompleted;
          public List<Level> Levels = new List<Level>();
@@ -76,11 +77,46 @@ namespace Game
     
          private IEnumerator LoadLevelCoroutine(string levelName)
          {
+             List<GameObject> gameObjectsToKeep = GetObjectsToAlwaysKeep();
+             string lastSceneName = SceneManager.GetActiveScene().name;
+             
              if(!SceneManager.GetSceneByName(levelName).isLoaded)
                  yield return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Single);
              if (!SceneManager.GetSceneByName(Constants.GAME_UI_SCENE_NAME).isLoaded)
                  yield return SceneManager.LoadSceneAsync(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelName));
+             
+             MoveObjectsToScene(gameObjectsToKeep, SceneManager.GetSceneByName(levelName));
+             MakeSceneObjectsActive(SceneManager.GetSceneByName(levelName));
+             MakeSceneObjectsActive(SceneManager.GetSceneByName(lastSceneName), false);
+         }
+
+         private void MakeSceneObjectsActive(Scene scene, bool active = true)
+         {
+             GameObject[] lastObjects = scene.GetRootGameObjects();
+             foreach (GameObject gameObject in lastObjects)
+             {
+                 gameObject.SetActive(active);
+             }
+         }
+
+         private List<GameObject> GetObjectsToAlwaysKeep()
+         {
+             List<GameObject> gameObjects = new List<GameObject>();
+             foreach (string objectTag in tagsOfObjectsToAlwaysKeep)
+             {
+                 gameObjects.Add(GameObject.FindWithTag(objectTag));
+             }
+             return gameObjects;
+         }
+
+         private void MoveObjectsToScene(List<GameObject> gameObjects, Scene scene)
+         {
+             foreach (GameObject gameObject in gameObjects)
+             {
+                 if(gameObject != null)
+                 SceneManager.MoveGameObjectToScene(gameObject, scene);
+             }
          }
 
          private IEnumerator UnloadLevelCoroutine(string levelName)
@@ -105,6 +141,9 @@ namespace Game
          {
              choiceRange = choiceRangePerDifficulty[difficultyLevel];
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
+             tagsOfObjectsToAlwaysKeep.Add(Tags.SOUND_MANAGER);
+             tagsOfObjectsToAlwaysKeep.Add(Tags.GAME_CONTROLLER_TAG);
+             tagsOfObjectsToAlwaysKeep.Add(Tags.ACHIEVEMENT_CONTROLLER_TAG);
          }
      }
 

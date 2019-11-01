@@ -68,8 +68,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -585814985
-  m_SortingLayer: 2
+  m_SortingLayerID: 18170363
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 2654536256330876277, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
     type: 3}
@@ -96,8 +96,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialPosition: {x: 7, y: 7}
+  unitInfos: {fileID: 11400000, guid: eb7d63274beb1f04cbc688cd5d7b2974, type: 2}
   playerType: 2
   classStats: {fileID: 11400000, guid: 4c7f10602b3245541836a9c82e85be9c, type: 2}
+  gender: 0
 --- !u!114 &8349026281355855261
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -23,7 +23,6 @@ namespace Game
         [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
-        [SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
@@ -40,6 +39,9 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
         private int levelTileUpdateKeeper = 0;
+
+        private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
+        private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         
         private CinematicController cinematicController;
         public CinematicController CinematicController => cinematicController;
@@ -49,7 +51,9 @@ namespace Game
         private bool levelEnded = false;
         private bool levelIsEnding = false;
         private bool isComputerPlaying;
-        private bool victoryMusicIsPlaying = false;
+        private OnLevelVictory onLevelVictory;
+        private GameObject dialogueUi;
+        private OnLevelChange onLevelChange;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -57,16 +61,20 @@ namespace Game
         private int numberOfPlayerTurns = 0;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
+
+        public AudioClip BackgroundMusic => backgroundMusic;
+
         private void Awake()
         {
+            dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
-            Debug.Log("Level name : " + levelName);
+            onLevelVictory = new OnLevelVictory();
+            onLevelChange = new OnLevelChange();
         }
 
         private void Start()
         {
-            Finder.SoundManager.StopCurrentMusic();
-            Finder.SoundManager.PlayMusic(backgroundMusic);
+            onLevelChange.Publish(this);
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -90,6 +98,28 @@ namespace Game
                     }
                 }
             }
+            
+            PrepareVictoryConditionForUI();
+        }
+
+        private void PrepareVictoryConditionForUI()
+        {
+            if (completeIfPointAchieved)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+            }
+            else if (completeIfAllEnemiesDefeated)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
+            }
+            else if (completeIfCertainEnemyDefeated)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + enemyToDefeat);
+            }
+            else if (completeIfSurvivedCertainNumberOfTurns)
+            {
+                Harmony.Finder.UIController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
+            }
         }
 
         protected void Update()
@@ -104,11 +134,9 @@ namespace Game
 
             if (levelEnded)
             {
-                if (levelCompleted && !victoryMusicIsPlaying)
+                if (levelCompleted)
                 {
-                    victoryMusicIsPlaying = true;
-                    Finder.SoundManager.StopCurrentMusic();
-                    Finder.SoundManager.PlayMusic(Finder.SoundClips.LevelVictoryMusic);
+                    onLevelVictory.Publish(this);
                 }
                 StartCoroutine(EndLevel());
             }
@@ -130,8 +158,7 @@ namespace Game
             if (levelIsEnding) yield break;
             levelIsEnding = true;
             
-            cinematicController.LaunchEndCinematic();
-            while (cinematicController.IsPlayingACutScene)
+            while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
             }
@@ -190,6 +217,7 @@ namespace Game
         private void OnTurnGiven()
         {
             if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
+            Harmony.Finder.UIController.ModifyTurnCounter(numberOfPlayerTurns);
             currentPlayer.OnTurnGiven();
         }
 
@@ -208,7 +236,6 @@ namespace Game
             bool fourthConditionAchieved = true;
             if (completeIfAllEnemiesDefeated)
             {
-                //TODO: Uncomment below when Turns are available
                 if(!ComputerPlayer.Instance.HaveAllUnitsDied()) firstConditionAchieved = false;
             }
             if (completeIfPointAchieved)
@@ -228,11 +255,11 @@ namespace Game
             }
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
+            if (levelCompleted) onLevelVictory.Publish(this);
         }
 
         private void CheckIfLevelFailed()
         {
-            //TODO: Uncomment below when Turns are available
             levelFailed =
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
                 (defeatIfProtectedIsKilled && unitToProtect.NoHealthLeft) ||

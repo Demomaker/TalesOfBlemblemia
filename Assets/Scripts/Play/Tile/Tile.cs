@@ -14,31 +14,37 @@ namespace Game
         private Button tileButton;
         [SerializeField] private TileType tileType;
         public TileType TileType => tileType;
+        private TileSprite tileSprite;
 
         private Image tileImage;
         private Unit linkedUnit;
+        private Door linkedDoor;
         private GridController gridController;
         public GridController GridController => gridController;
+        private readonly int costToMove;
+        private readonly float defenseRate;
         
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
+        public bool LinkedDoorCanBeAttackedByPlayer => IsOccupiedByADoor && IsPossibleAction;
         public bool LinkedUnitCanBeRecruitedByPlayer => IsOccupiedByAUnit && linkedUnit.IsRecruitable && IsPossibleAction;
         public bool LinkedUnitCanBeHealedByPlayer => IsOccupiedByAUnit && !linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedUnitCanBeSelectedByPlayer => IsOccupiedByAUnit && linkedUnit.IsPlayer && !linkedUnit.HasActed;
         public bool IsWalkable => tileType != TileType.Obstacle;
-        public bool IsAvailable => IsWalkable && !IsOccupiedByAUnit;
+        public bool IsAvailable => IsWalkable && !IsOccupiedByAUnitOrDoor;
+        public bool IsOccupiedByAUnitOrDoor => IsOccupiedByAUnit || IsOccupiedByADoor;
         public bool IsOccupiedByAUnit => linkedUnit != null;
+        public bool IsOccupiedByADoor => linkedDoor != null;
         private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
-        private readonly int costToMove;
-
+        public Door LinkedDoor => linkedDoor;
         public int CostToMove
         {
             get
             {
-                if (tileType == TileType.Obstacle)
+                if (tileType == TileType.Obstacle || IsOccupiedByADoor)
                 {
                     return int.MaxValue;
                 }
@@ -46,7 +52,6 @@ namespace Game
                 return costToMove;
             }
         }
-        private readonly float defenseRate;
         public float DefenseRate => defenseRate;
 
 
@@ -61,6 +66,7 @@ namespace Game
         {
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
+            tileSprite = GetComponent<TileSprite>();
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -74,6 +80,11 @@ namespace Game
         public void DisplayMoveActionPossibility()
         {
             tileImage.sprite = gridController.AvailabilitySprite;
+        }
+
+        public Sprite GetSprite()
+        {
+            return tileSprite.GetSprite();
         }
 
         public void DisplaySelectedTile()
@@ -100,22 +111,7 @@ namespace Game
         {
             tileImage.sprite = gridController.NormalSprite;
         }
-
-        public bool LinkUnit(Unit unit)
-        {
-            if (!IsWalkable) 
-                return false;
-            this.linkedUnit = unit;
-            return IsOccupiedByAUnit;
-        }
-
-        public bool UnlinkUnit()
-        {
-            if (!IsOccupiedByAUnit) return false;
-            linkedUnit = null;
-            return true;
-        }
-
+        
         /// <summary>
         /// Verifies if a tile is adjacent on a X or Y axis to this tile
         /// Authors: Jérémie Bertrand, Zacharie Lavigne
@@ -140,6 +136,48 @@ namespace Game
         {
             tileType = previousType;
         }
+
+        public void OnCursorEnter()
+        {
+            Harmony.Finder.UIController.ModifyPlayerUi(this);
+        }
+
+        public void LinkTargetable(Targetable targetable)
+        {
+            if (targetable.GetType() == typeof(Unit))
+                LinkUnit((Unit) targetable);
+            else if (targetable.GetType() == typeof(Door))
+                LinkDoor((Door) targetable);
+        }
+
+        public bool LinkUnit(Unit unit)
+        {
+            if (!IsWalkable) 
+                return false;
+            this.linkedUnit = unit;
+            return IsOccupiedByAUnitOrDoor;
+        }
+        public bool UnlinkUnit()
+        {
+            if (!IsOccupiedByAUnitOrDoor) return false;
+            linkedUnit = null;
+            return true;
+        }
+        
+        public bool LinkDoor(Door door)
+        {
+            if (!IsWalkable) 
+                return false;
+            this.linkedDoor = door;
+            return IsOccupiedByAUnitOrDoor;
+        }
+        public bool UnlinkDoor()
+        {
+            if (!IsOccupiedByAUnitOrDoor) return false;
+            linkedUnit = null;
+            return true;
+        }
+
     }
 }
 

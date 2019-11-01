@@ -1,5 +1,4 @@
-﻿﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
@@ -14,7 +13,6 @@ using UnityEngine.UI;
         [SerializeField] private Sprite attackableTileSprite = null;
         [SerializeField] private Sprite healableTileSprite = null;
         [SerializeField] private Sprite recruitableTileSprite = null;
-
         public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
@@ -55,21 +53,20 @@ using UnityEngine.UI;
             fromTile.DisplaySelectedTile();
             var linkedUnit = fromTile.LinkedUnit;
             var movementCosts = linkedUnit.MovementCosts;
-            Tile tile = null;
             for (int i = 0; i < movementCosts.GetLength(0); i++)
             {
                 for (int j = 0; j < movementCosts.GetLength(1); j++)
                 {
                     if (movementCosts[i, j] > 0)
                     {
-                        tile = GetTile(i, j);
+                        var tile = GetTile(i, j);
                         if (tile.IsAvailable && movementCosts[i, j] <= linkedUnit.MovesLeft)
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && (linkedUnit.TargetIsInMovementRange(tile.LinkedUnit) || linkedUnit.TargetIsInRange(tile.LinkedUnit)))
+                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInMovementRange(tile.LinkedUnit))
                         {
-                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && tile.LinkedUnit.IsEnemy)
+                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy || tile.IsOccupiedByADoor))
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
@@ -81,6 +78,11 @@ using UnityEngine.UI;
                             {
                                 tile.DisplayHealActionPossibility();
                             }
+                        }
+                        //TODO portes a distance apparaissent rouge
+                        else if (tile.LinkedDoor != null  || linkedUnit.TargetIsInRange(tile.LinkedDoor))
+                        {
+                            tile.DisplayAttackActionPossibility();
                         }
                     }
                 }
