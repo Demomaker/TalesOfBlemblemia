@@ -12,9 +12,7 @@ namespace Game
         protected override void Start()
         {
             if (baseHealth < 1)
-            {
                 throw new Exception("Door base health should be at least 1");
-            }
             CurrentHealthPoints = baseHealth;
             base.Start();
         }
