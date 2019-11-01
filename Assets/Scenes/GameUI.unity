@@ -509,7 +509,7 @@ PrefabInstance:
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
@@ -524,12 +524,12 @@ PrefabInstance:
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_text
-      value: Return to Overworld
+      value: Return to Main Menu
       objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
