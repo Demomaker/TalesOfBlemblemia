@@ -13,12 +13,12 @@ namespace Game
         [SerializeField] private TMP_InputField playerNameInputField;
         [SerializeField] private Button startNewGameButton;
         [SerializeField] private Button returnToMainMenuButton;
-        
-        [Header("Controls")]
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0;
 
-        private MenusController menusController;
+        private const int NUMBER_OF_MENUS_TO_GO_BACK_TO_MAIN = 2;
+        
+        private Navigator navigator;
         private SaveController saveController;
+        private Canvas newGameScreen;
 
         private int saveSlotSelectedNumber;
 
@@ -30,10 +30,17 @@ namespace Game
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
             saveController = Finder.SaveController;
+            newGameScreen = GetComponent<Canvas>();
+            saveSlotSelectedNumber = 0;
         }
 
+        public void Enter(int saveSlotNumber)
+        {
+            navigator.Enter(newGameScreen);
+        }
+        
         [UsedImplicitly]
         public void StartNewGame()
         {
@@ -60,15 +67,17 @@ namespace Game
             }
             
             saveController.UpdateSave(saveSlotSelectedNumber);
-            //CHARGER NOUVELLE SCENE
-            DontDestroyOnLoad(saveController);
-            SceneManager.LoadScene("ParabeneForest");
+            SceneManager.LoadSceneAsync(Constants.OVERWORLD_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(Constants.MAINMENU_SCENE_NAME);
+
         }
         
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {
-            menusController.ReturnFromNewGameMenu();
+            playerNameInputField.text = "";
+            saveSlotSelectedNumber = 0;
+            navigator.Leave(NUMBER_OF_MENUS_TO_GO_BACK_TO_MAIN);
         }
     }
 }

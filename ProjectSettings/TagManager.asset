@@ -4,18 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MainController
-  - Terrain
-  - NavigationMesh
-  - Flora
-  - Water
-  - Fauna
-  - Database
-  - DialogueUi
-  - UiPortrait
+  - SoundManager
   - GridController
   - LevelController
+  - DialogueUi
+  - UiPortrait
+  - MainController
+  - Navigator
   - SaveController
+  - PauseController
+  - AchievementController
   layers:
   - Default
   - TransparentFX
@@ -25,7 +23,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Achievements
   - 
   - 
   - 
@@ -53,12 +51,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Tilemap
-    uniqueID: 2569251369
-    locked: 0
-  - name: Character
-    uniqueID: 3709152311
-    locked: 0
-  - name: UI
-    uniqueID: 2306725519
+  - name: Characters
+    uniqueID: 18170363
     locked: 0

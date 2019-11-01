@@ -15,7 +15,7 @@ namespace Game
             get
             {
                 if (gameController == null)
-                    gameController = GameObject.FindWithTag(Constants.GAME_CONTROLLER_TAG)
+                    gameController = GameObject.FindWithTag(Tags.GAME_CONTROLLER_TAG)
                         .GetComponent<GameController>();
                 return gameController;
             }
@@ -27,11 +27,12 @@ namespace Game
             get
             {
                 if (gridController == null)
-                    gridController = GameObject.FindWithTag(Constants.GRID_CONTROLLER_TAG)
+                    gridController = GameObject.FindWithTag(Tags.GRID_CONTROLLER_TAG)
                         .GetComponent<GridController>();
                 return gridController;
             }
         }
+
         //Author: Zacharie Lavigne
         public static Random Random
         {
@@ -41,11 +42,14 @@ namespace Game
                     random = new Random();
                 return random;
             }
-        } 
+        }
+        public static AudioClips AudioClips => FindWithTag<AudioClips>(Tags.SOUND_MANAGER);
         
         //Author : Antoine Lessard
         public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);
         public static SaveController SaveController => FindWithTag<SaveController>(Tags.SAVE_CONTROLLER);
+        public static PauseController PauseController => FindWithTag<PauseController>(Tags.PAUSE_CONTROLLER);
+        public static Navigator Navigator => FindWithTag<Navigator>(Tags.NAVIGATOR);
 
         private static T FindWithTag<T>(string tag)
         {

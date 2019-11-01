@@ -23,6 +23,7 @@ namespace Game
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
          private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
+         private List<string> tagsOfObjectsToAlwaysKeep = new List<string>();
 
          public string NameOfLevelCompleted => nameOfLevelCompleted;
          public List<Level> Levels = new List<Level>();
@@ -37,7 +38,7 @@ namespace Game
          {
              InstantiateLevelList();
              ResetCompletedLevels();
-             LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+             SceneManager.LoadSceneAsync(Constants.MAINMENU_SCENE_NAME, LoadSceneMode.Additive);
          }
 
          private void InstantiateLevelList()
@@ -67,19 +68,38 @@ namespace Game
          
          public void LoadLevel(string levelname)
          {
-             if(lastLoadedLevelName != null)
-                 UnloadLevel(lastLoadedLevelName);
-             lastLoadedLevelName = levelname;
              if(lastLevelCoroutine != null)
                  StopCoroutine(lastLevelCoroutine);
              lastLevelCoroutine = StartCoroutine(LoadLevelCoroutine(levelname));
+             
+             if(lastLoadedLevelName != null)
+                 UnloadLevel(lastLoadedLevelName);
+             lastLoadedLevelName = levelname;
          }
     
          private IEnumerator LoadLevelCoroutine(string levelname)
          {
-             if(!SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
+             if (!SceneManager.GetSceneByName(levelname).isLoaded)
+             {
+                 if (levelname != Constants.OVERWORLD_SCENE_NAME)
+                 {
+                     SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
+                     SceneManager.UnloadSceneAsync(Constants.OVERWORLD_SCENE_NAME);
+                 }
+                 SceneManager.UnloadSceneAsync(Constants.GAME_UI_SCENE_NAME);
+                 yield return SceneManager.LoadSceneAsync(levelname,LoadSceneMode.Additive);
+             }
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
+         }
+         
+         private List<GameObject> GetObjectsToAlwaysKeep()
+         {
+             List<GameObject> gameObjects = new List<GameObject>();
+             foreach (string objectTag in tagsOfObjectsToAlwaysKeep)
+             {
+                 gameObjects.Add(GameObject.FindWithTag(objectTag));
+             }
+             return gameObjects;
          }
 
          private IEnumerator UnloadLevelCoroutine(string levelname)
@@ -104,6 +124,9 @@ namespace Game
          {
              choiceRange = choiceRangePerDifficulty[difficultyLevel];
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
+             tagsOfObjectsToAlwaysKeep.Add(Tags.SOUND_MANAGER);
+             tagsOfObjectsToAlwaysKeep.Add(Tags.GAME_CONTROLLER_TAG);
+             tagsOfObjectsToAlwaysKeep.Add(Tags.ACHIEVEMENT_CONTROLLER_TAG);
          }
      }
 

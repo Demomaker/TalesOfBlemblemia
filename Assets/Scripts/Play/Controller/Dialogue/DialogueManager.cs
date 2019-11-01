@@ -1,92 +1,113 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Harmony;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
-//this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
+//Author: Pierre-Luc Maltais et Jérémie Bertrand
+//Parts of this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
 //https://www.youtube.com/watch?v=_nRzoTzeyxU
-//The main difference is that i made the field private and serializable.
-public class DialogueManager : MonoBehaviour
+namespace Game
 {
-
-    [SerializeField] private Text nameText;
-    [SerializeField] private Text dialogueText;
-    [SerializeField] private Animator animator;
-    [SerializeField] private Texture[] textures;
-
-    private bool isDisplayingDialogue = false;
-    public bool IsDisplayingDialogue => isDisplayingDialogue;
-    private bool isTyping = false;
-    
-    private Queue<Quote> sentences;
-
-    // Start is called before the first frame update
-
-    public void StartDialogue(Dialogue dialogue)
+    [Findable("DialogueManager")]
+    public class DialogueManager : MonoBehaviour
     {
-        isDisplayingDialogue = true;
-        sentences = new Queue<Quote>();
-        animator.SetBool("IsOpen",true);
+        [SerializeField] private Texture[] textures;
+        [SerializeField] private Text nameText;
+        [SerializeField] private Text dialogueText;
+        [SerializeField] private Animator animator;
+        [SerializeField] private RawImage portrait;
         
-        sentences.Clear();
+        private bool skipTypingCoroutine;
+        private bool isDisplayingDialogue;
+        private bool isTyping;
+        private Queue<Quote> sentences;
+        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
 
-        foreach (Quote sentence in dialogue.Sentences)
+        public bool IsDisplayingDialogue => isDisplayingDialogue;
+
+        public void StartDialogue(Dialogue dialogue)
         {
-            sentences.Enqueue(sentence);
-        }
-        
-        DisplayNextSentence();
-    }
+            isDisplayingDialogue = true;
+            sentences = new Queue<Quote>();
+            animator.SetBool(IS_OPEN,true);
+            
+            sentences.Clear();
 
-    private void ChangePortrait(Texture texture)
-    {
-        RawImage portrait = GameObject.FindWithTag("UiPortrait").GetComponent<RawImage>();
-        portrait.texture = texture;
-    }
-
-    public void DisplayNextSentence()
-    {
-        if(isTyping) return;
-        if (sentences.Count == 0)
-        {
-            EndDialogue();
-            return;
-        }
-        Quote quote = sentences.Dequeue();
-
-        nameText.text = quote.Name;
-        foreach (var texture in textures)
-        {
-            if (texture.name == quote.Name)
+            foreach (Quote sentence in dialogue.Sentences)
             {
-                ChangePortrait(texture);
-                break;
+                sentences.Enqueue(sentence);
+            }
+            
+            DisplayNextSentence();
+        }
+
+        private void ChangePortrait(Texture texture)
+        {
+            portrait.texture = texture;
+        }
+
+        private void Update()
+        {
+            if (!isDisplayingDialogue) return;
+            if (Input.anyKeyDown && !Input.GetKey(KeyCode.Escape))
+            {
+                if (isTyping) skipTypingCoroutine = true;
+                else
+                {
+                    DisplayNextSentence();
+                }
             }
         }
-        
-        //StopAllCoroutines();
-        StartCoroutine(TypeSentence(quote.Sentence));
-    }
 
-    IEnumerator TypeSentence(string sentence)
-    {
-        isTyping = true;
-        dialogueText.text = "";
-        foreach (char letter in sentence)
+        [UsedImplicitly]
+        public void DisplayNextSentence()
         {
-            dialogueText.text += letter;
-            yield return null;
+            if(isTyping) return;
+            if (sentences.Count == 0)
+            {
+                EndDialogue();
+                return;
+            }
+            Quote quote = sentences.Dequeue();
+
+            nameText.text = quote.Name;
+            foreach (var texture in textures)
+            {
+                if (texture.name == quote.Name)
+                {
+                    ChangePortrait(texture);
+                    break;
+                }
+            }
+            StartCoroutine(TypeSentence(quote.Sentence));
         }
 
-        isTyping = false;
+        IEnumerator TypeSentence(string sentence)
+        {
+            isTyping = true;
+            dialogueText.text = "";
+            foreach (char letter in sentence)
+            {
+                if (skipTypingCoroutine)
+                {
+                    dialogueText.text = sentence;
+                    skipTypingCoroutine = false;
+                    break;
+                }
+                dialogueText.text += letter;
+                yield return null;
+            }
+            
+            isTyping = false;
+        }
+        
+        private void EndDialogue()
+        {
+            animator.SetBool(IS_OPEN,false);
+            isDisplayingDialogue = false;
+        }
     }
-    
-    private void EndDialogue()
-    {
-        animator.SetBool("IsOpen",false);
-        isDisplayingDialogue = false;
-    }
-
-  
 }
+

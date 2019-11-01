@@ -1,5 +1,4 @@
-﻿﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
@@ -14,7 +13,7 @@ using UnityEngine.UI;
         [SerializeField] private Sprite attackableTileSprite = null;
         [SerializeField] private Sprite healableTileSprite = null;
         [SerializeField] private Sprite recruitableTileSprite = null;
-
+        [SerializeField] private Sprite protectableTileSprite = null;
         public Unit SelectedUnit { get; private set; } = null;
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
@@ -22,6 +21,7 @@ using UnityEngine.UI;
         public Sprite AttackableTileSprite => attackableTileSprite;
         public Sprite HealableTileSprite => healableTileSprite;
         public Sprite RecruitableTileSprite => recruitableTileSprite;
+        public Sprite ProtectableTileSprite => protectableTileSprite;
 
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
@@ -55,21 +55,20 @@ using UnityEngine.UI;
             fromTile.DisplaySelectedTile();
             var linkedUnit = fromTile.LinkedUnit;
             var movementCosts = linkedUnit.MovementCosts;
-            Tile tile = null;
             for (int i = 0; i < movementCosts.GetLength(0); i++)
             {
                 for (int j = 0; j < movementCosts.GetLength(1); j++)
                 {
                     if (movementCosts[i, j] > 0)
                     {
-                        tile = GetTile(i, j);
+                        var tile = GetTile(i, j);
                         if (tile.IsAvailable && movementCosts[i, j] <= linkedUnit.MovesLeft)
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInRange(tile.LinkedUnit))
+                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInMovementRange(tile.LinkedUnit))
                         {
-                            if (tile.LinkedUnit.IsEnemy)
+                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy || tile.IsOccupiedByADoor))
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
@@ -77,6 +76,17 @@ using UnityEngine.UI;
                             {
                                 tile.DisplayRecruitActionPossibility();
                             }
+                            else if (linkedUnit.WeaponType == WeaponType.HealingStaff && !tile.LinkedUnit.IsEnemy)
+                            {
+                                tile.DisplayHealActionPossibility();
+                            }
+                        }
+                        else if (tile.LinkedDoor != null)
+                        {
+                            if (!tile.LinkedDoor.IsEnemyTarget)
+                                tile.DisplayAttackActionPossibility();
+                            else
+                                tile.DisplayProtectable();
                         }
                     }
                 }
@@ -91,18 +101,22 @@ using UnityEngine.UI;
             var unitMovesLeft = unit.MovesLeft;
             var movementCosts = unit.MovementCosts;
             
-            Tile tileToLeft = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
-            if (tileToLeft != null && tileToLeft.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
-                return tileToLeft;
-            Tile tileAbove = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
-            if (tileAbove != null && tileAbove.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
-                return tileAbove;
-            Tile tileToRight = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
-            if (tileToRight != null && tileToRight.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
-                return tileToRight;
-            Tile tileUnder = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
-            if (tileUnder != null && tileUnder.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
-                return tileUnder;
+            //Check left
+            Tile tileToCheck = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
+                return tileToCheck;
+            //Check up
+            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
+                return tileToCheck;
+            //Check right
+            tileToCheck = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
+                return tileToCheck;
+            //Check down
+            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
+            if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
+                return tileToCheck;
             return null;
         }
 

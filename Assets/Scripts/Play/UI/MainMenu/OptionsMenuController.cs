@@ -1,4 +1,5 @@
 ﻿using System;
+using Harmony;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,24 +14,39 @@ namespace Game
         [SerializeField] private Slider mainVolumeSlider;
         [SerializeField] private Slider musicVolumeSlider;
         [SerializeField] private Slider sfxVolumeSlider;
-        [SerializeField] private Button returnToMainMenuButton;
+        [SerializeField] private Button returnButton;
         [SerializeField] private Button applyChangesButton;
-
-        [Header("Controls")] 
-        [SerializeField] private KeyCode confirmKey = KeyCode.Mouse0;
-
-        private MenusController menusController;
+        
         private SaveController saveController;
+        private Navigator navigator;
+        private OnSFXToggle onSfxToggle;
+        private OnSFXVolumeChange onSfxVolumeChange;
+        private OnMusicToggle onMusicToggle;
+        private OnMusicVolumeChange onMusicVolumeChange;
+        private OnMainVolumeChange onMainVolumeChange;
+
+        private Canvas optionsScreen;
 
         private void Awake()
         {
-            menusController = Finder.MenusController;
+            navigator = Finder.Navigator;
             saveController = Finder.SaveController;
+            optionsScreen = GetComponent<Canvas>();
+            onSfxToggle = new OnSFXToggle();
+            onMusicToggle = new OnMusicToggle();
+            onMainVolumeChange = new OnMainVolumeChange();
+            onMusicVolumeChange = new OnMusicVolumeChange();
+            onSfxVolumeChange = new OnSFXVolumeChange();
         }
 
         private void Start()
         {
             InitializeSettingsValues();
+        }
+
+        public void Enter()
+        {
+            navigator.Enter(optionsScreen);
         }
 
         [UsedImplicitly]
@@ -40,9 +56,9 @@ namespace Game
         }
         
         [UsedImplicitly]
-        public void ReturnToMainMenu()
+        public void Leave()
         {
-            menusController.ReturnFromOptionsMenu();
+            navigator.Leave();
         }
 
         #region ValuesSetup
@@ -53,10 +69,22 @@ namespace Game
             mainVolumeSlider.value = saveController.playerSettings.MainVolume;
             musicVolumeSlider.value = saveController.playerSettings.MusicVolume;
             sfxVolumeSlider.value = saveController.playerSettings.SfxVolume;
+            onMusicToggle.Publish(musicToggle.isOn);
+            onSfxToggle.Publish(sfxToggle.isOn);
+            onMainVolumeChange.Publish(mainVolumeSlider.value);
+            onMusicVolumeChange.Publish(musicVolumeSlider.value);
+            onSfxVolumeChange.Publish(sfxVolumeSlider.value);
+            
         }
         
         private void UpdateSettings()
         {
+            if(saveController.playerSettings.MusicToggle != musicToggle.isOn) onMusicToggle.Publish(musicToggle.isOn);
+            if(saveController.playerSettings.SfxToggle != sfxToggle.isOn) onSfxToggle.Publish(sfxToggle.isOn);
+            if(saveController.playerSettings.MainVolume != (int) mainVolumeSlider.value) onMainVolumeChange.Publish(mainVolumeSlider.value);
+            if(saveController.playerSettings.MusicVolume != (int) musicVolumeSlider.value) onMusicVolumeChange.Publish(musicVolumeSlider.value);
+            if(saveController.playerSettings.SfxVolume != (int) sfxVolumeSlider.value) onSfxVolumeChange.Publish(sfxVolumeSlider.value);
+            
             saveController.playerSettings.MusicToggle = musicToggle.isOn;
             saveController.playerSettings.SfxToggle = sfxToggle.isOn;
             saveController.playerSettings.MainVolume = (int) mainVolumeSlider.value;
