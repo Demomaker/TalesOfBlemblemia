@@ -6,7 +6,7 @@
     /// </summary>
     public static class AiControllerValues
     {
-        public static float BASE_TARGET_ACTION_SCORE = BASE_CHOICE_ACTION_SCORE + 7f;
+        public static float BASE_TARGET_ACTION_SCORE = BASE_CHOICE_ACTION_SCORE + 3f;
         public const float POTENTIAL_DEATH_CHOICE_MOD = -4f;
         public const float DAMAGE_RECEIVE_CHOICE_MOD = -0.8f;
         public const float SPEAR_ATTACKING_FORTRESS_CHOICE_MOD = -2f;
