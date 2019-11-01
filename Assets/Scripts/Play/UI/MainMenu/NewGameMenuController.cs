@@ -67,8 +67,8 @@ namespace Game
             }
             
             saveController.UpdateSave(saveSlotSelectedNumber);
-            DontDestroyOnLoad(saveController);
-            SceneManager.LoadScene(Constants.OVERWORLD_SCENE_NAME);
+            SceneManager.LoadSceneAsync(Constants.OVERWORLD_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(Constants.MAINMENU_SCENE_NAME);
 
         }
         
