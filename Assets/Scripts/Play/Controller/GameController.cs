@@ -78,6 +78,8 @@ namespace Game
          {
              if(!SceneManager.GetSceneByName(levelName).isLoaded)
                  yield return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Single);
+             if (!SceneManager.GetSceneByName(Constants.GAME_UI_SCENE_NAME).isLoaded)
+                 yield return SceneManager.LoadSceneAsync(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelName));
          }
 

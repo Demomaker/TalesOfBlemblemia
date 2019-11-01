@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
@@ -10,7 +11,7 @@ namespace Game
         [Header("Buttons")] 
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button optionsButton;
-        [SerializeField] private Button returnToOverworldButton;
+        [SerializeField] private Button returnToMainMenuButton;
 
         [Header("Controller")] 
         [SerializeField] private OptionsMenuController optionsMenuController;
@@ -46,6 +47,13 @@ namespace Game
         public void GoToOptionsMenu()
         {
             optionsMenuController.Enter();
+        }
+
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            navigator.Leave();
+            SceneManager.LoadScene("Main");
         }
     }
 }

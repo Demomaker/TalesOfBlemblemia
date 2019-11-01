@@ -394,7 +394,7 @@ PrefabInstance:
     - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_Name
-      value: ReturnToOverworldButton
+      value: ReturnToMainMenu
       objectReference: {fileID: 0}
     - target: {fileID: 6269402149212879475, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
@@ -555,7 +555,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 733274061}
     - target: {fileID: 4866346866540218443, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1847,7 +1847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resumeButton: {fileID: 934391907}
   optionsButton: {fileID: 116321321}
-  returnToOverworldButton: {fileID: 116155497}
+  returnToMainMenuButton: {fileID: 116155497}
   optionsMenuController: {fileID: 1264856284}
 --- !u!1 &760408506
 GameObject:
