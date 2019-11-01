@@ -242,7 +242,7 @@ namespace Game
                     onAttack.Publish(this);
                     if (TargetIsInRange(action.Target))
                     {
-                        yield return Attack((Unit)action.Target);
+                        yield return Attack(action.Target);
                     }
                     else
                     {
@@ -316,11 +316,11 @@ namespace Game
                 );
             }
             
-            AttackRoutineHandle = StartCoroutine(Attack((Unit)target, isCountering, Constants.ATTACK_DURATION));
+            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
             return AttackRoutineHandle;
         }
 
-        private IEnumerator Attack(Unit target, bool isCountering, float duration)
+        private IEnumerator Attack(Targetable target, bool isCountering, float duration)
         {
             if (isAttacking) yield break;
             isAttacking = true;
@@ -343,19 +343,18 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                onDodge.Publish((Unit)target);
+                //onDodge.Publish((Unit)target);
             }
             else
             {
-                onHurt.Publish((Unit)target);
+                //onHurt.Publish((Unit)target);
             }
-            if (!isCountering && ((Unit)target).WeaponType == WeaponAdvantage)
+            if (!isCountering && (target.GetType() == typeof(Unit) || (target.GetType() == typeof(Unit) && ((Unit)target).WeaponType == WeaponAdvantage)))
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
             
             target.CurrentHealthPoints -= damage;
-            yield return uiController.LaunchBattleReport(IsEnemy, target.Stats.maxHealthPoints, target.CurrentHealthPoints);
             counter = 0;
             
             while (counter < duration)
@@ -367,13 +366,13 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
-            ((Unit)target).SetIsBeingHurt(false);
-            ((Unit)target).SetIsDodging(false);
+            //TODO verifier si cast est valide ((Unit)target).SetIsBeingHurt(false);
+            //TODO verifier si cast est valide ((Unit)target).SetIsDodging(false);
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
-            if (!isCountering && !target.NoHealthLeft)
-                StartCoroutine(target.Attack(this, true, Constants.ATTACK_DURATION));
+            if (target.GetType() == typeof(Unit) && !isCountering && !target.NoHealthLeft)
+                StartCoroutine(((Unit)target).Attack(this, true, Constants.ATTACK_DURATION));
             
             if (!isCountering)
             {

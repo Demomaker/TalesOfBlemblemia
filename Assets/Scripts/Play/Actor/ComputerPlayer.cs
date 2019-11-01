@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ namespace Game
     public class ComputerPlayer : UnitOwner
     {
         private static ComputerPlayer instance = null;
+        private List<Targetable> targetsToDestroy;
+        
         private UIController uiController;
 
         public static ComputerPlayer Instance
@@ -28,8 +31,14 @@ namespace Game
         private ComputerPlayer()
         {
             uiController = Harmony.Finder.UIController;
+            targetsToDestroy = new List<Targetable>();  
         }
 
+        public void AddTarget(Targetable target)
+        {
+            targetsToDestroy.Add(target);
+        }
+        
         public IEnumerator PlayUnits()
         {
             foreach (var unit in ownedUnits)
@@ -42,7 +51,7 @@ namespace Game
                      
                 if (!currentUnit.HasActed)
                 {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits);
+                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     while (!currentUnit.HasActed)
                     {
                         yield return currentUnit.MoveByAction(action);

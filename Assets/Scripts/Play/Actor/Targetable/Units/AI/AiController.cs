@@ -22,10 +22,11 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>The action the unit should play on its turn</returns>
-        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits)
+        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> TargetsToDestroy)
         {
             //Every potential actions the unit could do
             List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
+            actionsToDo.AddRange(ScanForTargets(playableUnit, TargetsToDestroy));
             
             //Setting every action's turn
             ComputeChoiceScores(actionsToDo, playableUnit);
@@ -39,6 +40,7 @@ namespace Game
             //The action is randomly selected from the best possible ones
             return SelectRandomBestAction(bestActions);
         }
+        
         /// <summary>
         /// Randomly chooses an action from the best possible actions to do
         /// </summary>
@@ -66,6 +68,7 @@ namespace Game
 
             return bestAction;
         }
+        
         /// <summary>
         /// Adds resting as a potential action if needed
         /// </summary>
@@ -80,6 +83,7 @@ namespace Game
                 bestActions[nbOfChoice - 1] = new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, null, AiControllerValues.BASE_CHOICE_ACTION_SCORE);
             }
         }
+        
         /// <summary>
         /// Computes the score of every action the unit could do
         /// </summary>
@@ -101,6 +105,7 @@ namespace Game
                 }
             }
         }
+        
         /// <summary>
         /// Gets the best possible actions (with the highest scores) in descending order
         /// The number of best actions depends on the difficulty level
@@ -132,6 +137,7 @@ namespace Game
             
             return bestAttacks;
         }
+        
         /// <summary>
         /// Finds the index of the highest scored action in a list
         /// </summary>
@@ -158,6 +164,7 @@ namespace Game
             }
             return bestActionIndex;
         }
+        
         /// <summary>
         /// Finds the safest place a unit could go to rest
         /// </summary>
@@ -209,14 +216,14 @@ namespace Game
 
             return FindPathTo(playableUnit, position);
         }
-
+        
         /// <summary>
         /// Finds the shortest path to a target unit
         /// </summary>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="potentialTarget">The target unit</param>
         /// <returns>The path to a target unit</returns>
-        private static List<Tile> FindPathTo(Unit playableUnit, Unit potentialTarget)
+        private static List<Tile> FindPathTo(Unit playableUnit, Targetable potentialTarget)
         {
             List<Tile> path;
             if (playableUnit.TargetIsInRange(potentialTarget))
@@ -257,6 +264,7 @@ namespace Game
                 playableUnit
             );
         }
+        
         /// <summary>
         /// Initializes action based on the unit's enemies
         /// </summary>
@@ -273,6 +281,26 @@ namespace Game
             }
             return actions;
         }
+        
+        /// <summary>
+        /// Initializes action based on the unit's targets
+        /// </summary>
+        /// <param name="playableUnit">The unit currently controlled by the AI</param>
+        /// <param name="enemyTargets">The AI's targets</param>
+        /// <returns>A list of potential actions, on per target</returns>
+        private static List<Action> ScanForTargets(Unit playableUnit, List<Targetable> enemyTargets)
+        {
+            List<Action> actions = new List<Action>();
+            foreach (var target in enemyTargets)
+            {
+                if (target != null)
+                {
+                    actions.Add(new Action(FindPathTo(playableUnit, target), ActionType.Attack, target, AiControllerValues.BASE_TARGET_ACTION_SCORE));
+                }
+            }
+            return actions;
+        }
+        
         /// <summary>
         /// Calculates how the health of a target unit influences the score of an action
         /// </summary>
@@ -285,6 +313,7 @@ namespace Game
                 return AiControllerValues.KILLING_ENEMY_CHOICE_MOD;
             return -(targetHp - playableUnit.Stats.AttackStrength);
         }
+        
         /// <summary>
         /// Calculates how the distance to a target unit influences the score of an action
         /// </summary>
@@ -297,6 +326,7 @@ namespace Game
             int nbTours = (int)Math.Ceiling(nbToursDouble);
             return AiControllerValues.TURN_MULTIPLIER_FOR_DISTANCE_CHOICE_MOD * nbTours + AiControllerValues.TURN_ADDER_FOR_DISTANCE_CHOICE_MOD;
         }
+        
         /// <summary>
         /// Calculates how the weapon types between the unit and a target influences the score of an action
         /// </summary>
@@ -339,6 +369,7 @@ namespace Game
 
             return choiceMod;
         }
+        
         /// <summary>
         /// Calculates how the tile a target unit is on influences the score of an action
         /// </summary>
@@ -371,6 +402,7 @@ namespace Game
             }
             return environmentChoiceMod;
         }
+        
         /// <summary>
         /// Calculates how the the potential damage a unit would receive by attacking a target unit influences the score of an action
         /// </summary>

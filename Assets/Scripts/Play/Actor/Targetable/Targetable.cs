@@ -6,10 +6,12 @@ namespace Game
     public abstract class Targetable : MonoBehaviour
     {
         [SerializeField] private Vector2Int initialPosition;
+        [SerializeField] private bool isEnemyTarget = false;
         
         protected Tile currentTile;
         private int currentHealthPoints;
-        
+
+        public bool IsEnemyTarget => isEnemyTarget;
         public bool NoHealthLeft => CurrentHealthPoints <= 0;
         
         public int CurrentHealthPoints
