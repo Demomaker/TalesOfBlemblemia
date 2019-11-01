@@ -67,10 +67,9 @@ namespace Game
             }
             
             saveController.UpdateSave(saveSlotSelectedNumber);
-            //CHARGER NOUVELLE SCENE
-            DontDestroyOnLoad(saveController);
-            Finder.GameController.LoadLevel("ParabeneForest");
-            SceneManager.LoadScene("GameUI", LoadSceneMode.Additive);
+            SceneManager.LoadSceneAsync(Constants.OVERWORLD_SCENE_NAME, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(Constants.MAINMENU_SCENE_NAME);
+
         }
         
         [UsedImplicitly]

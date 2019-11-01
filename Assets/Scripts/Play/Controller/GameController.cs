@@ -38,6 +38,7 @@ namespace Game
          {
              InstantiateLevelList();
              ResetCompletedLevels();
+             SceneManager.LoadSceneAsync(Constants.MAINMENU_SCENE_NAME, LoadSceneMode.Additive);
          }
 
          private void InstantiateLevelList()
@@ -78,25 +79,19 @@ namespace Game
     
          private IEnumerator LoadLevelCoroutine(string levelname)
          {
-             List<GameObject> gameObjectsToKeep = GetObjectsToAlwaysKeep();
-             string lastSceneName = SceneManager.GetActiveScene().name;
-             if(!SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.LoadSceneAsync(levelname, LoadSceneMode.Additive);
-             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
-             MoveObjectsToScene(gameObjectsToKeep, SceneManager.GetSceneByName(levelname));
-             MakeSceneObjectsActive(SceneManager.GetSceneByName(levelname));
-             MakeSceneObjectsActive(SceneManager.GetSceneByName(lastSceneName), false);
-         }
-
-         private void MakeSceneObjectsActive(Scene scene, bool active = true)
-         {
-             GameObject[] lastObjects = scene.GetRootGameObjects();
-             foreach (GameObject gameObject in lastObjects)
+             if (!SceneManager.GetSceneByName(levelname).isLoaded)
              {
-                 gameObject.SetActive(active);
+                 if (levelname != Constants.OVERWORLD_SCENE_NAME)
+                 {
+                     SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
+                     SceneManager.UnloadSceneAsync(Constants.OVERWORLD_SCENE_NAME);
+                 }
+                 SceneManager.UnloadSceneAsync(Constants.GAME_UI_SCENE_NAME);
+                 yield return SceneManager.LoadSceneAsync(levelname,LoadSceneMode.Additive);
              }
+             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
          }
-
+         
          private List<GameObject> GetObjectsToAlwaysKeep()
          {
              List<GameObject> gameObjects = new List<GameObject>();
@@ -105,15 +100,6 @@ namespace Game
                  gameObjects.Add(GameObject.FindWithTag(objectTag));
              }
              return gameObjects;
-         }
-
-         private void MoveObjectsToScene(List<GameObject> gameObjects, Scene scene)
-         {
-             foreach (GameObject gameObject in gameObjects)
-             {
-                 if(gameObject != null)
-                 SceneManager.MoveGameObjectToScene(gameObject, scene);
-             }
          }
 
          private IEnumerator UnloadLevelCoroutine(string levelname)
