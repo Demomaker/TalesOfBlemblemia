@@ -62,7 +62,15 @@ namespace Game
                         
                     if (tile.LinkedUnit.NoHealthLeft)
                     {
-                        tile.LinkedUnit.Die();
+                        gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
+                    }
+                }
+                else if (tile.LinkedDoorCanBeAttackedByPlayer)
+                {
+                    if (!gridControllerSelectedUnit.Attack(tile.LinkedDoor))
+                        gridControllerSelectedUnit.AttackDistantTargetable(tile.LinkedDoor);
+                    if (tile.LinkedDoor.NoHealthLeft)
+                    {
                         gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
                     }
                 }

@@ -24,7 +24,6 @@ namespace Game
         [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
-        //[SerializeField] private GameObject dialogueUi = null;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
@@ -40,6 +39,7 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
+        
         private int levelTileUpdateKeeper = 0;
         
 
@@ -58,6 +58,7 @@ namespace Game
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
         private GameObject dialogueUi;
+        private OnLevelChange onLevelChange;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -73,11 +74,12 @@ namespace Game
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
             onLevelVictory = new OnLevelVictory();
-            Debug.Log("Level name : " + levelName);
+            onLevelChange = new OnLevelChange();
         }
 
         private void Start()
         {
+            onLevelChange.Publish(this);
             players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -182,7 +184,6 @@ namespace Game
             bool fourthConditionAchieved = true;
             if (completeIfAllEnemiesDefeated)
             {
-                //TODO: Uncomment below when Turns are available
                 if(!ComputerPlayer.Instance.HaveAllUnitsDied()) firstConditionAchieved = false;
             }
             if (completeIfPointAchieved)
@@ -206,7 +207,6 @@ namespace Game
 
         private void CheckIfLevelFailed()
         {
-            //TODO: Uncomment below when Turns are available
             levelFailed =
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
                 (defeatIfProtectedIsKilled && unitToProtect.NoHealthLeft) ||

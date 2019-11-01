@@ -15,11 +15,6 @@ public class OverworldController : MonoBehaviour
     {
         onOverworldEnter = new OnOverworldEnter();
         onOverworldEnter.Publish(this);
-        
-        for (int i = 0; i < Finder.GameController.LevelsCompleted.Count; i++)
-        {
-            Debug.Log("Level completed : " + Finder.GameController.LevelsCompleted.ElementAt(i));
-        }
     }
 
 }

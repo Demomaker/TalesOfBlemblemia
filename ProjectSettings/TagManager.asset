@@ -4,17 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - SoundManager
   - GridController
   - LevelController
   - DialogueUi
   - UiPortrait
+  - MainController
   - Navigator
+  - SaveController
   - PauseController
-  - SoundManager
-  - UIController
-  - DialogueManager
-  - BattleReportAlly
-  - BattleReportEnemy
+  - AchievementController
   layers:
   - Default
   - TransparentFX
@@ -24,7 +23,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Achievements
   - 
   - 
   - 
@@ -51,4 +50,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Characters
+    uniqueID: 18170363
     locked: 0

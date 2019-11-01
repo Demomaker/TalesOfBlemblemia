@@ -1,143 +1,206 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 namespace Game
 {
+    [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour {
      
-        [SerializeField] private float verticalScrollArea = 10f;
-        [SerializeField] private float horizontalScrollArea = 10f;
-        [SerializeField] private float horizontalMoveSpeed = 10f;
-        [SerializeField] private float verticalMoveSpeed = 10f;
-        [SerializeField] private float zoomSpeed = 10f;
-        private float maxZoom = 8.5f;
-        [SerializeField] private float minZoom = 4.5f;
-        [SerializeField] private float minX = -14f;
-        [SerializeField] private float maxX = 14f;
-        [SerializeField] private float minY = -14f;
-        [SerializeField] private float maxY = 14f;
+        [Range(5, 20)][SerializeField] private float scrollArea = 10f;
+        [Range(10, 20)][SerializeField] private float moveSpeed = 20f;
+        [Range(5, 15)][SerializeField] private float zoomSpeed = 10f;
+        [Range(2, 4.5f)][SerializeField] private float minZoom = 4.5f;
+        [Range(-100, 100)][SerializeField] private int minX = -14;
+        [Range(-100, 100)][SerializeField] private int maxX = 14;
+        [Range(-100, 100)][SerializeField] private int minY = -14;
+        [Range(-100, 100)][SerializeField] private int maxY = 14;
         [SerializeField] private KeyCode moveUpKey = KeyCode.W;
         [SerializeField] private KeyCode moveDownKey = KeyCode.S;
         [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
         [SerializeField] private KeyCode moveRightKey = KeyCode.D;
+        [SerializeField] private KeyCode dragKey = KeyCode.Mouse2;
 
-        public bool ZoomEnabled => zoomEnabled;
-        public bool MoveEnabled => moveEnabled;
+        private Vector2Int lastScreenSize;
 
-        private bool zoomEnabled = true;
-        private bool moveEnabled = true;
-        
+        private float maxZoom = 8.5f;
+
+        private float targetOrtho = 0;
+        private Vector3 targetPos;
+
+        private bool controlsEnabled = true;
+
+        private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(moveLeftKey);
+        private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(moveRightKey);
+        private bool IsMovingDown => Input.mousePosition.y < scrollArea || Input.GetKey(moveDownKey);
+        private bool IsMovingUp => Input.mousePosition.y >= Screen.height - scrollArea || Input.GetKey(moveUpKey);
+
+        private float yMovement = 0;
+        private float xMovement = 0;
+
         private Camera camera;
-       
-        private Vector2 mousePos;
-        private Vector3 moveVector;
-        private int xMove;
-        private int yMove;
-        private int orthographicSize;
 
         private void Awake()
         {
             camera = GetComponent<Camera>();
+            targetOrtho = camera.orthographicSize;
+            targetPos = transform.position;
+            OnScreenSizeChanged();
         }
 
-        private void Start()
+        private void LateUpdate()
         {
-            var screenAspect = Screen.width / (float)Screen.height;
-            if (screenAspect < 1) screenAspect = 1;
-            maxZoom = Mathf.Min(maxY - minY, maxX - minX) / screenAspect / 2.0f;
+            if (!controlsEnabled) return;
+            if (lastScreenSize.x != Screen.width ||  lastScreenSize.y != Screen.height)
+            {
+                OnScreenSizeChanged();
+            }
+            
+            if (Input.mouseScrollDelta.y > 0)
+            {
+                ZoomIn();
+            }
+            if (Input.mouseScrollDelta.y < 0)
+            {
+                ZoomOut();
+            }
+                
+                
+            if (!Input.GetKey(dragKey))
+            {
+                if (IsMovingLeft && !IsMovingRight)
+                {
+                    xMovement = Mathf.Clamp(xMovement - Time.deltaTime, -1, 1);
+                } 
+                else if (xMovement < 0)
+                {
+                    xMovement = Mathf.Clamp(xMovement + Time.deltaTime, -1, 0);
+                }
+
+                if (IsMovingRight && !IsMovingLeft)
+                {
+                    xMovement = Mathf.Clamp(xMovement + Time.deltaTime, -1, 1);
+                }
+                else if (xMovement > 0)
+                {
+                    xMovement = Mathf.Clamp(xMovement - Time.deltaTime, 0, 1);
+                }
+
+                if (IsMovingDown && !IsMovingUp)
+                {
+                    yMovement = Mathf.Clamp(yMovement - Time.deltaTime, -1, 1);
+                }
+                else if (yMovement < 0)
+                {
+                    yMovement = Mathf.Clamp(yMovement + Time.deltaTime, -1, 0);
+                }
+
+                if (IsMovingUp && !IsMovingDown)
+                {
+                    yMovement = Mathf.Clamp(yMovement + Time.deltaTime, -1, 1);
+                }
+                else if (yMovement > 0)
+                {
+                    yMovement = Mathf.Clamp(yMovement - Time.deltaTime, 0, 1);
+                }
+                targetPos += moveSpeed * Time.deltaTime * new Vector3(xMovement, yMovement, 0);
+            }
+            
+            UpdateMovement();
+            UpdateZoom();
+
+            if (Input.GetKeyDown(dragKey)) StartCoroutine(Drag());
         }
 
-        void Update()
+        private IEnumerator Drag()
         {
-
-            mousePos = Input.mousePosition;
-            xMove = 0;
-            yMove = 0;
-            orthographicSize = 0;
-
-            //Move camera if mouse is at the edge of the screen
-            if (MoveEnabled)
+            var origin = camera.ScreenToWorldPoint(Input.mousePosition);
+            while (Input.GetKey(dragKey))
             {
-                if (mousePos.x < horizontalScrollArea || Input.GetKey(moveLeftKey))
-                {
-                    xMove = -1;
-                }
-                else if (mousePos.x >= Screen.width - horizontalScrollArea || Input.GetKey(moveRightKey))
-                {
-                    xMove = 1;
-                }
-
-                if (mousePos.y < verticalScrollArea || Input.GetKey(moveDownKey))
-                {
-                    yMove = -1;
-                }
-                else if (mousePos.y >= Screen.height - verticalScrollArea || Input.GetKey(moveUpKey))
-                {
-                    yMove = 1;
-                }
-            }
-
-            // Zoom Camera in or out
-            if (ZoomEnabled)
-            {
-                if (Input.GetAxis("Mouse ScrollWheel") < 0)
-                {
-                    orthographicSize = 1;
-                }
-                else if (Input.GetAxis("Mouse ScrollWheel") > 0)
-                {
-                    orthographicSize = -1;
-                }
-            }
-
-            Move(xMove, yMove);
-
-            if (orthographicSize != 0)
-            {
-                // Perform zoom
-                camera.orthographicSize =
-                    Mathf.Clamp(camera.orthographicSize + orthographicSize * zoomSpeed * Time.deltaTime, minZoom,
-                        maxZoom);
-                if (camera.orthographicSize != minZoom && orthographicSize < 0)
-                {
-                    Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-                    var xFactor = Mathf.Abs(mousePos.x - screenCenter.x) / screenCenter.x;
-                    var yFactor = Mathf.Abs(mousePos.y - screenCenter.y) / screenCenter.y;
-                    yMove = xMove = 0;
-                    if (mousePos.x < screenCenter.x) xMove = -1;
-                    else if (mousePos.x > screenCenter.x) xMove = 1;
-                    if (mousePos.y < screenCenter.y) yMove = -1;
-                    else if (mousePos.y > screenCenter.y) yMove = 1;
-                    Move(xMove * xFactor, yMove * yFactor);
-                }
+                var difference = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+                targetPos = origin - difference;
+                ClampCameraPosition();
+                yield return null;
             }
         }
 
-        private void Move(float x, float y)
+        private void UpdateMovement()
         {
-            moveVector = new Vector3(x * horizontalMoveSpeed, y * verticalMoveSpeed, 0) * Time.deltaTime;
-            transform.Translate(moveVector, Space.World);
+            transform.position = Vector3.Lerp (transform.position, targetPos, Time.deltaTime * zoomSpeed);
+            ClampCameraPosition();
+        }
+
+        private void UpdateZoom()
+        {
+            Vector3 oldPos = camera.ScreenToWorldPoint (Input.mousePosition);
+            camera.orthographicSize = Mathf.Lerp (camera.orthographicSize, targetOrtho, Time.deltaTime * zoomSpeed);
+            targetPos += oldPos - camera.ScreenToWorldPoint (Input.mousePosition);
             ClampCameraPosition();
         }
 
         private void ClampCameraPosition()
         {
+            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
             var topRight = camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth, camera.pixelHeight, 0));
-            var bottomLeft = camera.ScreenToWorldPoint(new Vector3(0, 0, 0));
+            var bottomLeft = camera.ScreenToWorldPoint(Vector3.zero);
 
-            if (topRight.x > maxX) transform.position = new Vector3(transform.position.x - (topRight.x - maxX), transform.position.y, transform.position.z);
-            if (topRight.y > maxY) transform.position = new Vector3(transform.position.x, transform.position.y - (topRight.y - maxY), transform.position.z);
-            if (bottomLeft.x < minX) transform.position = new Vector3(transform.position.x + (minX - bottomLeft.x), transform.position.y, transform.position.z);
-            if (bottomLeft.y < minY) transform.position = new Vector3(transform.position.x, transform.position.y + (minY - bottomLeft.y), transform.position.z);
+            if (topRight.x > maxX)
+            {
+                transform.position -= new Vector3(topRight.x - maxX, 0, 0);
+                targetPos.x = transform.position.x;
+                xMovement = 0;
+            }
+
+            if (topRight.y > maxY)
+            {
+                transform.position -= new Vector3(0, topRight.y - maxY, 0);
+                targetPos.y = transform.position.y;
+                yMovement = 0;
+            }
+
+            if (bottomLeft.x < minX)
+            {
+                transform.position += new Vector3(minX - bottomLeft.x, 0, 0);
+                targetPos.x = transform.position.x;
+                xMovement = 0;
+            }
+
+            if (bottomLeft.y < minY)
+            {
+                transform.position += new Vector3(0, minY - bottomLeft.y, 0);
+                targetPos.y = transform.position.y;
+                yMovement = 0;
+            }
         }
-        
+
+        private void ZoomIn()
+        {
+            targetOrtho = Mathf.Clamp(camera.orthographicSize - 1, minZoom, maxZoom);
+        }
+
+        private void ZoomOut()
+        {
+            targetOrtho = Mathf.Clamp(camera.orthographicSize + 1, minZoom, maxZoom);
+        }
+
         public void EnableControls()
         {
-            zoomEnabled = moveEnabled = true;
+            controlsEnabled = true;
         }
-        
+
         public void DisableControls()
         {
-            zoomEnabled = moveEnabled = false;
+            controlsEnabled = false;
+        }
+
+
+        private void OnScreenSizeChanged()
+        {
+            lastScreenSize = new Vector2Int(Screen.width, Screen.height);
+            var screenAspectRatio = lastScreenSize.x / (float) lastScreenSize.y;
+            var worldAspectRatio = (maxX - minX) / (float)(maxY - minY);
+            maxZoom = Math.Min((maxY - minY) * worldAspectRatio / screenAspectRatio, maxY - minY) / 2f;
+            ClampCameraPosition();
         }
     }
 }
