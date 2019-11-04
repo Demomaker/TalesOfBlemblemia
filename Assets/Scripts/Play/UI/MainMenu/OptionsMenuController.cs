@@ -32,11 +32,11 @@ namespace Game
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
             optionsScreen = GetComponent<Canvas>();
-            onSfxToggle = new OnSFXToggle();
-            onMusicToggle = new OnMusicToggle();
-            onMainVolumeChange = new OnMainVolumeChange();
-            onMusicVolumeChange = new OnMusicVolumeChange();
-            onSfxVolumeChange = new OnSFXVolumeChange();
+            onSfxToggle = Harmony.Finder.OnSFXToggle;
+            onMusicToggle = Harmony.Finder.OnMusicToggle;
+            onMainVolumeChange = Harmony.Finder.OnMainVolumeChange;
+            onMusicVolumeChange = Harmony.Finder.OnMusicVolumeChange;
+            onSfxVolumeChange = Harmony.Finder.OnSFXVolumeChange;
         }
 
         private void Start()

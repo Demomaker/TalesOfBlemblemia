@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
@@ -8,7 +9,13 @@ namespace Game
     {
         [SerializeField] private CinematicTriggerType trigger = CinematicTriggerType.Manual;
         [SerializeField] private List<CameraAction> cameraActions;
+        private OnLevelVictory onLevelVictory;
         public IEnumerable<CameraAction> CameraActions => cameraActions;
+
+        private void Awake()
+        {
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+        }
 
         private void Start()
         {
@@ -20,7 +27,7 @@ namespace Game
             switch (trigger)
             {
                 case CinematicTriggerType.OnLevelVictory:
-                    OnLevelVictory.Notify += TriggerCinematic;
+                    onLevelVictory.Notify += TriggerCinematic;
                     break;
             }
         }
@@ -30,7 +37,7 @@ namespace Game
             switch (trigger)
             {
                 case CinematicTriggerType.OnLevelVictory:
-                    OnLevelVictory.Notify -= TriggerCinematic;
+                    onLevelVictory.Notify -= TriggerCinematic;
                     break;
             }
         }

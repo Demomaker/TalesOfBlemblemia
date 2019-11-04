@@ -108,26 +108,26 @@ namespace Game
             gridController = Finder.GridController;
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
-            onHurt = new OnHurt();
-            onAttack = new OnAttack();
-            onDodge = new OnDodge();
-            onUnitMove = new OnUnitMove();
-            onUnitDeath = new OnUnitDeath();
-            onPlayerUnitLoss = new OnPlayerUnitLoss();
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
 
         }
 
         private void OnEnable()
         {
-            OnHurt.Notify += Hurt;
-            OnDodge.Notify += MakeDodge;
+            onHurt.Notify += Hurt;
+            onDodge.Notify += MakeDodge;
         }
 
         private void OnDisable()
         {
-            OnHurt.Notify -= Hurt;
-            OnDodge.Notify -= MakeDodge;
+            onHurt.Notify -= Hurt;
+            onDodge.Notify -= MakeDodge;
         }
 
         [UsedImplicitly]

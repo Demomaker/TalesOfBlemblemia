@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game;
 using UnityEngine;
 using UnityEngine.UI;
+using Finder = Harmony.Finder;
 
 public class ButtonTrigger : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class ButtonTrigger : MonoBehaviour
     private void Awake()
     {
         if (onButtonClick == null)
-            onButtonClick = new OnButtonClick();
+            onButtonClick = Finder.OnButtonClick;
     }
 
     public void OnClick()

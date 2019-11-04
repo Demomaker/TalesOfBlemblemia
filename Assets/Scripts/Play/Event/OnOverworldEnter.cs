@@ -2,9 +2,10 @@
 
 namespace Game
 {
+    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class OnOverworldEnter : EventChannel<OverworldController>
     {
-        public static event EventHandler<OverworldController> Notify;
+        public event EventHandler<OverworldController> Notify;
         public override void Publish(OverworldController eventParam)
         {
             Notify?.Invoke(eventParam);

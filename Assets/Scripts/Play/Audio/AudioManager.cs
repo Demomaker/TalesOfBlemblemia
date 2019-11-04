@@ -18,8 +18,24 @@ namespace Game
         private float mainVolume = 100;
         private float musicVolume = 100;
         private float sfxVolume = 100;
+        private OnHurt onHurt;
+        private OnAttack onAttack;
+        private OnDodge onDodge;
+        private OnUnitMove onUnitMove;
+        private OnUnitDeath onUnitDeath;
+        private OnPlayerUnitLoss onPlayerUnitLoss;
+        private OnLevelVictory onLevelVictory;
+        private OnLevelChange onLevelChange;
+        private OnOverworldEnter onOverworldEnter;
+        private OnMainMenuEnter onMainMenuEnter;
+        private OnButtonClick onButtonClick;
+        private OnSFXToggle onSFXToggle;
+        private OnMusicToggle onMusicToggle;
+        private OnMainVolumeChange onMainVolumeChange;
+        private OnMusicVolumeChange onMusicVolumeChange;
+        private OnSFXVolumeChange onSFXVolumeChange;
 
-        void Awake ()
+        private void Awake ()
         {
             musicSource = gameObject.AddComponent<AudioSource>();
             sfxSources = new AudioSource[numberOfSFXThatCanBePlayedAtTheSameTime];
@@ -30,46 +46,77 @@ namespace Game
 
             audioClips = Finder.AudioClips;
             if(audioClips == null) audioClips = new NullAudioClips();
+            InitializeEventChannels();
         }
 
         private void OnEnable()
         {
-            OnHurt.Notify += PlayHurtSound;
-            OnAttack.Notify += PlayAttackSound;
-            OnDodge.Notify += PlayDodgeSound;
-            OnUnitMove.Notify += PlayUnitMovementSound;
-            OnUnitDeath.Notify += PlayUnitDeathSound;
-            OnPlayerUnitLoss.Notify += PlayUnitLossMusic;
-            OnLevelVictory.Notify += PlayLevelVictoryMusic;
-            OnLevelChange.Notify += PlayBackgroundMusicOfLevel;
-            OnOverworldEnter.Notify += PlayOverworldBackgroundMusic;
-            OnMainMenuEnter.Notify += PlayMainMenuBackgroundMusic;
-            OnButtonClick.Notify += PlayButtonClickSound;
-            OnSFXToggle.Notify += ToggleSFX;
-            OnMusicToggle.Notify += ToggleMusic;
-            OnMainVolumeChange.Notify += ChangeMainVolume;
-            OnMusicVolumeChange.Notify += ChangeMusicVolume;
-            OnSFXVolumeChange.Notify += ChangeSFXVolume;
+            EnableEventChannels();
         }
 
         private void OnDisable()
         {
-            OnHurt.Notify -= PlayHurtSound;
-            OnAttack.Notify -= PlayAttackSound;
-            OnDodge.Notify -= PlayDodgeSound;
-            OnUnitMove.Notify -= PlayUnitMovementSound;
-            OnUnitDeath.Notify -= PlayUnitDeathSound;
-            OnPlayerUnitLoss.Notify -= PlayUnitLossMusic;
-            OnLevelVictory.Notify -= PlayLevelVictoryMusic;
-            OnLevelChange.Notify -= PlayBackgroundMusicOfLevel;
-            OnOverworldEnter.Notify -= PlayOverworldBackgroundMusic;
-            OnMainMenuEnter.Notify -= PlayMainMenuBackgroundMusic;
-            OnButtonClick.Notify -= PlayButtonClickSound;
-            OnSFXToggle.Notify -= ToggleSFX;
-            OnMusicToggle.Notify -= ToggleMusic;
-            OnMainVolumeChange.Notify -= ChangeMainVolume;
-            OnMusicVolumeChange.Notify -= ChangeMusicVolume;
-            OnSFXVolumeChange.Notify -= ChangeSFXVolume;
+            DisableEventChannels();
+        }
+
+        private void InitializeEventChannels()
+        {
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelChange = Harmony.Finder.OnLevelChange;
+            onOverworldEnter = Harmony.Finder.OnOverworldEnter;
+            onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
+            onButtonClick = Harmony.Finder.OnButtonClick;
+            onSFXToggle = Harmony.Finder.OnSFXToggle;
+            onMusicToggle = Harmony.Finder.OnMusicToggle;
+            onMainVolumeChange = Harmony.Finder.OnMainVolumeChange;
+            onMusicVolumeChange = Harmony.Finder.OnMusicVolumeChange;
+            onSFXVolumeChange = Harmony.Finder.OnSFXVolumeChange;
+        }
+
+        private void EnableEventChannels()
+        {
+            onHurt.Notify += PlayHurtSound;
+            onAttack.Notify += PlayAttackSound;
+            onDodge.Notify += PlayDodgeSound;
+            onUnitMove.Notify += PlayUnitMovementSound;
+            onUnitDeath.Notify += PlayUnitDeathSound;
+            onPlayerUnitLoss.Notify += PlayUnitLossMusic;
+            onLevelVictory.Notify += PlayLevelVictoryMusic;
+            onLevelChange.Notify += PlayBackgroundMusicOfLevel;
+            onOverworldEnter.Notify += PlayOverworldBackgroundMusic;
+            onMainMenuEnter.Notify += PlayMainMenuBackgroundMusic;
+            onButtonClick.Notify += PlayButtonClickSound;
+            onSFXToggle.Notify += ToggleSFX;
+            onMusicToggle.Notify += ToggleMusic;
+            onMainVolumeChange.Notify += ChangeMainVolume;
+            onMusicVolumeChange.Notify += ChangeMusicVolume;
+            onSFXVolumeChange.Notify += ChangeSFXVolume;
+        }
+
+        private void DisableEventChannels()
+        {
+            onHurt.Notify -= PlayHurtSound;
+            onAttack.Notify -= PlayAttackSound;
+            onDodge.Notify -= PlayDodgeSound;
+            onUnitMove.Notify -= PlayUnitMovementSound;
+            onUnitDeath.Notify -= PlayUnitDeathSound;
+            onPlayerUnitLoss.Notify -= PlayUnitLossMusic;
+            onLevelVictory.Notify -= PlayLevelVictoryMusic;
+            onLevelChange.Notify -= PlayBackgroundMusicOfLevel;
+            onOverworldEnter.Notify -= PlayOverworldBackgroundMusic;
+            onMainMenuEnter.Notify -= PlayMainMenuBackgroundMusic;
+            onButtonClick.Notify -= PlayButtonClickSound;
+            onSFXToggle.Notify -= ToggleSFX;
+            onMusicToggle.Notify -= ToggleMusic;
+            onMainVolumeChange.Notify -= ChangeMainVolume;
+            onMusicVolumeChange.Notify -= ChangeMusicVolume;
+            onSFXVolumeChange.Notify -= ChangeSFXVolume;
         }
 
         private void UpdateMusicVolume()
