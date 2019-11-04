@@ -3399,7 +3399,7 @@ PrefabInstance:
     - target: {fileID: 7672110919036753188, guid: fb5064d9b9d58af4cbbc4d5a01c03337,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7672110919036753188, guid: fb5064d9b9d58af4cbbc4d5a01c03337,
         type: 3}
@@ -4333,7 +4333,7 @@ PrefabInstance:
     - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1268969281238496394, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
@@ -4547,12 +4547,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 258474843}
   m_CullTransparentMesh: 0
---- !u!4 &261335354 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9184210282831072268, guid: 386cff33803d9e742ab386963032c720,
-    type: 3}
-  m_PrefabInstance: {fileID: 896080597}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &261701739
 GameObject:
   m_ObjectHideFlags: 0
@@ -43942,7 +43936,7 @@ PrefabInstance:
     - target: {fileID: 7654283363107742311, guid: 61f0a95a01dd3f649824ca9d243b63b1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7654283363107742311, guid: 61f0a95a01dd3f649824ca9d243b63b1,
         type: 3}
@@ -58743,36 +58737,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1191416298}
   m_CullTransparentMesh: 0
---- !u!1 &1200009457
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1200009458}
-  m_Layer: 0
-  m_Name: StartCinematicPosition
-  m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1200009458
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1200009457}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1214679647
 GameObject:
   m_ObjectHideFlags: 0
@@ -59018,7 +58982,7 @@ PrefabInstance:
     - target: {fileID: 870620027768372308, guid: 9930e3556e8c5814199cb8de51491737,
         type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 870620027768372308, guid: 9930e3556e8c5814199cb8de51491737,
         type: 3}
@@ -71676,6 +71640,7 @@ MonoBehaviour:
     type: 3}
   recruitableTileSprite: {fileID: 4060697602963108084, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
     type: 3}
+  protectableTileSprite: {fileID: 0}
 --- !u!114 &1713535633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72905,12 +72870,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747132123}
   m_CullTransparentMesh: 0
---- !u!4 &1751877591 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1160764969234236382, guid: a2c31dcea71da4840b855ea3cec19c95,
-    type: 3}
-  m_PrefabInstance: {fileID: 938696270}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1764593227
 GameObject:
   m_ObjectHideFlags: 0
@@ -79364,7 +79323,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b3f078b512f584fab740b15a882f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventSystemGameObject: {fileID: 299305933}
 --- !u!114 &1976513945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79378,50 +79336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trigger: 1
-  cameraActions:
-  - cameraTarget: {fileID: 1200009458}
-    duration: 0.5
-    cameraZoom: 8
-    quotes:
-    - name: Narrator
-      sentence: 'Our heroes have now finally reached the forest of Parabane. The forest
-        which neighbours the Capital of Blemblemia is a very dense forest which is
-        being '
-    - name: Narrator
-      sentence: "exploited in order to collect the very unique trees that grows in
-        it and which produce very sturdy wood. Sadly, our heroes have no time to rest
-        and marvel at the sight of the of the forest as they are still being chased
-        by Morks\u2026"
-  - cameraTarget: {fileID: 261335354}
-    duration: 1
-    cameraZoom: 3
-    quotes:
-    - name: Franklem
-      sentence: "Franklem: Hurry up Myriam. We\u2019re almost there\u2026"
-  - cameraTarget: {fileID: 1751877591}
-    duration: 0.5
-    cameraZoom: 3
-    quotes:
-    - name: Myriam
-      sentence: "Myriam: *heavy breathing* I\u2019m\u2026right\u2026behind\u2026you!"
-  - cameraTarget: {fileID: 1639890201655499800}
-    duration: 4
-    cameraZoom: 5
-    quotes:
-    - name: Narrator
-      sentence: Myriam looks around and sees a man through the dense trees that appears
-        wounded.
-    - name: Myriam
-      sentence: 'Myriam: Look Franklem! This man looks like he need our help.'
-    - name: Bram
-      sentence: 'Bram: Argh you darn creature! You think a small cut like that will
-        stop me?!'
-    - name: Franklem
-      sentence: "Franklem: You\u2019re right let\u2019s go help him quick!"
-  - cameraTarget: {fileID: 0}
-    duration: 2
-    cameraZoom: 8.5
-    quotes: []
+  cinematic: {fileID: 11400000, guid: 69e6d949335890b4c9ea87ff55e25085, type: 2}
 --- !u!1 &1979433056
 GameObject:
   m_ObjectHideFlags: 0
@@ -83591,36 +83506,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2147100923}
   m_CullTransparentMesh: 0
---- !u!1 &2147117696
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2147117697}
-  m_Layer: 0
-  m_Name: StartTeamPosition
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2147117697
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2147117696}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1639890201655499794
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83722,9 +83607,3 @@ MonoBehaviour:
         castle!
     - name: Bram
       sentence: You save me life my prince. My axe is yours!
---- !u!4 &1639890201655499800 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7617506599882242046, guid: f9341cfb1ebb657419148032b51ab674,
-    type: 3}
-  m_PrefabInstance: {fileID: 1639890201655499794}
-  m_PrefabAsset: {fileID: 0}
