@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class OnButtonClick : EventChannel<Button>
     {
-        public static event EventHandler<Button> Notify; 
+        public event EventHandler<Button> Notify; 
         public override void Publish(Button eventParam)
         {
             Notify?.Invoke(eventParam);

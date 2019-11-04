@@ -28,7 +28,7 @@ namespace Game
         {
             navigator = Finder.Navigator;
             mainMenuCanvas = GetComponent<Canvas>();
-            onMainMenuEnter = new OnMainMenuEnter();
+            onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
         }
 
         public void Enter()
