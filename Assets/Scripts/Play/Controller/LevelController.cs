@@ -90,6 +90,9 @@ namespace Game
                 dialogueUi.SetActive(true);
                 dialogueTriggerStartFranklem.TriggerDialogue();
             }
+            
+            ActivatePlayerUnits();
+
             PrepareVictoryConditionForUI();
         }
 
@@ -148,18 +151,75 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-
             
-            if (levelCompleted)
-            {
-                Finder.GameController.LevelsCompleted.Add(levelName);
-            }
             while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
             }
             
+            CheckForPermadeath();
+
+            UpdatePlayerSave();
+            
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+        }
+
+        /// <summary>
+        /// Saves if the level was successfully completed
+        /// </summary>
+        private void UpdatePlayerSave()
+        {
+            //If the level was successfully completed, mark it as completed
+            if (levelCompleted)
+            {
+                Finder.GameController.LevelsCompleted.Add(levelName);
+
+                var levels = Finder.GameController.Levels;
+                foreach (var level in levels)
+                {
+                    if (level.PreviousLevel == levelName)
+                    {
+                        Finder.SaveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
+                        break;
+                    }
+                }
+
+                Finder.SaveController.UpdateSave(Finder.SaveController.SaveSelected);
+            }
+        }
+
+        /// <summary>
+        /// Check for the player units defeated during the level and mark them as defeated in the player save if the difficulty
+        /// is medium or hard. Resets the save of the player if Franklem was defeated.
+        /// </summary>
+        private void CheckForPermadeath()
+        {
+            var defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
+
+            if (defeatedPlayerUnits.Any())
+            {
+                var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+                foreach (var unit in defeatedPlayerUnits)
+                {
+                    if (unit.name == Constants.FRANKLEM_NAME)
+                    {
+                        Finder.SaveController.ResetSave();
+                        break;
+                    }
+
+                    if (Finder.GameController.DifficultyLevel != DifficultyLevel.Easy && levelCompleted)
+                    {
+                        foreach (var character in characterInfos)
+                        {
+                            if (character.CharacterName == unit.name)
+                            {
+                                character.CharacterStatus = false;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void OnTurnGiven()
@@ -246,7 +306,7 @@ namespace Game
             }
         }
 
-        public void CheckForComputerTurnSkip()
+        private void CheckForComputerTurnSkip()
         {
             if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is ComputerPlayer)
             {
@@ -294,7 +354,7 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerEndOfTurn()
+        private void CheckForCurrentPlayerEndOfTurn()
         {
             if (currentPlayer.HasNoMorePlayableUnits)
             {
@@ -303,7 +363,7 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerWin()
+        private void CheckForCurrentPlayerWin()
         {
             if (HasWon(currentPlayer))
             {
@@ -311,7 +371,7 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerLoss()
+        private void CheckForCurrentPlayerLoss()
         {
             if (currentPlayer.HaveAllUnitsDied())
             {
@@ -321,12 +381,12 @@ namespace Game
             }
         }
 
-        public bool HasWon(UnitOwner unitOwner)
+        private bool HasWon(UnitOwner unitOwner)
         {
             return players.Contains(unitOwner) && players.Count <= 1;
         }
 
-        public void GiveTurnToNextPlayer()
+        private void GiveTurnToNextPlayer()
         {
             isComputerPlaying = false;
             currentPlayer.MakeOwnedUnitsUnplayable();
@@ -334,6 +394,25 @@ namespace Game
         
             if (players.ElementAt(nextPlayerIndex) != null)
                 currentPlayer = players.ElementAt(nextPlayerIndex);
+        }
+        
+        /// <summary>
+        /// Activating only the units that are not marked as defeated in the player's save file
+        /// </summary>
+        private void ActivatePlayerUnits()
+        {
+            var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+            foreach (var gameUnit in currentPlayer.OwnedUnits)
+            {
+                foreach (var saveUnit in characterInfos)
+                {
+                    if (gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus)
+                    {
+                        gameUnit.gameObject.SetActive(false);
+                    }
+                }
+            }
         }
         
         public void IncrementTileUpdate()
