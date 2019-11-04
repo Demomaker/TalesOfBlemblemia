@@ -355,6 +355,8 @@ namespace Game
             }
             
             target.CurrentHealthPoints -= damage;
+            //todo Will have to check for Doors in the future.
+            yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints,CurrentHealthPoints);
             counter = 0;
             
             while (counter < duration)

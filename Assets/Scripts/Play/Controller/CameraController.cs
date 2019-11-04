@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static Game.Constants;
 
 namespace Game
@@ -88,7 +89,7 @@ namespace Game
                 } 
                 else if (XMovement < 0)
                 {
-                    XMovement += Time.deltaTime;
+                    XMovement = Mathf.Clamp(XMovement + Time.deltaTime, -1, 0);
                 }
 
                 if (IsMovingRight && !IsMovingLeft)
@@ -97,7 +98,7 @@ namespace Game
                 }
                 else if (XMovement > 0)
                 {
-                    XMovement -= Time.deltaTime;
+                    XMovement = Mathf.Clamp(XMovement - Time.deltaTime, 0, 1);
                 }
 
                 if (IsMovingDown && !IsMovingUp)
@@ -106,7 +107,7 @@ namespace Game
                 }
                 else if (YMovement < 0)
                 {
-                    YMovement += Time.deltaTime;
+                    YMovement = Mathf.Clamp(YMovement + Time.deltaTime, -1, 0);
                 }
 
                 if (IsMovingUp && !IsMovingDown)
@@ -115,7 +116,7 @@ namespace Game
                 }
                 else if (YMovement > 0)
                 {
-                    YMovement -= Time.deltaTime;
+                    YMovement = Mathf.Clamp(YMovement - Time.deltaTime, 0, 1);
                 }
                 
                 targetPos += moveSpeed * Time.deltaTime * new Vector3(XMovement, YMovement, 0);

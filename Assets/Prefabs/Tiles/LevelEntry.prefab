@@ -92,7 +92,6 @@ GameObject:
   - component: {fileID: 4078076915280692668}
   - component: {fileID: 5362370819529076482}
   - component: {fileID: 1482485119123930423}
-  - component: {fileID: -6279038472582155038}
   m_Layer: 5
   m_Name: LevelEntry
   m_TagString: Untagged
@@ -227,15 +226,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   representedLevelName: 
---- !u!114 &-6279038472582155038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6355133595824120684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be4ef610b46a4685b2dbee0ee39fe803, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

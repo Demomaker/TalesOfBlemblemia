@@ -132,6 +132,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level 4-A
       objectReference: {fileID: 0}
+    - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -247,7 +252,8 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &165061401 stripped
 RectTransform:
@@ -3293,7 +3299,8 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: ParabeneForest
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &502664927 stripped
 RectTransform:
@@ -9914,6 +9921,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level 4-B
       objectReference: {fileID: 0}
+    - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10029,7 +10041,8 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level6
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &1063563958 stripped
 RectTransform:
@@ -10091,6 +10104,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Level 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
@@ -10207,7 +10225,8 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &1353857793 stripped
 RectTransform:
@@ -10226,7 +10245,6 @@ GameObject:
   - component: {fileID: 1398488840}
   - component: {fileID: 1398488839}
   - component: {fileID: 1398488838}
-  - component: {fileID: 1398488837}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -10234,31 +10252,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1398488837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1398488836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 759cc680b83f8ad4b9353258e4085d49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollArea: 10
-  moveSpeed: 20
-  zoomSpeed: 5
-  minZoom: 4.5
-  minX: -18
-  maxX: 10
-  minY: -10
-  maxY: 10
-  moveUpKey: 119
-  moveDownKey: 115
-  moveLeftKey: 97
-  moveRightKey: 100
-  dragKey: 325
 --- !u!81 &1398488838
 AudioListener:
   m_ObjectHideFlags: 0
@@ -10318,7 +10311,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398488836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -4, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -10335,6 +10328,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Level 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
@@ -10461,7 +10459,8 @@ PrefabInstance:
       propertyPath: m_Interactable
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &1490002155 stripped
 RectTransform:
@@ -10480,6 +10479,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Level 5-B
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
@@ -10596,7 +10600,8 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &1646924012 stripped
 RectTransform:
@@ -10722,6 +10727,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10837,7 +10847,8 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &2098402343 stripped
 RectTransform:
@@ -10856,6 +10867,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
@@ -11012,7 +11028,8 @@ PrefabInstance:
       propertyPath: m_FillCenter
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
 --- !u!224 &5549775178991470887 stripped
 RectTransform:

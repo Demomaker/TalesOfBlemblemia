@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Finder = Harmony.Finder;
 
@@ -59,10 +56,10 @@ public class LevelEntry : MonoBehaviour
 
     private bool PreviousLevelWasCompleted()
     {
-        if(PreviousLevelNames != null)
-        for (int i = 0; i < PreviousLevelNames.Count; i++)
+        if (PreviousLevelNames == null) return false;
+        foreach (var t in PreviousLevelNames)
         {
-            if (PreviousLevelNames[i] == Finder.GameController.NameOfLevelCompleted)
+            if (t == Finder.GameController.NameOfLevelCompleted)
             {
                 return true;
             }

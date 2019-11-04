@@ -51,7 +51,7 @@ namespace Game
         private void Update()
         {
             if (!isDisplayingDialogue) return;
-            if (Input.anyKeyDown)
+            if (Input.anyKeyDown && !Input.GetKey(KeyCode.Escape))
             {
                 if (isTyping) skipTypingCoroutine = true;
                 else
