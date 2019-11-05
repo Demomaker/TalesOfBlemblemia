@@ -28,7 +28,7 @@ namespace Game
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
             InitiateSaveController(Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
-                Constants.LEVEL_1_SCENE_NAME, playableCharactersDictionary);
+                Constants.TUTORIAL_SCENE_NAME, playableCharactersDictionary);
         }
 
 

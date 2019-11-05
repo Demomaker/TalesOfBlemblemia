@@ -19,14 +19,14 @@
         
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
         
-        public const string LEVEL_1_SCENE_NAME = "Level1";
-        public const string LEVEL_2_SCENE_NAME = "Level2";
-        public const string LEVEL_3_SCENE_NAME = "ParabeneForest";
+        public const string TUTORIAL_SCENE_NAME = "Level1";
+        public const string JIMSTERBURG_SCENE_NAME = "Level2";
+        public const string PARABENE_FOREST_SCENE_NAME = "ParabeneForest";
         public const string LEVEL_4_SCENE_NAME = "TestLevel";
         public const string LEVEL_5_SCENE_NAME = "Level5";
         public const string LEVEL_6_SCENE_NAME = "Level6";
         public const string LEVEL_7_SCENE_NAME = "Level7";
-        public const string LEVEL_8_SCENE_NAME = "Level8";
+        public const string MORKTRESS_SCENE_NAME = "Morktress";
         public const string OVERWORLD_SCENE_NAME = "Overworld";
         public const string MAINMENU_SCENE_NAME = "MainMenu";
         public const string GAME_UI_SCENE_NAME = "GameUI";
