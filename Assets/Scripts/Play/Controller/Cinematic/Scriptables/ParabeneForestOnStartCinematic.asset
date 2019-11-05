@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
+  m_Name: ParabeneForestOnStartCinematic
+  m_EditorClassIdentifier: 
+  cameraActions:
+  - cameraTarget: {x: 0, y: 0}
+    duration: 0.5
+    cameraZoom: 8
+    quotes:
+    - name: Narrator
+      sentence: Our heroes have now finally reached the forest of Parabane. The forest
+        which neighbours the Capital of Blemblemia is a very dense forest which is
+        being
+    - name: Narrator
+      sentence: "exploited in order to collect the very unique trees that grows in
+        it and which produce very sturdy wood. Sadly, our heroes have no time to rest
+        and marvel at the sight of the of the forest as they are still being chased
+        by Morks\u2026"
+  - cameraTarget: {x: -6, y: 0}
+    duration: 1
+    cameraZoom: 3
+    quotes:
+    - name: Franklem
+      sentence: "Hurry up Myriam. We\u2019re almost there\u2026"
+  - cameraTarget: {x: -7, y: -1}
+    duration: 0.5
+    cameraZoom: 3
+    quotes:
+    - name: Myriam
+      sentence: "*heavy breathing* I\u2019m\u2026right\u2026behind\u2026you!"
+  - cameraTarget: {x: 0, y: 0}
+    duration: 4
+    cameraZoom: 5
+    quotes:
+    - name: Narrator
+      sentence: Myriam looks around and sees a man through the dense trees that appears
+        wounded.
+    - name: Myriam
+      sentence: Look Franklem! This man looks like he need our help.
+    - name: Bram
+      sentence: Argh you darn creature! You think a small cut like that will stop
+        me?!
+    - name: Franklem
+      sentence: "You\u2019re right let\u2019s go help him quick!"
+  - cameraTarget: {x: 0, y: 0}
+    duration: 2
+    cameraZoom: 8.5
+    quotes: []

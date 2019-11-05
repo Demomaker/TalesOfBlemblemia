@@ -11,9 +11,13 @@ public class OverworldController : MonoBehaviour
 {
     // Start is called before the first frame update
     private OnOverworldEnter onOverworldEnter;
+
+    private void Awake()
+    {
+        onOverworldEnter = Harmony.Finder.OnOverworldEnter;
+    }
     void Start()
     {
-        onOverworldEnter = new OnOverworldEnter();
         onOverworldEnter.Publish(this);
     }
 

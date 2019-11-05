@@ -74,8 +74,8 @@ namespace Game
         {
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
-            onLevelVictory = new OnLevelVictory();
-            onLevelChange = new OnLevelChange();
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelChange = Harmony.Finder.OnLevelChange;
         }
 
         private void Start()

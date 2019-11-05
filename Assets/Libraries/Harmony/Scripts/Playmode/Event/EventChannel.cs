@@ -5,7 +5,7 @@ namespace Harmony
     /// <summary>
     /// Event Channel.
     /// </summary>
-    public abstract class EventChannel
+    public abstract class EventChannel : MonoBehaviour
     {
         /// <summary>
         /// Publish an event on this channel.
@@ -16,7 +16,7 @@ namespace Harmony
     /// <summary>
     /// EventChannel.
     /// </summary>
-    public abstract class EventChannel<T>
+    public abstract class EventChannel<T> : MonoBehaviour
     {
         /// <summary>
         /// Publish an event on this channel.
@@ -27,7 +27,7 @@ namespace Harmony
     /// <summary>
     /// EventChannel.
     /// </summary>
-    public abstract class EventChannel<T, U>
+    public abstract class EventChannel<T, U> : MonoBehaviour
     {
         /// <summary>
         /// Publish an event on this channel.
