@@ -34,53 +34,53 @@ namespace Game
             TileBase[] backgroundTiles = backgroundTilemap.GetTilesBlock(bounds);
             Rect cellGridRectangle = GetComponent<RectTransform>().rect;
 
-            int minX = GetMinX(bounds, cellGridRectangle);
-            int minY = GetMinY(bounds, cellGridRectangle);
-            int maxX = GetMaxX(bounds, cellGridRectangle);
-            int maxY = GetMaxY(bounds, cellGridRectangle);
+            var minX = GetMinX(bounds, cellGridRectangle);
+            var minY = GetMinY(bounds, cellGridRectangle);
+            var maxX = GetMaxX(bounds, cellGridRectangle);
+            var maxY = GetMaxY(bounds, cellGridRectangle);
 
             GetComponent<RectTransform>().sizeDelta = new Vector2(maxX - minX, maxY - minY);
 
-            for (int y = maxY - 1; y >= minY; y--)
+            for (var y = maxY - 1; y >= minY; y--)
             {
-                for (int x = minX; x < maxX; x++)
+                for (var x = minX; x < maxX; x++)
                 {
-                    TileBase currentTile = allTiles[x + y * bounds.size.x];
+                    TileBase currentTile = allTiles[(int)(x + y * bounds.size.x)];
                     GameObject createdGameObject = InstantiateCellPrefabFrom(currentTile);
                     if (currentTile == null)
-                        currentTile = emptyTiles[x + y * bounds.size.x];
+                        currentTile = emptyTiles[(int)(x + y * bounds.size.x)];
                     if (currentTile == null)
-                        currentTile = backgroundTiles[x + y * bounds.size.x];
+                        currentTile = backgroundTiles[(int)(x + y * bounds.size.x)];
                     if (createdGameObject != null)
                         createdGameObject.AddComponent<TileSprite>().SetSprite(((UnityEngine.Tilemaps.Tile)currentTile).sprite);
                 }
             }
         }
 
-        private int GetMinX(BoundsInt bounds, Rect cellGridRectangle)
+        private float GetMinX(BoundsInt bounds, Rect cellGridRectangle)
         {
-            int minX = ((int) bounds.size.x - (int) cellGridRectangle.width) / 2;
+            var minX =  ( bounds.size.x - cellGridRectangle.width) / 2;
             if (minX < 0) minX = 0;
             return minX;
         }
 
-        private int GetMinY(BoundsInt bounds, Rect cellGridRectangle)
+        private float GetMinY(BoundsInt bounds, Rect cellGridRectangle)
         {
-            int minY = ((int) bounds.size.y - (int) cellGridRectangle.height) / 2;
+            var minY = ( bounds.size.y - cellGridRectangle.height) / 2;
             if (minY < 0) minY = 0;
             return minY;
         }
 
-        private int GetMaxX(BoundsInt bounds, Rect cellGridRectangle)
+        private float GetMaxX(BoundsInt bounds, Rect cellGridRectangle)
         {
-            int maxX = bounds.size.x - GetMinX(bounds, cellGridRectangle);
+            var maxX = bounds.size.x - GetMinX(bounds, cellGridRectangle);
             if (maxX > bounds.size.x) maxX = bounds.size.x;
             return maxX;
         }
 
-        private int GetMaxY(BoundsInt bounds, Rect cellGridRectangle)
+        private float GetMaxY(BoundsInt bounds, Rect cellGridRectangle)
         {
-            int maxY = bounds.size.y - GetMinY(bounds, cellGridRectangle);
+            var maxY = bounds.size.y - GetMinY(bounds, cellGridRectangle);
             if (maxY > bounds.size.y) maxY = bounds.size.y;
             return maxY;
         }
