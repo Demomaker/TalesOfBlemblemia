@@ -210,6 +210,7 @@ namespace Game
         public void EnableControls()
         {
             controlsEnabled = true;
+            OnScreenSizeChanged();
         }
 
         public void DisableControls()
