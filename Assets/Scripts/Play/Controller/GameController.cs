@@ -45,15 +45,15 @@ namespace Game
          {
              Levels = new List<Level>
              {
-                 new Level("", Constants.TUTORIAL_SCENE_NAME),
-                 new Level(Constants.TUTORIAL_SCENE_NAME, Constants.JIMSTERBURG_SCENE_NAME),
-                 new Level(Constants.JIMSTERBURG_SCENE_NAME, Constants.PARABENE_FOREST_SCENE_NAME),
-                 new Level(Constants.PARABENE_FOREST_SCENE_NAME, Constants.LEVEL_4_SCENE_NAME),
+                 new Level("", Constants.LEVEL_1_SCENE_NAME),
+                 new Level(Constants.LEVEL_1_SCENE_NAME, Constants.LEVEL_2_SCENE_NAME),
+                 new Level(Constants.LEVEL_2_SCENE_NAME, Constants.LEVEL_3_SCENE_NAME),
+                 new Level(Constants.LEVEL_3_SCENE_NAME, Constants.LEVEL_4_SCENE_NAME),
                  new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_5_SCENE_NAME),
                  new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_6_SCENE_NAME),
                  new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_7_SCENE_NAME),
-                 new Level(Constants.LEVEL_7_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)
+                 new Level(Constants.LEVEL_7_SCENE_NAME, Constants.LEVEL_8_SCENE_NAME),
+                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_8_SCENE_NAME)
              };
          }
          private void ResetCompletedLevels()

@@ -1,6 +1,6 @@
 ﻿namespace Game
 {
-    public struct PlayerSettings
+    public class PlayerSettings
     {
         public int Id { get; }
         public bool MusicToggle { get; set; }
