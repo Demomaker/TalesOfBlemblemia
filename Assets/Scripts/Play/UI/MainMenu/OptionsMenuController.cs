@@ -47,6 +47,7 @@ namespace Game
         public void Enter()
         {
             navigator.Enter(optionsScreen);
+            InitializeSettingsValues();
         }
 
         [UsedImplicitly]
@@ -64,11 +65,11 @@ namespace Game
         #region ValuesSetup
         private void InitializeSettingsValues()
         {
-            musicToggle.isOn = saveController.playerSettings.MusicToggle;
-            sfxToggle.isOn = saveController.playerSettings.SfxToggle;
-            mainVolumeSlider.value = saveController.playerSettings.MainVolume;
-            musicVolumeSlider.value = saveController.playerSettings.MusicVolume;
-            sfxVolumeSlider.value = saveController.playerSettings.SfxVolume;
+            musicToggle.isOn = saveController.PlayerSettings.MusicToggle;
+            sfxToggle.isOn = saveController.PlayerSettings.SfxToggle;
+            mainVolumeSlider.value = saveController.PlayerSettings.MainVolume;
+            musicVolumeSlider.value = saveController.PlayerSettings.MusicVolume;
+            sfxVolumeSlider.value = saveController.PlayerSettings.SfxVolume;
             onMusicToggle.Publish(musicToggle.isOn);
             onSfxToggle.Publish(sfxToggle.isOn);
             onMainVolumeChange.Publish(mainVolumeSlider.value);
@@ -79,19 +80,21 @@ namespace Game
         
         private void UpdateSettings()
         {
-            if(saveController.playerSettings.MusicToggle != musicToggle.isOn) onMusicToggle.Publish(musicToggle.isOn);
-            if(saveController.playerSettings.SfxToggle != sfxToggle.isOn) onSfxToggle.Publish(sfxToggle.isOn);
-            if(saveController.playerSettings.MainVolume != (int) mainVolumeSlider.value) onMainVolumeChange.Publish(mainVolumeSlider.value);
-            if(saveController.playerSettings.MusicVolume != (int) musicVolumeSlider.value) onMusicVolumeChange.Publish(musicVolumeSlider.value);
-            if(saveController.playerSettings.SfxVolume != (int) sfxVolumeSlider.value) onSfxVolumeChange.Publish(sfxVolumeSlider.value);
+            PlayerSettings playerSettings = saveController.PlayerSettings;
             
-            saveController.playerSettings.MusicToggle = musicToggle.isOn;
-            saveController.playerSettings.SfxToggle = sfxToggle.isOn;
-            saveController.playerSettings.MainVolume = (int) mainVolumeSlider.value;
-            saveController.playerSettings.MusicVolume = (int) musicVolumeSlider.value;
-            saveController.playerSettings.SfxVolume = (int) sfxVolumeSlider.value;
+            if(playerSettings.MusicToggle != musicToggle.isOn) onMusicToggle.Publish(musicToggle.isOn);
+            if(playerSettings.SfxToggle != sfxToggle.isOn) onSfxToggle.Publish(sfxToggle.isOn);
+            if(playerSettings.MainVolume != (int) mainVolumeSlider.value) onMainVolumeChange.Publish(mainVolumeSlider.value);
+            if(playerSettings.MusicVolume != (int) musicVolumeSlider.value) onMusicVolumeChange.Publish(musicVolumeSlider.value);
+            if(playerSettings.SfxVolume != (int) sfxVolumeSlider.value) onSfxVolumeChange.Publish(sfxVolumeSlider.value);
             
-            saveController.UpdateSettings();
+            playerSettings.MusicToggle = musicToggle.isOn;
+            playerSettings.SfxToggle = sfxToggle.isOn;
+            playerSettings.MainVolume = (int) mainVolumeSlider.value;
+            playerSettings.MusicVolume = (int) musicVolumeSlider.value;
+            playerSettings.SfxVolume = (int) sfxVolumeSlider.value;
+            
+            saveController.UpdateSettings(playerSettings);
         }
         #endregion
         

@@ -30,6 +30,9 @@
         public const string OVERWORLD_SCENE_NAME = "Overworld";
         public const string MAINMENU_SCENE_NAME = "MainMenu";
         public const string GAME_UI_SCENE_NAME = "GameUI";
+        public const string NAME_STRING = "Name";
+        public const string DIFFICULTY_STRING = "Difficulty";
+        public const string STAGE_STRING = "Stage";
 
         public const bool DEFAULT_TOGGLE_VALUE = true;
         public const int DEFAULT_SLIDER_VALUE = 100;

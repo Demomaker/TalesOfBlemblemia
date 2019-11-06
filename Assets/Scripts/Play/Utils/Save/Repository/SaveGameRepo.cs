@@ -22,19 +22,19 @@ namespace Game
                 command.CommandText = "INSERT INTO SaveGame(savegame_id,player_name,difficulty_level,level_name) VALUES (?,?,?,?)";
 
                 var id = command.CreateParameter();
-                id.Value = myObject.id;
+                id.Value = myObject.Id;
                 command.Parameters.Add(id);
 
                 var playerName = command.CreateParameter();
-                playerName.Value = myObject.username;
+                playerName.Value = myObject.Username;
                 command.Parameters.Add(playerName);
 
                 var difficultyLevel = command.CreateParameter();
-                difficultyLevel.Value = myObject.difficultyLevel;
+                difficultyLevel.Value = myObject.DifficultyLevel;
                 command.Parameters.Add(difficultyLevel);
 
                 var levelName = command.CreateParameter();
-                levelName.Value = myObject.levelName;
+                levelName.Value = myObject.LevelName;
                 command.Parameters.Add(levelName);
 
                 command.ExecuteNonQuery();
@@ -73,19 +73,19 @@ namespace Game
             command.CommandText = "UPDATE SaveGame SET player_name = ?, difficulty_level = ?, level_name = ? WHERE savegame_id = ?";
 
             var playerName = command.CreateParameter();
-            playerName.Value = myObject.username;
+            playerName.Value = myObject.Username;
             command.Parameters.Add(playerName);
 
             var difficulty = command.CreateParameter();
-            difficulty.Value = myObject.difficultyLevel;
+            difficulty.Value = myObject.DifficultyLevel;
             command.Parameters.Add(difficulty);
             
             var levelName = command.CreateParameter();
-            levelName.Value = myObject.levelName;
+            levelName.Value = myObject.LevelName;
             command.Parameters.Add(levelName);
 
             var id = command.CreateParameter();
-            id.Value = myObject.id;
+            id.Value = myObject.Id;
             command.Parameters.Add(id);
             
             command.ExecuteNonQuery();
