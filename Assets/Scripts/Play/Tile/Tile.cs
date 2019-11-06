@@ -74,7 +74,7 @@ namespace Game
         {
             int index = transform.GetSiblingIndex();
             positionInGrid.x = index % Finder.GridController.NbColumns;
-            positionInGrid.y = index / Finder.GridController.NbLines;
+            positionInGrid.y = index / Finder.GridController.NbColumns;
         }
 
         public void DisplayMoveActionPossibility()
