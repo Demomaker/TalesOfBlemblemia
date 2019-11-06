@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fbe62bbb98bf413d81dfdb81d04fb290, type: 3}
-  m_Name: SwordInfantry
+  m_Name: SwordInfantryInfo
   m_EditorClassIdentifier: 
   characterName: InfantryMork
-  className: SwordMorkInfo
+  className: SwordMork
   weaponName: Sword
