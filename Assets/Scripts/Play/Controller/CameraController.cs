@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using static Game.Constants;
 
 namespace Game
@@ -34,8 +33,8 @@ namespace Game
 
         private Camera camera;
         
-        private float yMovement;
-        private float xMovement;
+        private float yMovement = 0;
+        private float xMovement = 0;
         
         private float YMovement
         {
@@ -59,8 +58,8 @@ namespace Game
         private void Awake()
         {
             camera = GetComponent<Camera>();
-            InitCamera();
             OnScreenSizeChanged();
+            InitCamera();
         }
 
         private void LateUpdate()
@@ -220,7 +219,7 @@ namespace Game
         private void InitCamera()
         {
             targetPos = transform.position;
-            targetOrthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
+            camera.orthographicSize = targetOrthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
         }
 
 
