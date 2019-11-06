@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game
@@ -356,7 +357,8 @@ namespace Game
             
             target.CurrentHealthPoints -= damage;
             //todo Will have to check for Doors in the future.
-            yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints,CurrentHealthPoints);
+            if (target is Unit)
+                yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints,CurrentHealthPoints);
             counter = 0;
             
             while (counter < duration)

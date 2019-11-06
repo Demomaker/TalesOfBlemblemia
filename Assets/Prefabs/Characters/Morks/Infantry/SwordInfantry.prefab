@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3155442499163033929
+--- !u!1 &4182702900757915526
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3155442499163033932}
-  - component: {fileID: 3155442499163033931}
-  - component: {fileID: 3200671728488553623}
-  - component: {fileID: 313956611502183885}
+  - component: {fileID: 4182702900757915523}
+  - component: {fileID: 4182702900757915524}
+  - component: {fileID: 4443506807806192216}
+  - component: {fileID: 759667291085994609}
   m_Layer: 0
-  m_Name: AxeDreadlord
+  m_Name: SwordInfantry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3155442499163033932
+--- !u!4 &4182702900757915523
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3155442499163033929}
+  m_GameObject: {fileID: 4182702900757915526}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,13 +33,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3155442499163033931
+--- !u!212 &4182702900757915524
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3155442499163033929}
+  m_GameObject: {fileID: 4182702900757915526}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 18170363
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 9103620627151409308, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
+  m_Sprite: {fileID: 8434883990147102178, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -83,13 +83,13 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3200671728488553623
+--- !u!114 &4443506807806192216
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3155442499163033929}
+  m_GameObject: {fileID: 4182702900757915526}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb984848d5b1460591abed472fca1966, type: 3}
@@ -97,20 +97,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialPosition: {x: 7, y: 7}
   isEnemyTarget: 0
-  unitInfos: {fileID: 11400000, guid: 7b1d4d96b761f614cbd0c27f5b4a63d7, type: 2}
+  unitInfos: {fileID: 11400000, guid: 81a34c25a683acb4da3c413df637a586, type: 2}
   playerType: 2
-  classStats: {fileID: 11400000, guid: a59c99018abf1cd40a93b7d9e3849805, type: 2}
+  classStats: {fileID: 11400000, guid: 143503c0a7f07fe42bfde1c238f309b1, type: 2}
   gender: 0
---- !u!114 &313956611502183885
+--- !u!114 &759667291085994609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3155442499163033929}
+  m_GameObject: {fileID: 4182702900757915526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37a40ba46ea5b4f4588b6eb1db2b9313, type: 3}
+  m_Script: {fileID: 11500000, guid: 77eb5db73a5c1a3469081f5cb93e702e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponStats: {fileID: 11400000, guid: 2407e281ef2d3f04ca4f2987a674e807, type: 2}
+  weaponStats: {fileID: 11400000, guid: a4c975b43d2f4aa4d98a8168e216c82d, type: 2}

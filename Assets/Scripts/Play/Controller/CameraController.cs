@@ -59,8 +59,7 @@ namespace Game
         private void Awake()
         {
             camera = GetComponent<Camera>();
-            targetOrthographicSize = camera.orthographicSize;
-            targetPos = transform.position;
+            InitCamera();
             OnScreenSizeChanged();
         }
 
@@ -210,11 +209,18 @@ namespace Game
         public void EnableControls()
         {
             controlsEnabled = true;
+            InitCamera();
         }
 
         public void DisableControls()
         {
             controlsEnabled = false;
+        }
+
+        private void InitCamera()
+        {
+            targetPos = transform.position;
+            targetOrthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
         }
 
 
