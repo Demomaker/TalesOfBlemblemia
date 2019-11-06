@@ -14,7 +14,7 @@ namespace Game
 {
     /// <summary>
     /// Controller for each individual level. Manages the turn functionalities as well as the players' turns
-    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne
+    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
     /// </summary>
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
