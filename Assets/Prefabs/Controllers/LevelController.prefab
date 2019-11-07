@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3032034816976037129}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6938851, y: -1.8493135, z: -1.3475347}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -44,3 +44,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelName: 
+  backgroundMusic: {fileID: 8300000, guid: 663e35c2820ba764ebac852c75d67895, type: 3}
+  backgroundMusicOption: 0
+  dialogueTriggerStartFranklem: {fileID: 0}
+  doNotEnd: 0
+  completeIfAllEnemiesDefeated: 0
+  completeIfPointAchieved: 0
+  completeIfSurvivedCertainNumberOfTurns: 0
+  completeIfCertainEnemyDefeated: 0
+  defeatIfNotCompleteLevelInCertainAmountOfTurns: 0
+  defeatIfProtectedIsKilled: 0
+  defeatIfAllPlayerUnitsDied: 0
+  pointToAchieve: {x: 0, y: 0}
+  enemyToDefeat: {fileID: 0}
+  targetsToProtect: []
+  numberOfTurnsBeforeDefeat: 0
+  numberOfTurnsBeforeCompletion: 0
+  revertWeaponTriangle: 0
