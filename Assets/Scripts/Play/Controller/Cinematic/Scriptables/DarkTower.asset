@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
+  m_Name: DarkTower
+  m_EditorClassIdentifier: 
+  cameraActions:
+  - cameraTarget: {x: 0, y: 8}
+    duration: 2
+    cameraZoom: 6
+    quotes:
+    - name: Narrator
+      sentence: Finally, our group caught up with the dark knight. Having taken refuge
+        in a dark abandonned tower, the knight sought to destroy Franklem and his
+        friends and finally bring Blemblemia down into darkness.
+    - name: Narrator
+      sentence: Dark incantations could be heard throughout the tower. A chilling
+        voice pronouncing words from a language long forgotten, but whatever the sinister
+        voice was saying, surely it couldn't be good.
+    - name: Narrator
+      sentence: Our group of heroes look tired, all but one, a young man seething
+        with unending rage and a strong desire for revenge...
+    - name: Franklem
+      sentence: Finally we caught up with this rat! Let's destroy this foul creature
+        once and for all and avenge the king!
+    - name: Myriam
+      sentence: Don't be reckless Franklem! We need you alive! Blemblemia needs you
+        alive!
+    - name: Rass
+      sentence: I know how you feel my friend, but we need to be careful. This is
+        the lair of the Dark knight...
+    - name: Franklem
+      sentence: You're all right...of course. Thank you all for coming. Let's get
+        this done.

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
+  m_Name: MorktressOnStart
+  m_EditorClassIdentifier: 
+  cameraActions:
+  - cameraTarget: {x: 7.5, y: 2.5}
+    duration: 1
+    cameraZoom: 3.5
+    quotes:
+    - name: Franklem
+      sentence: Race!
+    - name: Myriam
+      sentence: Raace?
+    - name: Myriam
+      sentence: '...'
+  - cameraTarget: {x: 7.5, y: 13.5}
+    duration: 1
+    cameraZoom: 3.5
+    quotes:
+    - name: LordMork
+      sentence: Mwahahahaha[...]
+    - name: LordMork
+      sentence: huh, huh, huh, huh, huh[...]
+    - name: LordMork
+      sentence: Hiiihiiihihihihii, pfrfrfr
+  - cameraTarget: {x: 7.5, y: 7.5}
+    duration: 1
+    cameraZoom: 4
+    quotes:
+    - name: Franklem
+      sentence: Let's do this
