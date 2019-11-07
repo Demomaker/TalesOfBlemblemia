@@ -22,14 +22,17 @@
         public const string LEVEL_1_SCENE_NAME = "Tutorial";
         public const string LEVEL_2_SCENE_NAME = "Level2";
         public const string LEVEL_3_SCENE_NAME = "ParabeneForest";
-        public const string LEVEL_4_SCENE_NAME = "TestLevel";
+        public const string LEVEL_4_SCENE_NAME = "TulipValley";
         public const string LEVEL_5_SCENE_NAME = "Level5";
         public const string LEVEL_6_SCENE_NAME = "Level6";
         public const string LEVEL_7_SCENE_NAME = "Level7";
-        public const string LEVEL_8_SCENE_NAME = "Level8";
+        public const string MORKTRESS_SCENE_NAME = "Morktress";
         public const string OVERWORLD_SCENE_NAME = "Overworld";
         public const string MAINMENU_SCENE_NAME = "MainMenu";
         public const string GAME_UI_SCENE_NAME = "GameUI";
+        public const string NAME_STRING = "Name";
+        public const string DIFFICULTY_STRING = "Difficulty";
+        public const string STAGE_STRING = "Stage";
 
         public const bool DEFAULT_TOGGLE_VALUE = true;
         public const int DEFAULT_SLIDER_VALUE = 100;

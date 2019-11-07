@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Game
 {
@@ -13,6 +13,9 @@ namespace Game
         public int NumberOfUnits => ownedUnits.Count;
         public int NumberOfRecruitedUnitsFromAlternatePath => numberOfRecruitedUnitsFromAlternativePath;
         private static HumanPlayer instance = null;
+        private List<Unit> defeatedUnits = new List<Unit>();
+        public List<Unit> DefeatedUnits => defeatedUnits;
+
         public static HumanPlayer Instance
         {
             get
@@ -35,6 +38,8 @@ namespace Game
             base.RemoveOwnedUnit(unit);
             hasLostAUnitInCurrentLevel = true;
             hasEverLostAUnit = true;
+            
+            defeatedUnits.Add(unit);
         }
 
         public override void OnNewLevel()

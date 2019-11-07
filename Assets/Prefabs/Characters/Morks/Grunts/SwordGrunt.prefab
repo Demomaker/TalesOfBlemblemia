@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialPosition: {x: 7, y: 7}
+  isEnemyTarget: 0
   unitInfos: {fileID: 11400000, guid: eb7d63274beb1f04cbc688cd5d7b2974, type: 2}
   playerType: 2
   classStats: {fileID: 11400000, guid: 4c7f10602b3245541836a9c82e85be9c, type: 2}

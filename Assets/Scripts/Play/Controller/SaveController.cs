@@ -8,10 +8,10 @@ namespace Game
 {
     public class SaveController : MonoBehaviour
     {
-        public SaveInfos saveSlot1;
-        public SaveInfos saveSlot2;
-        public SaveInfos saveSlot3;
-        public PlayerSettings playerSettings;
+        private SaveInfos saveSlot1;
+        private SaveInfos saveSlot2;
+        private SaveInfos saveSlot3;
+        private PlayerSettings playerSettings;
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
@@ -23,6 +23,28 @@ namespace Game
             get => saveSelected;
             set => saveSelected = value;
         }
+        
+        public SaveInfos GetCurrentSaveSelectedInfos()
+        {
+            SaveInfos currentSave = new SaveInfos();
+            switch (saveSelected)
+            {
+                case 1:
+                    currentSave = saveSlot1;
+                    break;
+                case 2:
+                    currentSave = saveSlot2;
+                    break;
+                case 3:
+                    currentSave = saveSlot3;
+                    break;
+            }
+
+            return currentSave;
+        }
+
+        public PlayerSettings PlayerSettings => playerSettings;
+
 
         public void Awake()
         {
@@ -38,14 +60,14 @@ namespace Game
         {
             Dictionary<string, bool> playableCharactersDictionary = new Dictionary<string, bool>
             {
-                {Constants.FRANKLEM_NAME, false},
-                {Constants.MYRIAM_NAME, false},
-                {Constants.BRAM_NAME, false},
-                {Constants.RASS_NAME, false},
-                {Constants.ULRIC_NAME, false},
-                {Constants.JEBEDIAH_NAME, false},
-                {Constants.THOMAS_NAME, false},
-                {Constants.ABRAHAM_NAME, false}
+                {Constants.FRANKLEM_NAME, true},
+                {Constants.MYRIAM_NAME, true},
+                {Constants.BRAM_NAME, true},
+                {Constants.RASS_NAME, true},
+                {Constants.ULRIC_NAME, true},
+                {Constants.JEBEDIAH_NAME, true},
+                {Constants.THOMAS_NAME, true},
+                {Constants.ABRAHAM_NAME, true}
             };
             return playableCharactersDictionary;
         }
@@ -134,9 +156,10 @@ namespace Game
             }
         }
 
-        public void UpdateSettings()
+        public void UpdateSettings(PlayerSettings playerSettings)
         {
-            saveSettingsRepo.Update(playerSettings);
+            this.playerSettings = playerSettings;
+            saveSettingsRepo.Update(this.playerSettings);
         }
         
         #region CreateSave
@@ -144,7 +167,7 @@ namespace Game
         private void CreateSave(SaveInfos saveSlot)
         {
             saveGameRepo.Insert(saveSlot);
-            foreach (var character in saveSlot.characterInfos)
+            foreach (var character in saveSlot.CharacterInfos)
             {
                 characterStatusRepo.Insert(character);
             }
@@ -156,8 +179,8 @@ namespace Game
 
         public void DeleteSave(SaveInfos saveSlot)
         {
-            characterStatusRepo.Delete(saveSlot.id);
-            saveGameRepo.Delete(saveSlot.id);
+            characterStatusRepo.Delete(saveSlot.Id);
+            saveGameRepo.Delete(saveSlot.Id);
         }
 
         #endregion
@@ -170,7 +193,7 @@ namespace Game
             {
                 case 1:
                     saveGameRepo.Update(saveSlot1);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -178,7 +201,7 @@ namespace Game
                     break;
                 case 2:
                     saveGameRepo.Update(saveSlot2);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -186,7 +209,7 @@ namespace Game
                     break;
                 case 3:
                     saveGameRepo.Update(saveSlot3);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -206,23 +229,53 @@ namespace Game
 
             foreach (var characterInfo in characterInfos)
             {
-                switch (characterInfo.saveId)
+                switch (characterInfo.SaveId)
                 {
                     case 1:
-                        result[0].characterInfos.Add(characterInfo);
+                        result[0].CharacterInfos.Add(characterInfo);
                         break;
                     case 2:
-                        result[1].characterInfos.Add(characterInfo);
+                        result[1].CharacterInfos.Add(characterInfo);
                         break;
                     default:
-                        result[2].characterInfos.Add(characterInfo);
+                        result[2].CharacterInfos.Add(characterInfo);
                         break;
                 }
             }
             return result;
         }
 
+        public SaveInfos[] GetSaves()
+        {
+            return new SaveInfos[]{saveSlot1, saveSlot2, saveSlot3};
+        }
         #endregion
+
+        public void ResetSave()
+        {
+            var playableCharactersDictionary = CreateBaseCharacterDictionary();
+
+            SaveInfos cleanSave = new SaveInfos(1, Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
+                Constants.LEVEL_1_SCENE_NAME, playableCharactersDictionary);
+            
+            switch (saveSelected)
+            {
+                case 1:
+                    saveSlot1 = cleanSave;
+                    UpdateSave(saveSelected);
+                    break;
+                case 2:
+                    cleanSave.Id = 2;
+                    saveSlot2 = cleanSave;
+                    UpdateSave(saveSelected);
+                    break;
+                case 3:
+                    cleanSave.Id = 3;
+                    saveSlot3 = cleanSave;
+                    UpdateSave(saveSelected);
+                    break;
+            }
+        }
 
         public void OnDestroy()
         {

@@ -1,16 +1,16 @@
 ﻿namespace Game
 {
-    public struct CharacterInfo
+    public class CharacterInfo
     {
-        public string characterName;
-        public bool characterStatus;
-        public int saveId;
+        public string CharacterName { get; set; }
+        public bool CharacterStatus { get; set; }
+        public int SaveId { get; set; }
 
         public CharacterInfo(string characterName, bool characterStatus, int saveId)
         {
-            this.characterStatus = characterStatus;
-            this.characterName = characterName;
-            this.saveId = saveId;
+            CharacterStatus = characterStatus;
+            CharacterName = characterName;
+            SaveId = saveId;
         }
     }
 }

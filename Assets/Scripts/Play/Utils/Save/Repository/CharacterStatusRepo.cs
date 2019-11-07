@@ -23,15 +23,15 @@ namespace Game
                 "INSERT INTO CharacterStatus(character_id,savegame_id,character_name, character_status) VALUES (Null,?,?,?)";
 
             var id = command.CreateParameter();
-            id.Value = myObject.saveId;
+            id.Value = myObject.SaveId;
             command.Parameters.Add(id);
 
             var characterName = command.CreateParameter();
-            characterName.Value = myObject.characterName;
+            characterName.Value = myObject.CharacterName;
             command.Parameters.Add(characterName);
 
             var characterStatus = command.CreateParameter();
-            characterStatus.Value = myObject.characterStatus;
+            characterStatus.Value = myObject.CharacterStatus;
             command.Parameters.Add(characterStatus);
 
             command.ExecuteNonQuery();
@@ -65,15 +65,15 @@ namespace Game
                 "UPDATE CharacterStatus SET character_status = ? WHERE savegame_id = ? AND character_name = ?";
 
             var characterStatus = command.CreateParameter();
-            characterStatus.Value = myObject.characterStatus;
+            characterStatus.Value = myObject.CharacterStatus;
             command.Parameters.Add(characterStatus);
 
             var id = command.CreateParameter();
-            id.Value = myObject.saveId;
+            id.Value = myObject.SaveId;
             command.Parameters.Add(id);
 
             var characterName = command.CreateParameter();
-            characterName.Value = myObject.characterName;
+            characterName.Value = myObject.CharacterName;
             command.Parameters.Add(characterName);
 
             command.ExecuteNonQuery();

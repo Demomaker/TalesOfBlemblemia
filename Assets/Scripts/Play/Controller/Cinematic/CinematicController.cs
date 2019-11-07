@@ -24,13 +24,13 @@ namespace Game
                 isPlayingACinematic = value;
                 if (isPlayingACinematic)
                 {
-                    cameraController.DisableControls();
-                    uiController.SetActive(false);
+                    if (cameraController != null) cameraController.DisableControls();
+                    if (uiController != null) uiController.SetActive(false);
                 }
                 else
                 {
-                    cameraController.EnableControls();
-                    uiController.SetActive(true);
+                    if (cameraController != null) cameraController.EnableControls();
+                    if (uiController != null) uiController.SetActive(true);
                 }
             }
         }

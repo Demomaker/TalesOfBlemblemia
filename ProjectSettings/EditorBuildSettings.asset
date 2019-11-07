@@ -18,12 +18,18 @@ EditorBuildSettings:
     path: Assets/Scenes/GameUI.unity
     guid: 1a9486eef1b5b334ba56ec841baf2cf7
   - enabled: 1
-    path: Assets/Scenes/ParabeneForest.unity
+    path: Assets/Scenes/Levels/ParabeneForest.unity
     guid: 8a2366d1db21489409e5c5e7a8f5f560
   - enabled: 0
-    path: Assets/Scenes/Jimsterbourg.unity
+    path: Assets/Scenes/Levels/Jimsterbourg.unity
     guid: c787b87a96eb24d42970ca72d48a0649
-  - enabled: 1
-    path: Assets/Scenes/Tutorial.unity
+  - enabled: 0
+    path: Assets/Scenes/Levels/Tutorial.unity
     guid: bb678c5030d9c714484f0f6e9ce3dc3f
+  - enabled: 1
+    path: Assets/Scenes/Levels/TulipValley.unity
+    guid: 262c9fff37ce64d40996e24056a8e0c7
+  - enabled: 1
+    path: Assets/Scenes/Levels/Morktress.unity
+    guid: 91dc955b4bbf92648a2077868dcc6334
   m_configObjects: {}
