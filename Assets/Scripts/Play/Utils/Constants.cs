@@ -19,7 +19,7 @@
         
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
         
-        public const string LEVEL_1_SCENE_NAME = "Level1";
+        public const string LEVEL_1_SCENE_NAME = "Tutorial";
         public const string LEVEL_2_SCENE_NAME = "Level2";
         public const string LEVEL_3_SCENE_NAME = "ParabeneForest";
         public const string LEVEL_4_SCENE_NAME = "TestLevel";

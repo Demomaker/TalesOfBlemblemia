@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using Debug = System.Diagnostics.Debug;
 
 namespace Game
 {
@@ -28,7 +29,8 @@ namespace Game
 
         public void CreateGridCells()
         {
-            BoundsInt bounds = backgroundTilemap.cellBounds;
+            BoundsInt bounds = interactiveTilemap.cellBounds;
+            UnityEngine.Debug.Log(bounds);
             TileBase[] allTiles = interactiveTilemap.GetTilesBlock(bounds);
             TileBase[] emptyTiles = tilemapOfTileToIncludeIfEmptyTile.GetTilesBlock(bounds);
             TileBase[] backgroundTiles = backgroundTilemap.GetTilesBlock(bounds);

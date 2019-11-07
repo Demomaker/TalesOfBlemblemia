@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3032034816976037131}
   - component: {fileID: 3032034816976037128}
+  - component: {fileID: 3305739749137775755}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: LevelController
@@ -44,3 +45,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelName: 
+  backgroundMusic: {fileID: 8300000, guid: 663e35c2820ba764ebac852c75d67895, type: 3}
+  backgroundMusicOption: 0
+  dialogueTriggerStartFranklem: {fileID: 0}
+  doNotEnd: 0
+  completeIfAllEnemiesDefeated: 0
+  completeIfPointAchieved: 0
+  completeIfSurvivedCertainNumberOfTurns: 0
+  completeIfCertainEnemyDefeated: 0
+  defeatIfNotCompleteLevelInCertainAmountOfTurns: 0
+  defeatIfProtectedIsKilled: 0
+  defeatIfAllPlayerUnitsDied: 0
+  pointToAchieve: {x: 0, y: 0}
+  enemyToDefeat: {fileID: 0}
+  targetsToProtect: []
+  numberOfTurnsBeforeDefeat: 0
+  numberOfTurnsBeforeCompletion: 0
+  revertWeaponTriangle: 0
+--- !u!114 &3305739749137775755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3032034816976037129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3b3f078b512f584fab740b15a882f26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
