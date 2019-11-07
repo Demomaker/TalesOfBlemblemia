@@ -13,21 +13,33 @@ MonoBehaviour:
   m_Name: TutorialOnStartCinematic
   m_EditorClassIdentifier: 
   cameraActions:
-  - cameraTarget: {x: 0, y: 0}
+  - cameraTarget: {x: 8.5, y: 8.5}
     duration: 0.58
-    cameraZoom: 3
+    cameraZoom: 8
     quotes:
     - name: Narrator
-      sentence: This is the Tutorial OwO
+      sentence: Welcome to Tales Of Blemblemia.
+    - name: Narrator
+      sentence: You only need a mouse to play.
+    - name: Narrator
+      sentence: You only need a mouse to play.
   - cameraTarget: {x: 6, y: 7}
-    duration: 2.38
+    duration: 1.16
     cameraZoom: 4.43
     quotes:
     - name: Edgar
-      sentence: Oh, Il arrive tel bug! OwO!
+      sentence: Oh, Franklem, these are some beautiful mountains!
   - cameraTarget: {x: 7, y: 7}
     duration: 1.66
     cameraZoom: 4.22
     quotes:
     - name: Franklem
-      sentence: Don't get carried away! They are going to blast us with peanuts...
+      sentence: Don't get carried away by the beauty of this land, Edgar!
+    - name: Franklem
+      sentence: We need to prepare for the next big fight...
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Edgar
+      sentence: Franklem! Watch out!

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3032034816976037131}
   - component: {fileID: 3032034816976037128}
-  - component: {fileID: 3305739749137775755}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: LevelController
@@ -62,15 +61,3 @@ MonoBehaviour:
   numberOfTurnsBeforeDefeat: 0
   numberOfTurnsBeforeCompletion: 0
   revertWeaponTriangle: 0
---- !u!114 &3305739749137775755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3032034816976037129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3b3f078b512f584fab740b15a882f26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

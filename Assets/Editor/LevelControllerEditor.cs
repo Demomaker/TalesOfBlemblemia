@@ -10,7 +10,6 @@ namespace Game
     {
         private SerializedProperty levelName;
         private SerializedProperty backgroundMusic;
-        private SerializedProperty backgroundMusicOptionProperty;
         private SerializedProperty doNotEnd;
         private SerializedProperty completeIfAllEnemiesDefeated;
         private SerializedProperty completeIfPointAchieved;
@@ -25,16 +24,11 @@ namespace Game
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
         private SerializedProperty revertWeaponTriangle;
-        private AudioClips audioClips;
-        
-        LevelBackgroundMusicType backgroundMusicOption;
 
         private void OnEnable()
         {
             levelName = serializedObject.FindProperty("levelName");
             backgroundMusic = serializedObject.FindProperty("backgroundMusic");
-            backgroundMusicOptionProperty = serializedObject.FindProperty("backgroundMusicOption");
-            backgroundMusicOption = (LevelBackgroundMusicType)backgroundMusicOptionProperty.enumValueIndex;
             doNotEnd = serializedObject.FindProperty("doNotEnd");
             completeIfAllEnemiesDefeated = serializedObject.FindProperty("completeIfAllEnemiesDefeated");
             completeIfPointAchieved = serializedObject.FindProperty("completeIfPointAchieved");
@@ -49,8 +43,6 @@ namespace Game
             numberOfTurnsBeforeCompletion = serializedObject.FindProperty("numberOfTurnsBeforeCompletion");
             numberOfTurnsBeforeDefeat = serializedObject.FindProperty("numberOfTurnsBeforeDefeat");
             revertWeaponTriangle = serializedObject.FindProperty("revertWeaponTriangle");
-            audioClips = Finder.AudioClips;
-            if(audioClips == null) audioClips = new NullAudioClips();
 
         }
 
@@ -63,20 +55,8 @@ namespace Game
             EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
             levelName.stringValue = EditorGUILayout.TextField("Level Name", levelName.stringValue);
-            backgroundMusicOption = (LevelBackgroundMusicType)EditorGUILayout.EnumPopup("Background Music Type", backgroundMusicOption);
-            backgroundMusicOptionProperty.enumValueIndex = (int)backgroundMusicOption;
-            switch (backgroundMusicOption)
-            {
-                case LevelBackgroundMusicType.Forest :
-                    backgroundMusic.objectReferenceValue = audioClips.ForestMusic;
-                    break;
-                case LevelBackgroundMusicType.Castle :
-                    backgroundMusic.objectReferenceValue = audioClips.CastleMusic;
-                    break;
-                case LevelBackgroundMusicType.Boss :
-                    backgroundMusic.objectReferenceValue = audioClips.BossMusic;
-                    break;
-            }
+            backgroundMusic.objectReferenceValue = 
+                EditorGUILayout.ObjectField("Background Music", enemyToDefeat.objectReferenceValue, typeof(AudioClip),true );
             doNotEnd.boolValue = EditorGUILayout.Toggle("Do Not End Level", doNotEnd.boolValue);
             
             EditorGUILayout.LabelField("Weapon Transformation", EditorStyles.boldLabel);
@@ -130,7 +110,7 @@ namespace Game
 
         }
 
-        public void SaveAndReturn()
+        private void SaveAndReturn()
         {
             serializedObject.ApplyModifiedProperties();
             return;

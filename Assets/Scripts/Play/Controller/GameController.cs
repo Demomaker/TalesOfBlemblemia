@@ -14,12 +14,12 @@ namespace Game
          [SerializeField] private int choiceForEasy = 10;
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
+         [SerializeField] private string startingLevelName = Constants.TUTORIAL_SCENE_NAME;
          
          private DifficultyLevel difficultyLevel;
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
-         private string startingLevelName = Constants.MORKTRESS_SCENE_NAME;
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
          private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
@@ -45,8 +45,8 @@ namespace Game
          {
              Levels = new List<Level>
              {
-                 new Level("", Constants.LEVEL_1_SCENE_NAME),
-                 new Level(Constants.LEVEL_1_SCENE_NAME, Constants.LEVEL_2_SCENE_NAME),
+                 new Level("", Constants.TUTORIAL_SCENE_NAME),
+                 new Level(Constants.TUTORIAL_SCENE_NAME, Constants.LEVEL_2_SCENE_NAME),
                  new Level(Constants.LEVEL_2_SCENE_NAME, Constants.LEVEL_3_SCENE_NAME),
                  new Level(Constants.LEVEL_3_SCENE_NAME, Constants.LEVEL_4_SCENE_NAME),
                  new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_5_SCENE_NAME),
