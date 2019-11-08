@@ -245,7 +245,7 @@ PrefabInstance:
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: representedLevelName
-      value: Level5
+      value: DarkTower
       objectReference: {fileID: 0}
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
