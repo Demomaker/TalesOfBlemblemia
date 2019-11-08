@@ -53,8 +53,8 @@ using UnityEngine.UI;
         public void DisplayPossibleActionsFrom(Tile fromTile)
         {
             fromTile.DisplaySelectedTile();
-            var linkedUnit = fromTile.LinkedUnit;
-            var movementCosts = linkedUnit.MovementCosts;
+            var playerUnit = fromTile.LinkedUnit;
+            var movementCosts = playerUnit.MovementCosts;
             for (int i = 0; i < movementCosts.GetLength(0); i++)
             {
                 for (int j = 0; j < movementCosts.GetLength(1); j++)
@@ -62,13 +62,13 @@ using UnityEngine.UI;
                     if (movementCosts[i, j] > 0)
                     {
                         var tile = GetTile(i, j);
-                        if (tile.IsAvailable && movementCosts[i, j] <= linkedUnit.MovesLeft)
+                        if (tile.IsAvailable && movementCosts[i, j] <= playerUnit.MovesLeft)
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInMovementRange(tile.LinkedUnit))
+                        else if (tile.LinkedUnit != null && playerUnit.TargetIsInMovementRange(tile.LinkedUnit))
                         {
-                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy || tile.IsOccupiedByADoor))
+                            if (playerUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy))
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
@@ -76,17 +76,17 @@ using UnityEngine.UI;
                             {
                                 tile.DisplayRecruitActionPossibility();
                             }
-                            else if (linkedUnit.WeaponType == WeaponType.HealingStaff && !tile.LinkedUnit.IsEnemy)
+                            else if (playerUnit.WeaponType == WeaponType.HealingStaff && !tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayHealActionPossibility();
                             }
                         }
-                        else if (tile.LinkedDoor != null)
+                        else if (tile.LinkedDoor != null && tile.LinkedDoor.isActiveAndEnabled)
                         {
-                            if (!tile.LinkedDoor.IsEnemyTarget)
-                                tile.DisplayAttackActionPossibility();
-                            else
+                            if (tile.LinkedDoor.IsEnemyTarget)
                                 tile.DisplayProtectable();
+                            else if (playerUnit.TargetIsInMovementRange(tile.LinkedDoor))
+                                tile.DisplayAttackActionPossibility();
                         }
                     }
                 }
