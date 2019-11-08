@@ -14,7 +14,7 @@ namespace Game
 {
     /// <summary>
     /// Controller for each individual level. Manages the turn functionalities as well as the players' turns
-    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne
+    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
     /// </summary>
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
@@ -30,12 +30,12 @@ namespace Game
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
-        /*TODO CRISSSSS changer le nom de la variable ESTI CA MARCHE PAS CALISSE c'eST QUOI CA ESTI*/[FormerlySerializedAs("completeIfCertainEnemyDefeated")] [SerializeField] private bool completeIfCertainTargetDefeated = false;
+        [SerializeField] private bool completeIfCertainTargetDefeated = false;
         [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [FormerlySerializedAs("enemyToDefeat")] [SerializeField] private Targetable targetToDefeat = null;
+        [SerializeField] private Targetable targetToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;

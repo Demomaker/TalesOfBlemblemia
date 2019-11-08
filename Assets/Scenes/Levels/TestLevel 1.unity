@@ -20363,9 +20363,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b3f078b512f584fab740b15a882f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosition: {fileID: 1488182975}
-  startActions: []
-  endActions: []
 --- !u!1 &1147864872
 GameObject:
   m_ObjectHideFlags: 0
@@ -25312,12 +25309,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1483525263}
   m_CullTransparentMesh: 0
---- !u!4 &1488182975 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9184210282831072268, guid: 386cff33803d9e742ab386963032c720,
-    type: 3}
-  m_PrefabInstance: {fileID: 268381032}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1493105227
 GameObject:
   m_ObjectHideFlags: 0
@@ -36624,6 +36615,7 @@ MonoBehaviour:
     type: 3}
   recruitableTileSprite: {fileID: -9127714096467619421, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
     type: 3}
+  protectableTileSprite: {fileID: 0}
 --- !u!114 &1951602360
 MonoBehaviour:
   m_ObjectHideFlags: 0

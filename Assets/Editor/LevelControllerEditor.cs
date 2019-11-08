@@ -104,7 +104,7 @@ namespace Game
                     EditorGUILayout.Toggle("Complete If Certain Target Defeated", completeIfCertainTargetDefeated.boolValue);
                 if (completeIfCertainTargetDefeated.boolValue)
                     targetToDefeat.objectReferenceValue =
-                        EditorGUILayout.ObjectField("Target to Defeat", /*TODO race Changer la objectReferenceValue pour le NOM de l'unité*/ targetToDefeat.objectReferenceValue, typeof(Targetable),true );
+                        EditorGUILayout.ObjectField("Target to Defeat", targetToDefeat.objectReferenceValue, typeof(Targetable),true );
                 
                 EditorGUILayout.LabelField("Conditions For Level Defeat", EditorStyles.boldLabel);
 
@@ -123,14 +123,10 @@ namespace Game
                 if (defeatIfProtectedIsKilled.boolValue)
                     EditorGUILayout.PropertyField(targetsToProtect,true);
             }
-            
-                
-            
             SaveAndReturn();
-
         }
 
-        public void SaveAndReturn()
+        private void SaveAndReturn()
         {
             serializedObject.ApplyModifiedProperties();
             return;

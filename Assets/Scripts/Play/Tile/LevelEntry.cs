@@ -34,7 +34,6 @@ public class LevelEntry : MonoBehaviour
     {
         if (CanBeClicked && !string.IsNullOrEmpty(representedLevelName))
         {
-            
             EventSystem.current.SetSelectedGameObject(null);
             Finder.GameController.LoadLevel(representedLevelName);
         }
