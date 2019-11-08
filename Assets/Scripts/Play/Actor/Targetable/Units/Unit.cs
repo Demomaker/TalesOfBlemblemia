@@ -244,6 +244,7 @@ namespace Game
                     if (TargetIsInRange(action.Target))
                     {
                         yield return Attack(action.Target);
+                        yield return uiController.LaunchBattleReport(IsEnemy);
                     }
                     else
                     {
@@ -298,7 +299,7 @@ namespace Game
             
             if(target.GetType() == typeof(Door))
             {
-                uiController.PrepareBattleReport(
+                uiController.SetupCharactersBattleInfo(
                     this.Stats.maxHealthPoints, 
                     this.CurrentHealthPoints,
                     ((Door)target).BaseHealth,
@@ -308,7 +309,7 @@ namespace Game
             }
             else
             {
-                uiController.PrepareBattleReport(
+                uiController.SetupCharactersBattleInfo(
                     this.Stats.maxHealthPoints, 
                     this.CurrentHealthPoints,
                     ((Unit)target).classStats.maxHealthPoints,
@@ -358,7 +359,7 @@ namespace Game
             target.CurrentHealthPoints -= damage;
             //todo Will have to check for Doors in the future.
             if (target is Unit)
-                yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints,CurrentHealthPoints);
+                uiController.ChangeCharacterDamageTaken(damage, IsEnemy);
             counter = 0;
             
             while (counter < duration)

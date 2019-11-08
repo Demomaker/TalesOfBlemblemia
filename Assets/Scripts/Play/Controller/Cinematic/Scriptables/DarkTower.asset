@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DarkTower
   m_EditorClassIdentifier: 
   cameraActions:
-  - cameraTarget: {x: 0, y: 8}
+  - cameraTarget: {x: 0, y: 5}
     duration: 2
     cameraZoom: 6
     quotes:

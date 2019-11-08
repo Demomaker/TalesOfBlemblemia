@@ -12,9 +12,11 @@ namespace Game
     public class ClickableObject : MonoBehaviour, IPointerClickHandler
     {
         private Tile tile;
+        private UIController uiController;
 
         private void Awake()
         {
+            uiController = Harmony.Finder.UIController;
             tile = GetComponentInParent<Tile>();
         }
 
@@ -59,6 +61,7 @@ namespace Game
                     else
                     {
                        gridControllerSelectedUnit.Attack(tile.LinkedUnit);
+                       uiController.LaunchBattleReport(false);
                     }
                         
                     if (tile.LinkedUnit.NoHealthLeft)

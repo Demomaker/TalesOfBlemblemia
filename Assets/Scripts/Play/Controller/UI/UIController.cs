@@ -21,7 +21,9 @@ namespace Game
         [SerializeField] private TMP_Text tileMouvementEffect;
         [SerializeField] private Image tileTexture;
 
-        [Header("Turn")] [SerializeField] private TMP_Text turnCounter;
+        [Header("Turn")] 
+        [SerializeField] private TMP_Text turnCounter;
+        [SerializeField] private TMP_Text turnInfo;
 
         [Header("Victory Condition")] [SerializeField] private TMP_Text victoryCondition;
         
@@ -44,11 +46,13 @@ namespace Game
         [SerializeField] private GameObject battleReports;
         
         [SerializeField] private GameObject battleReportAlly;
-        [SerializeField] private LayoutGroup playerHealthBar;
+        [FormerlySerializedAs("playerHealthBar")] 
+        [SerializeField] private LayoutGroup playerHealthBarLayout;
         [SerializeField] private GameObject playerDeathSymbol;
         
         [SerializeField] private GameObject battleReportEnemy;
-        [SerializeField] private LayoutGroup enemyHealthBar;
+        [FormerlySerializedAs("enemyHealthBar")] 
+        [SerializeField] private LayoutGroup enemyHealthBarLayout;
         [SerializeField] private GameObject enemyDeathSymbol;
 
         [Header("Colors")] 
@@ -59,41 +63,50 @@ namespace Game
 
         private const string UNREACHABLE_TILE_TEXT = "Unreachable";
         private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
+        private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
 
         private Animator playerAnimator;
         private Animator enemyAnimator;
         private static readonly int IS_ATTACKING = Animator.StringToHash("IsAttacking");
 
         private bool animationIsPlaying = false;
+        private BattleInfos playerBattleInfos;
+        private BattleInfos enemyBattleInfos;
+
+        private GameObject[] playerHealthbar;
+        private GameObject[] enemyHealthbar;
 
         public bool IsBattleReportActive => battleReports.activeSelf;
 
         private void Start()
         {
+            playerHealthbar = playerHealthBarLayout.Children();
+            enemyHealthbar = enemyHealthBarLayout.Children();
+            playerBattleInfos = new BattleInfos();
+            enemyBattleInfos = new BattleInfos();
             canvas.enabled = true;
             playerAnimator = battleReportAlly.GetComponent<Animator>();
             enemyAnimator = battleReportEnemy.GetComponent<Animator>();
             DeactivateBattleReport();
         }
 
-        public void PrepareBattleReport(int maxHealthPoints, 
+        public void SetupCharactersBattleInfo(int maxHealthPoints, 
         int currentHealthPoint, int targetMaxHealthPoint, int targetCurrentHealthPoint, bool isEnemy)
         {
             if (isEnemy)
             {
-                EnemyHealthBarSetup(maxHealthPoints, currentHealthPoint, grey);
-                PlayerHealthBarSetup(targetMaxHealthPoint, targetCurrentHealthPoint, grey);
+                enemyBattleInfos.ChangeInfos(maxHealthPoints, currentHealthPoint);
+                playerBattleInfos.ChangeInfos(targetMaxHealthPoint, targetCurrentHealthPoint);
             }
             else
             {
-                PlayerHealthBarSetup(maxHealthPoints, currentHealthPoint,grey);
-                EnemyHealthBarSetup(targetMaxHealthPoint, targetCurrentHealthPoint, grey);
+                playerBattleInfos.ChangeInfos(maxHealthPoints, currentHealthPoint);
+                enemyBattleInfos.ChangeInfos(targetMaxHealthPoint, targetCurrentHealthPoint);
             }
         }
-
-        private void PlayerHealthBarSetup(int maxHealthPoints, int currentHealthPoint, Color color)
+        
+        private void ModifyHealthBar(int maxHealthPoints, int currentHealthPoint, GameObject[] healthBar, bool beforeBattle = true, int damage = 0)
         {
-            GameObject[] healthBar = playerHealthBar.Children();
             for (int i = healthBar.Length; i > maxHealthPoints; i--)
             {
                 healthBar[i - 1].SetActive(false);
@@ -102,79 +115,98 @@ namespace Game
             for (int i = maxHealthPoints; i > currentHealthPoint; i--)
             {
                 RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                healthBarImage.color = color;
+                healthBarImage.color = grey;
+            }
+
+            if (beforeBattle == false)
+            {
+                for (int i = currentHealthPoint; i > currentHealthPoint - damage; i--)
+                {
+                    RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
+                    healthBarImage.color = red;
+                }
             }
         }
 
-        private void EnemyHealthBarSetup(int maxHealthPoints, int currentHealthPoint, Color color)
+        public void ChangeCharacterDamageTaken(int dmg, bool isEnemy)
         {
-            GameObject[] healthBar = enemyHealthBar.Children();
-            for (int i = healthBar.Length; i > maxHealthPoints; i--)
-            {
-                healthBar[i - 1].SetActive(false);
-            }
-
-            for (int i = maxHealthPoints; i > currentHealthPoint; i--)
-            {
-                RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                healthBarImage.color = color;
-            }
-        }
-
-        public Coroutine LaunchBattleReport(bool isEnemy, int maxHealthPoint, int currentHealthPoint)
-        {
-            Coroutine battleReportHandle;
-            
-            battleReports.SetActive(true);
             if (isEnemy)
             {
-                battleReportHandle = StartCoroutine(EnemyAttackAnimation(maxHealthPoint, currentHealthPoint));
+                enemyBattleInfos.DamageTaken = dmg;
             }
             else
             {
-                battleReportHandle = StartCoroutine(PlayerAttackAnimation(maxHealthPoint,currentHealthPoint));
+                playerBattleInfos.DamageTaken = dmg;
             }
+        }
+
+        public Coroutine LaunchBattleReport(bool isEnemy)
+        {
+            battleReports.SetActive(true);
 
             playerDeathSymbol.SetActive(false);
             enemyDeathSymbol.SetActive(false);
-            
-            if (currentHealthPoint <= 0)
-            {
-                if (isEnemy) playerDeathSymbol.SetActive(true);
-                else enemyDeathSymbol.SetActive(true);
-            }
-            
-            return battleReportHandle;
+
+            Coroutine handle = StartCoroutine(BattleReport(isEnemy));
+
+            return handle;
         }
 
-        private IEnumerator EnemyAttackAnimation(int maxHealthPoint, int currentHealthPoint)
+        private IEnumerator BattleReport(bool isEnemy)
+        {
+            if (isEnemy)
+            {
+                yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthbar);
+                if (playerBattleInfos.HealthBeforeCombat - playerBattleInfos.DamageTaken > 0)
+                {
+                    yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
+                    yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthbar);
+                }
+                   
+            }
+            else
+            {
+                yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthbar);
+                if (enemyBattleInfos.HealthBeforeCombat - enemyBattleInfos.DamageTaken > 0)
+                {
+                    yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
+                    yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthbar);
+                }
+                   
+            }
+
+            if (enemyBattleInfos.HealthBeforeCombat - enemyBattleInfos.DamageTaken <= 0)
+            {
+                enemyDeathSymbol.SetActive(true);
+            }
+
+            if (playerBattleInfos.HealthBeforeCombat - playerBattleInfos.DamageTaken <= 0)
+            {
+                playerDeathSymbol.SetActive(true);
+            }
+
+            yield return new WaitForSeconds(TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO);
+            battleReports.SetActive(false);
+        }
+
+        private IEnumerator AttackAnimation(Animator animator, BattleInfos battleInfos, GameObject[] healthBar)
         {
             while (animationIsPlaying)
             {
                 yield return null;
             }
+            
+            #region BeforeCombat
+                ModifyHealthBar(playerBattleInfos.MaxHp, playerBattleInfos.HealthBeforeCombat, playerHealthbar);
+                ModifyHealthBar(enemyBattleInfos.MaxHp, enemyBattleInfos.HealthBeforeCombat, enemyHealthbar);
+            #endregion
+            
             animationIsPlaying = true;
-            enemyAnimator.SetBool(IS_ATTACKING, true);
+            animator.SetBool(IS_ATTACKING,true);
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
-            yield return  new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            enemyAnimator.SetBool(IS_ATTACKING, false);
+            ModifyHealthBar(battleInfos.MaxHp, battleInfos.HealthBeforeCombat, healthBar, false, battleInfos.DamageTaken);
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            animationIsPlaying = false;
-        }
-
-        private IEnumerator PlayerAttackAnimation(int maxHealthPoint, int currentHealthPoint)
-        {
-            while (animationIsPlaying)
-            {
-                yield return null;
-            } 
-            animationIsPlaying = true;
-            playerAnimator.SetBool(IS_ATTACKING,true);
-            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            EnemyHealthBarSetup(maxHealthPoint, currentHealthPoint, red);
-            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            playerAnimator.SetBool(IS_ATTACKING,false);
+            animator.SetBool(IS_ATTACKING,false);
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             animationIsPlaying = false;
         }
@@ -209,6 +241,11 @@ namespace Game
         public void ModifyTurnCounter(int turns)
         {
             turnCounter.text = turns.ToString(("00"));
+        }
+
+        public void ModifyTurnInfo(string player)
+        {
+            turnInfo.text = player + " turn";
         }
 
         public void ModifyVictoryCondition(string victoryCondition)
