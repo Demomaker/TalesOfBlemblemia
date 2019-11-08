@@ -86,7 +86,10 @@ namespace Game
                      SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
                      SceneManager.UnloadSceneAsync(Constants.OVERWORLD_SCENE_NAME);
                  }
-                 SceneManager.UnloadSceneAsync(Constants.GAME_UI_SCENE_NAME);
+                 else
+                 {
+                     SceneManager.UnloadSceneAsync(Constants.GAME_UI_SCENE_NAME);
+                 }
                  yield return SceneManager.LoadSceneAsync(levelname,LoadSceneMode.Additive);
              }
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
