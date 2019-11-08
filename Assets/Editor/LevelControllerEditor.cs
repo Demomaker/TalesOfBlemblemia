@@ -15,13 +15,13 @@ namespace Game
         private SerializedProperty completeIfAllEnemiesDefeated;
         private SerializedProperty completeIfPointAchieved;
         private SerializedProperty completeIfSurvivedCertainNumberOfTurns;
-        private SerializedProperty completeIfCertainEnemyDefeated;
+        private SerializedProperty completeIfCertainTargetDefeated;
         private SerializedProperty defeatIfAllPlayerUnitsDied;
         private SerializedProperty defeatIfProtectedIsKilled;
         private SerializedProperty defeatIfNotCompleteLevelInCertainAmountOfTurns;
         private SerializedProperty pointToAchieve;
         private SerializedProperty targetsToProtect;
-        private SerializedProperty enemyToDefeat;
+        private SerializedProperty targetToDefeat;
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
         private SerializedProperty revertWeaponTriangle;
@@ -39,13 +39,13 @@ namespace Game
             completeIfAllEnemiesDefeated = serializedObject.FindProperty("completeIfAllEnemiesDefeated");
             completeIfPointAchieved = serializedObject.FindProperty("completeIfPointAchieved");
             completeIfSurvivedCertainNumberOfTurns = serializedObject.FindProperty("completeIfSurvivedCertainNumberOfTurns");
-            completeIfCertainEnemyDefeated = serializedObject.FindProperty("completeIfCertainEnemyDefeated");
+            completeIfCertainTargetDefeated = serializedObject.FindProperty("completeIfCertainTargetDefeated");
             defeatIfAllPlayerUnitsDied = serializedObject.FindProperty("defeatIfAllPlayerUnitsDied");
             defeatIfNotCompleteLevelInCertainAmountOfTurns = serializedObject.FindProperty("defeatIfNotCompleteLevelInCertainAmountOfTurns");
             defeatIfProtectedIsKilled = serializedObject.FindProperty("defeatIfProtectedIsKilled");
             pointToAchieve = serializedObject.FindProperty("pointToAchieve");
             targetsToProtect = serializedObject.FindProperty("targetsToProtect");
-            enemyToDefeat = serializedObject.FindProperty("enemyToDefeat");
+            targetToDefeat = serializedObject.FindProperty("targetToDefeat");
             numberOfTurnsBeforeCompletion = serializedObject.FindProperty("numberOfTurnsBeforeCompletion");
             numberOfTurnsBeforeDefeat = serializedObject.FindProperty("numberOfTurnsBeforeDefeat");
             revertWeaponTriangle = serializedObject.FindProperty("revertWeaponTriangle");
@@ -100,11 +100,11 @@ namespace Game
                     numberOfTurnsBeforeCompletion.intValue = EditorGUILayout.IntField("Number Of Turns Before Completion",
                         numberOfTurnsBeforeCompletion.intValue);
 
-                completeIfCertainEnemyDefeated.boolValue =
-                    EditorGUILayout.Toggle("Complete If Certain Enemy Defeated", completeIfCertainEnemyDefeated.boolValue);
-                if (completeIfCertainEnemyDefeated.boolValue)
-                    enemyToDefeat.objectReferenceValue =
-                        EditorGUILayout.ObjectField("Enemy to Defeat", enemyToDefeat.objectReferenceValue, typeof(Unit),true );
+                completeIfCertainTargetDefeated.boolValue =
+                    EditorGUILayout.Toggle("Complete If Certain Target Defeated", completeIfCertainTargetDefeated.boolValue);
+                if (completeIfCertainTargetDefeated.boolValue)
+                    targetToDefeat.objectReferenceValue =
+                        EditorGUILayout.ObjectField("Target to Defeat", targetToDefeat.objectReferenceValue, typeof(Targetable),true );
                 
                 EditorGUILayout.LabelField("Conditions For Level Defeat", EditorStyles.boldLabel);
 
@@ -123,14 +123,10 @@ namespace Game
                 if (defeatIfProtectedIsKilled.boolValue)
                     EditorGUILayout.PropertyField(targetsToProtect,true);
             }
-            
-                
-            
             SaveAndReturn();
-
         }
 
-        public void SaveAndReturn()
+        private void SaveAndReturn()
         {
             serializedObject.ApplyModifiedProperties();
             return;
