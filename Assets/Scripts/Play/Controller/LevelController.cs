@@ -30,12 +30,12 @@ namespace Game
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
-        [SerializeField] private bool completeIfCertainEnemyDefeated = false;
+        [SerializeField] private bool completeIfCertainTargetDefeated = false;
         [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Unit enemyToDefeat = null;
+        [SerializeField] private Targetable targetToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
@@ -106,9 +106,9 @@ namespace Game
             {
                 Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
             }
-            else if (completeIfCertainEnemyDefeated)
+            else if (completeIfCertainTargetDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + enemyToDefeat);
+                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + targetToDefeat);
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
             {
@@ -253,9 +253,9 @@ namespace Game
                 || (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile == null) 
                 || !(GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
             }
-            if (completeIfCertainEnemyDefeated)
+            if (completeIfCertainTargetDefeated)
             {
-                if (!(enemyToDefeat == null || enemyToDefeat.NoHealthLeft)) thirdConditionAchieved = false;
+                if (!(targetToDefeat == null || targetToDefeat.NoHealthLeft)) thirdConditionAchieved = false;
             }
             if (completeIfSurvivedCertainNumberOfTurns)
             {
