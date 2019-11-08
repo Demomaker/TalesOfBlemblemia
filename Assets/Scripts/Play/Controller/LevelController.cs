@@ -128,10 +128,6 @@ namespace Game
 
             if (levelEnded)
             {
-                if (levelCompleted)
-                {
-                    onLevelVictory.Publish(this);
-                }
                 StartCoroutine(EndLevel());
             }
 
@@ -152,6 +148,11 @@ namespace Game
             if (levelIsEnding) yield break;
             levelIsEnding = true;
             
+            if (levelCompleted)
+            {
+                onLevelVictory.Publish(this);
+            }
+            
             while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
@@ -161,7 +162,7 @@ namespace Game
 
             UpdatePlayerSave();
             
-            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+            //Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
         /// <summary>
@@ -263,7 +264,6 @@ namespace Game
             }
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
-            if (levelCompleted) onLevelVictory.Publish(this);
         }
 
         private void CheckIfLevelFailed()

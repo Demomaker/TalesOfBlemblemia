@@ -16,13 +16,7 @@ MonoBehaviour:
   - cameraTarget: {x: 8.5, y: 8.5}
     duration: 0.58
     cameraZoom: 8
-    quotes:
-    - name: Narrator
-      sentence: Welcome to Tales Of Blemblemia.
-    - name: Narrator
-      sentence: You only need a mouse to play.
-    - name: Narrator
-      sentence: You only need a mouse to play.
+    quotes: []
   - cameraTarget: {x: 6, y: 7}
     duration: 1.16
     cameraZoom: 4.43
@@ -42,4 +36,30 @@ MonoBehaviour:
     cameraZoom: 8
     quotes:
     - name: Edgar
-      sentence: Franklem! Watch out!
+      sentence: Franklem! Watch out! It's a Mork!
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Mork
+      sentence: "\u266AYeah, It's been years now, yeah, it's been years now\u266A"
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Franklem
+      sentence: Still singing, huh. We need to get rid of it.
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Edgar
+      sentence: It's pretty simple, Franklem, just move to him and attack!
+    - name: Edgar
+      sentence: Scatter the lands before that to be sure nothing can go wrong.
+    - name: Edgar
+      sentence: I wonder if some more could be behind us...
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes: []

@@ -56,7 +56,7 @@ namespace Game
 
             levelName.stringValue = EditorGUILayout.TextField("Level Name", levelName.stringValue);
             backgroundMusic.objectReferenceValue = 
-                EditorGUILayout.ObjectField("Background Music", enemyToDefeat.objectReferenceValue, typeof(AudioClip),true );
+                EditorGUILayout.ObjectField("Background Music", backgroundMusic.objectReferenceValue, typeof(AudioClip),true );
             doNotEnd.boolValue = EditorGUILayout.Toggle("Do Not End Level", doNotEnd.boolValue);
             
             EditorGUILayout.LabelField("Weapon Transformation", EditorStyles.boldLabel);
