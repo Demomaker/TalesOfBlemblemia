@@ -29,11 +29,11 @@ namespace Game
          public Level[] Levels = new Level[]
          {
              new Level("", Constants.TUTORIAL_SCENE_NAME),
-             new Level(Constants.TUTORIAL_SCENE_NAME, Constants.JIMSTERBOURG_SCENE_NAME),
-             new Level(Constants.JIMSTERBOURG_SCENE_NAME, Constants.PARABENE_FOREST_SCENE_NAME),
-             new Level(Constants.PARABENE_FOREST_SCENE_NAME, Constants.BLEMBOURG_CITADEL_SCENE_NAME),
-             new Level(Constants.BLEMBOURG_CITADEL_SCENE_NAME, Constants.DARK_TOWER_SCENE_NAME),
-             new Level(Constants.BLEMBOURG_CITADEL_SCENE_NAME, Constants.RINFRET_VILLAGE_SCENE_NAME),
+             new Level(Constants.TUTORIAL_SCENE_NAME, Constants.JIMSTERBURG_SCENE_NAME),
+             new Level(Constants.JIMSTERBURG_SCENE_NAME, Constants.PARABENE_FOREST_SCENE_NAME),
+             new Level(Constants.PARABENE_FOREST_SCENE_NAME, Constants.BLEMBURG_CITADEL_SCENE_NAME),
+             new Level(Constants.BLEMBURG_CITADEL_SCENE_NAME, Constants.DARK_TOWER_SCENE_NAME),
+             new Level(Constants.BLEMBURG_CITADEL_SCENE_NAME, Constants.RINFRET_VILLAGE_SCENE_NAME),
              new Level(Constants.RINFRET_VILLAGE_SCENE_NAME, Constants.TULIP_VALLEY_SCENE_NAME),
              new Level(Constants.TULIP_VALLEY_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME),
              new Level(Constants.DARK_TOWER_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)

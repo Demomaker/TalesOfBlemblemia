@@ -18,24 +18,27 @@ MonoBehaviour:
     cameraZoom: 3.5
     quotes:
     - name: Franklem
-      sentence: Race!
+      sentence: We've finally made it. Lord Mork! You will pay for what you have done
+        to this land and its people!
     - name: Myriam
-      sentence: Raace?
+      sentence: Your corruption of the Blemblem shall stand no more!
     - name: Myriam
-      sentence: '...'
+      sentence: Carefull everyone! His vile Antiblemblem sword could critically hurt
+        anyone of you.
   - cameraTarget: {x: 7.5, y: 13.5}
-    duration: 1
+    duration: 3
     cameraZoom: 3.5
     quotes:
     - name: LordMork
-      sentence: Mwahahahaha[...]
+      sentence: Mwahahahaha!
     - name: LordMork
-      sentence: huh, huh, huh, huh, huh[...]
+      sentence: So young and ignorant... Your little army can't possibly face the
+        might of my mighty Morks!
     - name: LordMork
       sentence: Hiiihiiihihihihii, pfrfrfr
   - cameraTarget: {x: 7.5, y: 7.5}
-    duration: 1
-    cameraZoom: 4
+    duration: 2
+    cameraZoom: 6
     quotes:
     - name: Franklem
-      sentence: Let's do this
+      sentence: Talk all you want. Team, let's do this!

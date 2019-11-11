@@ -20,6 +20,7 @@ namespace Game
         public override void Die()
         {
             currentTile.UnlinkDoor();
+            Harmony.Finder.LevelController.IncrementTileUpdate();
             base.Die();
         }
     }

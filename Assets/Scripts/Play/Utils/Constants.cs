@@ -20,9 +20,9 @@
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
         
         public const string TUTORIAL_SCENE_NAME = "Tutorial";
-        public const string JIMSTERBOURG_SCENE_NAME = "Jimsterbourg";
+        public const string JIMSTERBURG_SCENE_NAME = "Jimsterburg";
         public const string PARABENE_FOREST_SCENE_NAME = "ParabeneForest";
-        public const string BLEMBOURG_CITADEL_SCENE_NAME = "BlembourgCitadel";
+        public const string BLEMBURG_CITADEL_SCENE_NAME = "BlemburgCitadel";
         public const string RINFRET_VILLAGE_SCENE_NAME = "RinfretVillage";
         public const string DARK_TOWER_SCENE_NAME = "DarkTower";
         public const string TULIP_VALLEY_SCENE_NAME = "TulipValley";
