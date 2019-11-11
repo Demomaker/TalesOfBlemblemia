@@ -51,8 +51,8 @@ namespace Game
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {
-            navigator.Leave();
-            SceneManager.LoadScene("Main");
+            pauseController.Resume();
+            SceneManager.LoadSceneAsync("Main");
         }
     }
 }

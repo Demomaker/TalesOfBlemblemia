@@ -19,102 +19,97 @@ namespace Game
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
-         private string startingLevelName = Constants.LEVEL_4_SCENE_NAME;
+         
+         private string previousLevelName;
+         private string currentLevelName;
+         
          private Coroutine lastLevelCoroutine;
-         private string lastLoadedLevelName = null;
-         private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
-         private List<string> tagsOfObjectsToAlwaysKeep = new List<string>();
+         private string lastLoadedLevelName;
 
-         public string NameOfLevelCompleted => nameOfLevelCompleted;
-         public List<Level> Levels = new List<Level>();
-         public List<string> LevelsCompleted = new List<string>();
-         public string CurrentLevelName => lastLoadedLevelName; 
-         public string StartingLevelName => startingLevelName;
-         public bool AllLevelsCompleted => Levels.Count == LevelsCompleted.Count;
+         public Level[] Levels = new Level[]
+         {
+             new Level("", Constants.TUTORIAL_SCENE_NAME),
+             new Level(Constants.TUTORIAL_SCENE_NAME, Constants.JIMSTERBURG_SCENE_NAME),
+             new Level(Constants.JIMSTERBURG_SCENE_NAME, Constants.PARABENE_FOREST_SCENE_NAME),
+             new Level(Constants.PARABENE_FOREST_SCENE_NAME, Constants.BLEMBURG_CITADEL_SCENE_NAME),
+             new Level(Constants.BLEMBURG_CITADEL_SCENE_NAME, Constants.DARK_TOWER_SCENE_NAME),
+             new Level(Constants.BLEMBURG_CITADEL_SCENE_NAME, Constants.RINFRET_VILLAGE_SCENE_NAME),
+             new Level(Constants.RINFRET_VILLAGE_SCENE_NAME, Constants.TULIP_VALLEY_SCENE_NAME),
+             new Level(Constants.TULIP_VALLEY_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME),
+             new Level(Constants.DARK_TOWER_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)
+         };
+         
+         public string PreviousLevelName => previousLevelName;
+         public string CurrentLevelName => currentLevelName;
+         public string FirstLevelName => Constants.TUTORIAL_SCENE_NAME;
+         public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel => difficultyLevel;
 
+         private void Awake()
+         {
+             choiceRange = choiceRangePerDifficulty[difficultyLevel];
+             permaDeath = difficultyLevel != DifficultyLevel.Easy;
+         }
+         
          private void Start()
          {
-             InstantiateLevelList();
-             ResetCompletedLevels();
              SceneManager.LoadSceneAsync(Constants.MAINMENU_SCENE_NAME, LoadSceneMode.Additive);
          }
 
-         private void InstantiateLevelList()
+         private void UnloadLevel(string levelName)
          {
-             Levels = new List<Level>
-             {
-                 new Level("", Constants.LEVEL_1_SCENE_NAME),
-                 new Level(Constants.LEVEL_1_SCENE_NAME, Constants.LEVEL_2_SCENE_NAME),
-                 new Level(Constants.LEVEL_2_SCENE_NAME, Constants.LEVEL_3_SCENE_NAME),
-                 new Level(Constants.LEVEL_3_SCENE_NAME, Constants.LEVEL_4_SCENE_NAME),
-                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_5_SCENE_NAME),
-                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_6_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_7_SCENE_NAME),
-                 new Level(Constants.LEVEL_7_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)
-             };
-         }
-         private void ResetCompletedLevels()
-         {
-             LevelsCompleted.Clear();
-         }
-
-         public void UnloadLevel(string levelname)
-         {
-             StartCoroutine(UnloadLevelCoroutine(levelname));
+             StartCoroutine(UnloadLevelCoroutine(levelName));
          }
          
-         public void LoadLevel(string levelname)
+         public void LoadLevel(string levelName)
          {
-             if(lastLevelCoroutine != null)
-                 StopCoroutine(lastLevelCoroutine);
-             lastLevelCoroutine = StartCoroutine(LoadLevelCoroutine(levelname));
-             
-             if(lastLoadedLevelName != null)
-                 UnloadLevel(lastLoadedLevelName);
-             lastLoadedLevelName = levelname;
+             StartCoroutine(LoadLevelCoroutine(levelName));
          }
-    
-         private IEnumerator LoadLevelCoroutine(string levelname)
+
+         private IEnumerator LoadLevelCoroutine(string levelName)
          {
-             if (!SceneManager.GetSceneByName(levelname).isLoaded)
+             if (!SceneManager.GetSceneByName(levelName).isLoaded)
              {
-                 if (levelname != Constants.OVERWORLD_SCENE_NAME)
+                 var levelScene = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+                 levelScene.allowSceneActivation = false;
+                 while (levelScene.progress < 0.9f)
                  {
-                     SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
+                     yield return null;
+                 }
+
+                 if (levelName != Constants.OVERWORLD_SCENE_NAME)
+                 {
+                     while (!Harmony.Finder.OverWorldController.CanLoadANewLevel)
+                     {
+                         yield return null;
+                     }
                      SceneManager.UnloadSceneAsync(Constants.OVERWORLD_SCENE_NAME);
+                     while (SceneManager.GetSceneByName(Constants.OVERWORLD_SCENE_NAME).isLoaded)
+                     {
+                         yield return null;
+                     }
                  }
-                 else
+                 else if (!string.IsNullOrEmpty(currentLevelName))
                  {
-                     SceneManager.UnloadSceneAsync(Constants.GAME_UI_SCENE_NAME);
+                     SceneManager.UnloadSceneAsync(currentLevelName);
+                     while (SceneManager.GetSceneByName(currentLevelName).isLoaded)
+                     {
+                         yield return null;
+                     }
                  }
-                 yield return SceneManager.LoadSceneAsync(levelname,LoadSceneMode.Additive);
+                 levelScene.allowSceneActivation = true;
+                 currentLevelName = levelName;
              }
-             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
-         }
-         
-         private List<GameObject> GetObjectsToAlwaysKeep()
-         {
-             List<GameObject> gameObjects = new List<GameObject>();
-             foreach (string objectTag in tagsOfObjectsToAlwaysKeep)
-             {
-                 gameObjects.Add(GameObject.FindWithTag(objectTag));
-             }
-             return gameObjects;
          }
 
-         private IEnumerator UnloadLevelCoroutine(string levelname)
+         private IEnumerator UnloadLevelCoroutine(string levelName)
          {
-             if (SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.UnloadSceneAsync(levelname);
+             if (SceneManager.GetSceneByName(levelName).isLoaded)
+                 yield return SceneManager.UnloadSceneAsync(levelName);
          }
 
-         public GameController() : this(DifficultyLevel.Easy)
-         {
-             
-         }
+         public GameController() : this(DifficultyLevel.Easy) { }
          public GameController(DifficultyLevel difficultyLevel)
          {
              this.difficultyLevel = difficultyLevel;
@@ -123,13 +118,9 @@ namespace Game
              choiceRangePerDifficulty.Add(DifficultyLevel.Hard, choiceForHard);
          }
 
-         public void Awake()
+         public void OnLevelCompleted(string levelName)
          {
-             choiceRange = choiceRangePerDifficulty[difficultyLevel];
-             permaDeath = difficultyLevel != DifficultyLevel.Easy;
-             tagsOfObjectsToAlwaysKeep.Add(Tags.SOUND_MANAGER);
-             tagsOfObjectsToAlwaysKeep.Add(Tags.GAME_CONTROLLER_TAG);
-             tagsOfObjectsToAlwaysKeep.Add(Tags.ACHIEVEMENT_CONTROLLER_TAG);
+             previousLevelName = levelName;
          }
      }
 
