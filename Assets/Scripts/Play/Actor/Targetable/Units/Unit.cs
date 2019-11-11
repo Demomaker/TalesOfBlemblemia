@@ -27,6 +27,7 @@ namespace Game
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private Weapon weapon;
+        private GameSettings gameSettings;
 
         private UIController uiController;
 
@@ -116,6 +117,7 @@ namespace Game
             onUnitDeath = Harmony.Finder.OnUnitDeath;
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
+            gameSettings = Harmony.Finder.GameSettings;
 
         }
 
@@ -159,12 +161,12 @@ namespace Game
         {
             if (isMoving) isResting = false;
             if (animator == null) return;
-            animator.SetBool(Harmony.Finder.GameSettings.IsMoving, isMoving);
-            animator.SetBool(Harmony.Finder.GameSettings.IsAttacking, isAttacking);
-            animator.SetBool(Harmony.Finder.GameSettings.IsDodging, isDodging);
-            animator.SetBool(Harmony.Finder.GameSettings.IsBeingHurt, isBeingHurt);
-            animator.SetBool(Harmony.Finder.GameSettings.IsResting, isResting);
-            animator.SetBool(Harmony.Finder.GameSettings.IsGoingToDie, isGoingToDie);
+            animator.SetBool(gameSettings.IsMoving, isMoving);
+            animator.SetBool(gameSettings.IsAttacking, isAttacking);
+            animator.SetBool(gameSettings.IsDodging, isDodging);
+            animator.SetBool(gameSettings.IsBeingHurt, isBeingHurt);
+            animator.SetBool(gameSettings.IsResting, isResting);
+            animator.SetBool(gameSettings.IsGoingToDie, isGoingToDie);
         }
         
         public void ResetTurnStats()
@@ -197,7 +199,7 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            return StartCoroutine(MoveByAction(action, Harmony.Finder.GameSettings.MovementDuration));
+            return StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -317,7 +319,7 @@ namespace Game
                 );
             }
             
-            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, Harmony.Finder.GameSettings.AttackDuration));
+            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 
@@ -376,7 +378,7 @@ namespace Game
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
             if (target.GetType() == typeof(Unit) && !isCountering && !target.NoHealthLeft)
-                StartCoroutine(((Unit)target).Attack(this, true, Harmony.Finder.GameSettings.AttackDuration));
+                StartCoroutine(((Unit)target).Attack(this, true, gameSettings.AttackDuration));
             
             if (!isCountering)
             {

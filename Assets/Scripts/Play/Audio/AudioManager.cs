@@ -10,6 +10,7 @@ namespace Game
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
         [SerializeField] private float lowPitchRange = .95f;               
         [SerializeField] private float highPitchRange = 1.05f;
+        private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
         private AudioSource musicSource;
@@ -37,6 +38,7 @@ namespace Game
 
         private void Awake ()
         {
+            gameSettings = Harmony.Finder.GameSettings;
             musicSource = gameObject.AddComponent<AudioSource>();
             sfxSources = new AudioSource[numberOfSFXThatCanBePlayedAtTheSameTime];
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
@@ -121,12 +123,12 @@ namespace Game
 
         private void UpdateMusicVolume()
         {
-            musicSource.volume = mainVolume * musicVolume / (Harmony.Finder.GameSettings.Percent * Harmony.Finder.GameSettings.Percent);
+            musicSource.volume = mainVolume * musicVolume / (gameSettings.Percent * gameSettings.Percent);
         }
 
         private void UpdateSoundVolume()
         {
-            float totalSFXVolume = mainVolume * sfxVolume / (Harmony.Finder.GameSettings.Percent * Harmony.Finder.GameSettings.Percent);
+            float totalSFXVolume = mainVolume * sfxVolume / (gameSettings.Percent * gameSettings.Percent);
             foreach (var sfxSource in sfxSources)
             {
                 sfxSource.volume = totalSFXVolume;

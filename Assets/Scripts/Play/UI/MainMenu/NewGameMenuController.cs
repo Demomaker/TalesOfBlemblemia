@@ -19,11 +19,13 @@ namespace Game
         private Navigator navigator;
         private SaveController saveController;
         private Canvas newGameScreen;
+        private GameSettings gameSettings;
 
         private int saveSlotSelectedNumber;
 
         private void Awake()
         {
+            gameSettings = Harmony.Finder.GameSettings;
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
             newGameScreen = GetComponent<Canvas>();
@@ -53,8 +55,8 @@ namespace Game
             
             saveController.UpdateSave(saveSlotSelectedNumber);
             saveController.SaveSelected = saveSlotSelectedNumber;
-            SceneManager.LoadSceneAsync(Harmony.Finder.GameSettings.OverworldSceneName, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(Harmony.Finder.GameSettings.MainmenuSceneName);
+            SceneManager.LoadSceneAsync(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(gameSettings.MainmenuSceneName);
         }
         
         [UsedImplicitly]

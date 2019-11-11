@@ -8,35 +8,38 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Game
 {
+    /// <summary>
+    /// Editor for the Level Controller. Manages the serialized fields for the Level Controller.
+    /// Author : Mike Bédard
+    /// </summary>
     [CustomEditor(typeof(LevelController))]
     public class LevelControllerEditor : Editor
     {
         /*Property Indexes in Property Names List*/
         private const int FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST = 10;
-        private const int BACKGROUND_MUSIC_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 1;
-        private const int DO_NOT_END_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 3;
-        private const int COMPLETE_IF_ALL_ENEMIES_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 4;
-        private const int COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 5;
+        private const int BACKGROUND_MUSIC_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST;
+        private const int DO_NOT_END_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 2;
+        private const int COMPLETE_IF_ALL_ENEMIES_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 3;
+        private const int COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 4;
         private const int COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX =
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 6;
-        private const int COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 7;
-        private const int DEFEAT_IF_ALL_PLAYER_UNITS_DIED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 8;
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 5;
+        private const int COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 6;
+        private const int DEFEAT_IF_ALL_PLAYER_UNITS_DIED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 7;
         private const int DEFEAT_IF_NOT_COMPLETE_LEVEL_IN_CERTAIN_AMOUNT_OF_TURNS_PROPERTY_INDEX =
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 9;
-        private const int DEFEAT_IF_PROTECTED_IS_KILLED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
-        private const int POINT_TO_ACHIEVE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
-        private const int ENEMY_TO_DEFEAT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
-        private const int TARGETS_TO_PROTECT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 13;
-        private const int NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 14;
-        private const int NUMBER_OF_TURNS_BEFORE_DEFEAT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 15;
-        private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 16;
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 8;
+        private const int DEFEAT_IF_PROTECTED_IS_KILLED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 9;
+        private const int POINT_TO_ACHIEVE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
+        private const int ENEMY_TO_DEFEAT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
+        private const int TARGETS_TO_PROTECT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
+        private const int NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 13;
+        private const int NUMBER_OF_TURNS_BEFORE_DEFEAT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 14;
+        private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 15;
 
         /*Header and Field Names*/
         private const string LEVEL_HEADER = "Level";
         private const string WEAPON_TRANSFORMATION_HEADER = "Weapon Transformation";
         private const string LEVEL_COMPLETION_HEADER = "Conditions For Level Completion";
         private const string LEVEL_DEFEAT_HEADER = "Conditions For Level Defeat";
-        private const string LEVEL_NAME_FIELD_NAME = "Level Name";
         private const string BACKGROUND_MUSIC_FIELD_NAME = "Background Music";
         private const string DO_NOT_END_FIELD_NAME = "Do Not End Level";
         private const string COMPLETE_IF_ALL_ENEMIES_DEFEATED_FIELD_NAME = "Complete If All Enemies Defeated";
@@ -54,7 +57,6 @@ namespace Game
         private List<string> serializedPropertyNames;
         
         /*Properties*/
-        private SerializedProperty levelName;
         private SerializedProperty backgroundMusic;
         private SerializedProperty doNotEnd;
         private SerializedProperty completeIfAllEnemiesDefeated;
@@ -98,19 +100,18 @@ namespace Game
 
         private void InitializeSerializedProperties()
         {
-            levelName = serializedObject.FindProperty(serializedPropertyNames[FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST]);
             backgroundMusic = serializedObject.FindProperty(serializedPropertyNames[BACKGROUND_MUSIC_PROPERTY_INDEX]);
             doNotEnd = serializedObject.FindProperty(serializedPropertyNames[DO_NOT_END_PROPERTY_INDEX]);
             completeIfAllEnemiesDefeated = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_ALL_ENEMIES_DEFEATED_PROPERTY_INDEX]);
             completeIfPointAchieved = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX]);
             completeIfSurvivedCertainNumberOfTurns = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX]);
-            completeIfCertainEnemiesDefeated = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX]);
+            completeIfCertainTargetsDefeated = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX]);
             defeatIfAllPlayerUnitsDied = serializedObject.FindProperty(serializedPropertyNames[DEFEAT_IF_ALL_PLAYER_UNITS_DIED_PROPERTY_INDEX]);
             defeatIfNotCompleteLevelInCertainAmountOfTurns = serializedObject.FindProperty(serializedPropertyNames[DEFEAT_IF_NOT_COMPLETE_LEVEL_IN_CERTAIN_AMOUNT_OF_TURNS_PROPERTY_INDEX]);
             defeatIfProtectedIsKilled = serializedObject.FindProperty(serializedPropertyNames[DEFEAT_IF_PROTECTED_IS_KILLED_PROPERTY_INDEX]);
             pointToAchieve = serializedObject.FindProperty(serializedPropertyNames[POINT_TO_ACHIEVE_PROPERTY_INDEX]);
             targetsToProtect = serializedObject.FindProperty(serializedPropertyNames[TARGETS_TO_PROTECT_PROPERTY_INDEX]);
-            enemiesToDefeat = serializedObject.FindProperty(serializedPropertyNames[ENEMY_TO_DEFEAT_PROPERTY_INDEX]);
+            targetsToDefeat = serializedObject.FindProperty(serializedPropertyNames[ENEMY_TO_DEFEAT_PROPERTY_INDEX]);
             numberOfTurnsBeforeCompletion = serializedObject.FindProperty(serializedPropertyNames[NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX]);
             numberOfTurnsBeforeDefeat = serializedObject.FindProperty(serializedPropertyNames[NUMBER_OF_TURNS_BEFORE_DEFEAT_PROPERTY_INDEX]);
             revertWeaponTriangle = serializedObject.FindProperty(serializedPropertyNames[REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX]);
@@ -133,7 +134,6 @@ namespace Game
         private void ShowAndEditBasicLevelProperties()
         {
             EditorGUILayout.LabelField(LEVEL_HEADER, EditorStyles.boldLabel);
-            ShowAndEditLevelName();
             ShowAndEditBackgroundMusic();
             ShowAndEditDoNotEnd();
         }
@@ -159,11 +159,6 @@ namespace Game
             ShowAndEditDefeatIfAllPlayerUnitsDied();
             ShowAndEditDefeatIfNotCompleteLevelInCertainAmountOfTurns();
             ShowAndEditDefeatIfProtectedIsKilled();
-        }
-
-        private void ShowAndEditLevelName()
-        {
-            levelName.stringValue = EditorGUILayout.TextField(LEVEL_NAME_FIELD_NAME, levelName.stringValue);
         }
 
         private void ShowAndEditBackgroundMusic()

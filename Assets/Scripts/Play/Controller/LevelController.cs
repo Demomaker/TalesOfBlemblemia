@@ -6,6 +6,7 @@ using System.Linq;
 using Game;
 using Harmony;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Finder = Harmony.Finder;
@@ -22,7 +23,6 @@ namespace Game
         
         private const string PROTAGONIST_NAME = "Franklem";
         
-        [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
@@ -41,6 +41,7 @@ namespace Game
         [SerializeField] private bool revertWeaponTriangle = false;
         
         private int levelTileUpdateKeeper = 0;
+        private string levelName = "";
         
 
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
@@ -64,6 +65,10 @@ namespace Game
         private UnitOwner currentPlayer;
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         private int numberOfPlayerTurns = 0;
+        private GameSettings gameSettings;
+        private GameController gameController;
+        private SaveController saveController;
+        private UIController uiController;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
@@ -71,10 +76,15 @@ namespace Game
 
         private void Awake()
         {
+            uiController = Harmony.Finder.UIController;
+            saveController = Finder.SaveController;
+            gameController = Finder.GameController;
+            gameSettings = Harmony.Finder.GameSettings;
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelChange = Harmony.Finder.OnLevelChange;
+            levelName = gameObject.scene.name;
         }
 
         private void Start()
@@ -99,26 +109,26 @@ namespace Game
         {
             if (completeIfPointAchieved)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+                uiController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
             }
             else if (completeIfAllEnemiesDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
+                uiController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
             }
             else if (completeIfCertainTargetsDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + GetStringOfTargetsToDefeat());
+                uiController.ModifyVictoryCondition("Defeat " + GetStringOfTargetsToDefeat());
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
+                uiController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
             }
         }
 
         private string GetStringOfTargetsToDefeat()
         {
             string retval = "";
-            foreach (var enemy in enemiesToDefeat)
+            foreach (var enemy in targetsToDefeat)
             {
                 retval += enemy.ToString() + " ";
             }
@@ -171,7 +181,6 @@ namespace Game
 
             UpdatePlayerSave();
             
-            //Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
         /// <summary>
@@ -180,22 +189,20 @@ namespace Game
         private void UpdatePlayerSave()
         {
             //If the level was successfully completed, mark it as completed
-            if (levelCompleted)
+            if (!levelCompleted) return;
+            gameController.OnLevelCompleted(levelName);
+
+            var levels = gameController.Levels;
+            foreach (var level in levels)
             {
-                Finder.GameController.OnLevelCompleted(levelName);
-
-                var levels = Finder.GameController.Levels;
-                foreach (var level in levels)
+                if (level.PreviousLevel == levelName)
                 {
-                    if (level.PreviousLevel == levelName)
-                    {
-                        Finder.SaveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
-                        break;
-                    }
+                    saveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
+                    break;
                 }
-
-                Finder.SaveController.UpdateSave(Finder.SaveController.SaveSelected);
             }
+
+            saveController.UpdateSave(saveController.SaveSelected);
         }
 
         /// <summary>
@@ -208,17 +215,17 @@ namespace Game
 
             if (defeatedPlayerUnits.Any())
             {
-                var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+                var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
 
                 foreach (var unit in defeatedPlayerUnits)
                 {
-                    if (unit.name == Harmony.Finder.GameSettings.FranklemName)
+                    if (unit.name == gameSettings.FranklemName)
                     {
-                        Finder.SaveController.ResetSave();
+                        saveController.ResetSave();
                         break;
                     }
 
-                    if (Finder.GameController.DifficultyLevel != DifficultyLevel.Easy && levelCompleted)
+                    if (gameController.DifficultyLevel != DifficultyLevel.Easy && levelCompleted)
                     {
                         foreach (var character in characterInfos)
                         {
@@ -278,7 +285,7 @@ namespace Game
 
         private bool AllTargetsToDefeatHaveBeenDefeated()
         {
-            return targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == enemiesToDefeat.Length;
+            return targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length;
         }
 
         private void CheckIfLevelFailed()
@@ -313,7 +320,7 @@ namespace Game
 
         private void CheckForPlayerTurnSkip()
         {
-            if (Input.GetKeyDown(Harmony.Finder.GameSettings.SkipComputerTurnKey) && currentPlayer is HumanPlayer)
+            if (Input.GetKeyDown(gameSettings.SkipComputerTurnKey) && currentPlayer is HumanPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is ComputerPlayer);
@@ -323,7 +330,7 @@ namespace Game
 
         private void CheckForComputerTurnSkip()
         {
-            if (Input.GetKeyDown(Harmony.Finder.GameSettings.SkipComputerTurnKey) && currentPlayer is ComputerPlayer)
+            if (Input.GetKeyDown(gameSettings.SkipComputerTurnKey) && currentPlayer is ComputerPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is HumanPlayer);
@@ -416,7 +423,7 @@ namespace Game
         /// </summary>
         private void ActivatePlayerUnits()
         {
-            var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+            var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
 
             foreach (var gameUnit in currentPlayer.OwnedUnits)
             {

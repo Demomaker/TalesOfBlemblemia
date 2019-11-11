@@ -16,6 +16,7 @@ namespace Game
 
         private Navigator navigator;
         private SaveController saveController;
+        private GameSettings gameSettings;
 
         private Canvas saveSelectionScreen;
 
@@ -24,6 +25,7 @@ namespace Game
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
             saveSelectionScreen = GetComponent<Canvas>();
+            gameSettings = Harmony.Finder.GameSettings;
         }
 
         public void Enter()
@@ -39,9 +41,9 @@ namespace Game
             
             foreach (var saveSlot in saveSlots)
             {
-                saveSlot.transform.Find(Harmony.Finder.GameSettings.NameString).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
-                saveSlot.transform.Find(Harmony.Finder.GameSettings.StageString).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
-                saveSlot.transform.Find(Harmony.Finder.GameSettings.DifficultyString).GetComponent<TMP_Text>().text =
+                saveSlot.transform.Find(gameSettings.NameString).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
+                saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
+                saveSlot.transform.Find(gameSettings.DifficultyString).GetComponent<TMP_Text>().text =
                     saves[saveCounter].DifficultyLevel;
                 
                 ++saveCounter;

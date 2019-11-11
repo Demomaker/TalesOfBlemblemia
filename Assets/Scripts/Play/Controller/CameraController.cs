@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using static Game.Constants;
+using static Game.CameraConstants;
 
 namespace Game
 {

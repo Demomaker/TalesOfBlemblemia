@@ -2,7 +2,7 @@
 
 namespace Game
 {
-    [Findable(Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class OnOverWorldEnter : EventChannel<OverWorldController>
     {
         public event EventHandler<OverWorldController> Notify;

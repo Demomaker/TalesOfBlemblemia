@@ -1,10 +1,14 @@
 ﻿using System;
 using Harmony;
+using UnityEditor;
 using UnityEngine;
 
 namespace Game
 {
-    //Game settings
+    /// <summary>
+    /// Game settings (Variables with constant values that are customizable for the game)
+    /// Author : Mike Bédard
+    /// </summary>
     [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class GameSettings : MonoBehaviour
     {
@@ -16,19 +20,17 @@ namespace Game
         [SerializeField] private float movementDuration = 0.3f;
         [SerializeField] private int numberOfRecruitablesOnAlternatePath = 8;
         [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
-        [SerializeField] [Header("Scene names")] private string level1SceneName = "Tutorial";
-        [SerializeField] private string level2SceneName = "Level2";
-        [SerializeField] private string level3SceneName = "ParabeneForest";
-        [SerializeField] private string level4SceneName = "TulipValley";
-        [SerializeField] private string level5SceneName = "DarkTower";
-        [SerializeField] private string level6SceneName = "Level6";
-        [SerializeField] private string level7SceneName = "Level7";
-        [SerializeField] private string morktressSceneName = "Morktress";
-        [SerializeField] private string overworldSceneName = "Overworld";
-        [SerializeField] private string mainmenuSceneName = "MainMenu";
-        [SerializeField] private string gameUiSceneName = "GameUI";
-        [SerializeField] private Levels startingLevelName = Levels.Level1;
-        /*[SerializeField]*/ private string startingLevelName = "Tutorial";
+        [SerializeField] [Header("Scene names")] private SceneAsset tutorialScene;
+        [SerializeField] private SceneAsset jimsterburgScene;
+        [SerializeField] private SceneAsset parabeneForestScene;
+        [SerializeField] private SceneAsset blemburgCitadelScene;
+        [SerializeField] private SceneAsset rinfretVillageScene;
+        [SerializeField] private SceneAsset darkTowerScene;
+        [SerializeField] private SceneAsset tulipValleyScene;
+        [SerializeField] private SceneAsset morktressScene;
+        [SerializeField] private SceneAsset overworldScene;
+        [SerializeField] private SceneAsset mainmenuScene;
+        [SerializeField] private SceneAsset gameUiScene;
         [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
         [SerializeField] private int saveSlotTwo = 2;
         [SerializeField] private int saveSlotThree = 3;
@@ -71,18 +73,17 @@ namespace Game
         public float MovementDuration => movementDuration;
         public int NumberOfRecruitablesOnAlternatePath => numberOfRecruitablesOnAlternatePath;
         public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
-        public string Level1SceneName => level1SceneName;
-        public string Level2SceneName => level2SceneName;
-        public string Level3SceneName => level3SceneName;
-        public string Level4SceneName => level4SceneName;
-        public string Level5SceneName => level5SceneName;
-        public string Level6SceneName => level6SceneName;
-        public string Level7SceneName => level7SceneName;
-        public string MorktressSceneName => morktressSceneName;
-        public string OverworldSceneName => overworldSceneName;
-        public string MainmenuSceneName => mainmenuSceneName;
-        public string GameUiSceneName => gameUiSceneName;
-        public string StartingLevelName => startingLevelName;
+        public string TutorialSceneName => tutorialScene.name;
+        public string JimsterburgSceneName => jimsterburgScene.name;
+        public string ParabeneForestSceneName => parabeneForestScene.name;
+        public string BlemburgCitadelSceneName => blemburgCitadelScene.name;
+        public string RinfretVillageSceneName => rinfretVillageScene.name;
+        public string DarkTowerSceneName => darkTowerScene.name;
+        public string TulipValleySceneName => tulipValleyScene.name;
+        public string MorktressSceneName => morktressScene.name;
+        public string OverworldSceneName => overworldScene.name;
+        public string MainmenuSceneName => mainmenuScene.name;
+        public string GameUiSceneName => gameUiScene.name;
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;
         public int SaveSlotThree => saveSlotThree;
@@ -127,19 +128,19 @@ namespace Game
             switch (level)
             {
                 case Level.Level1:
-                    return Level1SceneName;
+                    return TutorialSceneName;
                 case Level.Level2:
-                    return Level2SceneName;
+                    return JimsterburgSceneName;
                 case Level.Level3:
-                    return Level3SceneName;
+                    return ParabeneForestSceneName;
                 case Level.Level4:
-                    return Level4SceneName;
+                    return BlemburgCitadelSceneName;
                 case Level.Level5:
-                    return Level5SceneName;
+                    return RinfretVillageSceneName;
                 case Level.Level6:
-                    return Level6SceneName;
+                    return DarkTowerSceneName;
                 case Level.Level7:
-                    return Level7SceneName;
+                    return TulipValleySceneName;
                 case Level.Level8:
                     return MorktressSceneName;
                 default:
