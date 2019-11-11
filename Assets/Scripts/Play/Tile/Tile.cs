@@ -33,8 +33,8 @@ namespace Game
         public bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnitOrDoor;
         public bool IsOccupiedByAUnitOrDoor => IsOccupiedByAUnit || IsOccupiedByADoor;
-        public bool IsOccupiedByAUnit => linkedUnit != null;
-        public bool IsOccupiedByADoor => linkedDoor != null;
+        public bool IsOccupiedByAUnit => linkedUnit != null && linkedUnit.isActiveAndEnabled;
+        public bool IsOccupiedByADoor => linkedDoor != null && linkedDoor.isActiveAndEnabled;
         private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;

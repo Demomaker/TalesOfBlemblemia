@@ -331,7 +331,7 @@ namespace Game
             {
                 var tile = grid.GetTile(to.x, to.y + 1);
                 //The first tile in the path should be available
-                if (path.Count == 1 && !tile.IsAvailable)
+                if (path.Count == 1 && !tile.IsAvailable && unitIsEnemy)
                     return newPosition;
                 if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {

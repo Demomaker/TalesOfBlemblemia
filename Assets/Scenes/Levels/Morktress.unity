@@ -40431,6 +40431,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 5d58d94f805aac940b80e0c49b148725,
         type: 3}
+    - target: {fileID: 3180761580863488110, guid: 3e1a2fcad8566c74a85c98215f09581e,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3180761580863488110, guid: 3e1a2fcad8566c74a85c98215f09581e,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4040480904007948212, guid: 3e1a2fcad8566c74a85c98215f09581e,
         type: 3}
       propertyPath: initialPosition.y
@@ -48396,12 +48406,12 @@ PrefabInstance:
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: revertWeaponTriangle
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: completeIfCertainEnemyDefeated
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
@@ -48413,6 +48423,21 @@ PrefabInstance:
       propertyPath: enemyToDefeat
       value: 
       objectReference: {fileID: 1681758952}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: completeIfAllEnemiesDefeated
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: targetToDefeat
+      value: 
+      objectReference: {fileID: 1681758952}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: completeIfCertainTargetDefeated
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
 --- !u!1 &1291933209 stripped
@@ -48447,6 +48472,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trigger: 1
   cinematic: {fileID: 11400000, guid: e91a2320c137e31488e1a72d5a0a2bab, type: 2}
+--- !u!114 &1291933212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291933209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 519db0c62c6141b5a6e73da7c3f5389d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trigger: 2
+  cinematic: {fileID: 11400000, guid: 63b07ba15d941a9429f699dc7e7674c5, type: 2}
 --- !u!1 &1293420171
 GameObject:
   m_ObjectHideFlags: 0
@@ -54837,6 +54876,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AxeGrunt
+      objectReference: {fileID: 0}
+    - target: {fileID: 7672110919036753185, guid: fb5064d9b9d58af4cbbc4d5a01c03337,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7672110919036753188, guid: fb5064d9b9d58af4cbbc4d5a01c03337,
         type: 3}
@@ -62243,6 +62287,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpearGrunt
+      objectReference: {fileID: 0}
+    - target: {fileID: 870620027768372305, guid: 9930e3556e8c5814199cb8de51491737,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 870620027768372308, guid: 9930e3556e8c5814199cb8de51491737,
         type: 3}

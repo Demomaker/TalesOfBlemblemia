@@ -91,14 +91,12 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         private static void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
-            Unit targetUnit;
             foreach (var action in actionsToDo)
             {
-                if (action.Target.GetType() == typeof(Unit))
+                if (action.Target is Unit targetUnit)
                 {
-                    targetUnit = (Unit) action.Target;
                     action.Score += HpChoiceMod(playableUnit, targetUnit.CurrentHealthPoints) +
-                                    DistanceChoiceMod(playableUnit, action.Path) +
+                                    DistanceChoiceMod(playableUnit, action.Target, action.Path) +
                                     WeaponTypeChoiceMod(playableUnit, targetUnit.WeaponType) +
                                     EnvironmentChoiceMod(playableUnit, targetUnit.CurrentTile) +
                                     HarmChoiceMod(playableUnit, targetUnit);
@@ -320,11 +318,20 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetPath">The path to a target unit</param>
         /// <returns>The score modifier caused by the target's distance</returns>
-        public static float DistanceChoiceMod(Unit playableUnit, List<Tile> targetPath)
+        public static float DistanceChoiceMod(Unit playableUnit, Targetable target, List<Tile> targetPath)
         {
-            float nbToursDouble = PathFinder.CalculatePathCost(targetPath, playableUnit.MovementCosts) / playableUnit.Stats.MoveSpeed;
-            int nbTours = (int)Math.Ceiling(nbToursDouble);
-            return AiControllerValues.TURN_MULTIPLIER_FOR_DISTANCE_CHOICE_MOD * nbTours + AiControllerValues.TURN_ADDER_FOR_DISTANCE_CHOICE_MOD;
+            float scoreMod = 0f;
+            if (playableUnit.TargetIsInRange(target))
+                scoreMod = AiControllerValues.ADJACENT_TARGET_CHOICE_MOD;
+            else if (targetPath.Count <= 1)
+                scoreMod += AiControllerValues.INACCESSIBLE_TARGET_CHOICE_MOD;
+            else
+            {
+                double nbToursDouble = PathFinder.CalculatePathCost(targetPath, playableUnit.MovementCosts) / playableUnit.Stats.MoveSpeed;
+                int nbTours = (int)Math.Ceiling(nbToursDouble);
+                scoreMod = AiControllerValues.TURN_MULTIPLIER_FOR_DISTANCE_CHOICE_MOD * nbTours + AiControllerValues.TURN_ADDER_FOR_DISTANCE_CHOICE_MOD;
+            }
+            return scoreMod;
         }
         
         /// <summary>
