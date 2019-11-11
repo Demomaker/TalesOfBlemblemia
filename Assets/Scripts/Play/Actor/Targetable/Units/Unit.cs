@@ -434,6 +434,8 @@ namespace Game
 
         public bool TargetIsInMovementRange(Targetable target)
         {
+            if (currentTile == null || target == null || target.CurrentTile == null)
+                return false;
             if (currentTile.IsWithinRange(target.CurrentTile, 1))
                 return true;
             return gridController.FindAvailableAdjacentTile(target.CurrentTile, this) != null;

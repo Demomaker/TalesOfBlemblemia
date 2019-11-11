@@ -66,7 +66,7 @@ namespace Game
         private IEnumerator PlayCameraAction(CameraAction cameraAction)
         {
             var startPosition = camTransform.position;
-            var endPosition = new Vector3(cameraAction.CameraTarget.x, cameraAction.CameraTarget.y, startPosition.z);
+            var endPosition = new Vector3(cameraAction.CameraTarget.position.x, cameraAction.CameraTarget.position.y, startPosition.z);
             var startZoom = camera.orthographicSize;
             var endZoom = cameraAction.CameraZoom;
             var duration = cameraAction.Duration;

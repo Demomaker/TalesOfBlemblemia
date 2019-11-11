@@ -41,13 +41,12 @@ namespace Game
         private const string DO_NOT_END_FIELD_NAME = "Do Not End Level";
         private const string COMPLETE_IF_ALL_ENEMIES_DEFEATED_FIELD_NAME = "Complete If All Enemies Defeated";
         private const string COMPLETE_IF_POINT_ACHIEVED_FIELD_NAME = "Complete If Point Achieved";
-        private const string COMPLETE_IF_CERTAIN_ENEMIES_DEFEATED_FIELD_NAME = "Complete If Certain Enemies Defeated";
+        private const string COMPLETE_IF_CERTAIN_ENEMIES_DEFEATED_FIELD_NAME = "Complete If Certain Targets Defeated";
         private const string COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_FIELD_NAME = "Complete If Survived Certain Number Of Turns";
         private const string DEFEAT_IF_ALL_PLAYER_UNITS_DIED_FIELD_NAME = "Defeat If All Player Units Die";
         private const string DEFEAT_IF_PROTECTED_IS_KILLED_FIELD_NAME = "Defeat If Protected Unit Is Killed";
         private const string DEFEAT_IF_NOT_COMPLETE_LEVEL_IN_CERTAIN_AMOUNT_OF_TURNS_FIELD_NAME = "Defeat If Level Not Completed In Certain Amount Of Turns";
         private const string POINT_TO_ACHIEVE_FIELD_NAME = "Point To Achieve";
-        private const string ENEMIES_TO_DEFEAT_FIELD_NAME = "Enemies To Defeat";
         private const string NUMBER_OF_TURNS_BEFORE_COMPLETION_FIELD_NAME = "Number Of Turns Before Level Completion";
         private const string NUMBER_OF_TURNS_BEFORE_DEFEAT_FIELD_NAME = "Number Of Turns Before Level Defeat";
         private const string REVERT_WEAPON_TRIANGLE_FIELD_NAME = "Revert Weapon Triangle";
@@ -61,13 +60,13 @@ namespace Game
         private SerializedProperty completeIfAllEnemiesDefeated;
         private SerializedProperty completeIfPointAchieved;
         private SerializedProperty completeIfSurvivedCertainNumberOfTurns;
-        private SerializedProperty completeIfCertainEnemiesDefeated;
+        private SerializedProperty completeIfCertainTargetsDefeated;
         private SerializedProperty defeatIfAllPlayerUnitsDied;
         private SerializedProperty defeatIfProtectedIsKilled;
         private SerializedProperty defeatIfNotCompleteLevelInCertainAmountOfTurns;
         private SerializedProperty pointToAchieve;
         private SerializedProperty targetsToProtect;
-        private SerializedProperty enemiesToDefeat;
+        private SerializedProperty targetsToDefeat;
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
         private SerializedProperty revertWeaponTriangle;
@@ -206,9 +205,9 @@ namespace Game
 
         private void ShowAndEditCompleteIfCertainEnemiesDefeated()
         {
-            completeIfCertainEnemiesDefeated.boolValue =
-                EditorGUILayout.Toggle(COMPLETE_IF_CERTAIN_ENEMIES_DEFEATED_FIELD_NAME, completeIfCertainEnemiesDefeated.boolValue);
-            if (completeIfCertainEnemiesDefeated.boolValue) EditorGUILayout.PropertyField(enemiesToDefeat,true);
+            completeIfCertainTargetsDefeated.boolValue =
+                EditorGUILayout.Toggle(COMPLETE_IF_CERTAIN_ENEMIES_DEFEATED_FIELD_NAME, completeIfCertainTargetsDefeated.boolValue);
+            if (completeIfCertainTargetsDefeated.boolValue) EditorGUILayout.PropertyField(targetsToDefeat,true);
         }
 
         private void ShowAndEditDefeatIfAllPlayerUnitsDied()

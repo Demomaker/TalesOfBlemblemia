@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static Game.CameraConstants;
+using static Game.Constants;
 
 namespace Game
 {
@@ -17,11 +16,11 @@ namespace Game
         [Range(MIN_CAM_X, MAX_CAM_X)][SerializeField] private int maxX;
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int minY;
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int maxY;
-        [SerializeField] private KeyCode moveUpKey = KeyCode.W;
-        [SerializeField] private KeyCode moveDownKey = KeyCode.S;
-        [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
-        [SerializeField] private KeyCode moveRightKey = KeyCode.D;
-        [SerializeField] private KeyCode dragKey = KeyCode.Mouse2;
+        private const KeyCode MOVE_UP_KEY = KeyCode.W;
+        private const KeyCode MOVE_DOWN_KEY = KeyCode.S;
+        private const KeyCode MOVE_LEFT_KEY = KeyCode.A;
+        private const KeyCode MOVE_RIGHT_KEY = KeyCode.D;
+        private const KeyCode DRAG_KEY = KeyCode.Mouse2;
 
         private Vector2Int lastScreenSize;
 
@@ -34,8 +33,8 @@ namespace Game
 
         private Camera camera;
         
-        private float yMovement;
-        private float xMovement;
+        private float yMovement = 0;
+        private float xMovement = 0;
         
         private float YMovement
         {
@@ -49,18 +48,18 @@ namespace Game
             set => xMovement = Mathf.Clamp(value, -1, 1);
         }
         
-        private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(moveLeftKey);
-        private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(moveRightKey);
-        private bool IsMovingDown => Input.mousePosition.y < scrollArea || Input.GetKey(moveDownKey);
-        private bool IsMovingUp => Input.mousePosition.y >= Screen.height - scrollArea || Input.GetKey(moveUpKey);
+        private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(MOVE_LEFT_KEY);
+        private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(MOVE_RIGHT_KEY);
+        private bool IsMovingDown => Input.mousePosition.y < scrollArea || Input.GetKey(MOVE_DOWN_KEY);
+        private bool IsMovingUp => Input.mousePosition.y >= Screen.height - scrollArea || Input.GetKey(MOVE_UP_KEY);
 
         public float MaxZoom => maxZoom;
 
         private void Awake()
         {
             camera = GetComponent<Camera>();
-            InitCamera();
             OnScreenSizeChanged();
+            InitCamera();
         }
 
         private void LateUpdate()
@@ -80,7 +79,7 @@ namespace Game
 
         private void UpdateTargetPosition()
         {
-            if (!Input.GetKey(dragKey))
+            if (!Input.GetKey(DRAG_KEY))
             {
                 if (IsMovingLeft && !IsMovingRight)
                 {
@@ -124,13 +123,13 @@ namespace Game
 
         private void UpdateDrag()
         {
-            if (Input.GetKeyDown(dragKey)) StartCoroutine(Drag());
+            if (Input.GetKeyDown(DRAG_KEY)) StartCoroutine(Drag());
         }
 
         private IEnumerator Drag()
         {
             var origin = camera.ScreenToWorldPoint(Input.mousePosition);
-            while (Input.GetKey(dragKey))
+            while (Input.GetKey(DRAG_KEY))
             {
                 var difference = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
                 targetPos = origin - difference;
@@ -220,7 +219,7 @@ namespace Game
         private void InitCamera()
         {
             targetPos = transform.position;
-            targetOrthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
+            camera.orthographicSize = targetOrthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
         }
 
 

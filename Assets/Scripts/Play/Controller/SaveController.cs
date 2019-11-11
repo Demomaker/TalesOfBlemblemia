@@ -49,8 +49,8 @@ namespace Game
         public void Awake()
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
-            InitiateSaveController(Harmony.Finder.GameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
-                Harmony.Finder.GameSettings.Level1SceneName, playableCharactersDictionary);
+            InitiateSaveController(Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
+                Constants.TUTORIAL_SCENE_NAME, playableCharactersDictionary);
         }
 
 
@@ -60,14 +60,14 @@ namespace Game
         {
             Dictionary<string, bool> playableCharactersDictionary = new Dictionary<string, bool>
             {
-                {Harmony.Finder.GameSettings.FranklemName, true},
-                {Harmony.Finder.GameSettings.MyriamName, true},
-                {Harmony.Finder.GameSettings.BramName, true},
-                {Harmony.Finder.GameSettings.RassName, true},
-                {Harmony.Finder.GameSettings.UlricName, true},
-                {Harmony.Finder.GameSettings.JebediahName, true},
-                {Harmony.Finder.GameSettings.ThomasName, true},
-                {Harmony.Finder.GameSettings.AbrahamName, true}
+                {Constants.FRANKLEM_NAME, true},
+                {Constants.MYRIAM_NAME, true},
+                {Constants.BRAM_NAME, true},
+                {Constants.RASS_NAME, true},
+                {Constants.ULRIC_NAME, true},
+                {Constants.JEBEDIAH_NAME, true},
+                {Constants.THOMAS_NAME, true},
+                {Constants.ABRAHAM_NAME, true}
             };
             return playableCharactersDictionary;
         }
@@ -95,8 +95,8 @@ namespace Game
 
         private void InitiateSettingsInfo()
         {
-            playerSettings = new PlayerSettings(1, Harmony.Finder.GameSettings.DefaultToggleValue, Harmony.Finder.GameSettings.DefaultToggleValue,
-                Harmony.Finder.GameSettings.DefaultSliderValue, Harmony.Finder.GameSettings.DefaultSliderValue, Harmony.Finder.GameSettings.DefaultSliderValue);
+            playerSettings = new PlayerSettings(1, Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_TOGGLE_VALUE,
+                Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE);
         }
 
         private void InitiateSaveInfo(string username, string difficultyLevel, string levelName,
@@ -255,8 +255,8 @@ namespace Game
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
 
-            SaveInfos cleanSave = new SaveInfos(1, Harmony.Finder.GameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
-                Harmony.Finder.GameSettings.Level1SceneName, playableCharactersDictionary);
+            SaveInfos cleanSave = new SaveInfos(1, Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
+                Constants.TUTORIAL_SCENE_NAME, playableCharactersDictionary);
             
             switch (saveSelected)
             {

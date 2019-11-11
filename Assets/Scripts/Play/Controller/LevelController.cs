@@ -14,7 +14,7 @@ namespace Game
 {
     /// <summary>
     /// Controller for each individual level. Manages the turn functionalities as well as the players' turns
-    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne
+    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
     /// </summary>
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
@@ -29,12 +29,12 @@ namespace Game
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
-        [SerializeField] private bool completeIfCertainEnemiesDefeated = false;
+        [SerializeField] private bool completeIfCertainTargetsDefeated = false;
         [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Unit[] enemiesToDefeat = null;
+        [SerializeField] private Unit[] targetsToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
@@ -105,9 +105,9 @@ namespace Game
             {
                 Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
             }
-            else if (completeIfCertainEnemiesDefeated)
+            else if (completeIfCertainTargetsDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + GetStringOfEnemiesToDefeat());
+                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + GetStringOfTargetsToDefeat());
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
             {
@@ -115,7 +115,7 @@ namespace Game
             }
         }
 
-        private string GetStringOfEnemiesToDefeat()
+        private string GetStringOfTargetsToDefeat()
         {
             string retval = "";
             foreach (var enemy in enemiesToDefeat)
@@ -171,7 +171,7 @@ namespace Game
 
             UpdatePlayerSave();
             
-            Finder.GameController.LoadLevel(Harmony.Finder.GameSettings.OverworldSceneName);
+            //Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Game
             //If the level was successfully completed, mark it as completed
             if (levelCompleted)
             {
-                Finder.GameController.LevelsCompleted.Add(levelName);
+                Finder.GameController.OnLevelCompleted(levelName);
 
                 var levels = Finder.GameController.Levels;
                 foreach (var level in levels)
@@ -263,9 +263,9 @@ namespace Game
                 || (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile == null) 
                 || !(GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
             }
-            if (completeIfCertainEnemiesDefeated)
+            if (completeIfCertainTargetsDefeated)
             {
-                if (!AllEnemiesToDefeatHaveBeenDefeated()) thirdConditionAchieved = false;
+                if (!AllTargetsToDefeatHaveBeenDefeated()) thirdConditionAchieved = false;
             }
             if (completeIfSurvivedCertainNumberOfTurns)
             {
@@ -276,9 +276,9 @@ namespace Game
             if (levelCompleted) onLevelVictory.Publish(this);
         }
 
-        private bool AllEnemiesToDefeatHaveBeenDefeated()
+        private bool AllTargetsToDefeatHaveBeenDefeated()
         {
-            return enemiesToDefeat.Count(enemy => enemy == null || enemy.NoHealthLeft) == enemiesToDefeat.Length;
+            return targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == enemiesToDefeat.Length;
         }
 
         private void CheckIfLevelFailed()
@@ -333,8 +333,8 @@ namespace Game
         
         private void InitializePlayersAndUnits()
         {
-            HumanPlayer player1 = HumanPlayer.Instance;
-            ComputerPlayer player2 = ComputerPlayer.Instance;
+            var player1 = HumanPlayer.Instance;
+            var player2 = ComputerPlayer.Instance;
 
             units = FindObjectsOfType<Unit>();
 
