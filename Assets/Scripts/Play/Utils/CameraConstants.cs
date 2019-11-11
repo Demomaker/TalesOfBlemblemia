@@ -16,7 +16,7 @@
         public const float MIN_CAM_X = -100f;
         public const float MAX_CAM_Y = 100f;
         public const float MIN_CAM_Y = -100f;
-        public const float MAX_CAM_MOVE_SPEED = 30f;
+        public const float MAX_CAM_MOVE_SPEED = 25f;
         public const float MIN_CAM_MOVE_SPEED = 10f;
         public const float MAX_CAM_ZOOM_SPEED = 10f;
         public const float MIN_CAM_ZOOM_SPEED = 1f;
