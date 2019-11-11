@@ -15,23 +15,23 @@ EditorBuildSettings:
     path: Assets/Scenes/Overworld.unity
     guid: f9f811e731d70d44aaea609d9c802999
   - enabled: 1
-    path: Assets/Scenes/GameUI.unity
-    guid: 1a9486eef1b5b334ba56ec841baf2cf7
-  - enabled: 1
     path: Assets/Scenes/Levels/ParabeneForest.unity
     guid: 8a2366d1db21489409e5c5e7a8f5f560
   - enabled: 1
     path: Assets/Scenes/DarkTower.unity
     guid: 69b9a6f1ea89f6840bfe90a27f5ea2cc
-  - enabled: 0
-    path: Assets/Scenes/Levels/Jimsterbourg.unity
+  - enabled: 1
+    path: Assets/Scenes/Levels/Jimsterburg.unity
     guid: c787b87a96eb24d42970ca72d48a0649
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Levels/Tutorial.unity
     guid: bb678c5030d9c714484f0f6e9ce3dc3f
   - enabled: 1
     path: Assets/Scenes/Levels/TulipValley.unity
     guid: 262c9fff37ce64d40996e24056a8e0c7
+  - enabled: 1
+    path: Assets/Scenes/Levels/RinfretVillage.unity
+    guid: 5ab43a1befec026418e1fa93ae1ceb15
   - enabled: 1
     path: Assets/Scenes/BlemburgCitadel.unity
     guid: 1c64e9fd3241f454d9e0177d9ad77b1d
