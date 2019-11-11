@@ -41,6 +41,7 @@ namespace Game
         
         public IEnumerator PlayUnits()
         {
+            //TODO les unités qui meurent altèrent la liste du foreach et font crasher si une unité meurt pendant sont tour
             foreach (var unit in ownedUnits)
             {
                 while (uiController.IsBattleReportActive)

@@ -19,13 +19,13 @@
         
         public const KeyCode SKIP_COMPUTER_TURN_KEY = KeyCode.Space;
         
-        public const string LEVEL_1_SCENE_NAME = "Level1";
-        public const string LEVEL_2_SCENE_NAME = "Level2";
-        public const string LEVEL_3_SCENE_NAME = "ParabeneForest";
-        public const string LEVEL_4_SCENE_NAME = "BlemburgCitadel";
-        public const string LEVEL_5_SCENE_NAME = "DarkTower";
-        public const string LEVEL_6_SCENE_NAME = "RinfretVillage";
-        public const string LEVEL_7_SCENE_NAME = "Level7";
+        public const string TUTORIAL_SCENE_NAME = "Tutorial";
+        public const string JIMSTERBURG_SCENE_NAME = "Jimsterburg";
+        public const string PARABENE_FOREST_SCENE_NAME = "ParabeneForest";
+        public const string BLEMBURG_CITADEL_SCENE_NAME = "BlemburgCitadel";
+        public const string RINFRET_VILLAGE_SCENE_NAME = "RinfretVillage";
+        public const string DARK_TOWER_SCENE_NAME = "DarkTower";
+        public const string TULIP_VALLEY_SCENE_NAME = "TulipValley";
         public const string MORKTRESS_SCENE_NAME = "Morktress";
         public const string OVERWORLD_SCENE_NAME = "Overworld";
         public const string MAINMENU_SCENE_NAME = "MainMenu";
@@ -64,7 +64,7 @@
         public const float MIN_CAM_Y = -100f;
         public const float MAX_CAM_MOVE_SPEED = 30f;
         public const float MIN_CAM_MOVE_SPEED = 10f;
-        public const float MAX_CAM_ZOOM_SPEED = 10f;
+        public const float MAX_CAM_ZOOM_SPEED = 25f;
         public const float MIN_CAM_ZOOM_SPEED = 1f;
         
         public const float MAX_CINEMATIC_TIME = 20f;
