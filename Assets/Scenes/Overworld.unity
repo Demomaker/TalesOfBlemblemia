@@ -9919,12 +9919,12 @@ PrefabInstance:
     - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: m_Name
-      value: Level 4-B
+      value: Rinfret Village
       objectReference: {fileID: 0}
     - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4422921206052769585, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
@@ -10034,7 +10034,7 @@ PrefabInstance:
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: representedLevelName
-      value: Level6
+      value: RinfretVillage
       objectReference: {fileID: 0}
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
