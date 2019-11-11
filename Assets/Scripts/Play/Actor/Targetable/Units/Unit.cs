@@ -159,12 +159,12 @@ namespace Game
         {
             if (isMoving) isResting = false;
             if (animator == null) return;
-            animator.SetBool(Constants.AnimationProperties.IS_MOVING, isMoving);
-            animator.SetBool(Constants.AnimationProperties.IS_ATTACKING, isAttacking);
-            animator.SetBool(Constants.AnimationProperties.IS_DODGING, isDodging);
-            animator.SetBool(Constants.AnimationProperties.IS_BEING_HURT, isBeingHurt);
-            animator.SetBool(Constants.AnimationProperties.IS_RESTING, isResting);
-            animator.SetBool(Constants.AnimationProperties.IS_GOING_TO_DIE, isGoingToDie);
+            animator.SetBool(Harmony.Finder.GameSettings.IsMoving, isMoving);
+            animator.SetBool(Harmony.Finder.GameSettings.IsAttacking, isAttacking);
+            animator.SetBool(Harmony.Finder.GameSettings.IsDodging, isDodging);
+            animator.SetBool(Harmony.Finder.GameSettings.IsBeingHurt, isBeingHurt);
+            animator.SetBool(Harmony.Finder.GameSettings.IsResting, isResting);
+            animator.SetBool(Harmony.Finder.GameSettings.IsGoingToDie, isGoingToDie);
         }
         
         public void ResetTurnStats()
@@ -197,7 +197,7 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            return StartCoroutine(MoveByAction(action, Constants.MOVEMENT_DURATION));
+            return StartCoroutine(MoveByAction(action, Harmony.Finder.GameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -317,7 +317,7 @@ namespace Game
                 );
             }
             
-            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
+            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, Harmony.Finder.GameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 
@@ -376,7 +376,7 @@ namespace Game
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
             if (target.GetType() == typeof(Unit) && !isCountering && !target.NoHealthLeft)
-                StartCoroutine(((Unit)target).Attack(this, true, Constants.ATTACK_DURATION));
+                StartCoroutine(((Unit)target).Attack(this, true, Harmony.Finder.GameSettings.AttackDuration));
             
             if (!isCountering)
             {

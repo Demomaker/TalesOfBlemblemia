@@ -39,9 +39,9 @@ namespace Game
             
             foreach (var saveSlot in saveSlots)
             {
-                saveSlot.transform.Find(Constants.NAME_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
-                saveSlot.transform.Find(Constants.STAGE_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
-                saveSlot.transform.Find(Constants.DIFFICULTY_STRING).GetComponent<TMP_Text>().text =
+                saveSlot.transform.Find(Harmony.Finder.GameSettings.NameString).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
+                saveSlot.transform.Find(Harmony.Finder.GameSettings.StageString).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
+                saveSlot.transform.Find(Harmony.Finder.GameSettings.DifficultyString).GetComponent<TMP_Text>().text =
                     saves[saveCounter].DifficultyLevel;
                 
                 ++saveCounter;

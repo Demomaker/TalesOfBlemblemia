@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static Game.Constants;
+using static Game.CameraConstants;
 
 namespace Game
 {

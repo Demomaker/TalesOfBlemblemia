@@ -53,8 +53,8 @@ namespace Game
             
             saveController.UpdateSave(saveSlotSelectedNumber);
             saveController.SaveSelected = saveSlotSelectedNumber;
-            SceneManager.LoadSceneAsync(Constants.OVERWORLD_SCENE_NAME, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(Constants.MAINMENU_SCENE_NAME);
+            SceneManager.LoadSceneAsync(Harmony.Finder.GameSettings.OverworldSceneName, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(Harmony.Finder.GameSettings.MainmenuSceneName);
         }
         
         [UsedImplicitly]

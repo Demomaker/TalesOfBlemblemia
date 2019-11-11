@@ -121,12 +121,12 @@ namespace Game
 
         private void UpdateMusicVolume()
         {
-            musicSource.volume = mainVolume * musicVolume / (Constants.PERCENT * Constants.PERCENT);
+            musicSource.volume = mainVolume * musicVolume / (Harmony.Finder.GameSettings.Percent * Harmony.Finder.GameSettings.Percent);
         }
 
         private void UpdateSoundVolume()
         {
-            float totalSFXVolume = mainVolume * sfxVolume / (Constants.PERCENT * Constants.PERCENT);
+            float totalSFXVolume = mainVolume * sfxVolume / (Harmony.Finder.GameSettings.Percent * Harmony.Finder.GameSettings.Percent);
             foreach (var sfxSource in sfxSources)
             {
                 sfxSource.volume = totalSFXVolume;

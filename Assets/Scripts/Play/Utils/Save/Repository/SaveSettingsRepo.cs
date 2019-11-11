@@ -110,9 +110,9 @@ namespace Game
         /// <returns>A new instance of PlayerSetting with the settings in the database for the player</returns>
         private static PlayerSettings PlayerSettingsBuilder(DbDataReader reader)
         {
-            PlayerSettings playerSettings = new PlayerSettings(0, Constants.DEFAULT_TOGGLE_VALUE,
-                Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE,
-                Constants.DEFAULT_SLIDER_VALUE);
+            PlayerSettings playerSettings = new PlayerSettings(0, Harmony.Finder.GameSettings.DefaultToggleValue,
+                Harmony.Finder.GameSettings.DefaultToggleValue, Harmony.Finder.GameSettings.DefaultSliderValue, Harmony.Finder.GameSettings.DefaultSliderValue,
+                Harmony.Finder.GameSettings.DefaultSliderValue);
             try
             {
                 playerSettings = new PlayerSettings(Convert.ToInt32(reader["id"]),

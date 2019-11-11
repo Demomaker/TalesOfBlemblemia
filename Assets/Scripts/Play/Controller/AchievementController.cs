@@ -18,15 +18,15 @@ namespace Game
 
         private void Awake()
         {
-            Achievements.Add(new Achievement(Constants.AchievementName.COMPLETE_CAMPAIGN_ON_EASY,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Easy));
-            Achievements.Add(new Achievement(Constants.AchievementName.COMPLETE_CAMPAIGN_ON_MEDIUM,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Medium));
-            Achievements.Add(new Achievement(Constants.AchievementName.COMPLETE_CAMPAIGN_ON_HARD,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Hard));
-            Achievements.Add(new Achievement(Constants.AchievementName.DEFEAT_BLACK_KNIGHT,  () => Harmony.Finder.GameController.LevelsCompleted.Contains(Constants.LEVEL_5_SCENE_NAME)));
-            Achievements.Add(new Achievement(Constants.AchievementName.REACH_FINAL_LEVEL_WITH_8_PLAYERS,  () => HumanPlayer.Instance.NumberOfUnits > 8 && Harmony.Finder.GameController.CurrentLevelName == Constants.MORKTRESS_SCENE_NAME));
-            Achievements.Add(new Achievement(Constants.AchievementName.FINISH_A_LEVEL_WITHOUT_UNIT_LOSS,  () => !HumanPlayer.Instance.HasLostAUnitInCurrentLevel && Harmony.Finder.GameController.LevelsCompleted.Contains(Harmony.Finder.GameController.CurrentLevelName)));
-            Achievements.Add(new Achievement(Constants.AchievementName.SAVE_ALL_RECRUITABLES_FROM_ALTERNATE_PATH,  () => HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >= Constants.NUMBER_OF_RECRUITABLES_ON_ALTERNATE_PATH));
-            Achievements.Add(new Achievement(Constants.AchievementName.FINISH_CAMPAIGN_WITHOUT_UNIT_LOSS,  () => !HumanPlayer.Instance.HasEverLostAUnit && Harmony.Finder.GameController.LevelsCompleted.Count >= Harmony.Finder.GameController.Levels.Count ));
-            nameText.text = Constants.ACHIEVEMENT_GET_STRING;
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.CompleteCampaignOnEasy,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Easy));
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.CompleteCampaignOnMedium,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Medium));
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.CompleteCampaignOnHard,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Hard));
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.DefeatBlackKnight,  () => Harmony.Finder.GameController.LevelsCompleted.Contains(Harmony.Finder.GameSettings.Level5SceneName)));
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.ReachFinalLevelWith8Players,  () => HumanPlayer.Instance.NumberOfUnits > 8 && Harmony.Finder.GameController.CurrentLevelName == Harmony.Finder.GameSettings.MorktressSceneName));
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.FinishALevelWithoutUnitLoss,  () => !HumanPlayer.Instance.HasLostAUnitInCurrentLevel && Harmony.Finder.GameController.LevelsCompleted.Contains(Harmony.Finder.GameController.CurrentLevelName)));
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.SaveAllRecruitablesFromAlternatePath,  () => HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >= Harmony.Finder.GameSettings.NumberOfRecruitablesOnAlternatePath));
+            Achievements.Add(new Achievement(Harmony.Finder.GameSettings.FinishCampaignWithoutUnitLoss,  () => !HumanPlayer.Instance.HasEverLostAUnit && Harmony.Finder.GameController.LevelsCompleted.Count >= Harmony.Finder.GameController.Levels.Count ));
+            nameText.text = Harmony.Finder.GameSettings.AchievementGetString;
         }
 
         private void Update()
@@ -64,9 +64,9 @@ namespace Game
             nameText.text = "";
             descriptionText.text = "";
             yield return new WaitForSeconds(1);
-            for (int i = 0; i < Constants.ACHIEVEMENT_GET_STRING.Length; i++)
+            for (int i = 0; i < Harmony.Finder.GameSettings.AchievementGetString.Length; i++)
             {
-                nameText.text += Constants.ACHIEVEMENT_GET_STRING[i];
+                nameText.text += Harmony.Finder.GameSettings.AchievementGetString[i];
                 yield return new WaitForSeconds(0.1f);
             }
             for(int i = 0; i < text.Length; i++)

@@ -19,7 +19,6 @@ namespace Game
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
-         private string startingLevelName = Constants.MORKTRESS_SCENE_NAME;
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
          private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
@@ -29,31 +28,38 @@ namespace Game
          public List<Level> Levels = new List<Level>();
          public List<string> LevelsCompleted = new List<string>();
          public string CurrentLevelName => lastLoadedLevelName; 
-         public string StartingLevelName => startingLevelName;
          public bool AllLevelsCompleted => Levels.Count == LevelsCompleted.Count;
 
          public DifficultyLevel DifficultyLevel => difficultyLevel;
 
+         public void Awake()
+         {
+             choiceRange = choiceRangePerDifficulty[difficultyLevel];
+             permaDeath = difficultyLevel != DifficultyLevel.Easy;
+             tagsOfObjectsToAlwaysKeep.Add(Tags.SOUND_MANAGER);
+             tagsOfObjectsToAlwaysKeep.Add(Tags.GAME_CONTROLLER_TAG);
+             tagsOfObjectsToAlwaysKeep.Add(Tags.ACHIEVEMENT_CONTROLLER_TAG);
+         }
          private void Start()
          {
              InstantiateLevelList();
              ResetCompletedLevels();
-             SceneManager.LoadSceneAsync(Constants.MAINMENU_SCENE_NAME, LoadSceneMode.Additive);
+             SceneManager.LoadSceneAsync(Harmony.Finder.GameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
 
          private void InstantiateLevelList()
          {
              Levels = new List<Level>
              {
-                 new Level("", Constants.LEVEL_1_SCENE_NAME),
-                 new Level(Constants.LEVEL_1_SCENE_NAME, Constants.LEVEL_2_SCENE_NAME),
-                 new Level(Constants.LEVEL_2_SCENE_NAME, Constants.LEVEL_3_SCENE_NAME),
-                 new Level(Constants.LEVEL_3_SCENE_NAME, Constants.LEVEL_4_SCENE_NAME),
-                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_5_SCENE_NAME),
-                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_6_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_7_SCENE_NAME),
-                 new Level(Constants.LEVEL_7_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)
+                 new Level("", Harmony.Finder.GameSettings.Level1SceneName),
+                 new Level(Harmony.Finder.GameSettings.Level1SceneName, Harmony.Finder.GameSettings.Level2SceneName),
+                 new Level(Harmony.Finder.GameSettings.Level2SceneName, Harmony.Finder.GameSettings.Level3SceneName),
+                 new Level(Harmony.Finder.GameSettings.Level3SceneName, Harmony.Finder.GameSettings.Level4SceneName),
+                 new Level(Harmony.Finder.GameSettings.Level4SceneName, Harmony.Finder.GameSettings.Level5SceneName),
+                 new Level(Harmony.Finder.GameSettings.Level4SceneName, Harmony.Finder.GameSettings.Level6SceneName),
+                 new Level(Harmony.Finder.GameSettings.Level6SceneName, Harmony.Finder.GameSettings.Level7SceneName),
+                 new Level(Harmony.Finder.GameSettings.Level7SceneName, Harmony.Finder.GameSettings.MorktressSceneName),
+                 new Level(Harmony.Finder.GameSettings.Level6SceneName, Harmony.Finder.GameSettings.MorktressSceneName)
              };
          }
          private void ResetCompletedLevels()
@@ -81,12 +87,12 @@ namespace Game
          {
              if (!SceneManager.GetSceneByName(levelname).isLoaded)
              {
-                 if (levelname != Constants.OVERWORLD_SCENE_NAME)
+                 if (levelname != Harmony.Finder.GameSettings.OverworldSceneName)
                  {
-                     SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
-                     SceneManager.UnloadSceneAsync(Constants.OVERWORLD_SCENE_NAME);
+                     SceneManager.LoadScene(Harmony.Finder.GameSettings.GameUiSceneName, LoadSceneMode.Additive);
+                     SceneManager.UnloadSceneAsync(Harmony.Finder.GameSettings.OverworldSceneName);
                  }
-                 SceneManager.UnloadSceneAsync(Constants.GAME_UI_SCENE_NAME);
+                 SceneManager.UnloadSceneAsync(Harmony.Finder.GameSettings.GameUiSceneName);
                  yield return SceneManager.LoadSceneAsync(levelname,LoadSceneMode.Additive);
              }
              SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
@@ -120,14 +126,6 @@ namespace Game
              choiceRangePerDifficulty.Add(DifficultyLevel.Hard, choiceForHard);
          }
 
-         public void Awake()
-         {
-             choiceRange = choiceRangePerDifficulty[difficultyLevel];
-             permaDeath = difficultyLevel != DifficultyLevel.Easy;
-             tagsOfObjectsToAlwaysKeep.Add(Tags.SOUND_MANAGER);
-             tagsOfObjectsToAlwaysKeep.Add(Tags.GAME_CONTROLLER_TAG);
-             tagsOfObjectsToAlwaysKeep.Add(Tags.ACHIEVEMENT_CONTROLLER_TAG);
-         }
      }
 
      public enum DifficultyLevel

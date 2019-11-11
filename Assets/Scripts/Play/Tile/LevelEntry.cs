@@ -8,7 +8,7 @@ using Finder = Harmony.Finder;
 public class LevelEntry : MonoBehaviour
 {
     private List<string> previousLevelNames;
-    private bool IsFirstLevel => representedLevelName == Finder.GameController.StartingLevelName;
+    private bool IsFirstLevel => representedLevelName == Harmony.Finder.GameSettings.StartingLevelName;
     private bool CanBeClicked => IsFirstLevel && Finder.GameController.NameOfLevelCompleted == null || PreviousLevelWasCompleted();
     [SerializeField] string representedLevelName;
     public List<string> PreviousLevelNames

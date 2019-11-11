@@ -24,18 +24,17 @@ namespace Game
         
         [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
-        [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
-        [SerializeField] private bool completeIfCertainEnemyDefeated = false;
+        [SerializeField] private bool completeIfCertainEnemiesDefeated = false;
         [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Unit enemyToDefeat = null;
+        [SerializeField] private Unit[] enemiesToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
@@ -106,14 +105,25 @@ namespace Game
             {
                 Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
             }
-            else if (completeIfCertainEnemyDefeated)
+            else if (completeIfCertainEnemiesDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + enemyToDefeat);
+                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + GetStringOfEnemiesToDefeat());
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
             {
                 Harmony.Finder.UIController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
             }
+        }
+
+        private string GetStringOfEnemiesToDefeat()
+        {
+            string retval = "";
+            foreach (var enemy in enemiesToDefeat)
+            {
+                retval += enemy.ToString() + " ";
+            }
+            retval = retval.Substring(retval.Length - 1);
+            return retval;
         }
 
         protected void Update()
@@ -161,7 +171,7 @@ namespace Game
 
             UpdatePlayerSave();
             
-            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+            Finder.GameController.LoadLevel(Harmony.Finder.GameSettings.OverworldSceneName);
         }
 
         /// <summary>
@@ -202,7 +212,7 @@ namespace Game
 
                 foreach (var unit in defeatedPlayerUnits)
                 {
-                    if (unit.name == Constants.FRANKLEM_NAME)
+                    if (unit.name == Harmony.Finder.GameSettings.FranklemName)
                     {
                         Finder.SaveController.ResetSave();
                         break;
@@ -253,9 +263,9 @@ namespace Game
                 || (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile == null) 
                 || !(GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
             }
-            if (completeIfCertainEnemyDefeated)
+            if (completeIfCertainEnemiesDefeated)
             {
-                if (!(enemyToDefeat == null || enemyToDefeat.NoHealthLeft)) thirdConditionAchieved = false;
+                if (!AllEnemiesToDefeatHaveBeenDefeated()) thirdConditionAchieved = false;
             }
             if (completeIfSurvivedCertainNumberOfTurns)
             {
@@ -264,6 +274,11 @@ namespace Game
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
             if (levelCompleted) onLevelVictory.Publish(this);
+        }
+
+        private bool AllEnemiesToDefeatHaveBeenDefeated()
+        {
+            return enemiesToDefeat.Count(enemy => enemy == null || enemy.NoHealthLeft) == enemiesToDefeat.Length;
         }
 
         private void CheckIfLevelFailed()
@@ -298,7 +313,7 @@ namespace Game
 
         private void CheckForPlayerTurnSkip()
         {
-            if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is HumanPlayer)
+            if (Input.GetKeyDown(Harmony.Finder.GameSettings.SkipComputerTurnKey) && currentPlayer is HumanPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is ComputerPlayer);
@@ -308,7 +323,7 @@ namespace Game
 
         private void CheckForComputerTurnSkip()
         {
-            if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is ComputerPlayer)
+            if (Input.GetKeyDown(Harmony.Finder.GameSettings.SkipComputerTurnKey) && currentPlayer is ComputerPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is HumanPlayer);
