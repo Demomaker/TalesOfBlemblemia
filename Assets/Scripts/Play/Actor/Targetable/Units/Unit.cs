@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Harmony;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,7 @@ namespace Game
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private Weapon weapon;
+        private bool hasActed;
         private GameSettings gameSettings;
 
         private UIController uiController;
@@ -44,6 +46,10 @@ namespace Game
         private bool isResting = false;
         private bool isGoingToDie = false;
         private Animator animator;
+        private SpriteRenderer spriteRenderer;
+        private readonly Color paleAlpha = new Color(1,1,1, 0.5f);
+        private readonly Color opaqueAlpha = new Color(1,1,1,1f);
+        
         #endregion
         
         #region Properties
@@ -92,7 +98,25 @@ namespace Game
         public WeaponType WeaponType => weapon.WeaponType;
         public WeaponType WeaponAdvantage => weapon.Advantage;
         public int MovesLeft => movesLeft;
-        public bool HasActed { get; set; }
+
+        public bool HasActed
+        {
+            get => hasActed;
+            set
+            {
+                //if the character has now acted
+                if (!hasActed && value)
+                {
+                    spriteRenderer.color = paleAlpha;
+                }
+                //if the character had previously acted but can now act
+                else if (hasActed && value == false)
+                {
+                    spriteRenderer.color = opaqueAlpha;
+                }
+                hasActed = value;
+            }
+        }
         public int AttackRange => 1;
 
         public UnitGender Gender => gender;
@@ -103,6 +127,7 @@ namespace Game
         
         private void Awake()
         {
+            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             uiController = Harmony.Finder.UIController;
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
@@ -246,6 +271,7 @@ namespace Game
                     if (TargetIsInRange(action.Target))
                     {
                         yield return Attack(action.Target);
+                        yield return uiController.LaunchBattleReport(IsEnemy);
                     }
                     else
                     {
@@ -300,7 +326,7 @@ namespace Game
             
             if(target.GetType() == typeof(Door))
             {
-                uiController.PrepareBattleReport(
+                uiController.SetupCharactersBattleInfo(
                     this.Stats.maxHealthPoints, 
                     this.CurrentHealthPoints,
                     ((Door)target).BaseHealth,
@@ -310,7 +336,7 @@ namespace Game
             }
             else
             {
-                uiController.PrepareBattleReport(
+                uiController.SetupCharactersBattleInfo(
                     this.Stats.maxHealthPoints, 
                     this.CurrentHealthPoints,
                     ((Unit)target).classStats.maxHealthPoints,
@@ -360,7 +386,7 @@ namespace Game
             target.CurrentHealthPoints -= damage;
             //todo Will have to check for Doors in the future.
             if (target is Unit)
-                yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints,CurrentHealthPoints);
+                uiController.ChangeCharacterDamageTaken(damage, IsEnemy);
             counter = 0;
             
             while (counter < duration)

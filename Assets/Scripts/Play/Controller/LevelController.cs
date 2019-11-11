@@ -46,6 +46,8 @@ namespace Game
 
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
+        private const string PLAYER_TURN_INFO = "Player";
+        private const string ENEMY_TURN_INFO = "Enemy";
 
 
 
@@ -60,6 +62,7 @@ namespace Game
         private OnLevelVictory onLevelVictory;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
+        private UIController uiController;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
@@ -89,6 +92,7 @@ namespace Game
 
         private void Start()
         {
+            uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
             players.Clear();
             InitializePlayersAndUnits();
@@ -241,8 +245,17 @@ namespace Game
 
         private void OnTurnGiven()
         {
-            if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
-            Harmony.Finder.UIController.ModifyTurnCounter(numberOfPlayerTurns);
+            if (currentPlayer is HumanPlayer)
+            {
+                numberOfPlayerTurns++;
+                uiController.ModifyTurnInfo(PLAYER_TURN_INFO);
+            }
+            else
+            {
+                uiController.ModifyTurnInfo(ENEMY_TURN_INFO);
+            }
+            uiController.ModifyTurnCounter(numberOfPlayerTurns);
+            
             currentPlayer.OnTurnGiven();
         }
 
