@@ -424,7 +424,7 @@ TextureImporter:
     second: tales_of_blemblemia_tileset_16x17_139
   - first:
       213: -451817976610773642
-    second: tales_of_blemblemia_tileset_16x17_140
+    second: number_0
   - first:
       213: 6836963425615628477
     second: tales_of_blemblemia_tileset_16x17_141
@@ -445,13 +445,13 @@ TextureImporter:
     second: tales_of_blemblemia_tileset_16x17_146
   - first:
       213: -3225875510052028526
-    second: tales_of_blemblemia_tileset_16x17_147
+    second: number_1
   - first:
       213: -8152013401765248315
-    second: tales_of_blemblemia_tileset_16x17_148
+    second: number_2
   - first:
       213: 8752304336966722653
-    second: tales_of_blemblemia_tileset_16x17_149
+    second: number_3
   - first:
       213: -270914290210424589
     second: tales_of_blemblemia_tileset_16x17_150
@@ -466,13 +466,13 @@ TextureImporter:
     second: tales_of_blemblemia_tileset_16x17_153
   - first:
       213: -9024941584485757977
-    second: tales_of_blemblemia_tileset_16x17_154
+    second: number_4
   - first:
       213: 2813041799525940979
-    second: tales_of_blemblemia_tileset_16x17_155
+    second: number_5
   - first:
       213: 141211627626956140
-    second: tales_of_blemblemia_tileset_16x17_156
+    second: number_6
   - first:
       213: 4623811821775524428
     second: tales_of_blemblemia_tileset_16x17_157
@@ -487,13 +487,13 @@ TextureImporter:
     second: tales_of_blemblemia_tileset_16x17_160
   - first:
       213: -4433464332869387864
-    second: tales_of_blemblemia_tileset_16x17_161
+    second: number_7
   - first:
       213: 3956711582936948008
-    second: tales_of_blemblemia_tileset_16x17_162
+    second: number_8
   - first:
       213: 3519323292613109048
-    second: tales_of_blemblemia_tileset_16x17_163
+    second: number_9
   - first:
       213: 4735324705673828959
     second: tales_of_blemblemia_tileset_16x17_164
@@ -4118,7 +4118,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_140
+      name: number_0
       rect:
         serializedVersion: 2
         x: 0
@@ -4265,7 +4265,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_147
+      name: number_1
       rect:
         serializedVersion: 2
         x: 0
@@ -4286,7 +4286,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_148
+      name: number_2
       rect:
         serializedVersion: 2
         x: 16
@@ -4307,7 +4307,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_149
+      name: number_3
       rect:
         serializedVersion: 2
         x: 32
@@ -4412,7 +4412,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_154
+      name: number_4
       rect:
         serializedVersion: 2
         x: 0
@@ -4433,7 +4433,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_155
+      name: number_5
       rect:
         serializedVersion: 2
         x: 16
@@ -4454,7 +4454,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_156
+      name: number_6
       rect:
         serializedVersion: 2
         x: 32
@@ -4559,7 +4559,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_161
+      name: number_7
       rect:
         serializedVersion: 2
         x: 0
@@ -4580,7 +4580,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_162
+      name: number_8
       rect:
         serializedVersion: 2
         x: 16
@@ -4601,7 +4601,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tales_of_blemblemia_tileset_16x17_163
+      name: number_9
       rect:
         serializedVersion: 2
         x: 32

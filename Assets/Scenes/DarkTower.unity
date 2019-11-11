@@ -7970,6 +7970,16 @@ PrefabInstance:
       propertyPath: enemyToDefeat
       value: 
       objectReference: {fileID: 1286291681}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: completeIfAllEnemiesDefeated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: defeatIfAllPlayerUnitsDied
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
 --- !u!1 &336111847 stripped
@@ -40330,6 +40340,11 @@ PrefabInstance:
         type: 3}
       propertyPath: initialPosition.y
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1625672215002910216, guid: f9341cfb1ebb657419148032b51ab674,
+        type: 3}
+      propertyPath: playerType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9341cfb1ebb657419148032b51ab674, type: 3}
