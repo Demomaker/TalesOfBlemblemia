@@ -27,7 +27,7 @@
         public const string DARK_TOWER_SCENE_NAME = "DarkTower";
         public const string TULIP_VALLEY_SCENE_NAME = "TulipValley";
         public const string MORKTRESS_SCENE_NAME = "Morktress";
-        public const string OVERWORLD_SCENE_NAME = "OverWorld";
+        public const string OVERWORLD_SCENE_NAME = "Overworld";
         public const string MAINMENU_SCENE_NAME = "MainMenu";
         public const string GAME_UI_SCENE_NAME = "GameUI";
         public const string NAME_STRING = "Name";
