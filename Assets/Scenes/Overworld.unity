@@ -10154,7 +10154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1ff118d5d163544abe0eb7c611557d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDebugging: 1
+  isDebugging: 0
 --- !u!1001 &1353857792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10165,7 +10165,7 @@ PrefabInstance:
     - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: m_Name
-      value: BlembourgCitadel
+      value: BlemburgCitadel
       objectReference: {fileID: 0}
     - target: {fileID: 6355133595824120684, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
@@ -10280,7 +10280,7 @@ PrefabInstance:
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: representedLevelName
-      value: BlembourgCitadel
+      value: BlemburgCitadel
       objectReference: {fileID: 0}
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
@@ -10504,7 +10504,7 @@ PrefabInstance:
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: representedLevelName
-      value: Jimsterbourg
+      value: Jimsterburg
       objectReference: {fileID: 0}
     - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}

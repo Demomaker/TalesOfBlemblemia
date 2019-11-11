@@ -14,7 +14,7 @@ public class LevelEntry : MonoBehaviour
     private OverWorldController overWorldController;
     private GameController gameController;
     private bool IsFirstLevel => string.IsNullOrEmpty(Finder.GameController.PreviousLevelName);
-    private bool CanBeClicked => Finder.OverWorldController.IsDebugging || IsFirstLevel && Finder.GameController.FirstLevelName == null || Finder.GameController.PreviousLevelName == previousLevelName;
+    private bool CanBeClicked => Finder.OverWorldController.IsDebugging || IsFirstLevel && string.IsNullOrEmpty(previousLevelName) || Finder.GameController.PreviousLevelName == previousLevelName;
     public string RepresentedLevelName => representedLevelName;
     private void Awake()
     {
