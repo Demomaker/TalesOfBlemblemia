@@ -161,7 +161,7 @@ namespace Game
 
             UpdatePlayerSave();
             
-            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+            //Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Game
             //If the level was successfully completed, mark it as completed
             if (levelCompleted)
             {
-                Finder.GameController.LevelsCompleted.Add(levelName);
+                Finder.GameController.OnLevelCompleted(levelName);
 
                 var levels = Finder.GameController.Levels;
                 foreach (var level in levels)
@@ -318,8 +318,8 @@ namespace Game
         
         private void InitializePlayersAndUnits()
         {
-            HumanPlayer player1 = HumanPlayer.Instance;
-            ComputerPlayer player2 = ComputerPlayer.Instance;
+            var player1 = HumanPlayer.Instance;
+            var player2 = ComputerPlayer.Instance;
 
             units = FindObjectsOfType<Unit>();
 

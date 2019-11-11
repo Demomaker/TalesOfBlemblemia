@@ -12,10 +12,10 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: d540e464439e9b844bb331f27aa87fca
   - enabled: 1
-    path: Assets/Scenes/Overworld.unity
+    path: Assets/Scenes/OverWorld.unity
     guid: f9f811e731d70d44aaea609d9c802999
   - enabled: 1
-    path: Assets/Scenes/GameUI.unity
+    path: Assets/Scenes/Levels/GameUI.unity
     guid: 1a9486eef1b5b334ba56ec841baf2cf7
   - enabled: 1
     path: Assets/Scenes/Levels/ParabeneForest.unity
