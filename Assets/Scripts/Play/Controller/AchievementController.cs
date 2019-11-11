@@ -13,23 +13,43 @@ namespace Game
         [SerializeField] private Text nameText;
         [SerializeField] private Text descriptionText;
         [SerializeField] private Animator animator;
-        private List<Achievement> Achievements  = new List<Achievement>();
+        private readonly List<Achievement> achievements = new List<Achievement>();
         private bool AchievementBeingShown;
         private GameSettings gameSettings;
         private GameController gameController;
+        
+        private bool CompletedCampaignOnEasy =>
+            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Easy;
+        private bool CompletedCampaignOnMedium =>
+            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Medium;
+        private bool CompletedCampaignOnHard =>
+            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
+        private bool BlackKnightDefeated => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName;
+        private bool ReachedFinalLevelWith8Players =>
+            HumanPlayer.Instance.NumberOfUnits > 8 &&
+            gameController.CurrentLevelName == gameSettings.MorktressSceneName;
+        private bool FinishedALevelWithoutUnitLoss =>
+            !HumanPlayer.Instance.HasLostAUnitInCurrentLevel &&
+            gameController.PreviousLevelName == gameController.CurrentLevelName &&
+            !string.IsNullOrEmpty(gameController.PreviousLevelName);
+        private bool SavedAllRecruitablesFromAlternatePath =>
+            HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >=
+            gameSettings.NumberOfRecruitablesOnAlternatePath;
+        private bool FinishedCampaignWithoutUnitLoss =>
+            !HumanPlayer.Instance.HasEverLostAUnit && gameController.AllLevelsCompleted;
 
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
             gameController = Harmony.Finder.GameController;
-            Achievements.Add(new Achievement(gameSettings.CompleteCampaignOnEasy,  () => gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Easy));
-            Achievements.Add(new Achievement(gameSettings.CompleteCampaignOnMedium,  () => gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Medium));
-            Achievements.Add(new Achievement(gameSettings.CompleteCampaignOnHard,  () => gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard));
-            Achievements.Add(new Achievement(gameSettings.DefeatBlackKnight,  () => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName));
-            Achievements.Add(new Achievement(gameSettings.ReachFinalLevelWith8Players,  () => HumanPlayer.Instance.NumberOfUnits > 8 && gameController.CurrentLevelName == gameSettings.MorktressSceneName));
-            Achievements.Add(new Achievement(gameSettings.FinishALevelWithoutUnitLoss,  () => !HumanPlayer.Instance.HasLostAUnitInCurrentLevel && gameController.PreviousLevelName == gameController.CurrentLevelName && !string.IsNullOrEmpty(gameController.PreviousLevelName)));
-            Achievements.Add(new Achievement(gameSettings.SaveAllRecruitablesFromAlternatePath,  () => HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >= gameSettings.NumberOfRecruitablesOnAlternatePath));
-            Achievements.Add(new Achievement(gameSettings.FinishCampaignWithoutUnitLoss,  () => !HumanPlayer.Instance.HasEverLostAUnit && gameController.AllLevelsCompleted ));
+            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnEasy,  () => CompletedCampaignOnEasy));
+            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnMedium,  () => CompletedCampaignOnMedium));
+            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnHard,  () => CompletedCampaignOnHard));
+            achievements.Add(new Achievement(gameSettings.DefeatBlackKnight,  () => BlackKnightDefeated));
+            achievements.Add(new Achievement(gameSettings.ReachFinalLevelWith8Players,  () => ReachedFinalLevelWith8Players));
+            achievements.Add(new Achievement(gameSettings.FinishALevelWithoutUnitLoss,  () => FinishedALevelWithoutUnitLoss));
+            achievements.Add(new Achievement(gameSettings.SaveAllRecruitablesFromAlternatePath,  () => SavedAllRecruitablesFromAlternatePath));
+            achievements.Add(new Achievement(gameSettings.FinishCampaignWithoutUnitLoss,  () => FinishedCampaignWithoutUnitLoss));
             nameText.text = gameSettings.AchievementGetString;
         }
 
@@ -40,7 +60,7 @@ namespace Game
 
         public void CheckIfAchievementCompleted()
         {
-            foreach (var achievement in Achievements)
+            foreach (var achievement in achievements)
             {
                 if (achievement.AchievementCompleted)
                 {

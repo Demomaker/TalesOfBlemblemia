@@ -42,7 +42,7 @@ namespace Game
         [SerializeField] private string jebediahName = "Jebediah";
         [SerializeField] private string thomasName = "Thomas";
         [SerializeField] private string abrahamName = "Abraham";
-        [SerializeField] private string achievementGetString = "Achievement Get!";
+        [SerializeField] [Header("Achievements")] private string achievementGetString = "Achievement Get!";
         [SerializeField] [Header("Achievement Names")] private string completeCampaignOnEasy = "Baby Steps";
         [SerializeField] private string completeCampaignOnMedium = "Now you're getting it!";
         [SerializeField] private string completeCampaignOnHard = "You mad man!";
@@ -117,47 +117,5 @@ namespace Game
         public int DefaultSliderValue => defaultSliderValue;
         public string DefaultUsername => defaultUsername;
         public int Percent => percent;
-
-        private void Awake()
-        {
-            
-        }
-
-        public string GetLevelNameFromLevel(Level level)
-        {
-            switch (level)
-            {
-                case Level.Level1:
-                    return TutorialSceneName;
-                case Level.Level2:
-                    return JimsterburgSceneName;
-                case Level.Level3:
-                    return ParabeneForestSceneName;
-                case Level.Level4:
-                    return BlemburgCitadelSceneName;
-                case Level.Level5:
-                    return RinfretVillageSceneName;
-                case Level.Level6:
-                    return DarkTowerSceneName;
-                case Level.Level7:
-                    return TulipValleySceneName;
-                case Level.Level8:
-                    return MorktressSceneName;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(level), level, null);
-            }
-        }
-
-        public enum Level
-        {
-            Level1,
-            Level2,
-            Level3,
-            Level4,
-            Level5,
-            Level6,
-            Level7,
-            Level8
-        }
     }
 }

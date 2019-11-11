@@ -521,6 +521,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 102900000, guid: 91dc955b4bbf92648a2077868dcc6334,
         type: 3}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: rinfretVillageScene
+      value: 
+      objectReference: {fileID: 102900000, guid: 5ab43a1befec026418e1fa93ae1ceb15,
+        type: 3}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: saveSlotOne
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
 --- !u!1001 &5470706462989742451

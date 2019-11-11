@@ -99,7 +99,7 @@ namespace Game
         private void InitiateSettingsInfo()
         {
             playerSettings = new PlayerSettings(1, gameSettings.DefaultToggleValue, gameSettings.DefaultToggleValue,
-                settings.DefaultSliderValue, gameSettings,gameSettings.DefaultSliderValue, gameSettings.DefaultSliderValue);
+                gameSettings.DefaultSliderValue, gameSettings.DefaultSliderValue,gameSettings.DefaultSliderValue);
         }
 
         private void InitiateSaveInfo(string username, string difficultyLevel, string levelName,
@@ -125,7 +125,7 @@ namespace Game
         /// </summary>
         private void CheckForExistingSettings()
         {
-            List<PlayerSettings> settings = saveSettingsRepo.FindAll();
+            var settings = saveSettingsRepo.FindAll();
             
             if (settings.Count == 0)
             {

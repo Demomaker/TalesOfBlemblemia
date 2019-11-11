@@ -8,7 +8,7 @@ using Finder = Harmony.Finder;
 [RequireComponent(typeof(Button))]
 public class LevelEntry : MonoBehaviour
 {
-    [SerializeField] private GameSettings.Level representedLevel;
+    [SerializeField] private LevelID.LevelIDValue representedLevelId;
     private GameSettings gameSettings;
     private Button levelEntryButton;
     private string previousLevelName;
@@ -21,16 +21,16 @@ public class LevelEntry : MonoBehaviour
     private void Awake()
     {
         gameSettings = Finder.GameSettings;
-        representedLevelName = gameSettings.GetLevelNameFromLevel(representedLevel);
+        representedLevelName = representedLevelId.GetLevelNameFromLevelID();
         overWorldController = Finder.OverWorldController;
         gameController = Finder.GameController;
         levelEntryButton = GetComponent<Button>();
         if(levelEntryButton == null) Debug.LogError(name + ": Button is null!");
-        for (int i = 0; i < gameController.Levels.Length; i++)
+        foreach (var level in gameController.Levels)
         {
-            if (gameController.Levels[i].LevelName == representedLevelName)
+            if (level.LevelName == representedLevelName)
             {
-                previousLevelName = gameController.Levels[i].PreviousLevel;
+                previousLevelName = level.PreviousLevel;
                 break;
             }
         }

@@ -71,7 +71,6 @@ namespace Game
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
-        private UIController uiController;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
@@ -131,7 +130,7 @@ namespace Game
 
         private string GetStringOfTargetsToDefeat()
         {
-            string retval = "";
+            var retval = "";
             foreach (var enemy in targetsToDefeat)
             {
                 retval += enemy.ToString() + " ";
@@ -217,28 +216,21 @@ namespace Game
         {
             var defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
 
-            if (defeatedPlayerUnits.Any())
+            if (!defeatedPlayerUnits.Any()) return;
+            var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+            foreach (var unit in defeatedPlayerUnits)
             {
-                var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-
-                foreach (var unit in defeatedPlayerUnits)
+                if (unit.name == gameSettings.FranklemName)
                 {
-                    if (unit.name == gameSettings.FranklemName)
-                    {
-                        saveController.ResetSave();
-                        break;
-                    }
+                    saveController.ResetSave();
+                    break;
+                }
 
-                    if (gameController.DifficultyLevel != DifficultyLevel.Easy && levelCompleted)
-                    {
-                        foreach (var character in characterInfos)
-                        {
-                            if (character.CharacterName == unit.name)
-                            {
-                                character.CharacterStatus = false;
-                            }
-                        }
-                    }
+                if (gameController.DifficultyLevel == DifficultyLevel.Easy || !levelCompleted) continue;
+                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                {
+                    character.CharacterStatus = false;
                 }
             }
         }
@@ -438,15 +430,9 @@ namespace Game
         {
             var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
 
-            foreach (var gameUnit in currentPlayer.OwnedUnits)
+            foreach (var gameUnit in from gameUnit in currentPlayer.OwnedUnits from saveUnit in characterInfos where gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus select gameUnit)
             {
-                foreach (var saveUnit in characterInfos)
-                {
-                    if (gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus)
-                    {
-                        gameUnit.gameObject.SetActive(false);
-                    }
-                }
+                gameUnit.gameObject.SetActive(false);
             }
         }
         
