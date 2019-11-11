@@ -53,7 +53,7 @@ namespace Game
                  new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_6_SCENE_NAME),
                  new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_7_SCENE_NAME),
                  new Level(Constants.LEVEL_7_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)
+                 new Level(Constants.LEVEL_5_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)
              };
          }
          private void ResetCompletedLevels()

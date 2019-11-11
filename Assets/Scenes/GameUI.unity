@@ -9560,10 +9560,10 @@ MonoBehaviour:
     type: 3}
   battleReports: {fileID: 2140144757}
   battleReportAlly: {fileID: 1042195280}
-  playerHealthBar: {fileID: 996105937}
+  playerHealthBarLayout: {fileID: 996105937}
   playerDeathSymbol: {fileID: 913075238}
   battleReportEnemy: {fileID: 218479312}
-  enemyHealthBar: {fileID: 1868954626}
+  enemyHealthBarLayout: {fileID: 1868954626}
   enemyDeathSymbol: {fileID: 304806448}
   green: {r: 0, g: 1, b: 0, a: 0}
   red: {r: 1, g: 0, b: 0, a: 1}
