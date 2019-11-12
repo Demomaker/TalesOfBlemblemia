@@ -16,8 +16,12 @@ namespace Game
 
         private void Awake()
         {
-            uiController = Harmony.Finder.UIController;
             tile = GetComponentInParent<Tile>();
+        }
+
+        private void Start()
+        {
+            uiController = Harmony.Finder.UIController;
         }
 
         public void OnPointerClick(PointerEventData eventData)

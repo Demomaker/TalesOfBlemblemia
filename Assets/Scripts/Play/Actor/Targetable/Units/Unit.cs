@@ -124,11 +124,11 @@ namespace Game
         public UnitInfos UnitInfos => unitInfos;
 
         #endregion
-        
-        private void Awake()
+
+        public override void Awake()
         {
-            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             uiController = Harmony.Finder.UIController;
+            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -143,7 +143,7 @@ namespace Game
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
             gameSettings = Harmony.Finder.GameSettings;
-
+            base.Awake();
         }
 
         private void OnEnable()

@@ -20,7 +20,7 @@ namespace Game
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
-         
+
          private string previousLevelName;
          private string currentLevelName;
          
@@ -31,7 +31,7 @@ namespace Game
          
          public string PreviousLevelName => previousLevelName;
          public string CurrentLevelName => currentLevelName;
-         public string FirstLevelName => gameSettings.TutorialSceneName;
+         public string FirstLevelName => gameSettings.ParabeneForestSceneName;
          public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel => difficultyLevel;
@@ -39,6 +39,7 @@ namespace Game
          private void Awake()
          {
              gameSettings = Harmony.Finder.GameSettings;
+             previousLevelName = gameSettings.JimsterburgSceneName;
              Levels = new Level[]
              {
                  new Level("", gameSettings.TutorialSceneName),

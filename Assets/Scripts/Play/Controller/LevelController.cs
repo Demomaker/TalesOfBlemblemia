@@ -78,7 +78,6 @@ namespace Game
 
         private void Awake()
         {
-            uiController = Harmony.Finder.UIController;
             saveController = Finder.SaveController;
             gameController = Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;

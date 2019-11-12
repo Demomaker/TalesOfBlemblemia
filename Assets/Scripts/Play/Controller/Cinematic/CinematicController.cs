@@ -37,16 +37,15 @@ namespace Game
 
         private void Awake()
         {
-            dialogueUI = GameObject.FindWithTag("DialogueUi");
-            uiController = Harmony.Finder.UIController.gameObject;
             camera = Camera.main;
             cameraController = camera.GetComponent<CameraController>();
             camTransform = camera.transform;
-            dialogueManager = Harmony.Finder.DialogueManager;
         }
 
         private void Start()
         {
+            uiController = Harmony.Finder.UIController.gameObject;
+            dialogueManager = Harmony.Finder.DialogueManager;
             if (dialogueUI != null) dialogueUI.SetActive(true);
         }
 

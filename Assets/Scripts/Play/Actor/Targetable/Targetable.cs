@@ -48,7 +48,7 @@ namespace Game
             gameObject.SetActive(false);
         }
 
-        public void Awake()
+        public virtual void Awake()
         {
             try
             {
