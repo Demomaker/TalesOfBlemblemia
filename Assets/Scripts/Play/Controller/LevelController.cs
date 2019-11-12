@@ -34,14 +34,14 @@ namespace Game
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Unit[] targetsToDefeat = null;
+        [SerializeField] private Targetable[] targetsToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
         
-        private int levelTileUpdateKeeper = 0;
-        private string levelName = "";
+        private int levelTileUpdateKeeper;
+        private string levelName;
         
 
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
@@ -54,20 +54,20 @@ namespace Game
         private CinematicController cinematicController;
         public CinematicController CinematicController => cinematicController;
 
-        private bool levelCompleted = false;
-        private bool levelFailed = false;
-        private bool levelEnded = false;
-        private bool levelIsEnding = false;
+        private bool levelCompleted;
+        private bool levelFailed;
+        private bool levelEnded;
+        private bool levelIsEnding;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
         private UIController uiController;
 
-        private Unit[] units = null;
+        private Unit[] units;
         private UnitOwner currentPlayer;
         private readonly List<UnitOwner> players = new List<UnitOwner>();
-        private int numberOfPlayerTurns = 0;
+        private int numberOfPlayerTurns;
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
@@ -78,6 +78,7 @@ namespace Game
 
         private void Awake()
         {
+            ResetVariables();
             saveController = Finder.SaveController;
             gameController = Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
@@ -88,11 +89,23 @@ namespace Game
             levelName = gameObject.scene.name;
         }
 
+        private void ResetVariables()
+        {
+            levelCompleted = false;
+            levelEnded = false;
+            levelIsEnding = false;
+            levelFailed = false;
+            units = null;
+            levelTileUpdateKeeper = 0;
+            levelName = "";
+            numberOfPlayerTurns = 0;
+            players.Clear();
+        }
+
         private void Start()
         {
             uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
-            players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             OnTurnGiven();
@@ -141,12 +154,6 @@ namespace Game
         protected void Update()
         {
             if(!doNotEnd) CheckIfLevelEnded();
-            
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                levelCompleted = true;
-                levelEnded = true;
-            }
 
             if (levelEnded)
             {

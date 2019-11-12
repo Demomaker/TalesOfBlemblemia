@@ -102,15 +102,18 @@ namespace Game
             get => hasActed;
             set
             {
-                //if the character has now acted
-                if (!hasActed && value)
+                if (spriteRenderer != null)
                 {
-                    spriteRenderer.color = gameSettings.PaleAlpha;
-                }
-                //if the character had previously acted but can now act
-                else if (hasActed && value == false)
-                {
-                    spriteRenderer.color = gameSettings.OpaqueAlpha;
+                    //if the character has now acted
+                    if (!hasActed && value)
+                    {
+                        spriteRenderer.color = gameSettings.PaleAlpha;
+                    }
+                    //if the character had previously acted but can now act
+                    else if (hasActed && value == false)
+                    {
+                        spriteRenderer.color = gameSettings.OpaqueAlpha;
+                    }
                 }
                 hasActed = value;
             }
