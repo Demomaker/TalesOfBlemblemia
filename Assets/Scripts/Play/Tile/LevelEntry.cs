@@ -8,25 +8,29 @@ using Finder = Harmony.Finder;
 [RequireComponent(typeof(Button))]
 public class LevelEntry : MonoBehaviour
 {
-    [SerializeField] private string representedLevelName;
+    [SerializeField] private LevelID.LevelIDValue representedLevelId;
+    private GameSettings gameSettings;
     private Button levelEntryButton;
     private string previousLevelName;
     private OverWorldController overWorldController;
     private GameController gameController;
-    private bool IsFirstLevel => string.IsNullOrEmpty(Finder.GameController.PreviousLevelName);
-    private bool CanBeClicked => Finder.OverWorldController.IsDebugging || IsFirstLevel && string.IsNullOrEmpty(previousLevelName) || Finder.GameController.PreviousLevelName == previousLevelName;
-    public string RepresentedLevelName => representedLevelName;
+    private string representedLevelName;
+    private bool IsFirstLevel => string.IsNullOrEmpty(gameController.PreviousLevelName);
+    private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && string.IsNullOrEmpty(previousLevelName) || gameController.PreviousLevelName == previousLevelName;
+
     private void Awake()
     {
+        gameSettings = Finder.GameSettings;
+        representedLevelName = representedLevelId.GetLevelNameFromLevelID();
         overWorldController = Finder.OverWorldController;
         gameController = Finder.GameController;
         levelEntryButton = GetComponent<Button>();
         if(levelEntryButton == null) Debug.LogError(name + ": Button is null!");
-        for (int i = 0; i < gameController.Levels.Length; i++)
+        foreach (var level in gameController.Levels)
         {
-            if (Finder.GameController.Levels[i].LevelName == representedLevelName)
+            if (level.LevelName == representedLevelName)
             {
-                previousLevelName = gameController.Levels[i].PreviousLevel;
+                previousLevelName = level.PreviousLevel;
                 break;
             }
         }
@@ -37,7 +41,7 @@ public class LevelEntry : MonoBehaviour
         var colors = levelEntryButton.colors;
         colors.highlightedColor = !CanBeClicked ? Color.red : Color.green;
         levelEntryButton.colors = colors;
-        if (RepresentedLevelName == gameController.PreviousLevelName)
+        if (representedLevelName == gameController.PreviousLevelName)
         {
             var target = transform.position;
             overWorldController.CharacterTransform.position = new Vector3(target.x + 1, target.y, target.z);

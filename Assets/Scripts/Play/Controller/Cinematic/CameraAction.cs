@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using static Game.Constants;
+using static Game.CameraConstants;
 using Vector3 = System.Numerics.Vector3;
 
 namespace Game

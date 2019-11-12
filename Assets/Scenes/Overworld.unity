@@ -252,6 +252,11 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level5
       objectReference: {fileID: 0}
+    - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: representedLevel
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
@@ -3359,6 +3364,11 @@ PrefabInstance:
         type: 3}
       propertyPath: RepresentedLevelName
       value: ParabeneForest
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: representedLevel
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -10102,6 +10112,11 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level6
       objectReference: {fileID: 0}
+    - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: representedLevel
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 06da8f35042ccc24a9a611be6554b630, type: 3}
@@ -10286,6 +10301,11 @@ PrefabInstance:
         type: 3}
       propertyPath: RepresentedLevelName
       value: Level4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: representedLevel
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -10516,6 +10536,11 @@ PrefabInstance:
       propertyPath: RepresentedLevelName
       value: Level2
       objectReference: {fileID: 0}
+    - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: representedLevel
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5362370819529076482, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}
       propertyPath: m_Interactable
@@ -10661,6 +10686,11 @@ PrefabInstance:
         type: 3}
       propertyPath: RepresentedLevelName
       value: Level7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: representedLevel
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -10970,6 +11000,11 @@ PrefabInstance:
         type: 3}
       propertyPath: RepresentedLevelName
       value: Level8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482485119123930423, guid: 06da8f35042ccc24a9a611be6554b630,
+        type: 3}
+      propertyPath: representedLevel
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5362370819529076482, guid: 06da8f35042ccc24a9a611be6554b630,
         type: 3}

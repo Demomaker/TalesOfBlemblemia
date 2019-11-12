@@ -12,6 +12,7 @@ namespace Game
         private SaveInfos saveSlot2;
         private SaveInfos saveSlot3;
         private PlayerSettings playerSettings;
+        private GameSettings gameSettings;
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
@@ -49,8 +50,9 @@ namespace Game
         public void Awake()
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
-            InitiateSaveController(Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
-                Constants.TUTORIAL_SCENE_NAME, playableCharactersDictionary);
+            gameSettings = Harmony.Finder.GameSettings;
+            InitiateSaveController(gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
+                gameSettings.TutorialSceneName, playableCharactersDictionary);
         }
 
 
@@ -58,16 +60,17 @@ namespace Game
 
         private static Dictionary<string, bool> CreateBaseCharacterDictionary()
         {
+            var gameSettings = Harmony.Finder.GameSettings;
             Dictionary<string, bool> playableCharactersDictionary = new Dictionary<string, bool>
             {
-                {Constants.FRANKLEM_NAME, true},
-                {Constants.MYRIAM_NAME, true},
-                {Constants.BRAM_NAME, true},
-                {Constants.RASS_NAME, true},
-                {Constants.ULRIC_NAME, true},
-                {Constants.JEBEDIAH_NAME, true},
-                {Constants.THOMAS_NAME, true},
-                {Constants.ABRAHAM_NAME, true}
+                {gameSettings.FranklemName, true},
+                {gameSettings.MyriamName, true},
+                {gameSettings.BramName, true},
+                {gameSettings.RassName, true},
+                {gameSettings.UlricName, true},
+                {gameSettings.JebediahName, true},
+                {gameSettings.ThomasName, true},
+                {gameSettings.AbrahamName, true}
             };
             return playableCharactersDictionary;
         }
@@ -95,8 +98,8 @@ namespace Game
 
         private void InitiateSettingsInfo()
         {
-            playerSettings = new PlayerSettings(1, Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_TOGGLE_VALUE,
-                Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE);
+            playerSettings = new PlayerSettings(1, gameSettings.DefaultToggleValue, gameSettings.DefaultToggleValue,
+                gameSettings.DefaultSliderValue, gameSettings.DefaultSliderValue,gameSettings.DefaultSliderValue);
         }
 
         private void InitiateSaveInfo(string username, string difficultyLevel, string levelName,
@@ -122,7 +125,7 @@ namespace Game
         /// </summary>
         private void CheckForExistingSettings()
         {
-            List<PlayerSettings> settings = saveSettingsRepo.FindAll();
+            var settings = saveSettingsRepo.FindAll();
             
             if (settings.Count == 0)
             {
@@ -255,8 +258,8 @@ namespace Game
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
 
-            SaveInfos cleanSave = new SaveInfos(1, Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
-                Constants.TUTORIAL_SCENE_NAME, playableCharactersDictionary);
+            SaveInfos cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
+                gameSettings.TutorialSceneName, playableCharactersDictionary);
             
             switch (saveSelected)
             {

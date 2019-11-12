@@ -2,16 +2,13 @@
 {
     public class Level
     {
-        private string previousLevel;
-        private string levelName;
-
-        public string PreviousLevel => previousLevel;
-        public string LevelName => levelName;
+        public string PreviousLevel { get; }
+        public string LevelName { get; }
 
         public Level(string previousLevel, string levelName)
         {
-            this.previousLevel = previousLevel;
-            this.levelName = levelName;
+            this.PreviousLevel = previousLevel;
+            this.LevelName = levelName;
         }
     }
 }

@@ -225,17 +225,15 @@ namespace Game
             if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
 
             tileTexture.sprite = tile.GetSprite();
-            
 
-            if (tile.LinkedUnit != null && tile.LinkedUnit.UnitInfos != null)
-            {
-                characterName.text = tile.LinkedUnit.UnitInfos.characterName;
-                characterClass.text = tile.LinkedUnit.UnitInfos.className;
-                weapon.text = tile.LinkedUnit.UnitInfos.weaponName;
-                mouvement.text = tile.LinkedUnit.MovesLeft.ToString();
-                atk.text = tile.LinkedUnit.Stats.AttackStrength.ToString();
-                hp.text = tile.LinkedUnit.CurrentHealthPoints.ToString();
-            }
+
+            if (tile.LinkedUnit == null || tile.LinkedUnit.UnitInfos == null) return;
+            characterName.text = tile.LinkedUnit.UnitInfos.characterName;
+            characterClass.text = tile.LinkedUnit.UnitInfos.className;
+            weapon.text = tile.LinkedUnit.UnitInfos.weaponName;
+            mouvement.text = tile.LinkedUnit.MovesLeft.ToString();
+            atk.text = tile.LinkedUnit.Stats.AttackStrength.ToString();
+            hp.text = tile.LinkedUnit.CurrentHealthPoints.ToString();
         }
 
         public void ModifyTurnCounter(int turns)
