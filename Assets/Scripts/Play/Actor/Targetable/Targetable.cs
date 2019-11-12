@@ -23,10 +23,8 @@ namespace Game
             {
                 currentHealthPoints = value;
                 if(overHeadHpController != null) overHeadHpController.ModifyOverHeadHp(currentHealthPoints);
-                if (NoHealthLeft)
-                {
+                if (NoHealthLeft) 
                     Die();
-                }
             }
         }
         

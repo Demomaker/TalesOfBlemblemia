@@ -47,9 +47,7 @@ namespace Game
         private bool isGoingToDie = false;
         private Animator animator;
         private SpriteRenderer spriteRenderer;
-        private readonly Color paleAlpha = new Color(1,1,1, 0.5f);
-        private readonly Color opaqueAlpha = new Color(1,1,1,1f);
-        
+
         #endregion
         
         #region Properties
@@ -107,12 +105,12 @@ namespace Game
                 //if the character has now acted
                 if (!hasActed && value)
                 {
-                    spriteRenderer.color = paleAlpha;
+                    spriteRenderer.color = gameSettings.PaleAlpha;
                 }
                 //if the character had previously acted but can now act
                 else if (hasActed && value == false)
                 {
-                    spriteRenderer.color = opaqueAlpha;
+                    spriteRenderer.color = gameSettings.OpaqueAlpha;
                 }
                 hasActed = value;
             }
@@ -202,7 +200,7 @@ namespace Game
         
         private void LookAt(Vector3 target)
         {
-            transform.localRotation = Quaternion.Euler(0, target.x < transform.position.x ? 180 : 0, 0);
+            gameObject.GetComponent<SpriteRenderer>().flipX = target.x < gameObject.transform.position.x;
         }
 
         #region Movements
@@ -274,9 +272,7 @@ namespace Game
                         yield return uiController.LaunchBattleReport(IsEnemy);
                     }
                     else
-                    {
                         Rest();
-                    }
                 }
                 if (action.ActionType == ActionType.Recruit && action.Target != null)
                 {
@@ -386,7 +382,7 @@ namespace Game
             target.CurrentHealthPoints -= damage;
             //todo Will have to check for Doors in the future.
             if (target is Unit)
-                uiController.ChangeCharacterDamageTaken(damage, IsEnemy);
+                uiController.ChangeCharacterDamageTaken(damage, !IsEnemy);
             counter = 0;
             
             while (counter < duration)

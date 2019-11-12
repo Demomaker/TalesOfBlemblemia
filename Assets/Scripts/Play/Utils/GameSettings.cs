@@ -65,6 +65,11 @@ namespace Game
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
 
+        private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
+        private static readonly Color opaqueAlpha = new Color(1,1,1,1f);
+
+        public Color PaleAlpha => paleAlpha;
+        public Color OpaqueAlpha => opaqueAlpha;
         public int PlayerMovementRange => playerMovementRange;
         public int EnemyMovementRange => enemyMovementRange;
         public int PlayerAttackRange => playerAttackRange;

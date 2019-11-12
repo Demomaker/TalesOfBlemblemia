@@ -183,6 +183,7 @@ namespace Game
 
             UpdatePlayerSave();
             
+            gameController.LoadLevel(gameSettings.OverworldSceneName);
         }
 
         /// <summary>
@@ -384,8 +385,17 @@ namespace Game
         {
             if (currentPlayer.HasNoMorePlayableUnits)
             {
+                ResetUnitsAlpha();
                 GiveTurnToNextPlayer();
                 OnTurnGiven();
+            }
+        }
+
+        private void ResetUnitsAlpha()
+        {
+            foreach (var unit in currentPlayer.OwnedUnits)
+            {
+                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
             }
         }
 

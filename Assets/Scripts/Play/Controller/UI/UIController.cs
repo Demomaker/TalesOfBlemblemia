@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using Harmony;
 using JetBrains.Annotations;
 using TMPro;
@@ -32,15 +30,9 @@ namespace Game
         [SerializeField] private TMP_Text characterName;
         [SerializeField] private TMP_Text characterClass;
         [SerializeField] private TMP_Text weapon;
-        [SerializeField] private TMP_Text mouvement;
+        [SerializeField] private TMP_Text movement;
         [SerializeField] private TMP_Text atk;
         [SerializeField] private TMP_Text hp;
-
-        [Header("Texture")] 
-        [SerializeField] private Sprite grassTexture;
-        [SerializeField] private Sprite mountainTexture;
-        [SerializeField] private Sprite fortressTexture;
-        [SerializeField] private Sprite forestTexture;
 
         [Header("Battle Report")] 
         [SerializeField] private GameObject battleReports;
@@ -69,19 +61,19 @@ namespace Game
         private Animator enemyAnimator;
         private static readonly int IS_ATTACKING = Animator.StringToHash("IsAttacking");
 
-        private bool animationIsPlaying = false;
+        private bool animationIsPlaying;
         private BattleInfos playerBattleInfos;
         private BattleInfos enemyBattleInfos;
 
-        private GameObject[] playerHealthbar;
-        private GameObject[] enemyHealthbar;
+        private GameObject[] playerHealthBar;
+        private GameObject[] enemyHealthBar;
 
         public bool IsBattleReportActive => battleReports.activeSelf;
 
         private void Start()
         {
-            playerHealthbar = playerHealthBarLayout.Children();
-            enemyHealthbar = enemyHealthBarLayout.Children();
+            playerHealthBar = playerHealthBarLayout.Children();
+            enemyHealthBar = enemyHealthBarLayout.Children();
             playerBattleInfos = new BattleInfos();
             enemyBattleInfos = new BattleInfos();
             canvas.enabled = true;
@@ -111,7 +103,13 @@ namespace Game
             {
                 healthBar[i - 1].SetActive(false);
             }
-
+        
+            for (int i = 0; i < currentHealthPoint; i++)
+            {
+                RawImage healthBarImage = healthBar[i].GetComponentInChildren<RawImage>();
+                healthBarImage.color = green;
+            }
+            
             for (int i = maxHealthPoints; i > currentHealthPoint; i--)
             {
                 RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
@@ -122,8 +120,13 @@ namespace Game
             {
                 for (int i = currentHealthPoint; i > currentHealthPoint - damage; i--)
                 {
-                    RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                    healthBarImage.color = red;
+                    if (i > 0)
+                    {
+                        RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
+                        healthBarImage.color = red;
+                    }
+                    else
+                        break;
                 }
             }
         }
@@ -156,31 +159,29 @@ namespace Game
         {
             if (isEnemy)
             {
-                yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthbar);
-                if (playerBattleInfos.HealthBeforeCombat - playerBattleInfos.DamageTaken > 0)
+                yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar);
+                if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken > 0)
                 {
                     yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-                    yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthbar);
+                    yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar);
                 }
-                   
             }
             else
             {
-                yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthbar);
-                if (enemyBattleInfos.HealthBeforeCombat - enemyBattleInfos.DamageTaken > 0)
+                yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar);
+                if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken > 0)
                 {
                     yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-                    yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthbar);
+                    yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar);
                 }
-                   
             }
 
-            if (enemyBattleInfos.HealthBeforeCombat - enemyBattleInfos.DamageTaken <= 0)
+            if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken <= 0)
             {
                 enemyDeathSymbol.SetActive(true);
             }
 
-            if (playerBattleInfos.HealthBeforeCombat - playerBattleInfos.DamageTaken <= 0)
+            if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken <= 0)
             {
                 playerDeathSymbol.SetActive(true);
             }
@@ -197,14 +198,15 @@ namespace Game
             }
             
             #region BeforeCombat
-                ModifyHealthBar(playerBattleInfos.MaxHp, playerBattleInfos.HealthBeforeCombat, playerHealthbar);
-                ModifyHealthBar(enemyBattleInfos.MaxHp, enemyBattleInfos.HealthBeforeCombat, enemyHealthbar);
+                ModifyHealthBar(playerBattleInfos.MaxHp, playerBattleInfos.CurrentHealth, playerHealthBar);
+                ModifyHealthBar(enemyBattleInfos.MaxHp, enemyBattleInfos.CurrentHealth, enemyHealthBar);
             #endregion
             
             animationIsPlaying = true;
             animator.SetBool(IS_ATTACKING,true);
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            ModifyHealthBar(battleInfos.MaxHp, battleInfos.HealthBeforeCombat, healthBar, false, battleInfos.DamageTaken);
+            ModifyHealthBar(battleInfos.MaxHp, battleInfos.CurrentHealth, healthBar, false, battleInfos.DamageTaken);
+            battleInfos.CurrentHealth -= battleInfos.DamageTaken;
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             animator.SetBool(IS_ATTACKING,false);
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
@@ -226,12 +228,11 @@ namespace Game
 
             tileTexture.sprite = tile.GetSprite();
 
-
             if (tile.LinkedUnit == null || tile.LinkedUnit.UnitInfos == null) return;
             characterName.text = tile.LinkedUnit.UnitInfos.characterName;
             characterClass.text = tile.LinkedUnit.UnitInfos.className;
             weapon.text = tile.LinkedUnit.UnitInfos.weaponName;
-            mouvement.text = tile.LinkedUnit.MovesLeft.ToString();
+            movement.text = tile.LinkedUnit.MovesLeft.ToString();
             atk.text = tile.LinkedUnit.Stats.AttackStrength.ToString();
             hp.text = tile.LinkedUnit.CurrentHealthPoints.ToString();
         }

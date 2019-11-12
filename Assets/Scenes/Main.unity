@@ -530,6 +530,11 @@ PrefabInstance:
       propertyPath: saveSlotOne
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: blemburgCitadelScene
+      value: 
+      objectReference: {fileID: 102900000, guid: 836a255d2ae3d884285c915c0faf4e55,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
 --- !u!1001 &5470706462989742451
