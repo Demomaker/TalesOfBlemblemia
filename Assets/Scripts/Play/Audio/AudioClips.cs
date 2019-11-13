@@ -13,7 +13,7 @@ public class AudioClips : MonoBehaviour
     [SerializeField] private AudioClip unitMoveSound;
     [SerializeField] private AudioClip unitDeathSound;
     [SerializeField] private AudioClip buttonClickSound;
-    [SerializeField] private AudioClip overworldMusic;
+    [SerializeField] private AudioClip overWorldMusic;
     [SerializeField] private AudioClip forestMusic;
     [SerializeField] private AudioClip castleMusic;
     [SerializeField] private AudioClip bossMusic;
@@ -34,7 +34,7 @@ public class AudioClips : MonoBehaviour
 
     public AudioClip ButtonClickSound => buttonClickSound;
     
-    public AudioClip OverworldMusic => overworldMusic;
+    public AudioClip OverWorldMusic => overWorldMusic;
 
     public AudioClip ForestMusic => forestMusic;
 

@@ -12,10 +12,12 @@ namespace Game
     public class ClickableObject : MonoBehaviour, IPointerClickHandler
     {
         private Tile tile;
+        private UIController uiController;
 
         private void Awake()
         {
             tile = GetComponent<Tile>();
+            uiController = Harmony.Finder.UIController;
         }
 
         public void OnPointerClick(PointerEventData eventData)

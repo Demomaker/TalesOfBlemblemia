@@ -14,10 +14,12 @@ namespace Game
         
         private Navigator navigator;
         private SaveController saveController;
+        private GameSettings gameSettings;
         private Canvas loadGameScreen;
 
         private void Awake()
         {
+            gameSettings = Harmony.Finder.GameSettings;
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
             loadGameScreen = GetComponent<Canvas>();
@@ -31,9 +33,9 @@ namespace Game
             
             foreach (var saveSlot in saveSlots)
             {
-                saveSlot.transform.Find(Constants.NAME_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
-                saveSlot.transform.Find(Constants.STAGE_STRING).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
-                saveSlot.transform.Find(Constants.DIFFICULTY_STRING).GetComponent<TMP_Text>().text =
+                saveSlot.transform.Find(gameSettings.NameString).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
+                saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
+                saveSlot.transform.Find(gameSettings.DifficultyString).GetComponent<TMP_Text>().text =
                     saves[saveCounter].DifficultyLevel;
                 
                 ++saveCounter;
@@ -62,9 +64,9 @@ namespace Game
         {
             saveController.SaveSelected = saveSlotNumber;
             SceneManager.LoadScene(sceneName);
-            if (!SceneManager.GetSceneByName(Constants.GAME_UI_SCENE_NAME).isLoaded)
+            if (!SceneManager.GetSceneByName(gameSettings.GameUiSceneName).isLoaded)
             {
-                SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
+                SceneManager.LoadScene(gameSettings.GameUiSceneName, LoadSceneMode.Additive);
             }
         }
     }

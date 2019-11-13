@@ -6,6 +6,7 @@ using System.Linq;
 using Game;
 using Harmony;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Finder = Harmony.Finder;
@@ -22,30 +23,31 @@ namespace Game
         
         private const string PROTAGONIST_NAME = "Franklem";
         
-        [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
-        [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
-        [SerializeField] private bool completeIfCertainTargetDefeated = false;
+        [SerializeField] private bool completeIfCertainTargetsDefeated = false;
         [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Targetable targetToDefeat = null;
+        [SerializeField] private Unit[] targetsToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
         [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
         [SerializeField] private bool revertWeaponTriangle = false;
         
         private int levelTileUpdateKeeper = 0;
+        private string levelName = "";
         
 
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
+        private const string PLAYER_TURN_INFO = "Player";
+        private const string ENEMY_TURN_INFO = "Enemy";
 
 
 
@@ -60,11 +62,15 @@ namespace Game
         private OnLevelVictory onLevelVictory;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
+        private UIController uiController;
 
         private Unit[] units = null;
         private UnitOwner currentPlayer;
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         private int numberOfPlayerTurns = 0;
+        private GameSettings gameSettings;
+        private GameController gameController;
+        private SaveController saveController;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
@@ -86,14 +92,20 @@ namespace Game
 
         private void Awake()
         {
+            uiController = Harmony.Finder.UIController;
+            saveController = Finder.SaveController;
+            gameController = Finder.GameController;
+            gameSettings = Harmony.Finder.GameSettings;
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelChange = Harmony.Finder.OnLevelChange;
+            levelName = gameObject.scene.name;
         }
 
         private void Start()
         {
+            uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
             players.Clear();
             InitializePlayersAndUnits();
@@ -114,20 +126,31 @@ namespace Game
         {
             if (completeIfPointAchieved)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+                uiController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
             }
             else if (completeIfAllEnemiesDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
+                uiController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
             }
-            else if (completeIfCertainTargetDefeated)
+            else if (completeIfCertainTargetsDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + targetToDefeat);
+                uiController.ModifyVictoryCondition("Defeat " + GetStringOfTargetsToDefeat());
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
+                uiController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
             }
+        }
+
+        private string GetStringOfTargetsToDefeat()
+        {
+            var retval = "";
+            foreach (var enemy in targetsToDefeat)
+            {
+                retval += enemy.ToString() + " ";
+            }
+            retval = retval.Substring(retval.Length - 1);
+            return retval;
         }
 
         protected void Update()
@@ -175,7 +198,6 @@ namespace Game
 
             UpdatePlayerSave();
             
-            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
         /// <summary>
@@ -184,22 +206,20 @@ namespace Game
         private void UpdatePlayerSave()
         {
             //If the level was successfully completed, mark it as completed
-            if (levelCompleted)
+            if (!levelCompleted) return;
+            gameController.OnLevelCompleted(levelName);
+
+            var levels = gameController.Levels;
+            foreach (var level in levels)
             {
-                Finder.GameController.LevelsCompleted.Add(levelName);
-
-                var levels = Finder.GameController.Levels;
-                foreach (var level in levels)
+                if (level.PreviousLevel == levelName)
                 {
-                    if (level.PreviousLevel == levelName)
-                    {
-                        Finder.SaveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
-                        break;
-                    }
+                    saveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
+                    break;
                 }
-
-                Finder.SaveController.UpdateSave(Finder.SaveController.SaveSelected);
             }
+
+            saveController.UpdateSave(saveController.SaveSelected);
         }
 
         /// <summary>
@@ -210,36 +230,38 @@ namespace Game
         {
             var defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
 
-            if (defeatedPlayerUnits.Any())
+            if (!defeatedPlayerUnits.Any()) return;
+            var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+            foreach (var unit in defeatedPlayerUnits)
             {
-                var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-
-                foreach (var unit in defeatedPlayerUnits)
+                if (unit.name == gameSettings.FranklemName)
                 {
-                    if (unit.name == Constants.FRANKLEM_NAME)
-                    {
-                        Finder.SaveController.ResetSave();
-                        break;
-                    }
+                    saveController.ResetSave();
+                    break;
+                }
 
-                    if (Finder.GameController.DifficultyLevel != DifficultyLevel.Easy && levelCompleted)
-                    {
-                        foreach (var character in characterInfos)
-                        {
-                            if (character.CharacterName == unit.name)
-                            {
-                                character.CharacterStatus = false;
-                            }
-                        }
-                    }
+                if (gameController.DifficultyLevel == DifficultyLevel.Easy || !levelCompleted) continue;
+                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                {
+                    character.CharacterStatus = false;
                 }
             }
         }
 
         private void OnTurnGiven()
         {
-            if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
-            Harmony.Finder.UIController.ModifyTurnCounter(numberOfPlayerTurns);
+            if (currentPlayer is HumanPlayer)
+            {
+                numberOfPlayerTurns++;
+                uiController.ModifyTurnInfo(PLAYER_TURN_INFO);
+            }
+            else
+            {
+                uiController.ModifyTurnInfo(ENEMY_TURN_INFO);
+            }
+            uiController.ModifyTurnCounter(numberOfPlayerTurns);
+            
             currentPlayer.OnTurnGiven();
         }
 
@@ -267,9 +289,9 @@ namespace Game
                 || (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile == null) 
                 || !(GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
             }
-            if (completeIfCertainTargetDefeated)
+            if (completeIfCertainTargetsDefeated)
             {
-                if (!(targetToDefeat == null || targetToDefeat.NoHealthLeft)) thirdConditionAchieved = false;
+                if (!AllTargetsToDefeatHaveBeenDefeated()) thirdConditionAchieved = false;
             }
             if (completeIfSurvivedCertainNumberOfTurns)
             {
@@ -278,6 +300,11 @@ namespace Game
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
             if (levelCompleted) onLevelVictory.Publish(this);
+        }
+
+        private bool AllTargetsToDefeatHaveBeenDefeated()
+        {
+            return targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length;
         }
 
         private void CheckIfLevelFailed()
@@ -312,7 +339,7 @@ namespace Game
 
         private void CheckForPlayerTurnSkip()
         {
-            if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is HumanPlayer)
+            if (Input.GetKeyDown(gameSettings.SkipComputerTurnKey) && currentPlayer is HumanPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is ComputerPlayer);
@@ -322,7 +349,7 @@ namespace Game
 
         private void CheckForComputerTurnSkip()
         {
-            if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is ComputerPlayer)
+            if (Input.GetKeyDown(gameSettings.SkipComputerTurnKey) && currentPlayer is ComputerPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is HumanPlayer);
@@ -332,8 +359,8 @@ namespace Game
         
         private void InitializePlayersAndUnits()
         {
-            HumanPlayer player1 = HumanPlayer.Instance;
-            ComputerPlayer player2 = ComputerPlayer.Instance;
+            var player1 = HumanPlayer.Instance;
+            var player2 = ComputerPlayer.Instance;
 
             units = FindObjectsOfType<Unit>();
 
@@ -415,17 +442,11 @@ namespace Game
         /// </summary>
         private void ActivatePlayerUnits()
         {
-            var characterInfos = Finder.SaveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+            var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
 
-            foreach (var gameUnit in currentPlayer.OwnedUnits)
+            foreach (var gameUnit in from gameUnit in currentPlayer.OwnedUnits from saveUnit in characterInfos where gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus select gameUnit)
             {
-                foreach (var saveUnit in characterInfos)
-                {
-                    if (gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus)
-                    {
-                        gameUnit.gameObject.SetActive(false);
-                    }
-                }
+                gameUnit.gameObject.SetActive(false);
             }
         }
         

@@ -10,6 +10,7 @@ namespace Game
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
         [SerializeField] private float lowPitchRange = .95f;               
         [SerializeField] private float highPitchRange = 1.05f;
+        private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
         private AudioSource musicSource;
@@ -26,7 +27,7 @@ namespace Game
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private OnLevelVictory onLevelVictory;
         private OnLevelChange onLevelChange;
-        private OnOverworldEnter onOverworldEnter;
+        private OnOverWorldEnter onOverWorldEnter;
         private OnMainMenuEnter onMainMenuEnter;
         private OnButtonClick onButtonClick;
         private OnSFXToggle onSFXToggle;
@@ -37,6 +38,7 @@ namespace Game
 
         private void Awake ()
         {
+            gameSettings = Harmony.Finder.GameSettings;
             musicSource = gameObject.AddComponent<AudioSource>();
             sfxSources = new AudioSource[numberOfSFXThatCanBePlayedAtTheSameTime];
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
@@ -69,7 +71,7 @@ namespace Game
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelChange = Harmony.Finder.OnLevelChange;
-            onOverworldEnter = Harmony.Finder.OnOverworldEnter;
+            onOverWorldEnter = Harmony.Finder.OnOverWorldEnter;
             onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
             onButtonClick = Harmony.Finder.OnButtonClick;
             onSFXToggle = Harmony.Finder.OnSFXToggle;
@@ -89,7 +91,7 @@ namespace Game
             onPlayerUnitLoss.Notify += PlayUnitLossMusic;
             onLevelVictory.Notify += PlayLevelVictoryMusic;
             onLevelChange.Notify += PlayBackgroundMusicOfLevel;
-            onOverworldEnter.Notify += PlayOverworldBackgroundMusic;
+            onOverWorldEnter.Notify += PlayOverWorldBackgroundMusic;
             onMainMenuEnter.Notify += PlayMainMenuBackgroundMusic;
             onButtonClick.Notify += PlayButtonClickSound;
             onSFXToggle.Notify += ToggleSFX;
@@ -109,7 +111,7 @@ namespace Game
             onPlayerUnitLoss.Notify -= PlayUnitLossMusic;
             onLevelVictory.Notify -= PlayLevelVictoryMusic;
             onLevelChange.Notify -= PlayBackgroundMusicOfLevel;
-            onOverworldEnter.Notify -= PlayOverworldBackgroundMusic;
+            onOverWorldEnter.Notify -= PlayOverWorldBackgroundMusic;
             onMainMenuEnter.Notify -= PlayMainMenuBackgroundMusic;
             onButtonClick.Notify -= PlayButtonClickSound;
             onSFXToggle.Notify -= ToggleSFX;
@@ -121,12 +123,12 @@ namespace Game
 
         private void UpdateMusicVolume()
         {
-            musicSource.volume = mainVolume * musicVolume / (Constants.PERCENT * Constants.PERCENT);
+            musicSource.volume = mainVolume * musicVolume / (gameSettings.Percent * gameSettings.Percent);
         }
 
         private void UpdateSoundVolume()
         {
-            float totalSFXVolume = mainVolume * sfxVolume / (Constants.PERCENT * Constants.PERCENT);
+            float totalSFXVolume = mainVolume * sfxVolume / (gameSettings.Percent * gameSettings.Percent);
             foreach (var sfxSource in sfxSources)
             {
                 sfxSource.volume = totalSFXVolume;
@@ -283,10 +285,10 @@ namespace Game
             PlayMusic(level.BackgroundMusic);
         }
 
-        private void PlayOverworldBackgroundMusic(OverworldController overworld)
+        private void PlayOverWorldBackgroundMusic(OverWorldController overWorld)
         {
             StopCurrentMusic();
-            PlayMusic(audioClips.OverworldMusic);
+            PlayMusic(audioClips.OverWorldMusic);
         }
 
         private void PlayMainMenuBackgroundMusic(MainMenuController mainMenu)

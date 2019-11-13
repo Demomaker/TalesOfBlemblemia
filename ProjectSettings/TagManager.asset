@@ -14,6 +14,7 @@ TagManager:
   - SaveController
   - PauseController
   - AchievementController
+  - OverWorldController
   layers:
   - Default
   - TransparentFX
