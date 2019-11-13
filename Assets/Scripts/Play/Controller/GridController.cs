@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
@@ -14,7 +15,27 @@ using UnityEngine.UI;
         [SerializeField] private Sprite healableTileSprite = null;
         [SerializeField] private Sprite recruitableTileSprite = null;
         [SerializeField] private Sprite protectableTileSprite = null;
-        public Unit SelectedUnit { get; private set; } = null;
+        [SerializeField] private Sprite verticalPathTileSprite = null;
+        [SerializeField] private Sprite horizontalPathTileSprite = null;
+        [SerializeField] private Sprite downToRightPathTileSprite = null;
+        [SerializeField] private Sprite downToLeftPathTileSprite = null;
+        [SerializeField] private Sprite upToRightPathTileSprite = null;
+        [SerializeField] private Sprite upToLeftPathTileSprite = null;
+        [SerializeField] private Sprite leftArrowPathTileSprite = null;
+        [SerializeField] private Sprite rightArrowPathTileSprite = null;
+        [SerializeField] private Sprite downArrowPathTileSprite = null;
+        [SerializeField] private Sprite upArrowPathTileSprite = null;
+        [SerializeField] private Sprite leftStartPathTileSprite = null;
+        [SerializeField] private Sprite rightStartPathTileSprite = null;
+        [SerializeField] private Sprite downStartPathTileSprite = null;
+        [SerializeField] private Sprite upStartPathTileSprite = null;
+
+
+        public Unit SelectedUnit
+        {
+            get; 
+            private set;
+        }
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
@@ -22,6 +43,20 @@ using UnityEngine.UI;
         public Sprite HealableTileSprite => healableTileSprite;
         public Sprite RecruitableTileSprite => recruitableTileSprite;
         public Sprite ProtectableTileSprite => protectableTileSprite;
+        public Sprite VerticalPathTileSprite => verticalPathTileSprite;
+        public Sprite HorizontalPathTileSprite => horizontalPathTileSprite;
+        public Sprite DownToRightPathTileSprite => downToRightPathTileSprite;
+        public Sprite DownToLeftPathTileSprite => downToLeftPathTileSprite;
+        public Sprite UpToRightPathTileSprite => upToRightPathTileSprite;
+        public Sprite UpToLeftPathTileSprite => upToLeftPathTileSprite;
+        public Sprite LeftArrowPathTileSprite => leftArrowPathTileSprite;
+        public Sprite RightArrowPathTileSprite => rightArrowPathTileSprite;
+        public Sprite DownArrowPathTileSprite => downArrowPathTileSprite;
+        public Sprite UpArrowPathTileSprite => upArrowPathTileSprite;
+        public Sprite LeftStartPathTileSprite => leftStartPathTileSprite;
+        public Sprite RightStartPathTileSprite => rightStartPathTileSprite;
+        public Sprite DownStartPathTileSprite => downStartPathTileSprite;
+        public Sprite UpStartPathTileSprite => upStartPathTileSprite;
 
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
@@ -47,6 +82,14 @@ using UnityEngine.UI;
             foreach (Transform child in transform)
             {
                 child.GetComponent<Tile>().HideActionPossibility();
+            }
+            RemoveActionPath();
+        }
+        public void RemoveActionPath()
+        {
+            foreach (Transform child in transform)
+            {
+                child.GetComponent<Tile>().HideActionPath();
             }
         }
         
@@ -133,6 +176,33 @@ using UnityEngine.UI;
         public bool IsValidGridPosition(int x, int y)
         {
             return x >= 0 && y >= 0 && x < NbColumns && y < NbLines;
+        }
+
+        public void DisplayAction(Action unitTurnAction, Unit playerUnit)
+        {
+            var completePath = new List<Tile>();
+            completePath.Add(playerUnit.CurrentTile);
+            completePath.AddRange(unitTurnAction.Path);
+            int prevIndex = -1;
+            int nextIndex = -1;
+            var pathCount = completePath.Count;
+            for (int i = 0; i < pathCount; i++)
+            {
+                prevIndex = i - 1;
+                if (prevIndex < 0) prevIndex = 0;
+                nextIndex = i + 1;
+                if (nextIndex >= pathCount) nextIndex = pathCount - 1;
+                completePath[i].DisplayPathPossibility(completePath[prevIndex], completePath[nextIndex]);
+            }
+                
+            var target = unitTurnAction.Target;
+            if (unitTurnAction.Target != null)
+            {
+                if (target is Unit && playerUnit.WeaponType == WeaponType.HealingStaff)
+                    target.CurrentTile.DisplayHealActionPossibility();
+                else
+                    target.CurrentTile.DisplayAttackActionPossibility();
+            }
         }
     }
  }

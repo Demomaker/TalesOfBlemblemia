@@ -15,82 +15,66 @@ namespace Game
 
         private void Awake()
         {
-            tile = GetComponentInParent<Tile>();
+            tile = GetComponent<Tile>();
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic) return;
-            ClickButton clickButton = ClickButton.LeftClick;
-            if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                clickButton = ClickButton.RightClick;
-            }
+            //Player cannot play while a cinematic is playing
+           if (tile == null) return;
+
+           var gridController = Finder.GridController;
+           
+            ClickButton clickButton = ReadClick(eventData);
             
             EventSystem.current.SetSelectedGameObject(null);
-            if (tile == null) return;
-            var gridControllerSelectedUnit = tile.GridController.SelectedUnit;
+            
+            var selectedPlayerUnit = tile.GridController.SelectedUnit;
 
-            if (clickButton == ClickButton.LeftClick && tile.LinkedUnitCanBeSelectedByPlayer)
+            if (tile.LinkedUnitCanBeSelectedByPlayer && tile.LinkedUnit != selectedPlayerUnit)
             {
-                if (clickButton == ClickButton.RightClick && tile.GridController.SelectedUnit == tile.LinkedUnit)
+                SelectUnit(gridController);
+                return;
+            }
+            
+            if (selectedPlayerUnit != null)
+            {
+                if (tile == selectedPlayerUnit.CurrentTile)
                 {
-                    if (tile == gridControllerSelectedUnit.CurrentTile)
-                    {
-                        gridControllerSelectedUnit.Rest();
-                        tile.GridController.DeselectUnit();
-                    }
+                    selectedPlayerUnit.Rest();
+                    tile.GridController.DeselectUnit();
+                }
+                else if (!PlayerClickManager.ActionIsSet || PlayerClickManager.TileToConfirm != tile)
+                {
+                    PlayerClickManager.SetAction(selectedPlayerUnit, tile, clickButton);
+                }
+                else if (PlayerClickManager.TileToConfirm == tile)
+                {
+                    PlayerClickManager.ExecuteAction();
+                    gridController.DeselectUnit();
                 }
                 else
                 {
-                    tile.GridController.SelectUnit(tile.LinkedUnit);
-                    tile.GridController.DisplayPossibleActionsFrom(tile);
-                }
-                return;
-            }
-            if (clickButton == ClickButton.RightClick && gridControllerSelectedUnit != null)
-            {
-                if (tile.LinkedUnitCanBeAttackedByPlayer)
-                {
-                    if (!gridControllerSelectedUnit.TargetIsInRange(tile.LinkedUnit))
-                        gridControllerSelectedUnit.AttackDistantTargetable(tile.LinkedUnit);
-                    else
-                        gridControllerSelectedUnit.Attack(tile.LinkedUnit);
-
-                    if (tile.LinkedUnit.NoHealthLeft)
-                        gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
-                }
-                else if (tile.LinkedDoorCanBeAttackedByPlayer)
-                {
-                    if (!gridControllerSelectedUnit.TargetIsInRange(tile.LinkedDoor))
-                        gridControllerSelectedUnit.AttackDistantTargetable(tile.LinkedDoor);
-                    else
-                        gridControllerSelectedUnit.Attack(tile.LinkedDoor);
-                    if (tile.LinkedDoor.NoHealthLeft)
-                        gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
-                }
-                else if (tile.LinkedUnitCanBeRecruitedByPlayer)
-                {
-                    if (!gridControllerSelectedUnit.RecruitUnit(tile.LinkedUnit))
-                        gridControllerSelectedUnit.RecruitDistantUnit(tile.LinkedUnit);
-                }
-                else if (gridControllerSelectedUnit.WeaponType == WeaponType.HealingStaff && tile.LinkedUnitCanBeHealedByPlayer)
-                {
-                    if (!gridControllerSelectedUnit.HealUnit(tile.LinkedUnit))
-                        gridControllerSelectedUnit.HealDistantUnit(tile.LinkedUnit);
-                }
-                else if (tile.IsPossibleAction)
-                {
-                    gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile), ActionType.Rest));
+                    PlayerClickManager.Reset();
+                    gridController.DeselectUnit();
                 }
             }
-            else if (tile.IsPossibleAction && tile.IsAvailable)
-            {
-                gridControllerSelectedUnit.MoveByAction(new Action(gridControllerSelectedUnit.PrepareMove(tile)));
-            }
+            
 
-            tile.GridController.DeselectUnit();
 
+        }
+
+        private void SelectUnit(GridController gridController)
+        {
+            gridController.SelectUnit(tile.LinkedUnit);
+            gridController.DisplayPossibleActionsFrom(tile);
+        }
+
+        private ClickButton ReadClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Right)
+                return ClickButton.RightClick;
+            return ClickButton.LeftClick;
         }
     }
 }

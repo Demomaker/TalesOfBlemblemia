@@ -19,7 +19,7 @@ namespace Game
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
-         private string startingLevelName = Constants.LEVEL_4_SCENE_NAME;
+         private string startingLevelName = Constants.MORKTRESS_SCENE_NAME;
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName = null;
          private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();

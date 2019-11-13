@@ -179,17 +179,15 @@ namespace Game
         }
 
         #region Movements
-        public List<Tile> PrepareMove(Tile tile)
+        public List<Tile> PrepareMove(Tile targetTile)
         {
             isMoving = true;
-            if (tile != currentTile)
+            if (targetTile != currentTile)
             {
                 currentTile.UnlinkUnit();
-                List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
-                    new Vector2Int(currentTile.LogicalPosition.x, currentTile.LogicalPosition.y), 
-                    new Vector2Int(tile.LogicalPosition.x, tile.LogicalPosition.y), this);
+                List<Tile> path = PathFinder.PrepareFindPath(gridController, MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.RemoveAt(0);
-                path.Add(tile);
+                path.Add(targetTile);
                 movesLeft -= currentTile.CostToMove;
                 return path;
             }
@@ -317,7 +315,7 @@ namespace Game
                 );
             }
             
-            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
+            AttackRoutineHandle = Harmony.Finder.LevelController.StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
             return AttackRoutineHandle;
         }
 
@@ -356,9 +354,7 @@ namespace Game
             }
             
             target.CurrentHealthPoints -= damage;
-            //todo Will have to check for Doors in the future.
-            if (target is Unit)
-                yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints,CurrentHealthPoints);
+            
             counter = 0;
             
             while (counter < duration)
@@ -370,13 +366,15 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
-            //TODO verifier si cast est valide ((Unit)target).SetIsBeingHurt(false);
-            //TODO verifier si cast est valide ((Unit)target).SetIsDodging(false);
+            
+            //todo Will have to check for Doors in the future.
+            //if (target is Unit)
+            //    yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints, CurrentHealthPoints);
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
-            if (target.GetType() == typeof(Unit) && !isCountering && !target.NoHealthLeft)
-                StartCoroutine(((Unit)target).Attack(this, true, Constants.ATTACK_DURATION));
+            if (!target.NoHealthLeft && !isCountering && target is Unit targetUnit)
+                yield return targetUnit.Attack(this, true, Constants.ATTACK_DURATION);
             
             if (!isCountering)
             {

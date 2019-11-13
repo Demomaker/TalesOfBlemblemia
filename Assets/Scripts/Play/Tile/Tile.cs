@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ namespace Game
         private TileSprite tileSprite;
 
         private Image tileImage;
+        private SpriteRenderer tilePathSprite;
         private Unit linkedUnit;
         private Door linkedDoor;
         private GridController gridController;
@@ -67,6 +69,7 @@ namespace Game
             tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
             tileSprite = GetComponent<TileSprite>();
+            tilePathSprite = GetComponentInChildren<SpriteRenderer>();
             gridController = transform.parent.GetComponent<GridController>();
         }
 
@@ -115,6 +118,11 @@ namespace Game
         public void HideActionPossibility()
         {
             tileImage.sprite = gridController.NormalSprite;
+        }
+        
+        public void HideActionPath()
+        {
+            tilePathSprite.sprite = gridController.NormalSprite;
         }
         
         /// <summary>
@@ -181,6 +189,96 @@ namespace Game
             if (!IsOccupiedByAUnitOrDoor) return false;
             linkedUnit = null;
             return true;
+        }
+
+        public void DisplayPathPossibility(Tile prevTile, Tile nextTile)
+        {
+            tilePathSprite.sprite = FindAppropriatePathSprite(prevTile, nextTile);
+        }
+
+        private Sprite FindAppropriatePathSprite(Tile prevTile, Tile nextTile)
+        {
+            var prevPosition = prevTile.LogicalPosition;
+            var nextPosition = nextTile.LogicalPosition;
+            var currentPosition = this.LogicalPosition;
+
+            //Starting pos
+            if (prevPosition == currentPosition)
+                return FindAppropriateStartingPathSprite(currentPosition, nextPosition);
+
+            //Mid path
+            else if (prevPosition != currentPosition && nextPosition != currentPosition)
+                return FindAppropriateMidPathSprite(prevPosition, currentPosition, nextPosition);
+
+            //End path
+            else if (currentPosition == nextPosition)
+                return FindAppropriateEndPathSprite(prevPosition, currentPosition);
+            return null;
+        }
+
+        private Sprite FindAppropriateEndPathSprite(Vector2Int prevPosition, Vector2Int currentPosition)
+        {
+            //Comes from the right (Goes left)
+            if (prevPosition.x > currentPosition.x)
+                return gridController.LeftArrowPathTileSprite;
+            //Comes from the left (Goes right)
+            else if (prevPosition.x < currentPosition.x)
+                return gridController.RightArrowPathTileSprite;
+            //Comes from below (Goes up)
+            else if (prevPosition.y > currentPosition.y)
+                return gridController.UpArrowPathTileSprite;
+            //Comes from above (Goes down)
+            else if (prevPosition.y < currentPosition.y) 
+                return gridController.DownArrowPathTileSprite;
+            return null;
+        }
+
+        private Sprite FindAppropriateMidPathSprite(Vector2Int prevPosition, Vector2Int currentPosition, Vector2Int nextPosition)
+        {
+            //Goes horizontal
+            if (prevPosition.y == currentPosition.y && currentPosition.y == nextPosition.y)
+                return gridController.HorizontalPathTileSprite;
+            //Goes vertical
+            if (prevPosition.x == currentPosition.x && currentPosition.x == nextPosition.x)
+                return gridController.VerticalPathTileSprite;
+            //Comes from the left
+            if (prevPosition.x < LogicalPosition.x)
+            {
+                //Goes up
+                if (currentPosition.y > nextPosition.y)
+                    return gridController.UpToLeftPathTileSprite;
+                //Goes down
+                if (currentPosition.y < nextPosition.y)
+                    return gridController.DownToLeftPathTileSprite;
+            }
+            //Comes from the right
+            else if (prevPosition.x > currentPosition.x)
+            {
+                //Goes up
+                if (currentPosition.y > nextPosition.y)
+                    return gridController.UpToRightPathTileSprite;
+                //Goes down
+                if (LogicalPosition.y < nextPosition.y)
+                    return gridController.DownToRightPathTileSprite;
+            }
+            return null;
+        }
+
+        private Sprite FindAppropriateStartingPathSprite(Vector2Int currentPosition, Vector2Int nextPosition)
+        {
+            //Goes left
+            if (currentPosition.x > nextPosition.x)
+                return gridController.LeftStartPathTileSprite;
+            //Goes right)
+            else if (currentPosition.x < nextPosition.x)
+                return gridController.RightStartPathTileSprite;
+            //Goes up
+            else if (currentPosition.y > nextPosition.y)
+                return gridController.UpStartPathTileSprite;
+            //Comes from above (Goes down)
+            else if (currentPosition.y < nextPosition.y) 
+                return gridController.DownStartPathTileSprite;
+            return null;
         }
     }
 }
