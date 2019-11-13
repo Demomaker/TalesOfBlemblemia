@@ -39,6 +39,9 @@ namespace Game
                 }
             }
             
+            //TODO demander a plucr si c'est encore valide pi ou faudrait le mettre apres les changements dans la classe
+            //uiController.LaunchBattleReport(false);
+            
             if (selectedPlayerUnit != null)
             {
                 if (!tile.IsPossibleAction)
