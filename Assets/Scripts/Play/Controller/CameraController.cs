@@ -31,7 +31,7 @@ namespace Game
 
         private bool controlsEnabled = true;
 
-        private Camera camera;
+        private Camera mainCamera;
         
         private float yMovement = 0;
         private float xMovement = 0;
@@ -57,9 +57,31 @@ namespace Game
 
         private void Awake()
         {
-            camera = GetComponent<Camera>();
+            mainCamera = GetComponent<Camera>();
             OnScreenSizeChanged();
             InitCamera();
+        }
+
+        public IEnumerator MoveCameraTo(Vector3 to, float endZoom, float duration)
+        {
+            var controlsWereEnabled = controlsEnabled;
+            DisableControls();
+            var startPosition = transform.position;
+            var endPosition = new Vector3(to.x, to.y, startPosition.z);
+            var startZoom = mainCamera.orthographicSize;
+
+            for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
+            {
+                transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
+                ClampCameraPosition();
+                mainCamera.orthographicSize = Mathf.Lerp(startZoom, endZoom, elapsedTime / duration);
+                yield return null;
+            }
+
+            transform.position = endPosition;
+            mainCamera.orthographicSize = endZoom;
+            ClampCameraPosition();
+            if(controlsWereEnabled) EnableControls(); 
         }
 
         private void LateUpdate()
@@ -128,10 +150,10 @@ namespace Game
 
         private IEnumerator Drag()
         {
-            var origin = camera.ScreenToWorldPoint(Input.mousePosition);
+            var origin = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             while (Input.GetKey(DRAG_KEY))
             {
-                var difference = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+                var difference = mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
                 targetPos = origin - difference;
                 ClampCameraPosition();
                 yield return null;
@@ -154,17 +176,17 @@ namespace Game
             {
                 ZoomOut();
             }
-            var oldPos = camera.ScreenToWorldPoint (Input.mousePosition);
-            camera.orthographicSize = Mathf.Lerp (camera.orthographicSize, targetOrthographicSize, Time.deltaTime * zoomSpeed);
-            targetPos += oldPos - camera.ScreenToWorldPoint (Input.mousePosition);
+            var oldPos = mainCamera.ScreenToWorldPoint (Input.mousePosition);
+            mainCamera.orthographicSize = Mathf.Lerp (mainCamera.orthographicSize, targetOrthographicSize, Time.deltaTime * zoomSpeed);
+            targetPos += oldPos - mainCamera.ScreenToWorldPoint (Input.mousePosition);
             ClampCameraPosition();
         }
 
         private void ClampCameraPosition()
         {
-            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
-            var topRight = camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth, camera.pixelHeight, 0));
-            var bottomLeft = camera.ScreenToWorldPoint(Vector3.zero);
+            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
+            var topRight = mainCamera.ScreenToWorldPoint(new Vector3(mainCamera.pixelWidth, mainCamera.pixelHeight, 0));
+            var bottomLeft = mainCamera.ScreenToWorldPoint(Vector3.zero);
 
             if (topRight.x > maxX)
             {
@@ -197,12 +219,12 @@ namespace Game
 
         private void ZoomIn()
         {
-            targetOrthographicSize = Mathf.Clamp(camera.orthographicSize - 1, minZoom, maxZoom);
+            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize - 1, minZoom, maxZoom);
         }
 
         private void ZoomOut()
         {
-            targetOrthographicSize = Mathf.Clamp(camera.orthographicSize + 1, minZoom, maxZoom);
+            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize + 1, minZoom, maxZoom);
         }
 
         public void EnableControls()
@@ -219,7 +241,7 @@ namespace Game
         private void InitCamera()
         {
             targetPos = transform.position;
-            camera.orthographicSize = targetOrthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
+            mainCamera.orthographicSize = targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
         }
 
 

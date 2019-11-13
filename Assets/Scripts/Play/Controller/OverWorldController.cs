@@ -72,11 +72,10 @@ namespace Game
 
         private IEnumerator MoveCharacterToPosition(Vector3 endPosition)
         {
-            var duration = 0.25f;
             var startPosition = characterTransform.position;
-            for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
+            for (float elapsedTime = 0; elapsedTime < Constants.MOVEMENT_DURATION; elapsedTime += Time.deltaTime)
             {
-                characterTransform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
+                characterTransform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / Constants.MOVEMENT_DURATION);
                 yield return null;
             }
             characterTransform.position = endPosition;

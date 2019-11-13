@@ -1,20 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Game
 {
     // Authors: Jérémie Bertrand
     public class CinematicController : MonoBehaviour
     {
-        private Camera camera;
+        private Camera mainCamera;
         private DialogueManager dialogueManager;
-        private bool isPlayingACinematic;
         private CameraController cameraController;
-        private Transform camTransform;
-        private GameObject dialogueUI;
         private GameObject uiController;
+        
+        private bool isPlayingACinematic;
 
         public bool IsPlayingACinematic
         {
@@ -34,60 +32,47 @@ namespace Game
                 }
             }
         }
-
         private void Awake()
         {
-            dialogueUI = GameObject.FindWithTag("DialogueUi");
             uiController = Harmony.Finder.UIController.gameObject;
-            camera = Camera.main;
-            cameraController = camera.GetComponent<CameraController>();
-            camTransform = camera.transform;
             dialogueManager = Harmony.Finder.DialogueManager;
+            mainCamera = Camera.main;
+            if (mainCamera != null)
+                cameraController = mainCamera.GetComponent<CameraController>();
+            else
+                Debug.LogError(gameObject.name + ": No main camera in the current scene. (CinematicController.cs)");
         }
-
-        private void Start()
-        {
-            if (dialogueUI != null) dialogueUI.SetActive(true);
-        }
-
-        private IEnumerator PlayCameraActions(IEnumerable<CameraAction> cameraActions)
+        
+        private IEnumerator PlayCameraActions(IEnumerable<CinematicAction> actions)
         {
             IsPlayingACinematic = true;
-
-            foreach (var cameraAction in cameraActions)
+            foreach (var action in actions)
             {
-                yield return StartCoroutine(PlayCameraAction(cameraAction));
+                yield return PlayCameraAction(action);
             }
-
             IsPlayingACinematic = false;
         }
-
-
-        private IEnumerator PlayCameraAction(CameraAction cameraAction)
+        
+        private IEnumerator PlayCameraAction(CinematicAction action)
         {
-            var startPosition = camTransform.position;
-            var endPosition = new Vector3(cameraAction.CameraTarget.position.x, cameraAction.CameraTarget.position.y, startPosition.z);
-            var startZoom = camera.orthographicSize;
-            var endZoom = cameraAction.CameraZoom;
-            var duration = cameraAction.Duration;
-
-            for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
+            switch (action.CinematicActionType)
             {
-                camTransform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
-                camera.orthographicSize = Mathf.Lerp(startZoom, endZoom, elapsedTime / duration);
-                yield return null;
-            }
-
-            camTransform.position = endPosition;
-            camera.orthographicSize = endZoom;
-
-            if (cameraAction.HasADialog)
-            {
-                yield return StartCoroutine(StartCinematicDialogue(cameraAction.Dialogue));
+                case CinematicActionType.Damage:
+                    yield return PlayDamage(action.TargetUnit, action.Damage);
+                    break;
+                case CinematicActionType.Quote:
+                    yield return PlayQuote(action.Dialogue);
+                    break;
+                case CinematicActionType.CameraMovement:
+                    yield return PlayCameraMovement(action.CameraTarget.position, action.CameraZoom, action.Duration);
+                    break;
+                case CinematicActionType.GameObjectMovement:
+                    yield return PlayGameObjectMovement(action.GameObjectToMove, action.GameObjectTarget.position, action.Duration, action.CameraZoom, action.CameraFollow);
+                    break;
             }
         }
 
-        private IEnumerator StartCinematicDialogue(Dialogue dialogue)
+        private IEnumerator PlayQuote(Dialogue dialogue)
         {
             dialogueManager.StartDialogue(dialogue);
             while (dialogueManager.IsDisplayingDialogue)
@@ -96,9 +81,37 @@ namespace Game
             }
         }
 
+        private IEnumerator PlayDamage(Targetable target, int damage)
+        {
+            target.CurrentHealthPoints -= damage;
+            yield break;
+        }
+
+        private IEnumerator PlayCameraMovement(Vector3 targetPos, float targetZoom, float duration)
+        {
+            yield return cameraController.MoveCameraTo(targetPos, targetZoom, duration);
+        }
+
+        private IEnumerator PlayGameObjectMovement(Transform movingObject, Vector3 targetPos, float duration, float targetZoom, bool moveWithCam = false)
+        {
+            var startPosition = movingObject.transform.position;
+            if (moveWithCam)
+            {
+                var camTransform = mainCamera.transform;
+                camTransform.position = new Vector3(startPosition.x, startPosition.y, camTransform.position.z);
+                StartCoroutine(cameraController.MoveCameraTo(targetPos, targetZoom, duration));
+            }
+            for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
+            {
+                movingObject.position = Vector3.Lerp(startPosition, targetPos, elapsedTime / duration);
+                yield return null;
+            }
+            movingObject.position = targetPos;
+        }
+
         public void LaunchCinematic(Cinematic cinematic)
         {
-            StartCoroutine(PlayCameraActions(cinematic.CameraActions));
+            StartCoroutine(PlayCameraActions(cinematic.Actions));
         }
     }
 }

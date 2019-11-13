@@ -32710,6 +32710,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b22ce649ef160d4a92281937ec4d330, type: 3}
+--- !u!4 &621210483 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4988458523309901347, guid: 4b22ce649ef160d4a92281937ec4d330,
+    type: 3}
+  m_PrefabInstance: {fileID: 621210482}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &625486036
 GameObject:
   m_ObjectHideFlags: 0
@@ -39458,6 +39464,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55b5bcc7f4da8914bb85fa16e82202e9, type: 3}
+--- !u!4 &853646975 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3155442499163033932, guid: 55b5bcc7f4da8914bb85fa16e82202e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 853646974}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &857250789
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -64591,6 +64603,11 @@ PrefabInstance:
       propertyPath: defeatIfProtectedIsKilled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
 --- !u!1 &1388170887
@@ -81683,6 +81700,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5924722284432074959, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 623c911082da5da4db1e7fc3a7896563, type: 3}
 --- !u!1 &1968170517
@@ -82100,25 +82122,57 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1976513943}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   trigger: 1
-  cameraActions:
-  - cameraTarget: {fileID: 896080598}
-    duration: 2
+  actions:
+  - cinematicActionType: 1
+    cameraTarget: {fileID: 621210483}
+    duration: 2.4
+    cameraZoom: 3.63
+    sentence: 
+    name: 
+    targetUnit: {fileID: 0}
+    damage: 0
+    gameObjectToMove: {fileID: 0}
+    gameObjectTarget: {fileID: 0}
+    cameraFollow: 0
+  - cinematicActionType: 1
+    cameraTarget: {fileID: 896080598}
+    duration: 2.7
+    cameraZoom: 5.52
+    sentence: 
+    name: 
+    targetUnit: {fileID: 0}
+    damage: 0
+    gameObjectToMove: {fileID: 0}
+    gameObjectTarget: {fileID: 0}
+    cameraFollow: 0
+  - cinematicActionType: 0
+    cameraTarget: {fileID: 0}
+    duration: 0
     cameraZoom: 3
-    quotes:
-    - name: Franklem
-      sentence: Hey!
-    - name: Myriam
-      sentence: Hi!
-  - cameraTarget: {fileID: 1639890201655499797}
-    duration: 2.07
-    cameraZoom: 8.5
-    quotes: []
+    sentence: Watch out for my sword, boi!
+    name: Franklem
+    targetUnit: {fileID: 0}
+    damage: 0
+    gameObjectToMove: {fileID: 0}
+    gameObjectTarget: {fileID: 0}
+    cameraFollow: 0
+  - cinematicActionType: 2
+    cameraTarget: {fileID: 0}
+    duration: 5.2
+    cameraZoom: 3
+    sentence: 
+    name: 
+    targetUnit: {fileID: 0}
+    damage: 0
+    gameObjectToMove: {fileID: 896080598}
+    gameObjectTarget: {fileID: 853646975}
+    cameraFollow: 1
 --- !u!1 &1982709065
 GameObject:
   m_ObjectHideFlags: 0
@@ -87858,9 +87912,3 @@ MonoBehaviour:
         castle!
     - name: Bram
       sentence: You save me life my prince. My axe is yours!
---- !u!4 &1639890201655499797 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7617506599882242046, guid: f9341cfb1ebb657419148032b51ab674,
-    type: 3}
-  m_PrefabInstance: {fileID: 1639890201655499794}
-  m_PrefabAsset: {fileID: 0}

@@ -161,7 +161,7 @@ namespace Game
 
             UpdatePlayerSave();
             
-            //Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
         /// <summary>
