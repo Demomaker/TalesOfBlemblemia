@@ -36570,6 +36570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a1ce9c027975b469243f81edd146fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  size: {x: 0, y: 0}
   emptyCellPrefab: {fileID: 822714897129928834, guid: 3bdb9660ef9417a478ad50ec75f1f4b7,
     type: 3}
   forestCellPrefab: {fileID: 822714897129928834, guid: 16aa02c08a3a3744f81a0451e8ad92be,

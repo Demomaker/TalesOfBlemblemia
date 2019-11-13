@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -33,8 +34,8 @@ namespace Game
         public bool IsWalkable => tileType != TileType.Obstacle;
         public bool IsAvailable => IsWalkable && !IsOccupiedByAUnitOrDoor;
         public bool IsOccupiedByAUnitOrDoor => IsOccupiedByAUnit || IsOccupiedByADoor;
-        public bool IsOccupiedByAUnit => linkedUnit != null;
-        public bool IsOccupiedByADoor => linkedDoor != null;
+        public bool IsOccupiedByAUnit => linkedUnit != null && linkedUnit.isActiveAndEnabled;
+        public bool IsOccupiedByADoor => linkedDoor != null && linkedDoor.isActiveAndEnabled;
         private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
@@ -181,6 +182,37 @@ namespace Game
             if (!IsOccupiedByAUnitOrDoor) return false;
             linkedUnit = null;
             return true;
+        }
+
+        public IEnumerator Blink(Sprite blinkSprite)
+        {
+            const bool isBlinking = true;
+            var fadeIn = false;
+            var fadeValue = 1f;
+            tileImage.sprite = blinkSprite;
+            var faded = tileImage.color;
+            while (isBlinking)
+            {
+                if (tileImage.sprite != blinkSprite) tileImage.sprite = blinkSprite;
+                if (fadeIn) fadeValue+=0.01f;
+                else
+                {
+                    fadeValue-=0.01f;
+                }
+
+                faded.a = fadeValue;
+                tileImage.color = faded;
+                if (fadeValue <= 0f) fadeIn = true;
+                if (fadeValue >= 1f) fadeIn = false;
+                yield return null;
+            }
+
+        }
+
+        public void ResetTileImage()
+        {
+            tileImage.sprite = gridController.NormalSprite;
+            tileImage.color = new Color(tileImage.color.r, tileImage.color.g, tileImage.color.b, 1f);
         }
     }
 }

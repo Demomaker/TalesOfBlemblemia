@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6664270035422016768}
   - component: {fileID: 6664270035422016769}
   - component: {fileID: 6664270035422016782}
+  - component: {fileID: 215045943551267698}
   m_Layer: 0
   m_Name: PointingArrow
   m_TagString: Untagged
@@ -67,8 +68,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -322906783
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ec8c26fbbfe88404aa461934a88d5f72, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -97,3 +98,17 @@ MonoBehaviour:
   lowestYPositionDifference: -10
   startingYDirection: 1
   transformToPoint: {fileID: 0}
+--- !u!114 &215045943551267698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6664270035422016771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3e5493e4719ea244b388c22e409046e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileToBlink: {fileID: 0}
+  blinkSprite: {fileID: 21300000, guid: 92e6af6ffa914f4439132db6e602a865, type: 3}

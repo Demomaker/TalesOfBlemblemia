@@ -34,10 +34,9 @@ namespace Game
             TileBase[] emptyTiles = tilemapOfTileToIncludeIfEmptyTile.GetTilesBlock(bounds);
             TileBase[] backgroundTiles = backgroundTilemap.GetTilesBlock(bounds);
 
-            Debug.Log(bounds);
-
-            transform.parent.GetComponent<Canvas>().transform.position = Vector3.zero;
-            transform.parent.GetComponent<Canvas>().GetComponent<RectTransform>().sizeDelta = size;
+            var canvas = transform.parent.GetComponent<Canvas>();
+            if(canvas != null) canvas.GetComponent<RectTransform>().sizeDelta = size;
+            
             for (int j = size.y - 1; j >= 0; j--)
             {
                 for (int i = 0; i < size.x; i++)
