@@ -70,6 +70,20 @@ namespace Game
 
         public AudioClip BackgroundMusic => backgroundMusic;
 
+        public bool PlayerUnitIsMovingOrAttacking
+        {
+            get
+            {
+                bool playerUnitIsMovingOrAttacking = false;
+                foreach (var unit in players[0].OwnedUnits)
+                {
+                    if (unit.IsMoving || unit.IsAttacking)
+                        playerUnitIsMovingOrAttacking = true;
+                }
+                return playerUnitIsMovingOrAttacking;
+            }
+        }
+
         private void Awake()
         {
             dialogueUi = GameObject.FindWithTag("DialogueUi");

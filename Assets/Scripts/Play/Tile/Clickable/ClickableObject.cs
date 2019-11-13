@@ -20,29 +20,34 @@ namespace Game
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            //Player cannot play while a cinematic is playing
-           if (tile == null) return;
-
-           var gridController = Finder.GridController;
-           
+            //Player cannot play while a cinematic is playing or if another of its units is moving
+            if (tile == null || Harmony.Finder.LevelController.PlayerUnitIsMovingOrAttacking) return;
+            
+            var gridController = Finder.GridController;
             ClickButton clickButton = ReadClick(eventData);
-            
             EventSystem.current.SetSelectedGameObject(null);
-            
             var selectedPlayerUnit = tile.GridController.SelectedUnit;
 
             if (tile.LinkedUnitCanBeSelectedByPlayer && tile.LinkedUnit != selectedPlayerUnit)
             {
-                SelectUnit(gridController);
-                return;
+                if ( clickButton == ClickButton.LeftClick || (clickButton == ClickButton.RightClick && selectedPlayerUnit?.WeaponType != WeaponType.HealingStaff))
+                {
+                    SelectUnit(gridController);
+                    return;
+                }
             }
             
             if (selectedPlayerUnit != null)
             {
-                if (tile == selectedPlayerUnit.CurrentTile)
+                if (!tile.IsPossibleAction)
                 {
-                    selectedPlayerUnit.Rest();
-                    tile.GridController.DeselectUnit();
+                    DeselectUnit(gridController);
+                }
+                else if (tile == selectedPlayerUnit.CurrentTile)
+                {
+                    if (clickButton == ClickButton.RightClick)
+                        selectedPlayerUnit.Rest();
+                    DeselectUnit(gridController);
                 }
                 else if (!PlayerClickManager.ActionIsSet || PlayerClickManager.TileToConfirm != tile)
                 {
@@ -51,21 +56,26 @@ namespace Game
                 else if (PlayerClickManager.TileToConfirm == tile)
                 {
                     PlayerClickManager.ExecuteAction();
-                    gridController.DeselectUnit();
+                    DeselectUnit(gridController);
                 }
                 else
                 {
-                    PlayerClickManager.Reset();
-                    gridController.DeselectUnit();
+                    DeselectUnit(gridController);
                 }
             }
-            
+        }
 
-
+        private void DeselectUnit(GridController gridController)
+        {
+            gridController.DeselectUnit();
+            gridController.RemoveActionPath();
+            PlayerClickManager.Reset();
         }
 
         private void SelectUnit(GridController gridController)
         {
+            DeselectUnit(gridController);
+            PlayerClickManager.Reset();
             gridController.SelectUnit(tile.LinkedUnit);
             gridController.DisplayPossibleActionsFrom(tile);
         }

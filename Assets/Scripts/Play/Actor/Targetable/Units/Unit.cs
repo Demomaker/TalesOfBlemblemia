@@ -66,7 +66,8 @@ namespace Game
                 return maxGain;
             }
         }
-
+        public bool IsMoving => isMoving;
+        public bool IsAttacking => isAttacking;
         public int[,] MovementCosts
         {
             get
@@ -179,16 +180,18 @@ namespace Game
         }
 
         #region Movements
-        public List<Tile> PrepareMove(Tile targetTile)
+        public List<Tile> PrepareMove(Tile targetTile, bool forArrow = true)
         {
-            isMoving = true;
             if (targetTile != currentTile)
             {
-                currentTile.UnlinkUnit();
+                if (forArrow)
+                {
+                    currentTile.UnlinkUnit();
+                    movesLeft -= currentTile.CostToMove;
+                }
                 List<Tile> path = PathFinder.PrepareFindPath(gridController, MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.RemoveAt(0);
                 path.Add(targetTile);
-                movesLeft -= currentTile.CostToMove;
                 return path;
             }
             return null;
@@ -202,6 +205,7 @@ namespace Game
             var path = action.Path;
             if (path != null)
             {
+                isMoving = true;
                 Tile finalTile = null;
                 for (int i = 0; i < path.Count; i++)
                 {
@@ -314,7 +318,7 @@ namespace Game
                     IsEnemy
                 );
             }
-            
+            //TODO créer un CouroutineStarter qui sera dans le finder qui remplacera le Level Controller de la ligne suivante
             AttackRoutineHandle = Harmony.Finder.LevelController.StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
             return AttackRoutineHandle;
         }
@@ -355,6 +359,10 @@ namespace Game
             
             target.CurrentHealthPoints -= damage;
             
+            //todo Will have to check for Doors in the future.
+            if (target is Unit)
+                yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints, CurrentHealthPoints);
+            
             counter = 0;
             
             while (counter < duration)
@@ -367,9 +375,6 @@ namespace Game
             transform.position = startPos;
             isAttacking = false;
             
-            //todo Will have to check for Doors in the future.
-            //if (target is Unit)
-            //    yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints, CurrentHealthPoints);
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter

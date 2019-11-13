@@ -83,7 +83,6 @@ using UnityEngine.UI;
             {
                 child.GetComponent<Tile>().HideActionPossibility();
             }
-            RemoveActionPath();
         }
         public void RemoveActionPath()
         {
