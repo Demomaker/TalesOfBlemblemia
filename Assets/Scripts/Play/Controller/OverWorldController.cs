@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
-    [Findable(Tags.OVER_WORLD_CONTROLLER_TAG)]
+    [Findable(Game.Tags.OVER_WORLD_CONTROLLER_TAG)]
     public class OverWorldController : MonoBehaviour
     {
         [SerializeField] private bool isDebugging;

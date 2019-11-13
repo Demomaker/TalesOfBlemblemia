@@ -16,6 +16,7 @@ namespace Game
          [SerializeField] private int choiceForHard = 3;
          
          private DifficultyLevel difficultyLevel;
+         private GameSettings gameSettings;
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
@@ -26,35 +27,37 @@ namespace Game
          private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName;
 
-         public Level[] Levels = new Level[]
-         {
-             new Level("", Constants.TUTORIAL_SCENE_NAME),
-             new Level(Constants.TUTORIAL_SCENE_NAME, Constants.JIMSTERBURG_SCENE_NAME),
-             new Level(Constants.JIMSTERBURG_SCENE_NAME, Constants.PARABENE_FOREST_SCENE_NAME),
-             new Level(Constants.PARABENE_FOREST_SCENE_NAME, Constants.BLEMBURG_CITADEL_SCENE_NAME),
-             new Level(Constants.BLEMBURG_CITADEL_SCENE_NAME, Constants.DARK_TOWER_SCENE_NAME),
-             new Level(Constants.BLEMBURG_CITADEL_SCENE_NAME, Constants.RINFRET_VILLAGE_SCENE_NAME),
-             new Level(Constants.RINFRET_VILLAGE_SCENE_NAME, Constants.TULIP_VALLEY_SCENE_NAME),
-             new Level(Constants.TULIP_VALLEY_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME),
-             new Level(Constants.DARK_TOWER_SCENE_NAME, Constants.MORKTRESS_SCENE_NAME)
-         };
+         public Level[] Levels;
          
          public string PreviousLevelName => previousLevelName;
          public string CurrentLevelName => currentLevelName;
-         public string FirstLevelName => Constants.TUTORIAL_SCENE_NAME;
+         public string FirstLevelName => gameSettings.TutorialSceneName;
          public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel => difficultyLevel;
 
          private void Awake()
          {
+             gameSettings = Harmony.Finder.GameSettings;
+             Levels = new Level[]
+             {
+                 new Level("", gameSettings.TutorialSceneName),
+                 new Level(gameSettings.TutorialSceneName, gameSettings.JimsterburgSceneName),
+                 new Level(gameSettings.JimsterburgSceneName, gameSettings.ParabeneForestSceneName),
+                 new Level(gameSettings.ParabeneForestSceneName, gameSettings.BlemburgCitadelSceneName),
+                 new Level(gameSettings.BlemburgCitadelSceneName, gameSettings.DarkTowerSceneName),
+                 new Level(gameSettings.BlemburgCitadelSceneName, gameSettings.RinfretVillageSceneName),
+                 new Level(gameSettings.RinfretVillageSceneName, gameSettings.TulipValleySceneName),
+                 new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
+                 new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
+             };
              choiceRange = choiceRangePerDifficulty[difficultyLevel];
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
          }
          
          private void Start()
          {
-             SceneManager.LoadSceneAsync(Constants.MAINMENU_SCENE_NAME, LoadSceneMode.Additive);
+             SceneManager.LoadSceneAsync(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
 
          private void UnloadLevel(string levelName)
@@ -78,14 +81,14 @@ namespace Game
                      yield return null;
                  }
 
-                 if (levelName != Constants.OVERWORLD_SCENE_NAME)
+                 if (levelName != gameSettings.OverworldSceneName)
                  {
                      while (!Harmony.Finder.OverWorldController.CanLoadANewLevel)
                      {
                          yield return null;
                      }
-                     SceneManager.UnloadSceneAsync(Constants.OVERWORLD_SCENE_NAME);
-                     while (SceneManager.GetSceneByName(Constants.OVERWORLD_SCENE_NAME).isLoaded)
+                     SceneManager.UnloadSceneAsync(gameSettings.OverworldSceneName);
+                     while (SceneManager.GetSceneByName(gameSettings.OverworldSceneName).isLoaded)
                      {
                          yield return null;
                      }
