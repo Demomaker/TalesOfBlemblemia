@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Harmony;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game
 {
@@ -11,7 +12,8 @@ namespace Game
         private OnOverWorldEnter onOverWorldEnter;
         private Transform characterTransform;
         private GameObject overWorldPath;
-        private GameController gameController;
+        private LevelLoader levelLoader;
+        private GameSettings gameSettings;
 
         private bool canLoadANewLevel = true;
 
@@ -22,8 +24,9 @@ namespace Game
 
         private void Awake()
         {
+            gameSettings = Harmony.Finder.GameSettings;
             onOverWorldEnter = Harmony.Finder.OnOverWorldEnter;
-            gameController = Harmony.Finder.GameController;
+            levelLoader = Harmony.Finder.LevelLoader;
             characterTransform = GameObject.FindWithTag(Tags.PLAYER_TAG)?.transform;
             overWorldPath = GameObject.Find("Path");
             if(characterTransform == null) Debug.LogError("Missing GameObject with tag 'Player' in OverWorld Scene.");
@@ -73,9 +76,10 @@ namespace Game
         private IEnumerator MoveCharacterToPosition(Vector3 endPosition)
         {
             var startPosition = characterTransform.position;
-            for (float elapsedTime = 0; elapsedTime < Constants.MOVEMENT_DURATION; elapsedTime += Time.deltaTime)
+            var movementDuration = gameSettings.MovementDuration;
+            for (float elapsedTime = 0; elapsedTime < movementDuration; elapsedTime += Time.deltaTime)
             {
-                characterTransform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / Constants.MOVEMENT_DURATION);
+                characterTransform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / movementDuration);
                 yield return null;
             }
             characterTransform.position = endPosition;
@@ -84,7 +88,7 @@ namespace Game
         public IEnumerator LoadLevel(string levelName, Vector3 position)
         {
             canLoadANewLevel = false;
-            gameController.LoadLevel(levelName);
+            levelLoader.FadeToLevel(levelName, LoadSceneMode.Additive);
             yield return MoveCharacterToLevelEntry(position);
             canLoadANewLevel = true;
         }

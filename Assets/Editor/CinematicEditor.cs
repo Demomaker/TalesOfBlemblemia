@@ -134,7 +134,7 @@ namespace Game
                 name.stringValue = "";
                 sentence.stringValue = "";
                 cameraTarget.objectReferenceValue = null;
-                cameraZoom.floatValue = Constants.MIN_CAM_ORTHOGRAPHIC_SIZE;
+                cameraZoom.floatValue = CameraConstants.MIN_CAM_ORTHOGRAPHIC_SIZE;
                 duration.floatValue = 0;
                 damage.intValue = 0;
                 targetUnit.objectReferenceValue = null;

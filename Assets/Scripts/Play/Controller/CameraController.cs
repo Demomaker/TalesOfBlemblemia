@@ -16,11 +16,6 @@ namespace Game
         [Range(MIN_CAM_X, MAX_CAM_X)][SerializeField] private int maxX;
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int minY;
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int maxY;
-        private const KeyCode MOVE_UP_KEY = KeyCode.W;
-        private const KeyCode MOVE_DOWN_KEY = KeyCode.S;
-        private const KeyCode MOVE_LEFT_KEY = KeyCode.A;
-        private const KeyCode MOVE_RIGHT_KEY = KeyCode.D;
-        private const KeyCode DRAG_KEY = KeyCode.Mouse2;
 
         private Vector2Int lastScreenSize;
 
@@ -36,6 +31,12 @@ namespace Game
         private float yMovement = 0;
         private float xMovement = 0;
         
+        private const KeyCode MOVE_UP_KEY = KeyCode.W;
+        private const KeyCode MOVE_DOWN_KEY = KeyCode.S;
+        private const KeyCode MOVE_LEFT_KEY = KeyCode.A;
+        private const KeyCode MOVE_RIGHT_KEY = KeyCode.D;
+        private const KeyCode DRAG_KEY = KeyCode.Mouse2;
+        
         private float YMovement
         {
             get => yMovement;
@@ -48,12 +49,12 @@ namespace Game
             set => xMovement = Mathf.Clamp(value, -1, 1);
         }
         
+        public float MaxZoom => maxZoom;
+        
         private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(MOVE_LEFT_KEY);
         private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(MOVE_RIGHT_KEY);
         private bool IsMovingDown => Input.mousePosition.y < scrollArea || Input.GetKey(MOVE_DOWN_KEY);
         private bool IsMovingUp => Input.mousePosition.y >= Screen.height - scrollArea || Input.GetKey(MOVE_UP_KEY);
-
-        public float MaxZoom => maxZoom;
 
         private void Awake()
         {

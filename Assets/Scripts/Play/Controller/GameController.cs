@@ -20,7 +20,9 @@ namespace Game
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
-         
+
+         private LevelLoader levelLoader;
+
          private string previousLevelName;
          private string currentLevelName;
          
@@ -38,6 +40,7 @@ namespace Game
 
          private void Awake()
          {
+             levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
              Levels = new Level[]
              {
@@ -57,59 +60,7 @@ namespace Game
          
          private void Start()
          {
-             SceneManager.LoadSceneAsync(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
-         }
-
-         private void UnloadLevel(string levelName)
-         {
-             StartCoroutine(UnloadLevelCoroutine(levelName));
-         }
-         
-         public void LoadLevel(string levelName)
-         {
-             StartCoroutine(LoadLevelCoroutine(levelName));
-         }
-
-         private IEnumerator LoadLevelCoroutine(string levelName)
-         {
-             if (!SceneManager.GetSceneByName(levelName).isLoaded)
-             {
-                 var levelScene = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
-                 levelScene.allowSceneActivation = false;
-                 while (levelScene.progress < 0.9f)
-                 {
-                     yield return null;
-                 }
-
-                 if (levelName != gameSettings.OverworldSceneName)
-                 {
-                     while (!Harmony.Finder.OverWorldController.CanLoadANewLevel)
-                     {
-                         yield return null;
-                     }
-                     SceneManager.UnloadSceneAsync(gameSettings.OverworldSceneName);
-                     while (SceneManager.GetSceneByName(gameSettings.OverworldSceneName).isLoaded)
-                     {
-                         yield return null;
-                     }
-                 }
-                 else if (!string.IsNullOrEmpty(currentLevelName))
-                 {
-                     SceneManager.UnloadSceneAsync(currentLevelName);
-                     while (SceneManager.GetSceneByName(currentLevelName).isLoaded)
-                     {
-                         yield return null;
-                     }
-                 }
-                 levelScene.allowSceneActivation = true;
-                 currentLevelName = levelName;
-             }
-         }
-
-         private IEnumerator UnloadLevelCoroutine(string levelName)
-         {
-             if (SceneManager.GetSceneByName(levelName).isLoaded)
-                 yield return SceneManager.UnloadSceneAsync(levelName);
+             levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
 
          public GameController() : this(DifficultyLevel.Easy) { }

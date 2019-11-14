@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Game
 {
-    // Authors: Jérémie Bertrand
     public class CinematicController : MonoBehaviour
     {
         private Camera mainCamera;
