@@ -17,6 +17,10 @@ namespace Game
         private void Awake()
         {
             tile = GetComponent<Tile>();
+        }
+
+        private void Start()
+        {
             uiController = Harmony.Finder.UIController;
         }
 

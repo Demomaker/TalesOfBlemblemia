@@ -31,6 +31,11 @@ namespace Game
             targetsToDestroy = new List<Targetable>();  
         }
 
+        public void FetchUiController()
+        {
+            uiController = Harmony.Finder.UIController;
+        }
+
         public void AddTarget(Targetable target)
         {
             targetsToDestroy.Add(target);

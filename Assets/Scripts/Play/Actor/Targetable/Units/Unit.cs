@@ -46,9 +46,7 @@ namespace Game
         private bool isGoingToDie = false;
         private Animator animator;
         private SpriteRenderer spriteRenderer;
-        private readonly Color paleAlpha = new Color(1,1,1, 0.5f);
-        private readonly Color opaqueAlpha = new Color(1,1,1,1f);
-        
+
         #endregion
         
         #region Properties
@@ -104,15 +102,18 @@ namespace Game
             get => hasActed;
             set
             {
-                //if the character has now acted
-                if (!hasActed && value)
+                if (spriteRenderer != null)
                 {
-                    spriteRenderer.color = paleAlpha;
-                }
-                //if the character had previously acted but can now act
-                else if (hasActed && value == false)
-                {
-                    spriteRenderer.color = opaqueAlpha;
+                    //if the character has now acted
+                    if (!hasActed && value)
+                    {
+                        spriteRenderer.color = gameSettings.PaleAlpha;
+                    }
+                    //if the character had previously acted but can now act
+                    else if (hasActed && value == false)
+                    {
+                        spriteRenderer.color = gameSettings.OpaqueAlpha;
+                    }
                 }
                 hasActed = value;
             }
@@ -124,11 +125,11 @@ namespace Game
         public UnitInfos UnitInfos => unitInfos;
 
         #endregion
-        
-        private void Awake()
+
+        public override void Awake()
         {
-            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             uiController = Harmony.Finder.UIController;
+            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -143,7 +144,7 @@ namespace Game
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
             gameSettings = Harmony.Finder.GameSettings;
-
+            base.Awake();
         }
 
         private void OnEnable()
@@ -202,7 +203,7 @@ namespace Game
         
         private void LookAt(Vector3 target)
         {
-            transform.localRotation = Quaternion.Euler(0, target.x < transform.position.x ? 180 : 0, 0);
+            gameObject.GetComponent<SpriteRenderer>().flipX = target.x < gameObject.transform.position.x;
         }
 
         #region Movements
@@ -272,12 +273,11 @@ namespace Game
                     if (TargetIsInRange(action.Target))
                     {
                         yield return Attack(action.Target);
-                        yield return uiController.LaunchBattleReport(IsEnemy);
+                        if (action.Target.GetType() == typeof(Unit))
+                            yield return uiController.LaunchBattleReport(IsEnemy);
                     }
                     else
-                    {
                         Rest();
-                    }
                 }
                 if (action.ActionType == ActionType.Recruit && action.Target != null)
                 {
@@ -325,17 +325,7 @@ namespace Game
         {
             Coroutine AttackRoutineHandle;
             
-            if(target.GetType() == typeof(Door))
-            {
-                uiController.SetupCharactersBattleInfo(
-                    this.Stats.maxHealthPoints, 
-                    this.CurrentHealthPoints,
-                    ((Door)target).BaseHealth,
-                    target.CurrentHealthPoints, 
-                    IsEnemy
-                );
-            }
-            else
+            if(target.GetType() == typeof(Unit))
             {
                 uiController.SetupCharactersBattleInfo(
                     this.Stats.maxHealthPoints, 
@@ -388,7 +378,7 @@ namespace Game
             
             //todo Will have to check for Doors in the future.
             if (target is Unit)
-                uiController.ChangeCharacterDamageTaken(damage, IsEnemy);
+                uiController.ChangeCharacterDamageTaken(damage, !IsEnemy);
             counter = 0;
             
             while (counter < duration)

@@ -1,6 +1,4 @@
-﻿using System;
-using Harmony;
-using UnityEditor;
+﻿using Harmony;
 using UnityEngine;
 
 namespace Game
@@ -20,17 +18,19 @@ namespace Game
         [SerializeField] private float movementDuration = 0.3f;
         [SerializeField] private int numberOfRecruitablesOnAlternatePath = 8;
         [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
-        [SerializeField] [Header("Scene names")] private SceneAsset tutorialScene;
-        [SerializeField] private SceneAsset jimsterburgScene;
-        [SerializeField] private SceneAsset parabeneForestScene;
-        [SerializeField] private SceneAsset blemburgCitadelScene;
-        [SerializeField] private SceneAsset rinfretVillageScene;
-        [SerializeField] private SceneAsset darkTowerScene;
-        [SerializeField] private SceneAsset tulipValleyScene;
-        [SerializeField] private SceneAsset morktressScene;
-        [SerializeField] private SceneAsset overworldScene;
-        [SerializeField] private SceneAsset mainmenuScene;
-        [SerializeField] private SceneAsset gameUiScene;
+
+        [Header("Scene names")] 
+        [SerializeField] private R.E.Scene tutorialScene;
+        [SerializeField] private R.E.Scene jimsterburgScene;
+        [SerializeField] private R.E.Scene parabeneForestScene;
+        [SerializeField] private R.E.Scene blemburgCitadelScene;
+        [SerializeField] private R.E.Scene rinfretVillageScene;
+        [SerializeField] private R.E.Scene darkTowerScene;
+        [SerializeField] private R.E.Scene tulipValleyScene;
+        [SerializeField] private R.E.Scene morktressScene;
+        [SerializeField] private R.E.Scene overworldScene;
+        [SerializeField] private R.E.Scene mainmenuScene;
+
         [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
         [SerializeField] private int saveSlotTwo = 2;
         [SerializeField] private int saveSlotThree = 3;
@@ -65,6 +65,11 @@ namespace Game
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
 
+        private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
+        private static readonly Color opaqueAlpha = new Color(1,1,1,1f);
+
+        public Color PaleAlpha => paleAlpha;
+        public Color OpaqueAlpha => opaqueAlpha;
         public int PlayerMovementRange => playerMovementRange;
         public int EnemyMovementRange => enemyMovementRange;
         public int PlayerAttackRange => playerAttackRange;
@@ -73,17 +78,16 @@ namespace Game
         public float MovementDuration => movementDuration;
         public int NumberOfRecruitablesOnAlternatePath => numberOfRecruitablesOnAlternatePath;
         public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
-        public string TutorialSceneName => tutorialScene.name;
-        public string JimsterburgSceneName => jimsterburgScene.name;
-        public string ParabeneForestSceneName => parabeneForestScene.name;
-        public string BlemburgCitadelSceneName => blemburgCitadelScene.name;
-        public string RinfretVillageSceneName => rinfretVillageScene.name;
-        public string DarkTowerSceneName => darkTowerScene.name;
-        public string TulipValleySceneName => tulipValleyScene.name;
-        public string MorktressSceneName => morktressScene.name;
-        public string OverworldSceneName => overworldScene.name;
-        public string MainmenuSceneName => mainmenuScene.name;
-        public string GameUiSceneName => gameUiScene.name;
+        public string TutorialSceneName => tutorialScene.ToString();
+        public string JimsterburgSceneName => jimsterburgScene.ToString();
+        public string ParabeneForestSceneName => parabeneForestScene.ToString();
+        public string BlemburgCitadelSceneName => blemburgCitadelScene.ToString();
+        public string RinfretVillageSceneName => rinfretVillageScene.ToString();
+        public string DarkTowerSceneName => darkTowerScene.ToString();
+        public string TulipValleySceneName => tulipValleyScene.ToString();
+        public string MorktressSceneName => morktressScene.ToString();
+        public string OverworldSceneName => overworldScene.ToString();
+        public string MainmenuSceneName => mainmenuScene.ToString();
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;
         public int SaveSlotThree => saveSlotThree;
