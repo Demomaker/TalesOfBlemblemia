@@ -16,6 +16,7 @@ namespace Game
         private SaveController saveController;
         private GameSettings gameSettings;
         private Canvas loadGameScreen;
+        private LevelLoader levelLoader;
 
         private void Awake()
         {
@@ -23,6 +24,8 @@ namespace Game
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
             loadGameScreen = GetComponent<Canvas>();
+            levelLoader = Harmony.Finder.LevelLoader;
+
         }
         
         private void Start()
@@ -63,11 +66,7 @@ namespace Game
         private void LoadScenes(int saveSlotNumber, string sceneName)
         {
             saveController.SaveSelected = saveSlotNumber;
-            SceneManager.LoadScene(sceneName);
-            if (!SceneManager.GetSceneByName(gameSettings.GameUiSceneName).isLoaded)
-            {
-                SceneManager.LoadScene(gameSettings.GameUiSceneName, LoadSceneMode.Additive);
-            }
+            levelLoader.FadeToLevel(sceneName, LoadSceneMode.Additive);
         }
     }
 }

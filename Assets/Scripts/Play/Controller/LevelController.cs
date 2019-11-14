@@ -57,6 +57,8 @@ namespace Game
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
         private UIController uiController;
+        private LevelLoader levelLoader;
+
         private Unit[] units = null;
         private UnitOwner currentPlayer;
         private int numberOfPlayerTurns = 0;
@@ -101,6 +103,7 @@ namespace Game
 
         private void Awake()
         {
+            levelLoader = Harmony.Finder.LevelLoader;
             uiController = Harmony.Finder.UIController;
             saveController = Finder.SaveController;
             gameController = Finder.GameController;
@@ -209,7 +212,8 @@ namespace Game
             CheckForPermadeath();
 
             UpdatePlayerSave();
-
+            
+            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
 
         /// <summary>

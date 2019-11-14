@@ -6,10 +6,10 @@ namespace Game
     public class Cinematic : MonoBehaviour
     {
         [SerializeField] private CinematicTriggerType trigger = CinematicTriggerType.Manual;
-        private OnLevelVictory onLevelVictory;
+        [SerializeField] private List<CinematicAction> actions;
         
-        [SerializeField] private List<CameraAction> cameraActions;
-        public IEnumerable<CameraAction> CameraActions => cameraActions;
+        private OnLevelVictory onLevelVictory;
+        public IEnumerable<CinematicAction> Actions => actions;
 
         private void Awake()
         {
@@ -46,7 +46,7 @@ namespace Game
             Harmony.Finder.LevelController.CinematicController.LaunchCinematic(this);
         }
 
-        enum CinematicTriggerType
+        public enum CinematicTriggerType
         {
             Manual,
             OnStart,
