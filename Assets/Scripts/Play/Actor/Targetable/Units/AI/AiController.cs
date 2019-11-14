@@ -29,6 +29,7 @@ namespace Game
             actionsToDo.AddRange(ScanForTargets(playableUnit, TargetsToDestroy));
             
             //Setting every action's turn
+            //BR : Et pourquoi le score n'est pas déterminé en même temps que l'action est créée ?
             ComputeChoiceScores(actionsToDo, playableUnit);
             
             //The best potential actions
@@ -91,12 +92,17 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         private static void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
+            //BC : Pourquoi la déclaration est si loin de son usage réel ? Propreté.
             Unit targetUnit;
             foreach (var action in actionsToDo)
             {
+                //BC : Au moins, utilisez "is" au lieu de "GetType".....
+                //     Mais non, je veux pas ça.
                 if (action.Target.GetType() == typeof(Unit))
                 {
                     targetUnit = (Unit) action.Target;
+                    //BC : Le pire dans tout cela, c'est que l'action ne calcule pas elle même son propre score,
+                    //     ce qui me semble pourtant être une évidence....
                     action.Score += HpChoiceMod(playableUnit, targetUnit.CurrentHealthPoints) +
                                     DistanceChoiceMod(playableUnit, action.Path) +
                                     WeaponTypeChoiceMod(playableUnit, targetUnit.WeaponType) +
@@ -271,11 +277,16 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>A list of potential actions, on per enemy</returns>
+        //BC : À mon sens, fusionnable avec "ScanForTargets", car un "Unit" est targettable.
+        //     Avez vous une "enum" qui représente le "type" de target ? Se serait possible d'obtenir le poids en fonction de ce type d'unité. Le type d'unité
+        //     pourrait être contenu dans l'unité.
         private static List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits)
         {
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
             {
+                //BC : "enemyUnits[i].IsPlayer" est pas mal garenti d'être vrai tout le temps non ?
+                //     Aussi, pourquoi ce serait null ?
                 if(enemyUnits[i] != null && enemyUnits[i].IsPlayer)
                     actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, enemyUnits[i], AiControllerValues.BASE_CHOICE_ACTION_SCORE));
             }
@@ -307,6 +318,8 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetHp">The target unit's health</param>
         /// <returns>The score modifier caused by the target's health</returns>
+        //BC : Pourquoi "mod" ? Quel est le rapport avec les modulos ? Vous en faites pas....
+        //     Nommage incomplet...d'ou mon incompréhension probablement.
         public static float HpChoiceMod(Unit playableUnit, int targetHp)
         {
             if (targetHp - playableUnit.Stats.AttackStrength <= 0)

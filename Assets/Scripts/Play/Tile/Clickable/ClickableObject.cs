@@ -20,6 +20,11 @@ namespace Game
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            //BC : Trouvez un autre moyen de faire cela. Pourquoi pas une sorte de "Boolean"
+            //     à quelque part qui indique si le joueur a le contrôle ou si le jeu a le contrôle.
+            //     À mettre dans "LevelController" ou "GameController" possiblement.
+            //     Sinon, à chaque fois qu'un composant veut mettre le jeu "en pause", il va falloir
+            //     en modifier une panoplie d'autres.
             if (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic) return;
             ClickButton clickButton = ClickButton.LeftClick;
             if (eventData.button == PointerEventData.InputButton.Right)

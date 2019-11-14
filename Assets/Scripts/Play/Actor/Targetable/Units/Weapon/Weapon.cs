@@ -28,6 +28,7 @@ namespace Game
         protected WeaponType advantage;
         public WeaponType Advantage => Harmony.Finder.LevelController.RevertWeaponTriangle ? GetAdvantageByWeaponType(advantage) : advantage;
 
+        //BR : Remplaçable par une méthode d'extension. J'en avais pas parlé ?
         private static WeaponType GetAdvantageByWeaponType(WeaponType weaponType)
         {
             switch (weaponType)

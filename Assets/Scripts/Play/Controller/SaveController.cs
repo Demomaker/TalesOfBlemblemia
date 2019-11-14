@@ -8,6 +8,7 @@ namespace Game
 {
     public class SaveController : MonoBehaviour
     {
+        //BC : Attribut public devrait être private.
         public SaveInfos saveSlot1;
         public SaveInfos saveSlot2;
         public SaveInfos saveSlot3;
@@ -27,6 +28,10 @@ namespace Game
         public void Awake()
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
+            //BR : Un paramètre par ligne si vous faites cela SVP! C'est juste une question de lisibilité.
+            //     Ne vous êtes vous jamais dit que vous feriez moins de bogues si le code est plus facile à lire ?
+            //     Mieux encore, ne pensez vous pas que du code plus lisible rend plus facile de trouver un bogue ?
+            //     J'ai vraiment l'impression que vous ne m'écoutez pas des fois.
             InitiateSaveController(Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
                 Constants.LEVEL_1_SCENE_NAME, playableCharactersDictionary);
         }
@@ -36,6 +41,8 @@ namespace Game
 
         private static Dictionary<string, bool> CreateBaseCharacterDictionary()
         {
+            //BR : Peut être un attribut statique readonly dans une classe de constantes (peut être dans
+            //     Constants?).
             Dictionary<string, bool> playableCharactersDictionary = new Dictionary<string, bool>
             {
                 {Constants.FRANKLEM_NAME, false},
@@ -93,8 +100,12 @@ namespace Game
         }
 
         #endregion
+        
+        //BR : Pourquoi certaines choses sont documentés et d'autres ne le sont pas. Vous avez comme une sorte
+        //     de demi mesure étrange et pas vraiment cohérente.
 
         //Author : Antoine Lessard
+        //BC : Commentaire mensonger. Ces settings ne sont pas appliqués, juste "conservés".
         /// <summary>
         /// Checks if there are any settings in the database, if there are, we load those settings and apply them, otherwise, we insert the default settings
         /// </summary>
@@ -109,6 +120,7 @@ namespace Game
             else
             {
                 //There should always be only one set of settings
+                //BR : Je me demande alors pourquoi le "Repository" n'est pas conçu en ce sens...
                 playerSettings = settings.First();
             }
         }
@@ -139,6 +151,7 @@ namespace Game
             saveSettingsRepo.Update(playerSettings);
         }
         
+        //BC : Abuse pas des régions.
         #region CreateSave
 
         private void CreateSave(SaveInfos saveSlot)

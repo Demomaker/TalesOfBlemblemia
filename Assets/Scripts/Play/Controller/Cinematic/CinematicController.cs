@@ -52,6 +52,11 @@ namespace Game
 
             foreach (var cameraAction in cameraActions)
             {
+                //BR : Remplacer ceci par cela :
+                //        yield return PlayCameraAction(cameraAction);
+                //     Ça fait la même chose de manière plus efficace.
+                //
+                //     Même chose ailleurs dans le code.
                 yield return StartCoroutine(PlayCameraAction(cameraAction));
             }
 

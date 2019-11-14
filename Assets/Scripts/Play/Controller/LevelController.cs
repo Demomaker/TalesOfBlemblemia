@@ -20,6 +20,7 @@ namespace Game
     public class LevelController : MonoBehaviour
     {
         
+        //BC : Devrait être un "SerializedField".
         private const string PROTAGONIST_NAME = "Franklem";
         
         [SerializeField] private string levelName;
@@ -43,7 +44,8 @@ namespace Game
         
         private int levelTileUpdateKeeper = 0;
         
-
+        //BC : Constantes en plein milieux d'attributs, d'autant plus qu'il y en a d'autres en haut.
+        //     De plus, cela devrait être des "SerializedFields", car c'est destiné à être affiché.
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
 
@@ -72,6 +74,7 @@ namespace Game
 
         private void Awake()
         {
+            //BC : Constante manquante. PLM.
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
             onLevelVictory = new OnLevelVictory();
@@ -81,10 +84,13 @@ namespace Game
         private void Start()
         {
             onLevelChange.Publish(this);
-            players.Clear();
+            players.Clear(); //BC : No op. Toujours vide.
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             OnTurnGiven();
+            //BC : dialogueTriggerStartFranklem ? C'est donc ben mal nommé ça ?
+            //     De plus, c'est tu un "One shot deal" ? Juste pour un niveau dans un jeu en particulier ?
+            //     Si c'est le cas, c'est encore pire!
             if (dialogueUi != null && dialogueTriggerStartFranklem != null)
             {
                 dialogueUi.SetActive(true);
@@ -93,6 +99,8 @@ namespace Game
             PrepareVictoryConditionForUI();
         }
 
+        //BC : Le UI devrait se renseigner auprès du LevelController, et non pas l'inverse.
+        //     C'est totalement contraire à ce qui vous a été montré par les années passées...vous savez, le MVC!!!!
         private void PrepareVictoryConditionForUI()
         {
             if (completeIfPointAchieved)
@@ -105,6 +113,7 @@ namespace Game
             }
             else if (completeIfCertainEnemyDefeated)
             {
+                //BC : Constante manquante.
                 Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + enemyToDefeat);
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
@@ -115,8 +124,12 @@ namespace Game
 
         protected void Update()
         {
+            //BC : Lol wut ? Do not end ?
+            //     C'est quoi la raison d'être de cette condition ?
             if(!doNotEnd) CheckIfLevelEnded();
             
+            //BC : Hard coded input. Pour du déboguage ? J'ai comme l'impression que c'est ça...
+            //     Au moins, mettez un commentaire...
             if (Input.GetKeyDown(KeyCode.O))
             {
                 levelCompleted = true;
@@ -129,12 +142,17 @@ namespace Game
                 {
                     onLevelVictory.Publish(this);
                 }
+                //BC : OMG!!! C'est appelé en boucle ça ! Considérez la méthode "Update" comme une sorte de boucle
+                //     "while(true)". Cela veut dire que vous démarez cette coroutine à toute les frames!!!
+                //     Je sais que la coroutine vérifie au départ si elle est déja démarrée, mais c'est quand même
+                //     pas la bonne solution : c'est même une patch.
                 StartCoroutine(EndLevel());
             }
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
             //TODO enlever ca avant la release
+            //BC : Alpha ça ?
             CheckForComputerTurnSkip();
             CheckForPlayerTurnSkip();
 
@@ -162,6 +180,7 @@ namespace Game
             Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
         }
 
+        //BC : Nommage (léger). OnTurnStart ?
         private void OnTurnGiven()
         {
             if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
@@ -294,6 +313,7 @@ namespace Game
             }
         }
 
+        //BC : Devrait être private. Utilisé seulement ici.
         public void CheckForCurrentPlayerEndOfTurn()
         {
             if (currentPlayer.HasNoMorePlayableUnits)

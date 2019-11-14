@@ -4,6 +4,8 @@ namespace Game
 {
     public struct SaveInfos
     {
+        //BC : Attirbut public devrait être private. Au moins, fait une propriété automatique, c'est déjà mieux, car tu communique
+        //     une intention, et en plus, tu peux toujours y revenir et mettre le "set" private au besoin si tu le désire par après.
         public int id;
 
         public string username;

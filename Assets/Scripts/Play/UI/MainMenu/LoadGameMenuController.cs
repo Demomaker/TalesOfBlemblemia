@@ -28,6 +28,8 @@ namespace Game
         
         private void Start()
         {
+            //BC : Constantes manquantes.
+            //     Vous avez même pas d'excuse en plus, car je les génère automatiquement pour vous!!!
             saveSlot1.transform.Find("Name").GetComponent<TMP_Text>().text = saveController.saveSlot1.username;
             saveSlot1.transform.Find("Stage").GetComponent<TMP_Text>().text = saveController.saveSlot1.levelName;
             saveSlot1.transform.Find("Difficulty").GetComponent<TMP_Text>().text =
@@ -77,6 +79,7 @@ namespace Game
         {
             saveController.SaveSelected = saveSlotNumber;
             SceneManager.LoadScene(sceneName);
+            //BC : ???
             if (!SceneManager.GetSceneByName(Constants.GAME_UI_SCENE_NAME).isLoaded)
             {
                 SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);

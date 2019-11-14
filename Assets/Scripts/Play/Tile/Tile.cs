@@ -9,9 +9,11 @@ namespace Game
     /// Behaviour of a tile
     /// Author: Jérémie Bertrand
     /// </summary>
+    //BC : Les classes qui en héritent ne font rien. L'héritage est donc inutile.'
     public abstract class Tile : MonoBehaviour
     {
         private Button tileButton;
+        //BC : SerializedField en plein milieux de d'autres attirbuts.
         [SerializeField] private TileType tileType;
         public TileType TileType => tileType;
         private TileSprite tileSprite;
@@ -40,10 +42,14 @@ namespace Game
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
         public Door LinkedDoor => linkedDoor;
+        
+        //BR : Je comprends ce que tu as fait avec le constructeur protected, mais c'est pas la manière "Unity" de le faire.
+        //     Cette propriété aurait du être "abstraite".
         public int CostToMove
         {
             get
             {
+                //BC : Logique à revoir. Quand vous construisez une "ObstacleTile", le "costToMove" est déjà à la valeur maximale.
                 if (tileType == TileType.Obstacle || IsOccupiedByADoor)
                 {
                     return int.MaxValue;
@@ -54,7 +60,7 @@ namespace Game
         }
         public float DefenseRate => defenseRate;
 
-
+        
         protected Tile(TileType tileType, int costToMove = TileValues.DEFAULT_COST_TO_MOVE, float defenseRate = TileValues.DEFAULT_DEFENSE_RATE)
         {
             this.tileType = tileType;
@@ -72,6 +78,7 @@ namespace Game
 
         protected void Start()
         {
+            //BR : J'espère qu'ils sont mis dans le bon ordre.....
             int index = transform.GetSiblingIndex();
             positionInGrid.x = index % Finder.GridController.NbColumns;
             positionInGrid.y = index / Finder.GridController.NbLines;
@@ -132,6 +139,7 @@ namespace Game
             return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
         }
 
+        //BC : Non, ça marche vraiment pas votre héritage. Regardez cette méthode et la classe "ObstacleTile", vous comprendrez.
         public void MakeObstacle()
         {
             tileType = TileType.Obstacle;

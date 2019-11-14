@@ -4,7 +4,7 @@
     /// Constant values used by the AiController class
     /// Author: Zacharie Lavigne
     /// </summary>
-    public static class AiControllerValues
+    public static class AiControllerValues 
     {
         public static float BASE_TARGET_ACTION_SCORE = BASE_CHOICE_ACTION_SCORE + 3f;
         public const float POTENTIAL_DEATH_CHOICE_MOD = -4f;

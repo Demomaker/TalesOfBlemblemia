@@ -11,6 +11,8 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
+        //BR : no....nO....NO....NOOOO!!!!!!!!!! PAS UN SINGLETON!!!!!!!!!!!!!!
+        //     Ça risque de vous causer de nombreux problèmes, sérieusement!
         private static ComputerPlayer instance = null;
         private List<Targetable> targetsToDestroy;
         
@@ -43,6 +45,7 @@ namespace Game
         {
             foreach (var unit in ownedUnits)
             {
+                //BC : Le UI ne devrait pas déborder ici. Aucun rapport.
                 while (uiController.IsBattleReportActive)
                 {
                     yield return null;

@@ -108,6 +108,7 @@ namespace Game
             gridController = Finder.GridController;
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
+            //BC : Ok, chaque unité se fait son propre canal événemetiel. Cela ne respecte pas l'esprit du patron.
             onHurt = new OnHurt();
             onAttack = new OnAttack();
             onDodge = new OnDodge();
@@ -120,6 +121,7 @@ namespace Game
 
         private void OnEnable()
         {
+            //BC : Hein ? What the....
             OnHurt.Notify += Hurt;
             OnDodge.Notify += MakeDodge;
         }
@@ -436,6 +438,8 @@ namespace Game
                 return true;
             return gridController.FindAvailableAdjacentTile(target.CurrentTile, this) != null;
         }
+        
+        //BR : J'aurais appellé ça "CanReach" ou "CanAttack".
         public bool TargetIsInRange(Targetable target)
         {
             if (target != null && currentTile != null)

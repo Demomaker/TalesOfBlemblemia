@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //BC : Pourquoi c'est pas avec les autres UI Controllers ?
     public class PauseMenuController : MonoBehaviour
     {
         [Header("Buttons")] 
+        //BC : Code mort. Jamais utilisé.
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button optionsButton;
         [SerializeField] private Button returnToOverworldButton;

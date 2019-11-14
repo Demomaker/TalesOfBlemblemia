@@ -5,6 +5,7 @@ namespace Game
 {
     // Authors: Jérémie Bertrand
     [System.Serializable]
+    //BC : Mal nommé je pense. Cela fait plus que de juste toucher la caméra.
     public class CameraAction
     {
         [Header("Camera Values")]

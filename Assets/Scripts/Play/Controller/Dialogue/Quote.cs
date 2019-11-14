@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿//BC : Namespace manquant.
+
+using UnityEngine;
 [System.Serializable]
 public class Quote
 {

@@ -25,6 +25,7 @@ namespace Game
             }
         }
 
+        //BC : Code mort. Ne fait qu'appeller la classe parent.
         public override void CheckUnitDeaths()
         {
             base.CheckUnitDeaths();

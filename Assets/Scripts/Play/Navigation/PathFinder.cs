@@ -8,8 +8,12 @@ namespace Game
     //Author Pierre-Luc Maltais and Antoine Lessard
     public static class PathFinder
     {
+        //BC : Nommage. Pourquoi cela ne s'appelle pas "ComputeCost"?
+        //     Vous savez que plusieurs méthodes peuvent avoir le même nom, tant qu'il n'ont pas les mêmes paramètres ?
+        //     Il est possible d'avoir deux méthodes "ComputeCost". De plus, une peu être privé et l'autre public.
         public static int[,] PrepareComputeCost(Vector2Int from, bool unitIsEnemy)
         {
+            //BC : Devrait être reçu en paramêtre.
             GridController grid = Finder.GridController;
             //Initialize movementCosts array
             int[,] movementCosts = new int[grid.NbColumns,grid.NbLines];
@@ -51,6 +55,7 @@ namespace Game
             bool unitIsEnemy
         )
         {
+            //BR : Ouais....pour la lisibilité, on repassera.........
             if (from.x < grid.NbColumns - 1 && movementCosts[from.x, from.y] + costToMove < movementCosts[from.x + 1, from.y]
                                             && grid.GetTile(from.x + 1, from.y).CostToMove != int.MaxValue
                                             && (grid.GetTile(from.x + 1, from.y).LinkedUnit == null 
@@ -118,6 +123,8 @@ namespace Game
         }
         #endregion
         
+        //BC : Même commentaire qu'en haut.
+        //     Ici, en plus, je constante l'absence de "Finder", ce qui est la bonne façon de procéder.
         public static List<Tile> PrepareFindPath(
             GridController grid, 
             int[,] movementCosts, 
@@ -133,6 +140,12 @@ namespace Game
                 //check for the closest available tile to target
                 
                 //Check left
+                //BC : Vous envoyez un "null" à votre méthode. Voir "currentPath".
+                //     Est-ce que vous comprenez ce qu'est une référence ?
+                //
+                //     De plus, vous faites potentiellement 4 recherche de chemin.
+                //     Il va donc toujours prendre la case en bas si elle est libre.
+                //     Défaut de logique assez important, même pour l'alpha.
                 currentPath = CheckLeftOfTarget(grid, movementCosts, from, to, currentPath, unit);
                 //Check right
                 currentPath = CheckRightOfTarget(grid, movementCosts, from, to, currentPath, unit);
@@ -168,6 +181,10 @@ namespace Game
             return currentPath;
         }
 
+        //BC : Pourquoi est-ce que "CheckDownOfTarget" est si différent de "CheckLeftOfTarget" ?
+        //     EDIT : Omg...je viens de comprendre.........
+        //            Vous vérifiez si le nouveau chemin est plus court, d'où l'algo bizzare dans "PrepareFindPath".
+        //            Vous savez qu'il y a une meilleure façon de faire cela ? Me voir.
         private static List<Tile> CheckDownOfTarget(
             GridController grid, 
             int[,] movementCosts, 
@@ -405,14 +422,14 @@ namespace Game
         public static List<Tile> GetPath(
             GridController grid, 
             int[,] movementCosts, 
-            List<Tile> path, 
+            List<Tile> path, //BC : Cette liste est jamais utilisé vraiment. Ne vous faites que vérifier si elle est nulle. Vous n'utilisez jamais son contenu.
             Vector2Int from,
             Vector2Int to, 
             Unit unit
         )
         {
             List <Tile> pathInOrder = FindPath(grid, PrepareComputeCost(from, unit.IsEnemy), new List<Tile>(), from, to, unit);
-            if (path != null)
+            if (path != null) // BC : Hein ? C'est à quoi que ça sert ça?
                 pathInOrder.Reverse();
             return pathInOrder;
         }

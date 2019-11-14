@@ -5,6 +5,8 @@ using Game;
 using UnityEngine;
 using UnityEngine.UI;
 
+//BC : Namespace manquant.
+
 public class ButtonTrigger : MonoBehaviour
 {
     public static OnButtonClick onButtonClick = null;

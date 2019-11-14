@@ -23,6 +23,7 @@ namespace Game
         private bool isDisplayingDialogue;
         private bool isTyping;
         private Queue<Quote> sentences;
+        //BC : Constantes doivent être en haut du fichier.
         private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
 
         public bool IsDisplayingDialogue => isDisplayingDialogue;
@@ -48,6 +49,7 @@ namespace Game
             portrait.texture = texture;
         }
 
+        //BC : Ça manque de coroutine cette chose là.
         private void Update()
         {
             if (!isDisplayingDialogue) return;
@@ -84,6 +86,7 @@ namespace Game
             StartCoroutine(TypeSentence(quote.Sentence));
         }
 
+        //BC : Private manquant.
         IEnumerator TypeSentence(string sentence)
         {
             isTyping = true;

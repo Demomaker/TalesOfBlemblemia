@@ -6,6 +6,7 @@ using UnityEngine.UI;
     //Authors: Jérémie Bertrand & Mike Bédard
     public class GridController : MonoBehaviour
     {
+        //BC : Propreté. Attributs et "SerializedField" sont mélangés.
         private GridLayoutGroup gridLayoutGroup;
         [SerializeField] private Sprite movementTileSprite = null;
         [SerializeField] private Sprite normalTileSprite = null;
@@ -23,6 +24,8 @@ using UnityEngine.UI;
         public Sprite RecruitableTileSprite => recruitableTileSprite;
         public Sprite ProtectableTileSprite => protectableTileSprite;
 
+        //BR : Débutez les noms de propriétés "booleans" par "Is" ou "Has.
+        //     Ici, ça donne "IsUnitSelected". Simple non ?
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
         public int NbColumns { get; private set; } = 0;
@@ -31,6 +34,7 @@ using UnityEngine.UI;
         private void Awake()
         {
             gridLayoutGroup = GetComponent<GridLayoutGroup>();
+            //BC : Appels répétés à "GetComponent<RectTransform>()".
             NbColumns = (int)(GetComponent<RectTransform>().rect.width / gridLayoutGroup.cellSize.x);
             NbLines = (int)(GetComponent<RectTransform>().rect.height / gridLayoutGroup.cellSize.y);
         }
@@ -38,6 +42,9 @@ using UnityEngine.UI;
         public void SelectUnit(Unit unit)
         {
             if(SelectedUnit != null) DeselectUnit();
+            //BC : Ici, vous auriez du appeller "DisplayPossibleActionsFrom", car chaque appel à "SelectUnit"
+            //     est suivi d'un appel à "DisplayPossibleActionsFrom".
+            //     C'est aussi plus cohérent avec le "DeselectUnit".
             SelectedUnit = unit;
         }
 
@@ -59,6 +66,8 @@ using UnityEngine.UI;
             {
                 for (int j = 0; j < movementCosts.GetLength(1); j++)
                 {
+                    //BR : Accès répété à la même cellule de tableau. Super lent.
+                    //     Voir trois lignes plus bas. 
                     if (movementCosts[i, j] > 0)
                     {
                         var tile = GetTile(i, j);
