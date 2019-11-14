@@ -64,10 +64,6 @@ namespace Game
         {
             saveController.SaveSelected = saveSlotNumber;
             SceneManager.LoadScene(sceneName);
-            if (!SceneManager.GetSceneByName(gameSettings.GameUiSceneName).isLoaded)
-            {
-                SceneManager.LoadScene(gameSettings.GameUiSceneName, LoadSceneMode.Additive);
-            }
         }
     }
 }

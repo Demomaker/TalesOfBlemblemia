@@ -15,7 +15,6 @@ namespace Game
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
          
-         private DifficultyLevel difficultyLevel;
          private GameSettings gameSettings;
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
@@ -31,10 +30,9 @@ namespace Game
          
          public string PreviousLevelName => previousLevelName;
          public string CurrentLevelName => currentLevelName;
-         public string FirstLevelName => gameSettings.ParabeneForestSceneName;
          public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
-         public DifficultyLevel DifficultyLevel => difficultyLevel;
+         public DifficultyLevel DifficultyLevel { get; set; }
 
          private void Awake()
          {
@@ -52,8 +50,8 @@ namespace Game
                  new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
                  new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
              };
-             choiceRange = choiceRangePerDifficulty[difficultyLevel];
-             permaDeath = difficultyLevel != DifficultyLevel.Easy;
+             choiceRange = choiceRangePerDifficulty[DifficultyLevel];
+             permaDeath = DifficultyLevel != DifficultyLevel.Easy;
          }
          
          private void Start()
@@ -116,7 +114,7 @@ namespace Game
          public GameController() : this(DifficultyLevel.Easy) { }
          public GameController(DifficultyLevel difficultyLevel)
          {
-             this.difficultyLevel = difficultyLevel;
+             DifficultyLevel = difficultyLevel;
              choiceRangePerDifficulty.Add(DifficultyLevel.Easy, choiceForEasy);
              choiceRangePerDifficulty.Add(DifficultyLevel.Medium, choiceForMedium);
              choiceRangePerDifficulty.Add(DifficultyLevel.Hard, choiceForHard);

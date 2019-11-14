@@ -30,8 +30,12 @@ namespace Game
 
         private ComputerPlayer()
         {
-            uiController = Harmony.Finder.UIController;
             targetsToDestroy = new List<Targetable>();  
+        }
+
+        public void FetchUiController()
+        {
+            uiController = Harmony.Finder.UIController;
         }
 
         public void AddTarget(Targetable target)

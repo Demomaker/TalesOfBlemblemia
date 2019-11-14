@@ -36,8 +36,8 @@ namespace Game
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
         [SerializeField] private Targetable[] targetsToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
-        [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
-        [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
+        [SerializeField] private int numberOfTurnsBeforeDefeat;
+        [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         
         private int levelTileUpdateKeeper;
@@ -108,6 +108,7 @@ namespace Game
             onLevelChange.Publish(this);
             InitializePlayersAndUnits();
             currentPlayer = players[0];
+            ComputerPlayer.Instance.FetchUiController();
             OnTurnGiven();
             if (dialogueUi != null && dialogueTriggerStartFranklem != null)
             {
@@ -189,6 +190,11 @@ namespace Game
             CheckForPermadeath();
 
             UpdatePlayerSave();
+
+            foreach (var player in players)
+            {
+                player.OwnedUnits.Clear();
+            }
             
             gameController.LoadLevel(gameSettings.OverworldSceneName);
         }
@@ -234,10 +240,12 @@ namespace Game
                     break;
                 }
 
-                if (gameController.DifficultyLevel == DifficultyLevel.Easy || !levelCompleted) continue;
-                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                if (gameController.DifficultyLevel != DifficultyLevel.Easy)
                 {
-                    character.CharacterStatus = false;
+                    foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                    {
+                        character.CharacterStatus = false;
+                    }
                 }
             }
         }
@@ -306,7 +314,7 @@ namespace Game
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
                 (defeatIfProtectedIsKilled && TargetToProtectHasDied()) ||
                 (defeatIfAllPlayerUnitsDied &&
-                 HumanPlayer.Instance.HaveAllUnitsDied()
+                 players[0].HaveAllUnitsDied()
                 ) || (GameObject.Find(PROTAGONIST_NAME) == null || GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
         }
 

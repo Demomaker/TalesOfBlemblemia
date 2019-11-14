@@ -272,7 +272,10 @@ namespace Game
                     if (TargetIsInRange(action.Target))
                     {
                         yield return Attack(action.Target);
-                        yield return uiController.LaunchBattleReport(IsEnemy);
+                        if (action.Target.GetType() == typeof(Unit))
+                        {
+                            yield return uiController.LaunchBattleReport(IsEnemy);
+                        }
                     }
                     else
                         Rest();
@@ -323,17 +326,7 @@ namespace Game
         {
             Coroutine AttackRoutineHandle;
             
-            if(target.GetType() == typeof(Door))
-            {
-                uiController.SetupCharactersBattleInfo(
-                    this.Stats.maxHealthPoints, 
-                    this.CurrentHealthPoints,
-                    ((Door)target).BaseHealth,
-                    target.CurrentHealthPoints, 
-                    IsEnemy
-                );
-            }
-            else
+            if(target.GetType() == typeof(Unit))
             {
                 uiController.SetupCharactersBattleInfo(
                     this.Stats.maxHealthPoints, 
@@ -343,7 +336,7 @@ namespace Game
                     IsEnemy
                 );
             }
-            
+
             AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }

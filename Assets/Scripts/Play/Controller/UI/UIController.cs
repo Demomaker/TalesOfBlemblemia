@@ -209,7 +209,6 @@ namespace Game
             battleInfos.CurrentHealth -= battleInfos.DamageTaken;
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             animator.SetBool(IS_ATTACKING,false);
-            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             animationIsPlaying = false;
         }
 
