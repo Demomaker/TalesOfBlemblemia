@@ -314,13 +314,7 @@ namespace Game
             
             HasActed = true;
         }
-
-        public void AttackDistantTargetable(Targetable target)
-        {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
-            if (adjacentTile != null)
-                MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Attack, target));
-        }
+        
         public Coroutine Attack(Targetable target, bool isCountering = false)
         {
             Coroutine AttackRoutineHandle;
@@ -404,12 +398,6 @@ namespace Game
             }
         }
         
-        public void RecruitDistantUnit(Unit target)
-        {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
-            if (adjacentTile != null)
-                MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Recruit, target));
-        }
         public bool RecruitUnit()
         {
             if (IsRecruitable)
@@ -444,12 +432,6 @@ namespace Game
         {
             
             CurrentHealthPoints += HpGainedByHealing;
-        }
-        public void HealDistantUnit(Unit target)
-        {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
-            if (adjacentTile != null)
-                MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Heal, target));
         }
 
         public bool TargetIsInMovementRange(Targetable target)
