@@ -24,7 +24,6 @@
         //Cinematic properties
         public const float MAX_CINEMATIC_TIME = 20f;
         public const float MIN_CINEMATIC_TIME = 0f;
-        public const float DEFAULT_CINEMATIC_TIME = 3f;
-        
+
     }
 }

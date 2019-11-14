@@ -16,6 +16,7 @@ namespace Game
         [SerializeField] private Button returnToMainMenuButton;
 
         private const int NUMBER_OF_MENUS_TO_GO_BACK_TO_MAIN = 2;
+        private LevelLoader levelLoader;
         
         private Navigator navigator;
         private SaveController saveController;
@@ -27,6 +28,7 @@ namespace Game
 
         private void Awake()
         {
+            levelLoader = Harmony.Finder.LevelLoader;
             gameSettings = Harmony.Finder.GameSettings;
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
@@ -73,8 +75,8 @@ namespace Game
             }
             
             saveController.UpdateSave(saveSlotSelectedNumber);
-            SceneManager.LoadSceneAsync(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(gameSettings.MainmenuSceneName);
+            saveController.SaveSelected = saveSlotSelectedNumber;
+            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
         
         [UsedImplicitly]

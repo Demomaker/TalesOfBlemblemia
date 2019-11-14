@@ -10184,7 +10184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1ff118d5d163544abe0eb7c611557d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDebugging: 0
+  isDebugging: 1
 --- !u!1001 &1353857792
 PrefabInstance:
   m_ObjectHideFlags: 0
