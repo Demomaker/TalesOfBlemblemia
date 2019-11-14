@@ -82,8 +82,10 @@ namespace Game
 #if UNITY_EDITOR
             var path = "URI=file:" + Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db");
 #else
-            var path = "URI=file:" + Path.Combine(Application.persistentDataPath, "Database.db");
+            var path = "URI=file:" + Path.Combine(Application.persistentDataPath, "SaveGame.db");
 #endif
+
+            Debug.Log(path);
             
             connection = new SqliteConnection(path);
             connection.Open();
@@ -143,7 +145,7 @@ namespace Game
         /// </summary>
         private void CheckForExistingSaves()
         {
-            List<SaveInfos> saves = saveGameRepo.FindAll();
+            List<SaveInfos> saves = FindAll();
 
             if (saves.Count == 0)
             {
