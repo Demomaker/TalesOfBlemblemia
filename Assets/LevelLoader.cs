@@ -15,6 +15,8 @@ namespace Game
         private GameSettings gameSettings;
         private bool fadeOutCompleted;
 
+        public string LoadedLevel => loadedLevel;
+
         private void Awake()
         {
             animator = GetComponent<Animator>();

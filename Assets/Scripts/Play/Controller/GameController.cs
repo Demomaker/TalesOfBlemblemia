@@ -25,14 +25,11 @@ namespace Game
 
          private string previousLevelName;
          private string currentLevelName;
-         
-         private Coroutine lastLevelCoroutine;
-         private string lastLoadedLevelName;
 
          public Level[] Levels;
          
          public string PreviousLevelName => previousLevelName;
-         public string CurrentLevelName => currentLevelName;
+         public string CurrentLevelName => levelLoader.LoadedLevel;
          public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel { get; set; }
