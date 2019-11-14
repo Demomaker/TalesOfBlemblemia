@@ -20,10 +20,7 @@ namespace Game
          private LevelLoader levelLoader;
          private DifficultyLevel difficultyLevel;
          private GameSettings gameSettings;
-         private Coroutine lastLevelCoroutine;
          private string previousLevelName;
-         private string currentLevelName;
-         private string lastLoadedLevelName;
          private int choiceRange;
          private bool permaDeath;
 
@@ -32,8 +29,7 @@ namespace Game
          public DifficultyLevel DifficultyLevel => difficultyLevel;
          public Level[] Levels { get; private set; }
          public string PreviousLevelName => previousLevelName;
-         public string CurrentLevelName => currentLevelName;
-         public string FirstLevelName => gameSettings.TutorialSceneName;
+         public string CurrentLevelName => levelLoader.LoadedLevel;
          public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
 
