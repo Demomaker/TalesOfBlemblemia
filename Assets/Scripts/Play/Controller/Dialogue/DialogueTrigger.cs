@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 
-//this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
-//https://www.youtube.com/watch?v=_nRzoTzeyxU
-//The main difference is that I made the field private and serializable.
 namespace Game
 {
     public class DialogueTrigger : MonoBehaviour
     {
         [SerializeField] private Dialogue dialogue;
+        private DialogueManager dialogueManager;
+
+        private void Awake()
+        {
+            dialogueManager = Harmony.Finder.DialogueManager;
+        }
 
         public void TriggerDialogue()
         {
-            FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+            dialogueManager.StartDialogue(dialogue);
         }
     }
 }
