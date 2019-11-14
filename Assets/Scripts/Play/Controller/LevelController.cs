@@ -34,23 +34,25 @@ namespace Game
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Unit[] targetsToDefeat = null;
+        [SerializeField] private Targetable[] targetsToDefeat = null;
         [SerializeField] private bool allTargetsNeedToBeDefeated;
         [SerializeField] private Targetable[] targetsToProtect = null;
-        [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
-        [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
+        [SerializeField] private int numberOfTurnsBeforeDefeat;
+        [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         
+        
+
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
         
         private readonly List<UnitOwner> players = new List<UnitOwner>();
-
+        
         private CinematicController cinematicController;
-        private int levelTileUpdateKeeper = 0;
-        private string levelName = "";
+        private int levelTileUpdateKeeper;
+        private string levelName;
         private bool levelIsEnding;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
@@ -59,7 +61,7 @@ namespace Game
         private UIController uiController;
         private LevelLoader levelLoader;
 
-        private Unit[] units = null;
+        private Unit[] units;
         private UnitOwner currentPlayer;
         private int numberOfPlayerTurns = 0;
         private GameSettings gameSettings;
@@ -104,7 +106,7 @@ namespace Game
         private void Awake()
         {
             levelLoader = Harmony.Finder.LevelLoader;
-            uiController = Harmony.Finder.UIController;
+            ResetVariables();
             saveController = Finder.SaveController;
             gameController = Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
@@ -115,13 +117,26 @@ namespace Game
             levelName = gameObject.scene.name;
         }
 
+        private void ResetVariables()
+        {
+            levelCompleted = false;
+            levelEnded = false;
+            levelIsEnding = false;
+            levelFailed = false;
+            units = null;
+            levelTileUpdateKeeper = 0;
+            levelName = "";
+            numberOfPlayerTurns = 0;
+            players.Clear();
+        }
+
         private void Start()
         {
             uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
-            players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
+            ComputerPlayer.Instance.FetchUiController();
             OnTurnGiven();
             if (dialogueUi != null)
             {
@@ -187,6 +202,7 @@ namespace Game
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
+            //TODO enlever ca avant la release
             CheckForComputerTurnSkip();
             CheckForPlayerTurnSkip();
             CheckForCurrentPlayerWin();
@@ -212,6 +228,11 @@ namespace Game
             CheckForPermadeath();
 
             UpdatePlayerSave();
+
+            foreach (var player in players)
+            {
+                player.OwnedUnits.Clear();
+            }
             
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
@@ -257,10 +278,12 @@ namespace Game
                     break;
                 }
 
-                if (gameController.DifficultyLevel == DifficultyLevel.Easy || !levelCompleted) continue;
-                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                if (gameController.DifficultyLevel != DifficultyLevel.Easy)
                 {
-                    character.CharacterStatus = false;
+                    foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                    {
+                        character.CharacterStatus = false;
+                    }
                 }
             }
         }
@@ -364,8 +387,17 @@ namespace Game
         {
             if (currentPlayer.HasNoMorePlayableUnits)
             {
+                ResetUnitsAlpha();
                 GiveTurnToNextPlayer();
                 OnTurnGiven();
+            }
+        }
+
+        private void ResetUnitsAlpha()
+        {
+            foreach (var unit in currentPlayer.OwnedUnits)
+            {
+                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
             }
         }
 

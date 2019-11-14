@@ -23,10 +23,8 @@ namespace Game
          private string previousLevelName;
          private int choiceRange;
          private bool permaDeath;
-
-
-
-         public DifficultyLevel DifficultyLevel => difficultyLevel;
+         
+         public DifficultyLevel DifficultyLevel { get; set; }
          public Level[] Levels { get; private set; }
          public string PreviousLevelName => previousLevelName;
          public string CurrentLevelName => levelLoader.LoadedLevel;
@@ -37,6 +35,7 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
+             previousLevelName = gameSettings.JimsterburgSceneName;
              Levels = new Level[]
              {
                  new Level("", gameSettings.TutorialSceneName),
@@ -49,8 +48,8 @@ namespace Game
                  new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
                  new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
              };
-             choiceRange = choiceRangePerDifficulty[difficultyLevel];
-             permaDeath = difficultyLevel != DifficultyLevel.Easy;
+             choiceRange = choiceRangePerDifficulty[DifficultyLevel];
+             permaDeath = DifficultyLevel != DifficultyLevel.Easy;
          }
          
          private void Start()
@@ -61,7 +60,7 @@ namespace Game
          public GameController() : this(DifficultyLevel.Easy) { }
          public GameController(DifficultyLevel difficultyLevel)
          {
-             this.difficultyLevel = difficultyLevel;
+             DifficultyLevel = difficultyLevel;
              choiceRangePerDifficulty.Add(DifficultyLevel.Easy, choiceForEasy);
              choiceRangePerDifficulty.Add(DifficultyLevel.Medium, choiceForMedium);
              choiceRangePerDifficulty.Add(DifficultyLevel.Hard, choiceForHard);
