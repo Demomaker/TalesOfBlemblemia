@@ -261,6 +261,26 @@ namespace Game
                 if (LogicalPosition.y < nextPosition.y)
                     return gridController.DownToRightPathTileSprite;
             }
+            //Comes from above
+            if (prevPosition.y < LogicalPosition.y)
+            {
+                //Goes right
+                if (currentPosition.x < nextPosition.x)
+                    return gridController.UpToRightPathTileSprite;
+                //Goes left
+                if (currentPosition.x > nextPosition.x)
+                    return gridController.UpToLeftPathTileSprite;
+            }
+            //Comes from below
+            else if (prevPosition.x > currentPosition.x)
+            {
+                //Goes right
+                if (currentPosition.x > nextPosition.x)
+                    return gridController.DownToRightPathTileSprite;
+                //Goes left
+                if (currentPosition.x < nextPosition.x)
+                    return gridController.DownToLeftPathTileSprite;
+            }
             return null;
         }
 

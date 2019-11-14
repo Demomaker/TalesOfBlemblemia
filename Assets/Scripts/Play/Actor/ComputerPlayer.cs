@@ -33,7 +33,7 @@ namespace Game
 
         public void FetchUiController()
         {
-            uiController = Harmony.Finder.UIController;
+            //uiController = Harmony.Finder.UIController;
         }
 
         public void AddTarget(Targetable target)
