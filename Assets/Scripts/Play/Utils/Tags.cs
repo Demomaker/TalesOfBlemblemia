@@ -9,8 +9,9 @@
         public const string SOUND_MANAGER = "SoundManager";
         public const string GAME_CONTROLLER_TAG = "GameController";
         public const string GRID_CONTROLLER_TAG = "GridController";
-        public const string ACHIEVEMENT_CONTROLLER_TAG = "AchievementController";
         public const string OVER_WORLD_CONTROLLER_TAG = "OverWorldController";
+        public const string GAME_SETTINGS_TAG = "GameSettings";
+        public const string GAME_EVENT_HANDLER_TAG = "GameEventHandler";
         public const string PLAYER_TAG = "Player";
     }
 }

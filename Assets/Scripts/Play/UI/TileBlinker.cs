@@ -18,6 +18,7 @@ public class TileBlinker : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(blinkCoroutine);
+        if(tileToBlink != null)
         tileToBlink.ResetTileImage();
     }
 }

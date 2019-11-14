@@ -15,26 +15,23 @@ namespace Game
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
          
+         private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private DifficultyLevel difficultyLevel;
          private GameSettings gameSettings;
-         private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
-         private int choiceRange;
-         private bool permaDeath;
-         
+         private Coroutine lastLevelCoroutine;
          private string previousLevelName;
          private string currentLevelName;
-         
-         private Coroutine lastLevelCoroutine;
          private string lastLoadedLevelName;
+         private int choiceRange;
+         private bool permaDeath;
 
-         public Level[] Levels;
-         
+         public DifficultyLevel DifficultyLevel => difficultyLevel;
+         public Level[] Levels { get; private set; }
          public string PreviousLevelName => previousLevelName;
          public string CurrentLevelName => currentLevelName;
          public string FirstLevelName => gameSettings.TutorialSceneName;
          public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
-         public DifficultyLevel DifficultyLevel => difficultyLevel;
 
          private void Awake()
          {
@@ -54,6 +51,7 @@ namespace Game
              choiceRange = choiceRangePerDifficulty[difficultyLevel];
              permaDeath = difficultyLevel != DifficultyLevel.Easy;
          }
+
          
          private void Start()
          {

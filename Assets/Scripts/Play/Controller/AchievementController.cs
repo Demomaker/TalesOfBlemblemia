@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Game.UI.Achievement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,11 +14,15 @@ namespace Game
         [SerializeField] private Text nameText;
         [SerializeField] private Text descriptionText;
         [SerializeField] private Animator animator;
+        [SerializeField] private Button skipButton;
+        
+        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
         private readonly List<Achievement> achievements = new List<Achievement>();
-        private bool AchievementBeingShown;
+        private bool achievementBeingShown;
+        private bool skipAchievementShow = false;
         private GameSettings gameSettings;
         private GameController gameController;
-        
+
         private bool CompletedCampaignOnEasy =>
             gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Easy;
         private bool CompletedCampaignOnMedium =>
@@ -25,9 +30,16 @@ namespace Game
         private bool CompletedCampaignOnHard =>
             gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
         private bool BlackKnightDefeated => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName;
-        private bool ReachedFinalLevelWith8Players =>
-            HumanPlayer.Instance.NumberOfUnits > 8 &&
-            gameController.CurrentLevelName == gameSettings.MorktressSceneName;
+        private bool ReachedFinalLevelWithCertainAmountOfUnits
+        {
+            get
+            {
+                const int numberOfUnitsNeededForAchievement = 8;
+                return HumanPlayer.Instance.NumberOfUnits > numberOfUnitsNeededForAchievement &&
+                       gameController.CurrentLevelName == gameSettings.MorktressSceneName;
+            }
+        }
+
         private bool FinishedALevelWithoutUnitLoss =>
             !HumanPlayer.Instance.HasLostAUnitInCurrentLevel &&
             gameController.PreviousLevelName == gameController.CurrentLevelName &&
@@ -46,11 +58,26 @@ namespace Game
             achievements.Add(new Achievement(gameSettings.CompleteCampaignOnMedium,  () => CompletedCampaignOnMedium));
             achievements.Add(new Achievement(gameSettings.CompleteCampaignOnHard,  () => CompletedCampaignOnHard));
             achievements.Add(new Achievement(gameSettings.DefeatBlackKnight,  () => BlackKnightDefeated));
-            achievements.Add(new Achievement(gameSettings.ReachFinalLevelWith8Players,  () => ReachedFinalLevelWith8Players));
+            achievements.Add(new Achievement(gameSettings.ReachFinalLevelWith8Players,  () => ReachedFinalLevelWithCertainAmountOfUnits));
             achievements.Add(new Achievement(gameSettings.FinishALevelWithoutUnitLoss,  () => FinishedALevelWithoutUnitLoss));
             achievements.Add(new Achievement(gameSettings.SaveAllRecruitablesFromAlternatePath,  () => SavedAllRecruitablesFromAlternatePath));
             achievements.Add(new Achievement(gameSettings.FinishCampaignWithoutUnitLoss,  () => FinishedCampaignWithoutUnitLoss));
             nameText.text = gameSettings.AchievementGetString;
+        }
+
+        private void OnEnable()
+        {
+            skipButton.onClick.AddListener(SkipAchievementShow);
+        }
+
+        private void OnDisable()
+        {
+            skipButton.onClick.RemoveListener(SkipAchievementShow);
+        }
+
+        private void SkipAchievementShow()
+        {
+            skipAchievementShow = true;
         }
 
         private void Update()
@@ -58,53 +85,58 @@ namespace Game
             CheckIfAchievementCompleted();
         }
 
-        public void CheckIfAchievementCompleted()
+        private void CheckIfAchievementCompleted()
         {
-            foreach (var achievement in achievements)
+            foreach (var achievement in achievements.Where(achievement => achievement.AchievementCompleted).Where(achievement => !achievement.AchievementHasBeenShown && !achievementBeingShown))
             {
-                if (achievement.AchievementCompleted)
-                {
-                    if(!achievement.AchievementHasBeenShown && !AchievementBeingShown)
-                            ShowAchievement(achievement);
-                }
+                ShowAchievement(achievement);
             }
         }
 
-        public void ShowAchievement(Achievement achievement)
+        private void ShowAchievement(Achievement achievement)
         {
             achievement.SetAchievementHasBeenShown();
             StartAchievement(achievement);
         }
-        
-        public void StartAchievement(Achievement achievement)
+
+        private void StartAchievement(Achievement achievement)
         {
-            animator.SetBool("IsOpen",true);
-            AchievementBeingShown = true;
+            animator.SetBool(IS_OPEN,true);
+            achievementBeingShown = true;
             StartCoroutine(TypeAchievementText(achievement.AchievementName));
         }
 
-        IEnumerator TypeAchievementText(string text)
+        private IEnumerator TypeAchievementText(string text)
         {
             nameText.text = "";
             descriptionText.text = "";
-            yield return new WaitForSeconds(1);
-            for (int i = 0; i < gameSettings.AchievementGetString.Length; i++)
+            const int secondsBeforeTypingStart = 1;
+            const float secondsBeforeTitleCharacterPrint = 0.1f;
+            const float secondsBeforeTextCharacterPrint = 0.2f;
+            yield return new WaitForSeconds(secondsBeforeTypingStart);
+            foreach (var character in gameSettings.AchievementGetString)
             {
-                nameText.text += gameSettings.AchievementGetString[i];
-                yield return new WaitForSeconds(0.1f);
+                if (skipAchievementShow) break;
+                nameText.text += character;
+                yield return new WaitForSeconds(secondsBeforeTitleCharacterPrint);
             }
-            for(int i = 0; i < text.Length; i++)
+
+            nameText.text = gameSettings.AchievementGetString;
+            foreach (var character in text)
             {
-                descriptionText.text += text[i];
-                yield return new WaitForSeconds(0.2f);
+                if (skipAchievementShow) break;
+                descriptionText.text += character;
+                yield return new WaitForSeconds(secondsBeforeTextCharacterPrint);
             }
+            descriptionText.text = text;
             EndAchievementShow();
         }
     
         private void EndAchievementShow()
         {
-            animator.SetBool("IsOpen",false);
-            AchievementBeingShown = false;
+            animator.SetBool(IS_OPEN,false);
+            achievementBeingShown = false;
+            skipAchievementShow = false;
         }
     }
 }

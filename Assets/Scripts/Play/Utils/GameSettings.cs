@@ -9,7 +9,7 @@ namespace Game
     /// Game settings (Variables with constant values that are customizable for the game)
     /// Author : Mike Bédard
     /// </summary>
-    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
     {
         [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
@@ -42,7 +42,7 @@ namespace Game
         [SerializeField] private string jebediahName = "Jebediah";
         [SerializeField] private string thomasName = "Thomas";
         [SerializeField] private string abrahamName = "Abraham";
-        [SerializeField] [Header("Achievements")] private string achievementGetString = "Achievement Get!";
+        [SerializeField] [Header("Achievements")] private string achievementGetString = "Achievement Completed!";
         [SerializeField] [Header("Achievement Names")] private string completeCampaignOnEasy = "Baby Steps";
         [SerializeField] private string completeCampaignOnMedium = "Now you're getting it!";
         [SerializeField] private string completeCampaignOnHard = "You mad man!";

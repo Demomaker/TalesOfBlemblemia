@@ -3,7 +3,7 @@ using Harmony;
 
 namespace Game
 {
-    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class OnLevelChange : EventChannel<LevelController>
     {
         public event EventHandler<LevelController> Notify;

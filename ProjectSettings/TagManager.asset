@@ -20,6 +20,9 @@ TagManager:
   - BattleReportEnemy
   - UIController
   - DialogueManager
+  - AnimationManager
+  - GameEventHandler
+  - GameSettings
   layers:
   - Default
   - TransparentFX

@@ -69,7 +69,11 @@ namespace Game
         {
             yield return new WaitForEndOfFrame();
             var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
-            transform.position = tile.WorldPosition;
+            if(transform != null && tile != null)
+            {
+                transform.position = tile.WorldPosition;
+            }
+
             CurrentTile = tile;
         }
     }
