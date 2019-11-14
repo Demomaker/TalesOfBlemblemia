@@ -13,7 +13,7 @@ namespace Game
         private string loadedLevel;
         private LoadSceneMode sceneMode = LoadSceneMode.Single;
         private GameSettings gameSettings;
-        private bool fadeInCompleted;
+        private bool fadeOutCompleted;
 
         private void Awake()
         {
@@ -35,7 +35,7 @@ namespace Game
 
         public void OnFadeComplete ()
         {
-            fadeInCompleted = true;
+            fadeOutCompleted = true;
         }
 
         private IEnumerator FadeToLevelAsync(string levelName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
@@ -68,7 +68,7 @@ namespace Game
             loadedLevel = levelName;
             this.sceneMode = loadSceneMode;
             
-            while (!fadeInCompleted)
+            while (!fadeOutCompleted)
             {
                 yield return null;
             }
@@ -76,7 +76,7 @@ namespace Game
             scene.allowSceneActivation = true;
 
             animator.SetTrigger("FadeIn");
-            fadeInCompleted = false;
+            fadeOutCompleted = false;
         }
     }
 }
