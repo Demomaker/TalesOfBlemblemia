@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,18 +9,32 @@ using Finder = Harmony.Finder;
 [RequireComponent(typeof(Button))]
 public class LevelEntry : MonoBehaviour
 {
-    [SerializeField] private LevelID.LevelIDValue representedLevelId;
+    [SerializeField] private LevelName.LevelNameEnum representedLevelId;
     private GameSettings gameSettings;
     private Button levelEntryButton;
-    private string previousLevelName;
+    private List<string> previousLevelName;
     private OverWorldController overWorldController;
     private GameController gameController;
     private string representedLevelName;
     private bool IsFirstLevel => string.IsNullOrEmpty(gameController.PreviousLevelName);
-    private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && string.IsNullOrEmpty(previousLevelName) || gameController.PreviousLevelName == previousLevelName;
+    private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && previousLevelName.Count != 0 || PreviousLevelNameListContainsElement(gameController.PreviousLevelName);
+
+    private bool PreviousLevelNameListContainsElement(string previousLevel)
+    {
+        foreach (var levelName in previousLevelName)
+        {
+            if (levelName == previousLevel)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void Awake()
     {
+        previousLevelName = new List<string>();
         gameSettings = Finder.GameSettings;
         representedLevelName = representedLevelId.GetLevelNameFromLevelID();
         overWorldController = Finder.OverWorldController;
@@ -30,8 +45,7 @@ public class LevelEntry : MonoBehaviour
         {
             if (level.LevelName == representedLevelName)
             {
-                previousLevelName = level.PreviousLevel;
-                break;
+                previousLevelName.Add(level.PreviousLevel);
             }
         }
     }

@@ -523,12 +523,55 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
       propertyPath: rinfretVillageScene
-      value: 
-      objectReference: {fileID: 102900000, guid: 5ab43a1befec026418e1fa93ae1ceb15,
-        type: 3}
+      value: 15409662
+      objectReference: {fileID: 0}
     - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
       propertyPath: saveSlotOne
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: blemburgCitadelScene
+      value: 56039707
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: achievementGetString
+      value: Achievement Unlocked!
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: tutorialScene.m_Handle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: tutorialScene
+      value: 23585056
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: jimsterburgScene
+      value: 21787095
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: parabeneForestScene
+      value: 76988147
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: darkTowerScene
+      value: 20786035
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: tulipValleyScene
+      value: 56662542
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: morktressScene
+      value: 96624225
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: overworldScene
+      value: 18175791
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188774076, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
+      propertyPath: mainmenuScene
+      value: 10387227
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c9454721d25a1146a511fe71d4e98f3, type: 3}
