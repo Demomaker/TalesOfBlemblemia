@@ -7,7 +7,7 @@ namespace Game
 {
     /// <summary>
     /// The computer player that controls its units
-    /// Authors: Jérémie Bertrand, Zacharie Lavigne
+    /// Authors: Zacharie Lavigne, Pierre-Luc Maltais
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
@@ -29,11 +29,6 @@ namespace Game
         private ComputerPlayer()
         {
             targetsToDestroy = new List<Targetable>();  
-        }
-
-        public void FetchUiController()
-        {
-            //uiController = Harmony.Finder.UIController;
         }
 
         public void AddTarget(Targetable target)
@@ -81,7 +76,7 @@ namespace Game
                         yield return currentUnit.MoveByAction(action);
                     }
 
-                    base.CheckUnitDeaths();
+                    base.RemoveDeadUnits();
                 }
             }
         }

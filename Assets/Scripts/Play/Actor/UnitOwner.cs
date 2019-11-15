@@ -14,7 +14,6 @@ namespace Game
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
         protected int numberOfStartingOwnedUnits;
-        private bool hasLost = false;
         private string name = "";
         public string Name => name;
         public List<Unit> OwnedUnits => ownedUnits;
@@ -34,36 +33,28 @@ namespace Game
             }
         }
 
+        public bool HasLost { get; set; }
 
-        public bool HasLost
+        public void RemoveDeadUnits()
         {
-            get => hasLost;
-            set => hasLost = value;
-        }
-
-        public virtual bool CheckUnitDeaths()
-        {
-            bool unitHasBeenRemoved = false;
             for (int i = 0; i < ownedUnits.Count; i++)
             {
                 if (ownedUnits[i].NoHealthLeft)
                 {
                     RemoveOwnedUnit(ownedUnits[i]);
-                    unitHasBeenRemoved = true;
                 }
             }
-            return unitHasBeenRemoved;
         }
 
-        public virtual void Lose()
+        public void Lose()
         {
             MakeOwnedUnitsUnplayable();
-            hasLost = true;
+            HasLost = true;
         }
 
         public virtual void Win()
         {
-            
+            //TODO: Remove or to be completed
         }
 
         public void MakeOwnedUnitsUnplayable()
@@ -118,7 +109,7 @@ namespace Game
 
         public virtual void OnNewLevel()
         {
-            
+            //Nothing to do on purpose
         }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Zacharie Lavigne
     /// <summary>
     /// The artificial intelligence controller for the enemy units
     /// Author: Zacharie Lavigne

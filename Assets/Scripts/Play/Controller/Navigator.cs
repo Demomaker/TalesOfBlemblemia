@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Antoine Lessard
     public class Navigator : MonoBehaviour
     {
         private Stack<Canvas> menusStack;

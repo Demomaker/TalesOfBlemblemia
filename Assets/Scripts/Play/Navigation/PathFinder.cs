@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game
 {
-    //Author Pierre-Luc Maltais and Antoine Lessard, Zacharie Lavigne.
+    //Authors: Pierre-Luc Maltais, Antoine Lessard, Zacharie Lavigne
     public static class PathFinder
     {
         public static int[,] PrepareComputeCost(Vector2Int from, bool unitIsEnemy)

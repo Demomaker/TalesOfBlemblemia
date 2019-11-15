@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Jérémie Bertrand
     public class Cinematic : MonoBehaviour
     {
         [SerializeField] private CinematicTriggerType trigger = CinematicTriggerType.Manual;

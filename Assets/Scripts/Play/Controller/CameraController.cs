@@ -49,8 +49,6 @@ namespace Game
             set => xMovement = Mathf.Clamp(value, -1, 1);
         }
         
-        public float MaxZoom => maxZoom;
-        
         private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(MOVE_LEFT_KEY);
         private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(MOVE_RIGHT_KEY);
         private bool IsMovingDown => Input.mousePosition.y < scrollArea || Input.GetKey(MOVE_DOWN_KEY);

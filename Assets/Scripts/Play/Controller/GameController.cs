@@ -6,7 +6,6 @@ using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//Author: Pierre-Luc Maltais, Jérémie Bertrand, Antoine Lessard
 namespace Game
  { 
      /// <summary>
