@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 [System.Serializable]
+
+//Author: Pierre-Luc Maltais, Jérémie Bertrand.
 public class Quote
 {
     [SerializeField] private string name;

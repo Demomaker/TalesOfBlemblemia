@@ -1,5 +1,6 @@
 ﻿using System;
 
+//Author Mike Bedard, Correction: Pierre-Luc Maltais et Antoine Lessard.
 namespace Game
 {
     public static class LevelName

@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Game
 {
-    //Authors: Jérémie Bertrand, Zacharie Lavigne
+    //Authors: Jérémie Bertrand, Zacharie Lavigne, Pierre-Luc Maltais (Ce qui touche au ui)
     public class Unit : Targetable
     {
         #region Serialized fields

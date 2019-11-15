@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    //Author : Antoine Lessard
     public class PlayerSettings
     {
         public int Id { get; }

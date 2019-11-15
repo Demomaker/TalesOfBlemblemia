@@ -174,10 +174,7 @@ namespace Game
 
             if (levelEnded)
             {
-                if (levelCompleted)
-                {
-                    onLevelVictory.Publish(this);
-                }
+                ResetUnitsAlpha();
                 StartCoroutine(EndLevel());
             }
 
@@ -197,7 +194,7 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-            
+            if(levelCompleted) onLevelVictory.Publish(this);
             while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
@@ -316,7 +313,6 @@ namespace Game
             }
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
-            if (levelCompleted) onLevelVictory.Publish(this);
         }
 
         private bool AllTargetsToDefeatHaveBeenDefeated()
@@ -379,6 +375,10 @@ namespace Game
             var player1 = HumanPlayer.Instance;
             var player2 = ComputerPlayer.Instance;
 
+            player1.OwnedUnits.Clear();
+            player1.DefeatedUnits.Clear();
+            player2.OwnedUnits.Clear();
+            
             units = FindObjectsOfType<Unit>();
 
             GiveUnits(units, player1, player2);

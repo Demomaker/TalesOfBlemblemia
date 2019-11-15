@@ -2,6 +2,7 @@
 
 namespace Game
 {
+    //Authors : Pierre-Luc Maltais & Antoine Lessard
     public class SaveInfos
     {
         public int Id { get; set; }

@@ -6,6 +6,7 @@ using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Author: Pierre-Luc Maltais, Jérémie Bertrand, Antoine Lessard
 namespace Game
  { 
      /// <summary>
@@ -42,7 +43,7 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             previousLevelName = gameSettings.JimsterburgSceneName;
+             previousLevelName = gameSettings.TutorialSceneName;
              Levels = new Level[]
              {
                  new Level("", gameSettings.TutorialSceneName),

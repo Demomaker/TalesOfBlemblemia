@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+//Author: Pierre-Luc Maltais
 namespace Game
 {
     public class DialogueTrigger : MonoBehaviour
