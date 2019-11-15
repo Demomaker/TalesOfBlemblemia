@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ae361f60e5e4f045871ba281a2d6c81, type: 3}
-  m_Name: FranklemStats
+  m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
+  m_Name: EmptyCinematic
   m_EditorClassIdentifier: 
-  maxHealthPoints: 15
-  moveSpeed: 4
-  attackStrength: 2
-  hitRate: 1
-  critRate: 0
+  cameraActions:
+  - cameraTarget: {x: 0, y: 0}
+    duration: 0.1
+    cameraZoom: 12
+    quotes: []
