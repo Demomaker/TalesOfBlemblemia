@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Audio clips that represent the sounds and music of the game
+/// Author : Mike Bédard
+/// </summary>
 public class AudioClips : MonoBehaviour
 {
     [SerializeField] private AudioClip maleAttackSound;

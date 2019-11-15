@@ -8,6 +8,10 @@ using UnityEngine.SceneManagement;
 
 namespace Game
  { 
+     /// <summary>
+     /// Controller for game-wide functionalities
+     /// Author : Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
+     /// </summary>
      [Findable("GameController")]
      public class GameController : MonoBehaviour
      {

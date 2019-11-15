@@ -1,5 +1,9 @@
 ﻿namespace Game
 {
+    /// <summary>
+    /// Tags
+    /// Author : Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard, Pierre-Luc Maltais
+    /// </summary>
     public static class Tags
     {
         public const string MAIN_CONTROLLER = "MainController";

@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using Finder = Harmony.Finder;
 
+/// <summary>
+/// Trigger for button presses
+/// Author : Mike Bédard
+/// </summary>
 public class ButtonTrigger : MonoBehaviour
 {
     public static OnButtonClick onButtonClick = null;
