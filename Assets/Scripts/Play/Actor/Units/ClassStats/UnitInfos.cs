@@ -2,6 +2,7 @@
 
 namespace Game
 {
+    //Author: Pierre-Luc Maltais
     [CreateAssetMenu]
     public class UnitInfos : ScriptableObject
     {

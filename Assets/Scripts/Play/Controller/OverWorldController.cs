@@ -7,7 +7,7 @@ namespace Game
 {
     /// <summary>
     /// Controls the overworld
-    /// Authors : Mike Bédard, Jérémie Bertrand
+    /// Authors : Jérémie Bertrand, Mike Bédard
     /// </summary>
     [Findable(Game.Tags.OVER_WORLD_CONTROLLER_TAG)]
     public class OverWorldController : MonoBehaviour

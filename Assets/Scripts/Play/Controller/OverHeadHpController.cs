@@ -2,7 +2,6 @@
 using System.Linq;
 using UnityEngine;
 
-
 //Author: Pierre-Luc Maltais
 //Todo Complete this class. The numbers are not update yet.
 namespace Game

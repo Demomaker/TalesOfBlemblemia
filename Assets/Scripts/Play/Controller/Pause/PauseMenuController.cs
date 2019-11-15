@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //Author: Antoine Lessard
     public class PauseMenuController : MonoBehaviour
     {
         [Header("Buttons")] 

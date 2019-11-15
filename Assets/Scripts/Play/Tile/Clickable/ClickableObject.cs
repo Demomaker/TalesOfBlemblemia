@@ -7,7 +7,7 @@ namespace Game
 {
     /// <summary>
     /// Personalized clickable to detect if a tile has been clicked on
-    /// Author: Zacharie Lavigne
+    /// Author: Zacharie Lavigne, Jérémie Bertrand
     /// </summary>
     public class ClickableObject : MonoBehaviour, IPointerClickHandler
     {

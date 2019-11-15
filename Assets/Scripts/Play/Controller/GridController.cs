@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
  namespace Game
  {
-    //Authors: Jérémie Bertrand & Mike Bédard
+    //Authors: Jérémie Bertrand, Mike Bédard
     public class GridController : MonoBehaviour
     {
         private GridLayoutGroup gridLayoutGroup;

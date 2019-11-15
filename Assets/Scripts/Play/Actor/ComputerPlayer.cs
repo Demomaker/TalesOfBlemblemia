@@ -7,7 +7,7 @@ namespace Game
 {
     /// <summary>
     /// The computer player that controls its units
-    /// Authors: Jérémie Bertrand, Zacharie Lavigne
+    /// Authors: Zacharie Lavigne
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {

@@ -2,6 +2,7 @@
 
 namespace Game
 {
+    //Author: Mike Bédard, Zacharie Lavigne
     public class HumanPlayer : UnitOwner
     {
 

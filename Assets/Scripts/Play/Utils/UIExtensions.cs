@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //Author: Antoine Lessard
     public static class UIExtensions
     {
         public static Button SelectedButton => EventSystem.current.currentSelectedGameObject?.GetComponent<Button>();

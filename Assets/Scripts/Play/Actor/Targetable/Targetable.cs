@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Jérémie Bertrand, Zacharie Lavigne
     public abstract class Targetable : MonoBehaviour
     {
         [SerializeField] private Vector2Int initialPosition;

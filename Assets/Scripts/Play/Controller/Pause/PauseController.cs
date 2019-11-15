@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //Author: Antoine Lessard
     public class PauseController : MonoBehaviour
     {
         [Header("Controller")] 

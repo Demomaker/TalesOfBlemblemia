@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Finder = Harmony.Finder;
 
 [RequireComponent(typeof(Button))]
+//Author: Jérémie Bertrand, Mike Bédard
 public class LevelEntry : MonoBehaviour
 {
     [SerializeField] private LevelName.LevelNameEnum representedLevelId;
