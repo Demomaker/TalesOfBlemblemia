@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿
+//Author: Pierre-Luc Maltais
+namespace Game
 {
     public class BattleInfos
     {

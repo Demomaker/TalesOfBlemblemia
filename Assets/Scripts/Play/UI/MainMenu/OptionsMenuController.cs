@@ -1,9 +1,8 @@
-﻿using System;
-using Harmony;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Author: Antoine Lessard
 namespace Game
 {
     public class OptionsMenuController : MonoBehaviour

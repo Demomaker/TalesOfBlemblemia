@@ -4,6 +4,8 @@ using System.Linq;
 using Mono.Data.Sqlite;
 using UnityEngine;
 
+
+//Author: Antoine Lessard, Pierre-Luc Maltais
 namespace Game
 {
     public class SaveController : MonoBehaviour
