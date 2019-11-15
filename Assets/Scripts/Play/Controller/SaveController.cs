@@ -79,14 +79,8 @@ namespace Game
         private void InitiateSaveController(string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
-#if UNITY_EDITOR
-            var path = "URI=file:" + Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db");
-#else
-            var path = "URI=file:" + Path.Combine(Application.persistentDataPath, "SaveGame.db");
-#endif
+            var path = GetPath();
 
-            Debug.Log(path);
-            
             connection = new SqliteConnection(path);
             connection.Open();
             InitiateSaveInfo(username, difficultyLevel, levelName, characterStatus);
@@ -96,6 +90,22 @@ namespace Game
             CheckForExistingSettings();
             //Check if saves were already created in the database
             CheckForExistingSaves();
+        }
+
+
+        private static string GetPath()
+        {
+#if UNITY_EDITOR
+            var path = "URI=file:" + Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db");
+#else
+            var filePath = Path.Combine(Application.persistentDataPath, "SaveGame.db");
+            var path = "URI=file:" + filePath;
+            if (!File.Exists(filePath))
+            {
+                File.Copy(Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db"), filePath);
+            }
+#endif
+            return path;
         }
 
         private void InitiateSettingsInfo()
