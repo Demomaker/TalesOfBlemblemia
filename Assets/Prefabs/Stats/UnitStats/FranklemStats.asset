@@ -15,5 +15,5 @@ MonoBehaviour:
   maxHealthPoints: 15
   moveSpeed: 4
   attackStrength: 2
-  hitRate: 0
+  hitRate: 1
   critRate: 0

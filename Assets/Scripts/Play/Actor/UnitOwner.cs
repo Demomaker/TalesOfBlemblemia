@@ -41,15 +41,18 @@ namespace Game
             set => hasLost = value;
         }
 
-        public virtual void CheckUnitDeaths()
+        public virtual bool CheckUnitDeaths()
         {
+            bool unitHasBeenRemoved = false;
             for (int i = 0; i < ownedUnits.Count; i++)
             {
                 if (ownedUnits[i].NoHealthLeft)
                 {
                     RemoveOwnedUnit(ownedUnits[i]);
+                    unitHasBeenRemoved = true;
                 }
             }
+            return unitHasBeenRemoved;
         }
 
         public virtual void Lose()
