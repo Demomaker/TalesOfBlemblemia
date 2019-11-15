@@ -52,8 +52,8 @@ namespace Game
                     case CinematicActionType.Quote:
                         EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), name);
                         rect.y += EditorGUIUtility.singleLineHeight;
-                        EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight * 3), sentence);
-                        rect.y += EditorGUIUtility.singleLineHeight * 3;
+                        EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight * 4), sentence);
+                        rect.y += EditorGUIUtility.singleLineHeight * 4;
                         break;
                     case CinematicActionType.CameraMovement:
                         EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), cameraTarget);
@@ -98,7 +98,7 @@ namespace Game
                 switch ((CinematicActionType)cinematicActionType.intValue)
                 {
                     case CinematicActionType.Quote:
-                        return EditorGUIUtility.singleLineHeight * 7;
+                        return EditorGUIUtility.singleLineHeight * 8;
                     case CinematicActionType.CameraMovement:
                         return EditorGUIUtility.singleLineHeight * 6;
                     case CinematicActionType.GameObjectMovement:

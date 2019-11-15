@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//Author: Antoine Lessard
 namespace Game
 {
     public class MainMenuController : MonoBehaviour
