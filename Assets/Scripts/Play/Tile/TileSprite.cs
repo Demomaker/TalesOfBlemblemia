@@ -2,6 +2,7 @@
 
 namespace Game
 {
+    // Author: Mike Bédard
     public class TileSprite : MonoBehaviour
     {
         [SerializeField] private Sprite tileSprite;

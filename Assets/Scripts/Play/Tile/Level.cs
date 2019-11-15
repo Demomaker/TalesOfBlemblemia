@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    // Author: Mike Bédard
     public class Level
     {
         public string PreviousLevel { get; }

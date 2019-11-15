@@ -4,15 +4,14 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Jérémie Bertrand
     public class CinematicController : MonoBehaviour
     {
         private Camera mainCamera;
         private DialogueManager dialogueManager;
         private CameraController cameraController;
         private GameObject uiController;
-        
         private bool isPlayingACinematic;
-
         public bool IsPlayingACinematic
         {
             get => isPlayingACinematic;
@@ -38,8 +37,6 @@ namespace Game
             mainCamera = Camera.main;
             if (mainCamera != null)
                 cameraController = mainCamera.GetComponent<CameraController>();
-            else
-                Debug.LogError(gameObject.name + ": No main camera in the current scene. (CinematicController.cs)");
         }
         
         private IEnumerator PlayCameraActions(IEnumerable<CinematicAction> actions)

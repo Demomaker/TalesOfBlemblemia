@@ -1,6 +1,6 @@
 ﻿namespace Game
 {
-    /// Author: Zacharie Lavigne
+    //Author: Zacharie Lavigne
     public enum ActionType
     {
         Rest,

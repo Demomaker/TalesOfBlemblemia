@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-//this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
-//https://www.youtube.com/watch?v=_nRzoTzeyxU
+//Author: Pierre-Luc Maltais, Jérémie Bertrand.
 [System.Serializable]
 public class Dialogue
 {

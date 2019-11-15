@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Zacharie Lavigne
     public class Door : Targetable
     {
         [SerializeField] private int baseHealth = 1;

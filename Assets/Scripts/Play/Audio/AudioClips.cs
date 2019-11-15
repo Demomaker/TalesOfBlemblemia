@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Audio clips that represent the sounds and music of the game
@@ -26,29 +23,17 @@ public class AudioClips : MonoBehaviour
     [SerializeField] private AudioClip mainMenuMusic;
     
     public AudioClip MaleAttackSound => maleAttackSound;
-
     public AudioClip FemaleAttackSound => femaleAttackSound;
-
     public AudioClip MorkAttackSound => morkAttackSound;
-
     public AudioClip HurtSound => hurtSound;
     public AudioClip DodgeSound => dodgeSound;
     public AudioClip UnitMoveSound => unitMoveSound;
     public AudioClip UnitDeathSound => unitDeathSound;
-
     public AudioClip ButtonClickSound => buttonClickSound;
-    
     public AudioClip OverWorldMusic => overWorldMusic;
-
     public AudioClip ForestMusic => forestMusic;
-
     public AudioClip CastleMusic => castleMusic;
-
-    public AudioClip BossMusic => bossMusic;
-
     public AudioClip SadMusic => sadMusic;
-
     public AudioClip LevelVictoryMusic => levelVictoryMusic;
-
     public AudioClip MainMenuMusic => mainMenuMusic;
 }

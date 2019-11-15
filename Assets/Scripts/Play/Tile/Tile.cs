@@ -8,7 +8,7 @@ namespace Game
 {
     // <summary>
     /// Behaviour of a tile
-    /// Author: Jérémie Bertrand
+    /// Author: Jérémie Bertrand, Zacharie Lavigne
     /// </summary>
     public abstract class Tile : MonoBehaviour
     {

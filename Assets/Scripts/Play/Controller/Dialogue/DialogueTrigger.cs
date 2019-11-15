@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-//Author: Pierre-Luc Maltais
+//Author: Pierre-Luc Maltais, Jérémie Bertrand.
 namespace Game
 {
     public class DialogueTrigger : MonoBehaviour

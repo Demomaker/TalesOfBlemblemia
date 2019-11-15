@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    //Author: Jérémie Bertrand
     public class TileValues
     {
         public const float DEFAULT_DEFENSE_RATE = 0;
