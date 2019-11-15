@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using static Game.CameraConstants;
 
+//Author: Jérémie Bertrand.
 namespace Game
 {
     [RequireComponent(typeof(Camera))]

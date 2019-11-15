@@ -316,7 +316,6 @@ namespace Game
             }
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
-            if (levelCompleted) onLevelVictory.Publish(this);
         }
 
         private bool AllTargetsToDefeatHaveBeenDefeated()

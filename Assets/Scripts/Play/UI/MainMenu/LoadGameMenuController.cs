@@ -1,10 +1,10 @@
-﻿using Harmony;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//Author: Antoine Lessard
 namespace Game
 {
     public class LoadGameMenuController : MonoBehaviour

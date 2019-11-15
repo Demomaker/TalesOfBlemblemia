@@ -13,6 +13,7 @@ namespace Game
         [Range(MIN_CINEMATIC_TIME, MAX_CINEMATIC_TIME)][SerializeField] private float duration;
         [Range(MIN_CAM_ORTHOGRAPHIC_SIZE, MAX_CAM_ORTHOGRAPHIC_SIZE)][SerializeField] private float cameraZoom;
     
+        [TextArea(2,6)]
         [SerializeField] private string sentence;
         [SerializeField] private string name;
     
