@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Permissions;
 using System.Linq;
-using Game;
 using Harmony;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
-using Finder = Harmony.Finder;
+using UnityEngine.SceneManagement;
 
 namespace Game
 {
     /// <summary>
     /// Controller for each individual level. Manages the turn functionalities as well as the players' turns
-    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne
+    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
     /// </summary>
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
@@ -22,66 +18,105 @@ namespace Game
         
         private const string PROTAGONIST_NAME = "Franklem";
         
-        [SerializeField] private string levelName;
         [SerializeField] private AudioClip backgroundMusic;
-        [SerializeField] private LevelBackgroundMusicType backgroundMusicOption;
         [SerializeField] private DialogueTrigger dialogueTriggerStartFranklem = null;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private bool completeIfAllEnemiesDefeated = false;
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
-        [SerializeField] private bool completeIfCertainEnemyDefeated = false;
+        [SerializeField] private bool completeIfCertainTargetsDefeated = false;
         [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
         [SerializeField] private bool defeatIfProtectedIsKilled = false;
         [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
         [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Unit enemyToDefeat = null;
+        [SerializeField] private Targetable[] targetsToDefeat = null;
         [SerializeField] private Targetable[] targetsToProtect = null;
-        [SerializeField] private int numberOfTurnsBeforeDefeat = 0;
-        [SerializeField] private int numberOfTurnsBeforeCompletion = 0;
+        [SerializeField] private int numberOfTurnsBeforeDefeat;
+        [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         
-        private int levelTileUpdateKeeper = 0;
+        private int levelTileUpdateKeeper;
+        private string levelName;
         
 
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
+        private const string PLAYER_TURN_INFO = "Player";
+        private const string ENEMY_TURN_INFO = "Enemy";
 
 
 
         private CinematicController cinematicController;
         public CinematicController CinematicController => cinematicController;
 
-        private bool levelCompleted = false;
-        private bool levelFailed = false;
-        private bool levelEnded = false;
-        private bool levelIsEnding = false;
+        private bool levelCompleted;
+        private bool levelFailed;
+        private bool levelEnded;
+        private bool levelIsEnding;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
+        private UIController uiController;
+        private LevelLoader levelLoader;
 
-        private Unit[] units = null;
+        private Unit[] units;
         private UnitOwner currentPlayer;
         private readonly List<UnitOwner> players = new List<UnitOwner>();
-        private int numberOfPlayerTurns = 0;
+        private int numberOfPlayerTurns;
+        private GameSettings gameSettings;
+        private GameController gameController;
+        private SaveController saveController;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
         public AudioClip BackgroundMusic => backgroundMusic;
 
+        public bool PlayerUnitIsMovingOrAttacking
+        {
+            get
+            {
+                bool playerUnitIsMovingOrAttacking = false;
+                foreach (var unit in players[0].OwnedUnits)
+                {
+                    if (unit.IsMoving || unit.IsAttacking)
+                        playerUnitIsMovingOrAttacking = true;
+                }
+                return playerUnitIsMovingOrAttacking;
+            }
+        }
+
         private void Awake()
         {
+            levelLoader = Harmony.Finder.LevelLoader;
+            ResetVariables();
+            saveController = Finder.SaveController;
+            gameController = Finder.GameController;
+            gameSettings = Harmony.Finder.GameSettings;
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
-            onLevelVictory = new OnLevelVictory();
-            onLevelChange = new OnLevelChange();
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelChange = Harmony.Finder.OnLevelChange;
+            levelName = gameObject.scene.name;
+        }
+
+        private void ResetVariables()
+        {
+            levelCompleted = false;
+            levelEnded = false;
+            levelIsEnding = false;
+            levelFailed = false;
+            units = null;
+            levelTileUpdateKeeper = 0;
+            levelName = "";
+            numberOfPlayerTurns = 0;
+            players.Clear();
         }
 
         private void Start()
         {
+            uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
-            players.Clear();
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             OnTurnGiven();
@@ -90,6 +125,9 @@ namespace Game
                 dialogueUi.SetActive(true);
                 dialogueTriggerStartFranklem.TriggerDialogue();
             }
+            
+            ActivatePlayerUnits();
+
             PrepareVictoryConditionForUI();
         }
 
@@ -97,38 +135,40 @@ namespace Game
         {
             if (completeIfPointAchieved)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+                uiController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
             }
             else if (completeIfAllEnemiesDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
+                uiController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
             }
-            else if (completeIfCertainEnemyDefeated)
+            else if (completeIfCertainTargetsDefeated)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Defeat " + enemyToDefeat);
+                uiController.ModifyVictoryCondition("Defeat " + GetStringOfTargetsToDefeat());
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
             {
-                Harmony.Finder.UIController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
+                uiController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
             }
+        }
+
+        private string GetStringOfTargetsToDefeat()
+        {
+            var retval = "";
+            foreach (var enemy in targetsToDefeat)
+            {
+                retval += enemy + " ";
+            }
+            retval = retval.Substring(retval.Length - 1);
+            return retval;
         }
 
         protected void Update()
         {
             if(!doNotEnd) CheckIfLevelEnded();
-            
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                levelCompleted = true;
-                levelEnded = true;
-            }
 
             if (levelEnded)
             {
-                if (levelCompleted)
-                {
-                    onLevelVictory.Publish(this);
-                }
+                ResetUnitsAlpha();
                 StartCoroutine(EndLevel());
             }
 
@@ -148,24 +188,88 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-
-            
-            if (levelCompleted)
-            {
-                Finder.GameController.LevelsCompleted.Add(levelName);
-            }
+            if(levelCompleted) onLevelVictory.Publish(this);
             while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
             }
             
-            Finder.GameController.LoadLevel(Constants.OVERWORLD_SCENE_NAME);
+            CheckForPermadeath();
+
+            UpdatePlayerSave();
+
+            foreach (var player in players)
+            {
+                player.OwnedUnits.Clear();
+            }
+            
+            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+        }
+
+        /// <summary>
+        /// Saves if the level was successfully completed
+        /// </summary>
+        private void UpdatePlayerSave()
+        {
+            //If the level was successfully completed, mark it as completed
+            if (!levelCompleted) return;
+            gameController.OnLevelCompleted(levelName);
+
+            var levels = gameController.Levels;
+            foreach (var level in levels)
+            {
+                if (level.PreviousLevel == levelName)
+                {
+                    saveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
+                    break;
+                }
+            }
+
+            saveController.UpdateSave(saveController.SaveSelected);
+        }
+
+        /// <summary>
+        /// Check for the player units defeated during the level and mark them as defeated in the player save if the difficulty
+        /// is medium or hard. Resets the save of the player if Franklem was defeated.
+        /// </summary>
+        private void CheckForPermadeath()
+        {
+            var defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
+
+            if (!defeatedPlayerUnits.Any()) return;
+            var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+            foreach (var unit in defeatedPlayerUnits)
+            {
+                if (unit.name == gameSettings.FranklemName)
+                {
+                    saveController.ResetSave();
+                    break;
+                }
+
+                if (gameController.DifficultyLevel != DifficultyLevel.Easy)
+                {
+                    foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                    {
+                        character.CharacterStatus = false;
+                    }
+                }
+            }
         }
 
         private void OnTurnGiven()
         {
-            if(currentPlayer is HumanPlayer) numberOfPlayerTurns++;
-            Harmony.Finder.UIController.ModifyTurnCounter(numberOfPlayerTurns);
+            if (currentPlayer is HumanPlayer)
+            {
+                numberOfPlayerTurns++;
+                uiController.ModifyTurnInfo(PLAYER_TURN_INFO);
+            }
+            else
+            {
+                uiController.ModifyTurnInfo(ENEMY_TURN_INFO);
+            }
+            uiController.ModifyTurnCounter(numberOfPlayerTurns);
+            
             currentPlayer.OnTurnGiven();
         }
 
@@ -193,9 +297,9 @@ namespace Game
                 || (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile == null) 
                 || !(GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve)) secondConditionAchieved = false;
             }
-            if (completeIfCertainEnemyDefeated)
+            if (completeIfCertainTargetsDefeated)
             {
-                if (!(enemyToDefeat == null || enemyToDefeat.NoHealthLeft)) thirdConditionAchieved = false;
+                if (!AllTargetsToDefeatHaveBeenDefeated()) thirdConditionAchieved = false;
             }
             if (completeIfSurvivedCertainNumberOfTurns)
             {
@@ -203,7 +307,11 @@ namespace Game
             }
 
             levelCompleted = firstConditionAchieved && secondConditionAchieved && thirdConditionAchieved && fourthConditionAchieved;
-            if (levelCompleted) onLevelVictory.Publish(this);
+        }
+
+        private bool AllTargetsToDefeatHaveBeenDefeated()
+        {
+            return targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length;
         }
 
         private void CheckIfLevelFailed()
@@ -212,7 +320,7 @@ namespace Game
                 defeatIfNotCompleteLevelInCertainAmountOfTurns && (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat) ||
                 (defeatIfProtectedIsKilled && TargetToProtectHasDied()) ||
                 (defeatIfAllPlayerUnitsDied &&
-                 HumanPlayer.Instance.HaveAllUnitsDied()
+                 players[0].HaveAllUnitsDied()
                 ) || (GameObject.Find(PROTAGONIST_NAME) == null || GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
         }
 
@@ -227,7 +335,7 @@ namespace Game
 
         private void Play(UnitOwner unitOwner)
         {
-            unitOwner.CheckUnitDeaths();
+            unitOwner.RemoveDeadUnits();
             if (!isComputerPlaying && unitOwner is ComputerPlayer)
             {
                 isComputerPlaying = true;
@@ -238,7 +346,7 @@ namespace Game
 
         private void CheckForPlayerTurnSkip()
         {
-            if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is HumanPlayer)
+            if (Input.GetKeyDown(gameSettings.SkipComputerTurnKey) && currentPlayer is HumanPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is ComputerPlayer);
@@ -246,9 +354,9 @@ namespace Game
             }
         }
 
-        public void CheckForComputerTurnSkip()
+        private void CheckForComputerTurnSkip()
         {
-            if (Input.GetKeyDown(Constants.SKIP_COMPUTER_TURN_KEY) && currentPlayer is ComputerPlayer)
+            if (Input.GetKeyDown(gameSettings.SkipComputerTurnKey) && currentPlayer is ComputerPlayer)
             {
                 isComputerPlaying = false;
                 currentPlayer = players.Find(player => player is HumanPlayer);
@@ -258,9 +366,13 @@ namespace Game
         
         private void InitializePlayersAndUnits()
         {
-            HumanPlayer player1 = HumanPlayer.Instance;
-            ComputerPlayer player2 = ComputerPlayer.Instance;
+            var player1 = HumanPlayer.Instance;
+            var player2 = ComputerPlayer.Instance;
 
+            player1.OwnedUnits.Clear();
+            player1.DefeatedUnits.Clear();
+            player2.OwnedUnits.Clear();
+            
             units = FindObjectsOfType<Unit>();
 
             GiveUnits(units, player1, player2);
@@ -294,16 +406,25 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerEndOfTurn()
+        private void CheckForCurrentPlayerEndOfTurn()
         {
             if (currentPlayer.HasNoMorePlayableUnits)
             {
+                ResetUnitsAlpha();
                 GiveTurnToNextPlayer();
                 OnTurnGiven();
             }
         }
 
-        public void CheckForCurrentPlayerWin()
+        private void ResetUnitsAlpha()
+        {
+            foreach (var unit in currentPlayer.OwnedUnits)
+            {
+                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
+            }
+        }
+
+        private void CheckForCurrentPlayerWin()
         {
             if (HasWon(currentPlayer))
             {
@@ -311,7 +432,7 @@ namespace Game
             }
         }
 
-        public void CheckForCurrentPlayerLoss()
+        private void CheckForCurrentPlayerLoss()
         {
             if (currentPlayer.HaveAllUnitsDied())
             {
@@ -321,12 +442,12 @@ namespace Game
             }
         }
 
-        public bool HasWon(UnitOwner unitOwner)
+        private bool HasWon(UnitOwner unitOwner)
         {
             return players.Contains(unitOwner) && players.Count <= 1;
         }
 
-        public void GiveTurnToNextPlayer()
+        private void GiveTurnToNextPlayer()
         {
             isComputerPlaying = false;
             currentPlayer.MakeOwnedUnitsUnplayable();
@@ -334,6 +455,19 @@ namespace Game
         
             if (players.ElementAt(nextPlayerIndex) != null)
                 currentPlayer = players.ElementAt(nextPlayerIndex);
+        }
+        
+        /// <summary>
+        /// Activating only the units that are not marked as defeated in the player's save file
+        /// </summary>
+        private void ActivatePlayerUnits()
+        {
+            var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+            foreach (var gameUnit in from gameUnit in currentPlayer.OwnedUnits from saveUnit in characterInfos where gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus select gameUnit)
+            {
+                gameUnit.gameObject.SetActive(false);
+            }
         }
         
         public void IncrementTileUpdate()

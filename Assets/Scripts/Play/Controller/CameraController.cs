@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static Game.Constants;
+using static Game.CameraConstants;
 
+//Author: Jérémie Bertrand.
 namespace Game
 {
     [RequireComponent(typeof(Camera))]
@@ -12,16 +12,10 @@ namespace Game
         [Range(MIN_CAM_SCROLL_AREA, MAX_CAM_SCROLL_AREA)][SerializeField] private float scrollArea;
         [Range(MIN_CAM_MOVE_SPEED, MAX_CAM_MOVE_SPEED)][SerializeField] private float moveSpeed;
         [Range(MIN_CAM_ZOOM_SPEED, MAX_CAM_ZOOM_SPEED)][SerializeField] private float zoomSpeed;
-        [Range(MIN_CAM_ORTHOGRAPHIC_SIZE, MAX_CAM_ORTHOGRAPHIC_SIZE)][SerializeField] private float minZoom;
         [Range(MIN_CAM_X, MAX_CAM_X)][SerializeField] private int minX;
         [Range(MIN_CAM_X, MAX_CAM_X)][SerializeField] private int maxX;
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int minY;
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int maxY;
-        [SerializeField] private KeyCode moveUpKey = KeyCode.W;
-        [SerializeField] private KeyCode moveDownKey = KeyCode.S;
-        [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
-        [SerializeField] private KeyCode moveRightKey = KeyCode.D;
-        [SerializeField] private KeyCode dragKey = KeyCode.Mouse2;
 
         private Vector2Int lastScreenSize;
 
@@ -32,10 +26,16 @@ namespace Game
 
         private bool controlsEnabled = true;
 
-        private Camera camera;
+        private Camera mainCamera;
         
-        private float yMovement;
-        private float xMovement;
+        private float yMovement = 0;
+        private float xMovement = 0;
+        
+        private const KeyCode MOVE_UP_KEY = KeyCode.W;
+        private const KeyCode MOVE_DOWN_KEY = KeyCode.S;
+        private const KeyCode MOVE_LEFT_KEY = KeyCode.A;
+        private const KeyCode MOVE_RIGHT_KEY = KeyCode.D;
+        private const KeyCode DRAG_KEY = KeyCode.Mouse2;
         
         private float YMovement
         {
@@ -49,19 +49,38 @@ namespace Game
             set => xMovement = Mathf.Clamp(value, -1, 1);
         }
         
-        private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(moveLeftKey);
-        private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(moveRightKey);
-        private bool IsMovingDown => Input.mousePosition.y < scrollArea || Input.GetKey(moveDownKey);
-        private bool IsMovingUp => Input.mousePosition.y >= Screen.height - scrollArea || Input.GetKey(moveUpKey);
-
-        public float MaxZoom => maxZoom;
+        private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(MOVE_LEFT_KEY);
+        private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(MOVE_RIGHT_KEY);
+        private bool IsMovingDown => Input.mousePosition.y < scrollArea || Input.GetKey(MOVE_DOWN_KEY);
+        private bool IsMovingUp => Input.mousePosition.y >= Screen.height - scrollArea || Input.GetKey(MOVE_UP_KEY);
 
         private void Awake()
         {
-            camera = GetComponent<Camera>();
-            targetOrthographicSize = camera.orthographicSize;
-            targetPos = transform.position;
+            mainCamera = GetComponent<Camera>();
             OnScreenSizeChanged();
+            InitCamera();
+        }
+
+        public IEnumerator MoveCameraTo(Vector3 to, float endZoom, float duration)
+        {
+            var controlsWereEnabled = controlsEnabled;
+            DisableControls();
+            var startPosition = transform.position;
+            var endPosition = new Vector3(to.x, to.y, startPosition.z);
+            var startZoom = mainCamera.orthographicSize;
+
+            for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
+            {
+                transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
+                ClampCameraPosition();
+                mainCamera.orthographicSize = Mathf.Lerp(startZoom, endZoom, elapsedTime / duration);
+                yield return null;
+            }
+
+            transform.position = endPosition;
+            mainCamera.orthographicSize = endZoom;
+            ClampCameraPosition();
+            if(controlsWereEnabled) EnableControls(); 
         }
 
         private void LateUpdate()
@@ -81,7 +100,7 @@ namespace Game
 
         private void UpdateTargetPosition()
         {
-            if (!Input.GetKey(dragKey))
+            if (!Input.GetKey(DRAG_KEY))
             {
                 if (IsMovingLeft && !IsMovingRight)
                 {
@@ -125,15 +144,15 @@ namespace Game
 
         private void UpdateDrag()
         {
-            if (Input.GetKeyDown(dragKey)) StartCoroutine(Drag());
+            if (Input.GetKeyDown(DRAG_KEY)) StartCoroutine(Drag());
         }
 
         private IEnumerator Drag()
         {
-            var origin = camera.ScreenToWorldPoint(Input.mousePosition);
-            while (Input.GetKey(dragKey))
+            var origin = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            while (Input.GetKey(DRAG_KEY))
             {
-                var difference = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+                var difference = mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
                 targetPos = origin - difference;
                 ClampCameraPosition();
                 yield return null;
@@ -156,17 +175,17 @@ namespace Game
             {
                 ZoomOut();
             }
-            var oldPos = camera.ScreenToWorldPoint (Input.mousePosition);
-            camera.orthographicSize = Mathf.Lerp (camera.orthographicSize, targetOrthographicSize, Time.deltaTime * zoomSpeed);
-            targetPos += oldPos - camera.ScreenToWorldPoint (Input.mousePosition);
+            var oldPos = mainCamera.ScreenToWorldPoint (Input.mousePosition);
+            mainCamera.orthographicSize = Mathf.Lerp (mainCamera.orthographicSize, targetOrthographicSize, Time.deltaTime * zoomSpeed);
+            targetPos += oldPos - mainCamera.ScreenToWorldPoint (Input.mousePosition);
             ClampCameraPosition();
         }
 
         private void ClampCameraPosition()
         {
-            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoom, maxZoom);
-            var topRight = camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth, camera.pixelHeight, 0));
-            var bottomLeft = camera.ScreenToWorldPoint(Vector3.zero);
+            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
+            var topRight = mainCamera.ScreenToWorldPoint(new Vector3(mainCamera.pixelWidth, mainCamera.pixelHeight, 0));
+            var bottomLeft = mainCamera.ScreenToWorldPoint(Vector3.zero);
 
             if (topRight.x > maxX)
             {
@@ -199,22 +218,29 @@ namespace Game
 
         private void ZoomIn()
         {
-            targetOrthographicSize = Mathf.Clamp(camera.orthographicSize - 1, minZoom, maxZoom);
+            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize - 1, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
         }
 
         private void ZoomOut()
         {
-            targetOrthographicSize = Mathf.Clamp(camera.orthographicSize + 1, minZoom, maxZoom);
+            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize + 1, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
         }
 
         public void EnableControls()
         {
             controlsEnabled = true;
+            InitCamera();
         }
 
         public void DisableControls()
         {
             controlsEnabled = false;
+        }
+
+        private void InitCamera()
+        {
+            targetPos = transform.position;
+            mainCamera.orthographicSize = targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
         }
 
 

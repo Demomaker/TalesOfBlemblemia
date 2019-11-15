@@ -5,6 +5,7 @@ using System.Data.Common;
 
 namespace Game
 {
+    //Authors : Pierre-Luc Maltais & Antoine Lessard
     public class CharacterStatusRepo : Repository<CharacterInfo>
     {
         private DbConnection connection;
@@ -16,80 +17,91 @@ namespace Game
     
         public void Insert(CharacterInfo myObject)
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandType = CommandType.Text;
 
-            command.CommandText =
-                "INSERT INTO CharacterStatus(character_id,savegame_id,character_name, character_status) VALUES (Null,?,?,?)";
+                command.CommandText =
+                    "INSERT INTO CharacterStatus(character_id,savegame_id,character_name, character_status) VALUES (Null,?,?,?)";
 
-            var id = command.CreateParameter();
-            id.Value = myObject.saveId;
-            command.Parameters.Add(id);
+                var id = command.CreateParameter();
+                id.Value = myObject.SaveId;
+                command.Parameters.Add(id);
 
-            var characterName = command.CreateParameter();
-            characterName.Value = myObject.characterName;
-            command.Parameters.Add(characterName);
+                var characterName = command.CreateParameter();
+                characterName.Value = myObject.CharacterName;
+                command.Parameters.Add(characterName);
 
-            var characterStatus = command.CreateParameter();
-            characterStatus.Value = myObject.characterStatus;
-            command.Parameters.Add(characterStatus);
+                var characterStatus = command.CreateParameter();
+                characterStatus.Value = myObject.CharacterStatus;
+                command.Parameters.Add(characterStatus);
 
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
 
         public List<CharacterInfo> FindAll()
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            
-            command.CommandText = "SELECT * FROM CharacterStatus";
-
-            List<CharacterInfo> result = new List<CharacterInfo>();
-            DbDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            using (var command = connection.CreateCommand())
             {
-                bool status = Convert.ToBoolean(reader["character_status"]);
-                result.Add(new CharacterInfo(
-                reader["character_name"].ToString(),
-                status,
-                Convert.ToInt32(reader["savegame_id"])));
+                command.CommandType = CommandType.Text;
+
+                command.CommandText = "SELECT * FROM CharacterStatus";
+
+                var result = new List<CharacterInfo>();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        bool status = Convert.ToBoolean(reader["character_status"]);
+                        result.Add(new CharacterInfo(
+                            reader["character_name"].ToString(),
+                            status,
+                            Convert.ToInt32(reader["savegame_id"])));
+                    }
+                }
+
+                return result;
             }
-            return result;
         }
 
         public void Update(CharacterInfo myObject)
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText =
-                "UPDATE CharacterStatus SET character_status = ? WHERE savegame_id = ? AND character_name = ?";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandType = CommandType.Text;
+                command.CommandText =
+                    "UPDATE CharacterStatus SET character_status = ? WHERE savegame_id = ? AND character_name = ?";
 
-            var characterStatus = command.CreateParameter();
-            characterStatus.Value = myObject.characterStatus;
-            command.Parameters.Add(characterStatus);
+                var characterStatus = command.CreateParameter();
+                characterStatus.Value = myObject.CharacterStatus;
+                command.Parameters.Add(characterStatus);
 
-            var id = command.CreateParameter();
-            id.Value = myObject.saveId;
-            command.Parameters.Add(id);
+                var id = command.CreateParameter();
+                id.Value = myObject.SaveId;
+                command.Parameters.Add(id);
 
-            var characterName = command.CreateParameter();
-            characterName.Value = myObject.characterName;
-            command.Parameters.Add(characterName);
+                var characterName = command.CreateParameter();
+                characterName.Value = myObject.CharacterName;
+                command.Parameters.Add(characterName);
 
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
 
         public void Delete(int id)
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = "DELETE FROM CharacterStatus WHERE savegame_id = ?";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandType = CommandType.Text;
+                command.CommandText = "DELETE FROM CharacterStatus WHERE savegame_id = ?";
 
-            var saveGameId = command.CreateParameter();
-            saveGameId.Value = id;
-            command.Parameters.Add(saveGameId);
+                var saveGameId = command.CreateParameter();
+                saveGameId.Value = id;
+                command.Parameters.Add(saveGameId);
 
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

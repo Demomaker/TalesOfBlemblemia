@@ -1,20 +1,41 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
  {
-    //Authors: Jérémie Bertrand & Mike Bédard
+    //Authors: Jérémie Bertrand, Mike Bédard, Zacharie Lavigne
     public class GridController : MonoBehaviour
     {
         private GridLayoutGroup gridLayoutGroup;
-        [SerializeField] private Sprite movementTileSprite = null;
-        [SerializeField] private Sprite normalTileSprite = null;
-        [SerializeField] private Sprite selectedTileSprite = null;
-        [SerializeField] private Sprite attackableTileSprite = null;
-        [SerializeField] private Sprite healableTileSprite = null;
-        [SerializeField] private Sprite recruitableTileSprite = null;
-        [SerializeField] private Sprite protectableTileSprite = null;
-        public Unit SelectedUnit { get; private set; } = null;
+        [SerializeField] private Sprite movementTileSprite;
+        [SerializeField] private Sprite normalTileSprite;
+        [SerializeField] private Sprite selectedTileSprite;
+        [SerializeField] private Sprite attackableTileSprite;
+        [SerializeField] private Sprite healableTileSprite;
+        [SerializeField] private Sprite recruitableTileSprite;
+        [SerializeField] private Sprite protectableTileSprite;
+        [SerializeField] private Sprite verticalPathTileSprite;
+        [SerializeField] private Sprite horizontalPathTileSprite;
+        [SerializeField] private Sprite downToRightPathTileSprite;
+        [SerializeField] private Sprite downToLeftPathTileSprite;
+        [SerializeField] private Sprite upToRightPathTileSprite;
+        [SerializeField] private Sprite upToLeftPathTileSprite;
+        [SerializeField] private Sprite leftArrowPathTileSprite;
+        [SerializeField] private Sprite rightArrowPathTileSprite;
+        [SerializeField] private Sprite downArrowPathTileSprite;
+        [SerializeField] private Sprite upArrowPathTileSprite;
+        [SerializeField] private Sprite leftStartPathTileSprite;
+        [SerializeField] private Sprite rightStartPathTileSprite;
+        [SerializeField] private Sprite downStartPathTileSprite;
+        [SerializeField] private Sprite upStartPathTileSprite;
+
+
+        public Unit SelectedUnit
+        {
+            get; 
+            private set;
+        }
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
@@ -22,11 +43,25 @@ using UnityEngine.UI;
         public Sprite HealableTileSprite => healableTileSprite;
         public Sprite RecruitableTileSprite => recruitableTileSprite;
         public Sprite ProtectableTileSprite => protectableTileSprite;
+        public Sprite VerticalPathTileSprite => verticalPathTileSprite;
+        public Sprite HorizontalPathTileSprite => horizontalPathTileSprite;
+        public Sprite DownToRightPathTileSprite => downToRightPathTileSprite;
+        public Sprite DownToLeftPathTileSprite => downToLeftPathTileSprite;
+        public Sprite UpToRightPathTileSprite => upToRightPathTileSprite;
+        public Sprite UpToLeftPathTileSprite => upToLeftPathTileSprite;
+        public Sprite LeftArrowPathTileSprite => leftArrowPathTileSprite;
+        public Sprite RightArrowPathTileSprite => rightArrowPathTileSprite;
+        public Sprite DownArrowPathTileSprite => downArrowPathTileSprite;
+        public Sprite UpArrowPathTileSprite => upArrowPathTileSprite;
+        public Sprite LeftStartPathTileSprite => leftStartPathTileSprite;
+        public Sprite RightStartPathTileSprite => rightStartPathTileSprite;
+        public Sprite DownStartPathTileSprite => downStartPathTileSprite;
+        public Sprite UpStartPathTileSprite => upStartPathTileSprite;
 
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
-        public int NbColumns { get; private set; } = 0;
-        public int NbLines { get; private set; } = 0;
+        public int NbColumns { get; private set; }
+        public int NbLines { get; private set; }
         
         private void Awake()
         {
@@ -49,12 +84,19 @@ using UnityEngine.UI;
                 child.GetComponent<Tile>().HideActionPossibility();
             }
         }
+        public void RemoveActionPath()
+        {
+            foreach (Transform child in transform)
+            {
+                child.GetComponent<Tile>().HideActionPath();
+            }
+        }
         
         public void DisplayPossibleActionsFrom(Tile fromTile)
         {
             fromTile.DisplaySelectedTile();
-            var linkedUnit = fromTile.LinkedUnit;
-            var movementCosts = linkedUnit.MovementCosts;
+            var playerUnit = fromTile.LinkedUnit;
+            var movementCosts = playerUnit.MovementCosts;
             for (int i = 0; i < movementCosts.GetLength(0); i++)
             {
                 for (int j = 0; j < movementCosts.GetLength(1); j++)
@@ -62,13 +104,13 @@ using UnityEngine.UI;
                     if (movementCosts[i, j] > 0)
                     {
                         var tile = GetTile(i, j);
-                        if (tile.IsAvailable && movementCosts[i, j] <= linkedUnit.MovesLeft)
+                        if (tile.IsAvailable && movementCosts[i, j] <= playerUnit.MovesLeft)
                         {
                             tile.DisplayMoveActionPossibility();
                         }
-                        else if (tile.LinkedUnit != null && linkedUnit.TargetIsInMovementRange(tile.LinkedUnit))
+                        else if (tile.LinkedUnit != null && playerUnit.TargetIsInMovementRange(tile.LinkedUnit))
                         {
-                            if (linkedUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy || tile.IsOccupiedByADoor))
+                            if (playerUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy))
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
@@ -76,17 +118,17 @@ using UnityEngine.UI;
                             {
                                 tile.DisplayRecruitActionPossibility();
                             }
-                            else if (linkedUnit.WeaponType == WeaponType.HealingStaff && !tile.LinkedUnit.IsEnemy)
+                            else if (playerUnit.WeaponType == WeaponType.HealingStaff && !tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayHealActionPossibility();
                             }
                         }
-                        else if (tile.LinkedDoor != null)
+                        else if (tile.LinkedDoor != null && tile.LinkedDoor.isActiveAndEnabled)
                         {
-                            if (!tile.LinkedDoor.IsEnemyTarget)
-                                tile.DisplayAttackActionPossibility();
-                            else
+                            if (tile.LinkedDoor.IsEnemyTarget)
                                 tile.DisplayProtectable();
+                            else if (playerUnit.TargetIsInMovementRange(tile.LinkedDoor))
+                                tile.DisplayAttackActionPossibility();
                         }
                     }
                 }
@@ -133,6 +175,33 @@ using UnityEngine.UI;
         public bool IsValidGridPosition(int x, int y)
         {
             return x >= 0 && y >= 0 && x < NbColumns && y < NbLines;
+        }
+
+        public void DisplayAction(Action unitTurnAction, Unit playerUnit)
+        {
+            var completePath = new List<Tile>();
+            completePath.Add(playerUnit.CurrentTile);
+            completePath.AddRange(unitTurnAction.Path);
+            int prevIndex = -1;
+            int nextIndex = -1;
+            var pathCount = completePath.Count;
+            for (int i = 0; i < pathCount; i++)
+            {
+                prevIndex = i - 1;
+                if (prevIndex < 0) prevIndex = 0;
+                nextIndex = i + 1;
+                if (nextIndex >= pathCount) nextIndex = pathCount - 1;
+                completePath[i].DisplayPathPossibility(completePath[prevIndex], completePath[nextIndex]);
+            }
+                
+            var target = unitTurnAction.Target;
+            if (unitTurnAction.Target != null)
+            {
+                if (target is Unit && playerUnit.WeaponType == WeaponType.HealingStaff)
+                    target.CurrentTile.DisplayHealActionPossibility();
+                else
+                    target.CurrentTile.DisplayAttackActionPossibility();
+            }
         }
     }
  }

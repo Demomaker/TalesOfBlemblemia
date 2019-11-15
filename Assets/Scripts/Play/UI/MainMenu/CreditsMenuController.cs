@@ -1,7 +1,8 @@
-﻿using JetBrains.Annotations;
+﻿using Harmony;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
-
+//Author: Antoine Lessard
 namespace Game
 {
     public class CreditsMenuController : MonoBehaviour

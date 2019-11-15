@@ -2,34 +2,44 @@
 
 namespace Game
 {
-    public struct SaveInfos
+    //Authors : Pierre-Luc Maltais & Antoine Lessard
+    public class SaveInfos
     {
-        public int id;
+        public int Id { get; set; }
 
-        public string username;
+        public string Username { get; set; }
 
-        public string difficultyLevel;
+        public string DifficultyLevel { get; set; }
 
-        public string levelName;
+        public string LevelName { get; set; }
 
-        public List<CharacterInfo> characterInfos;
+        public List<CharacterInfo> CharacterInfos { get; set; }
 
         public SaveInfos(int id, string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
-            this.id = id;
-            this.username = username;
-            this.difficultyLevel = difficultyLevel;
-            this.levelName = levelName;
-            characterInfos = new List<CharacterInfo>();
+            Id = id;
+            Username = username;
+            DifficultyLevel = difficultyLevel;
+            LevelName = levelName;
+            CharacterInfos = new List<CharacterInfo>();
             if (characterStatus != null)
             {
                 foreach (var characterStatusDictionary in characterStatus)
                 {
-                    characterInfos.Add(new CharacterInfo(characterStatusDictionary.Key, characterStatusDictionary.Value,
+                    CharacterInfos.Add(new CharacterInfo(characterStatusDictionary.Key, characterStatusDictionary.Value,
                         id));
                 }
             }
+        }
+        
+        public SaveInfos()
+        {
+            Id = 0;
+            Username = "";
+            DifficultyLevel = "";
+            LevelName = "";
+            CharacterInfos = null;
         }
     }
 }

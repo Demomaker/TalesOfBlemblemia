@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//Author: Antoine Lessard
 namespace Game
 {
     public class NewGameMenuController : MonoBehaviour
@@ -15,61 +17,67 @@ namespace Game
         [SerializeField] private Button returnToMainMenuButton;
 
         private const int NUMBER_OF_MENUS_TO_GO_BACK_TO_MAIN = 2;
+        private LevelLoader levelLoader;
         
         private Navigator navigator;
         private SaveController saveController;
         private Canvas newGameScreen;
+        private GameSettings gameSettings;
+        private GameController gameController;
 
         private int saveSlotSelectedNumber;
 
-        public int SaveSlotSelectedNumber
-        {
-            get => saveSlotSelectedNumber;
-            set => saveSlotSelectedNumber = value;
-        }
-
         private void Awake()
         {
+            levelLoader = Harmony.Finder.LevelLoader;
+            gameSettings = Harmony.Finder.GameSettings;
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
             newGameScreen = GetComponent<Canvas>();
             saveSlotSelectedNumber = 0;
+            gameController = Finder.GameController;
         }
 
         public void Enter(int saveSlotNumber)
         {
             navigator.Enter(newGameScreen);
+            saveSlotSelectedNumber = saveSlotNumber;
         }
         
         [UsedImplicitly]
         public void StartNewGame()
         {
+            saveController.SaveSelected = saveSlotSelectedNumber;
+            
             //if the player did not enter a name, player name will be Franklem
             if (playerNameInputField.text == "")
             {
                 playerNameInputField.text = "Franklem";
             }
 
-            switch (saveSlotSelectedNumber)
+            var saves = saveController.GetSaves();
+            
+            saveController.ResetSave();
+            
+            saves[saveSlotSelectedNumber - 1].Username = playerNameInputField.text;
+            saves[saveSlotSelectedNumber - 1].DifficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+
+            switch (difficultyDropdownMenu.options[difficultyDropdownMenu.value].text)
             {
-                case 1:
-                    saveController.saveSlot1.username = playerNameInputField.text;
-                    saveController.saveSlot1.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+                case "Easy":
+                    gameController.DifficultyLevel = DifficultyLevel.Easy;
                     break;
-                case 2:
-                    saveController.saveSlot2.username = playerNameInputField.text;
-                    saveController.saveSlot2.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+                case "Hard":
+                    gameController.DifficultyLevel = DifficultyLevel.Hard;
                     break;
-                case 3:
-                    saveController.saveSlot3.username = playerNameInputField.text;
-                    saveController.saveSlot3.difficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
+                default:
+                    gameController.DifficultyLevel = DifficultyLevel.Medium;
                     break;
             }
             
             saveController.UpdateSave(saveSlotSelectedNumber);
-            SceneManager.LoadSceneAsync(Constants.OVERWORLD_SCENE_NAME, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(Constants.MAINMENU_SCENE_NAME);
-
+            saveController.SaveSelected = saveSlotSelectedNumber;
+            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
         
         [UsedImplicitly]

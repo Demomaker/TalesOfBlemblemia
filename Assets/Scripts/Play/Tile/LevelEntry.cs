@@ -1,70 +1,73 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Finder = Harmony.Finder;
 
+[RequireComponent(typeof(Button))]
 public class LevelEntry : MonoBehaviour
 {
-    private List<string> previousLevelNames;
-    private bool IsFirstLevel => representedLevelName == Finder.GameController.StartingLevelName;
-    private bool CanBeClicked => IsFirstLevel && Finder.GameController.NameOfLevelCompleted == null || PreviousLevelWasCompleted();
-    [SerializeField] string representedLevelName;
-    public List<string> PreviousLevelNames
-    {
-        get
-        {
-            List<string> retval = new List<string>();
-            List<Level> currentLevels = Finder.GameController.Levels.FindAll(level => level.LevelName == representedLevelName);
-            if (currentLevels != null)
-            {
-                for (int i = 0; i < currentLevels.Count; i++)
-                {
-                    if (currentLevels[i] != null)
-                        retval.Add(currentLevels[i].PreviousLevel);
-                }
-                return retval;
-            }
+    [SerializeField] private LevelName.LevelNameEnum representedLevelId;
+    private GameSettings gameSettings;
+    private Button levelEntryButton;
+    private List<string> previousLevelName;
+    private OverWorldController overWorldController;
+    private GameController gameController;
+    private string representedLevelName;
+    private bool IsFirstLevel => string.IsNullOrEmpty(gameController.PreviousLevelName);
+    private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && previousLevelName.Count != 0 || PreviousLevelNameListContainsElement(gameController.PreviousLevelName);
 
-            return null;
-        }
-    }
-    public void OnLevelEntry()
+    private bool PreviousLevelNameListContainsElement(string previousLevel)
     {
-        if (CanBeClicked && !string.IsNullOrEmpty(representedLevelName))
+        foreach (var levelName in previousLevelName)
         {
-            
-            EventSystem.current.SetSelectedGameObject(null);
-            Finder.GameController.LoadLevel(representedLevelName);
-        }
-    }
-
-    private void Update()
-    {
-        var colors = GetComponent<Button>().colors;
-        if (!CanBeClicked || string.IsNullOrEmpty(representedLevelName))
-        {
-            colors.pressedColor = Color.red;
-        }
-        else
-        {
-            colors.pressedColor = Color.green;
-        }
-        GetComponent<Button>().colors = colors;
-    }
-
-    private bool PreviousLevelWasCompleted()
-    {
-        if (PreviousLevelNames == null) return false;
-        foreach (var t in PreviousLevelNames)
-        {
-            if (t == Finder.GameController.NameOfLevelCompleted)
+            if (levelName == previousLevel)
             {
                 return true;
             }
         }
-
         return false;
+    }
+
+
+    private void Awake()
+    {
+        previousLevelName = new List<string>();
+        gameSettings = Finder.GameSettings;
+        representedLevelName = representedLevelId.GetLevelNameFromLevelID();
+        overWorldController = Finder.OverWorldController;
+        gameController = Finder.GameController;
+        levelEntryButton = GetComponent<Button>();
+        if(levelEntryButton == null) Debug.LogError(name + ": Button is null!");
+        foreach (var level in gameController.Levels)
+        {
+            if (level.LevelName == representedLevelName)
+            {
+                previousLevelName.Add(level.PreviousLevel);
+            }
+        }
+    }
+    
+    private void Start()
+    {
+        var colors = levelEntryButton.colors;
+        colors.highlightedColor = !CanBeClicked ? Color.red : Color.green;
+        levelEntryButton.colors = colors;
+        if (representedLevelName == gameController.PreviousLevelName)
+        {
+            var target = transform.position;
+            overWorldController.CharacterTransform.position = new Vector3(target.x + 1, target.y, target.z);
+        }
+    }
+
+    public void OnLevelEntry()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        if (CanBeClicked && overWorldController.CanLoadANewLevel)
+        {
+            StartCoroutine(overWorldController.LoadLevel(representedLevelName, transform.position));
+        }
     }
 }

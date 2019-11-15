@@ -1,16 +1,18 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
 {
+    //Author: Antoine Lessard
     public class PauseMenuController : MonoBehaviour
     {
+        //TODO nécessaire?
         [Header("Buttons")] 
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button optionsButton;
-        [SerializeField] private Button returnToOverworldButton;
+        [SerializeField] private Button returnToMainMenuButton;
 
         [Header("Controller")] 
         [SerializeField] private OptionsMenuController optionsMenuController;
@@ -46,6 +48,13 @@ namespace Game
         public void GoToOptionsMenu()
         {
             optionsMenuController.Enter();
+        }
+        
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            pauseController.Resume();
+            SceneManager.LoadSceneAsync("Main");
         }
     }
 }

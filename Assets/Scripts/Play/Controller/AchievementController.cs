@@ -7,26 +7,54 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    /// <summary>
+    /// Controls the achievements and sends messages if achievements are completed
+    /// Author : Mike Bédard
+    /// </summary>
     public class AchievementController : MonoBehaviour
     {
 
-        [SerializeField] private Text nameText = null;
-        [SerializeField] private Text descriptionText = null;
-        [SerializeField] private Animator animator = null;
-        private List<Achievement> Achievements  = new List<Achievement>();
-        private bool AchievementBeingShown = false;
+        [SerializeField] private Text nameText;
+        [SerializeField] private Text descriptionText;
+        [SerializeField] private Animator animator;
+        private readonly List<Achievement> achievements = new List<Achievement>();
+        private bool AchievementBeingShown;
+        private GameSettings gameSettings;
+        private GameController gameController;
+        
+        private bool CompletedCampaignOnEasy =>
+            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Easy;
+        private bool CompletedCampaignOnMedium =>
+            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Medium;
+        private bool CompletedCampaignOnHard =>
+            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
+        private bool BlackKnightDefeated => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName;
+        private bool ReachedFinalLevelWith8Players =>
+            HumanPlayer.Instance.NumberOfUnits > 8 &&
+            gameController.CurrentLevelName == gameSettings.MorktressSceneName;
+        private bool FinishedALevelWithoutUnitLoss =>
+            !HumanPlayer.Instance.HasLostAUnitInCurrentLevel &&
+            gameController.PreviousLevelName == gameController.CurrentLevelName &&
+            !string.IsNullOrEmpty(gameController.PreviousLevelName);
+        private bool SavedAllRecruitablesFromAlternatePath =>
+            HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >=
+            gameSettings.NumberOfRecruitablesOnAlternatePath;
+        private bool FinishedCampaignWithoutUnitLoss =>
+            !HumanPlayer.Instance.HasEverLostAUnit && gameController.AllLevelsCompleted;
 
         private void Awake()
         {
-            Achievements.Add(new Achievement(Constants.AchievementName.COMPLETE_CAMPAIGN_ON_EASY,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Easy));
-            Achievements.Add(new Achievement(Constants.AchievementName.COMPLETE_CAMPAIGN_ON_MEDIUM,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Medium));
-            Achievements.Add(new Achievement(Constants.AchievementName.COMPLETE_CAMPAIGN_ON_HARD,  () => Harmony.Finder.GameController.AllLevelsCompleted && Harmony.Finder.GameController.DifficultyLevel == DifficultyLevel.Hard));
-            Achievements.Add(new Achievement(Constants.AchievementName.DEFEAT_BLACK_KNIGHT,  () => Harmony.Finder.GameController.LevelsCompleted.Contains(Constants.LEVEL_5_SCENE_NAME)));
-            Achievements.Add(new Achievement(Constants.AchievementName.REACH_FINAL_LEVEL_WITH_8_PLAYERS,  () => HumanPlayer.Instance.NumberOfUnits > 8 && Harmony.Finder.GameController.CurrentLevelName == Constants.LEVEL_8_SCENE_NAME));
-            Achievements.Add(new Achievement(Constants.AchievementName.FINISH_A_LEVEL_WITHOUT_UNIT_LOSS,  () => !HumanPlayer.Instance.HasLostAUnitInCurrentLevel && Harmony.Finder.GameController.LevelsCompleted.Contains(Harmony.Finder.GameController.CurrentLevelName)));
-            Achievements.Add(new Achievement(Constants.AchievementName.SAVE_ALL_RECRUITABLES_FROM_ALTERNATE_PATH,  () => HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >= Constants.NUMBER_OF_RECRUITABLES_ON_ALTERNATE_PATH));
-            Achievements.Add(new Achievement(Constants.AchievementName.FINISH_CAMPAIGN_WITHOUT_UNIT_LOSS,  () => !HumanPlayer.Instance.HasEverLostAUnit && Harmony.Finder.GameController.LevelsCompleted.Count >= Harmony.Finder.GameController.Levels.Count ));
-            nameText.text = Constants.ACHIEVEMENT_GET_STRING;
+            gameSettings = Harmony.Finder.GameSettings;
+            gameController = Harmony.Finder.GameController;
+            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnEasy,  () => CompletedCampaignOnEasy));
+            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnMedium,  () => CompletedCampaignOnMedium));
+            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnHard,  () => CompletedCampaignOnHard));
+            achievements.Add(new Achievement(gameSettings.DefeatBlackKnight,  () => BlackKnightDefeated));
+            achievements.Add(new Achievement(gameSettings.ReachFinalLevelWith8Players,  () => ReachedFinalLevelWith8Players));
+            achievements.Add(new Achievement(gameSettings.FinishALevelWithoutUnitLoss,  () => FinishedALevelWithoutUnitLoss));
+            achievements.Add(new Achievement(gameSettings.SaveAllRecruitablesFromAlternatePath,  () => SavedAllRecruitablesFromAlternatePath));
+            achievements.Add(new Achievement(gameSettings.FinishCampaignWithoutUnitLoss,  () => FinishedCampaignWithoutUnitLoss));
+            nameText.text = gameSettings.AchievementGetString;
         }
 
         private void Update()
@@ -36,7 +64,7 @@ namespace Game
 
         public void CheckIfAchievementCompleted()
         {
-            foreach (var achievement in Achievements)
+            foreach (var achievement in achievements)
             {
                 if (achievement.AchievementCompleted)
                 {
@@ -64,9 +92,9 @@ namespace Game
             nameText.text = "";
             descriptionText.text = "";
             yield return new WaitForSeconds(1);
-            for (int i = 0; i < Constants.ACHIEVEMENT_GET_STRING.Length; i++)
+            for (int i = 0; i < gameSettings.AchievementGetString.Length; i++)
             {
-                nameText.text += Constants.ACHIEVEMENT_GET_STRING[i];
+                nameText.text += gameSettings.AchievementGetString[i];
                 yield return new WaitForSeconds(0.1f);
             }
             for(int i = 0; i < text.Length; i++)

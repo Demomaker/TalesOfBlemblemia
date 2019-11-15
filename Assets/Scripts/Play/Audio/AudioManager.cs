@@ -5,11 +5,14 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    /// <summary>
+    /// Manages the sounds and music of the game
+    /// Author : Mike Bédard
+    /// </summary>
     public class AudioManager : MonoBehaviour
     {
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
-        [SerializeField] private float lowPitchRange = .95f;               
-        [SerializeField] private float highPitchRange = 1.05f;
+        private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
         private AudioSource musicSource;
@@ -18,9 +21,26 @@ namespace Game
         private float mainVolume = 100;
         private float musicVolume = 100;
         private float sfxVolume = 100;
+        private OnHurt onHurt;
+        private OnAttack onAttack;
+        private OnDodge onDodge;
+        private OnUnitMove onUnitMove;
+        private OnUnitDeath onUnitDeath;
+        private OnPlayerUnitLoss onPlayerUnitLoss;
+        private OnLevelVictory onLevelVictory;
+        private OnLevelChange onLevelChange;
+        private OnOverWorldEnter onOverWorldEnter;
+        private OnMainMenuEnter onMainMenuEnter;
+        private OnButtonClick onButtonClick;
+        private OnSFXToggle onSFXToggle;
+        private OnMusicToggle onMusicToggle;
+        private OnMainVolumeChange onMainVolumeChange;
+        private OnMusicVolumeChange onMusicVolumeChange;
+        private OnSFXVolumeChange onSFXVolumeChange;
 
-        void Awake ()
+        private void Awake ()
         {
+            gameSettings = Harmony.Finder.GameSettings;
             musicSource = gameObject.AddComponent<AudioSource>();
             sfxSources = new AudioSource[numberOfSFXThatCanBePlayedAtTheSameTime];
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
@@ -30,56 +50,87 @@ namespace Game
 
             audioClips = Finder.AudioClips;
             if(audioClips == null) audioClips = new NullAudioClips();
+            InitializeEventChannels();
         }
 
         private void OnEnable()
         {
-            OnHurt.Notify += PlayHurtSound;
-            OnAttack.Notify += PlayAttackSound;
-            OnDodge.Notify += PlayDodgeSound;
-            OnUnitMove.Notify += PlayUnitMovementSound;
-            OnUnitDeath.Notify += PlayUnitDeathSound;
-            OnPlayerUnitLoss.Notify += PlayUnitLossMusic;
-            OnLevelVictory.Notify += PlayLevelVictoryMusic;
-            OnLevelChange.Notify += PlayBackgroundMusicOfLevel;
-            OnOverworldEnter.Notify += PlayOverworldBackgroundMusic;
-            OnMainMenuEnter.Notify += PlayMainMenuBackgroundMusic;
-            OnButtonClick.Notify += PlayButtonClickSound;
-            OnSFXToggle.Notify += ToggleSFX;
-            OnMusicToggle.Notify += ToggleMusic;
-            OnMainVolumeChange.Notify += ChangeMainVolume;
-            OnMusicVolumeChange.Notify += ChangeMusicVolume;
-            OnSFXVolumeChange.Notify += ChangeSFXVolume;
+            EnableEventChannels();
         }
 
         private void OnDisable()
         {
-            OnHurt.Notify -= PlayHurtSound;
-            OnAttack.Notify -= PlayAttackSound;
-            OnDodge.Notify -= PlayDodgeSound;
-            OnUnitMove.Notify -= PlayUnitMovementSound;
-            OnUnitDeath.Notify -= PlayUnitDeathSound;
-            OnPlayerUnitLoss.Notify -= PlayUnitLossMusic;
-            OnLevelVictory.Notify -= PlayLevelVictoryMusic;
-            OnLevelChange.Notify -= PlayBackgroundMusicOfLevel;
-            OnOverworldEnter.Notify -= PlayOverworldBackgroundMusic;
-            OnMainMenuEnter.Notify -= PlayMainMenuBackgroundMusic;
-            OnButtonClick.Notify -= PlayButtonClickSound;
-            OnSFXToggle.Notify -= ToggleSFX;
-            OnMusicToggle.Notify -= ToggleMusic;
-            OnMainVolumeChange.Notify -= ChangeMainVolume;
-            OnMusicVolumeChange.Notify -= ChangeMusicVolume;
-            OnSFXVolumeChange.Notify -= ChangeSFXVolume;
+            DisableEventChannels();
+        }
+
+        private void InitializeEventChannels()
+        {
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelChange = Harmony.Finder.OnLevelChange;
+            onOverWorldEnter = Harmony.Finder.OnOverWorldEnter;
+            onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
+            onButtonClick = Harmony.Finder.OnButtonClick;
+            onSFXToggle = Harmony.Finder.OnSFXToggle;
+            onMusicToggle = Harmony.Finder.OnMusicToggle;
+            onMainVolumeChange = Harmony.Finder.OnMainVolumeChange;
+            onMusicVolumeChange = Harmony.Finder.OnMusicVolumeChange;
+            onSFXVolumeChange = Harmony.Finder.OnSFXVolumeChange;
+        }
+
+        private void EnableEventChannels()
+        {
+            onHurt.Notify += PlayHurtSound;
+            onAttack.Notify += PlayAttackSound;
+            onDodge.Notify += PlayDodgeSound;
+            onUnitMove.Notify += PlayUnitMovementSound;
+            onUnitDeath.Notify += PlayUnitDeathSound;
+            onPlayerUnitLoss.Notify += PlayUnitLossMusic;
+            onLevelVictory.Notify += PlayLevelVictoryMusic;
+            onLevelChange.Notify += PlayBackgroundMusicOfLevel;
+            onOverWorldEnter.Notify += PlayOverWorldBackgroundMusic;
+            onMainMenuEnter.Notify += PlayMainMenuBackgroundMusic;
+            onButtonClick.Notify += PlayButtonClickSound;
+            onSFXToggle.Notify += ToggleSFX;
+            onMusicToggle.Notify += ToggleMusic;
+            onMainVolumeChange.Notify += ChangeMainVolume;
+            onMusicVolumeChange.Notify += ChangeMusicVolume;
+            onSFXVolumeChange.Notify += ChangeSFXVolume;
+        }
+
+        private void DisableEventChannels()
+        {
+            onHurt.Notify -= PlayHurtSound;
+            onAttack.Notify -= PlayAttackSound;
+            onDodge.Notify -= PlayDodgeSound;
+            onUnitMove.Notify -= PlayUnitMovementSound;
+            onUnitDeath.Notify -= PlayUnitDeathSound;
+            onPlayerUnitLoss.Notify -= PlayUnitLossMusic;
+            onLevelVictory.Notify -= PlayLevelVictoryMusic;
+            onLevelChange.Notify -= PlayBackgroundMusicOfLevel;
+            onOverWorldEnter.Notify -= PlayOverWorldBackgroundMusic;
+            onMainMenuEnter.Notify -= PlayMainMenuBackgroundMusic;
+            onButtonClick.Notify -= PlayButtonClickSound;
+            onSFXToggle.Notify -= ToggleSFX;
+            onMusicToggle.Notify -= ToggleMusic;
+            onMainVolumeChange.Notify -= ChangeMainVolume;
+            onMusicVolumeChange.Notify -= ChangeMusicVolume;
+            onSFXVolumeChange.Notify -= ChangeSFXVolume;
         }
 
         private void UpdateMusicVolume()
         {
-            musicSource.volume = mainVolume * musicVolume / (Constants.PERCENT * Constants.PERCENT);
+            musicSource.volume = mainVolume * musicVolume / (gameSettings.Percent * gameSettings.Percent);
         }
 
         private void UpdateSoundVolume()
         {
-            float totalSFXVolume = mainVolume * sfxVolume / (Constants.PERCENT * Constants.PERCENT);
+            float totalSFXVolume = mainVolume * sfxVolume / (gameSettings.Percent * gameSettings.Percent);
             foreach (var sfxSource in sfxSources)
             {
                 sfxSource.volume = totalSFXVolume;
@@ -221,13 +272,13 @@ namespace Game
         private void PlayUnitLossMusic(Unit unit)
         {
             if(musicSource.clip != audioClips.SadMusic)
-            PlayMusic(audioClips.SadMusic);
+                PlayMusic(audioClips.SadMusic);
         }
 
         private void PlayLevelVictoryMusic(LevelController levelController)
         {
             if(musicSource.clip != audioClips.LevelVictoryMusic)
-            PlayMusic(audioClips.LevelVictoryMusic);
+                PlayMusic(audioClips.LevelVictoryMusic);
         }
 
         private void PlayBackgroundMusicOfLevel(LevelController level)
@@ -236,10 +287,10 @@ namespace Game
             PlayMusic(level.BackgroundMusic);
         }
 
-        private void PlayOverworldBackgroundMusic(OverworldController overworld)
+        private void PlayOverWorldBackgroundMusic(OverWorldController overWorld)
         {
             StopCurrentMusic();
-            PlayMusic(audioClips.OverworldMusic);
+            PlayMusic(audioClips.OverWorldMusic);
         }
 
         private void PlayMainMenuBackgroundMusic(MainMenuController mainMenu)

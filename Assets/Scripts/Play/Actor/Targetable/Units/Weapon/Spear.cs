@@ -1,12 +1,12 @@
 ﻿namespace Game
 {
-    /// Author: Zacharie Lavigne
+    /// Author: Zacharie Lavigne, Jérémie Bertrand
     public class Spear : Weapon
     {
         private void Awake()
         {
             weaponType = WeaponType.Spear;
-            advantage = SPEAR_ADVANTAGE;
+            advantage = WeaponTypeExt.SPEAR_ADVANTAGE;
         }
     }
 }

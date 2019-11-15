@@ -4,31 +4,52 @@ using System.Linq;
 using Mono.Data.Sqlite;
 using UnityEngine;
 
+
+//Author: Antoine Lessard, Pierre-Luc Maltais
 namespace Game
 {
     public class SaveController : MonoBehaviour
     {
-        public SaveInfos saveSlot1;
-        public SaveInfos saveSlot2;
-        public SaveInfos saveSlot3;
-        public PlayerSettings playerSettings;
+        private SaveInfos saveSlot1;
+        private SaveInfos saveSlot2;
+        private SaveInfos saveSlot3;
+        private PlayerSettings playerSettings;
+        private GameSettings gameSettings;
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
         private SqliteConnection connection;
-        private int saveSelected;
 
-        public int SaveSelected
+        public int SaveSelected { get; set; }
+
+        public SaveInfos GetCurrentSaveSelectedInfos()
         {
-            get => saveSelected;
-            set => saveSelected = value;
+            SaveInfos currentSave = new SaveInfos();
+            switch (SaveSelected)
+            {
+                case 1:
+                    currentSave = saveSlot1;
+                    break;
+                case 2:
+                    currentSave = saveSlot2;
+                    break;
+                case 3:
+                    currentSave = saveSlot3;
+                    break;
+            }
+
+            return currentSave;
         }
+
+        public PlayerSettings PlayerSettings => playerSettings;
+
 
         public void Awake()
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
-            InitiateSaveController(Constants.DEFAULT_USERNAME, DifficultyLevel.Medium.ToString(),
-                Constants.LEVEL_1_SCENE_NAME, playableCharactersDictionary);
+            gameSettings = Harmony.Finder.GameSettings;
+            InitiateSaveController(gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
+                gameSettings.TutorialSceneName, playableCharactersDictionary);
         }
 
 
@@ -36,16 +57,17 @@ namespace Game
 
         private static Dictionary<string, bool> CreateBaseCharacterDictionary()
         {
+            var gameSettings = Harmony.Finder.GameSettings;
             Dictionary<string, bool> playableCharactersDictionary = new Dictionary<string, bool>
             {
-                {Constants.FRANKLEM_NAME, false},
-                {Constants.MYRIAM_NAME, false},
-                {Constants.BRAM_NAME, false},
-                {Constants.RASS_NAME, false},
-                {Constants.ULRIC_NAME, false},
-                {Constants.JEBEDIAH_NAME, false},
-                {Constants.THOMAS_NAME, false},
-                {Constants.ABRAHAM_NAME, false}
+                {gameSettings.FranklemName, true},
+                {gameSettings.MyriamName, true},
+                {gameSettings.BramName, true},
+                {gameSettings.RassName, true},
+                {gameSettings.UlricName, true},
+                {gameSettings.JebediahName, true},
+                {gameSettings.ThomasName, true},
+                {gameSettings.AbrahamName, true}
             };
             return playableCharactersDictionary;
         }
@@ -54,12 +76,8 @@ namespace Game
         private void InitiateSaveController(string username, string difficultyLevel, string levelName,
             Dictionary<string, bool> characterStatus)
         {
-#if UNITY_EDITOR
-            var path = "URI=file:" + Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db");
-#else
-            var path = "URI=file:" + Path.Combine(Application.persistentDataPath, "Database.db");
-#endif
-            
+            var path = GetPath();
+
             connection = new SqliteConnection(path);
             connection.Open();
             InitiateSaveInfo(username, difficultyLevel, levelName, characterStatus);
@@ -71,10 +89,26 @@ namespace Game
             CheckForExistingSaves();
         }
 
+
+        private static string GetPath()
+        {
+#if UNITY_EDITOR
+            var path = "URI=file:" + Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db");
+#else
+            var filePath = Path.Combine(Application.persistentDataPath, "SaveGame.db");
+            var path = "URI=file:" + filePath;
+            if (!File.Exists(filePath))
+            {
+                File.Copy(Path.Combine(Application.dataPath, "StreamingAssets", "SaveGame.db"), filePath);
+            }
+#endif
+            return path;
+        }
+
         private void InitiateSettingsInfo()
         {
-            playerSettings = new PlayerSettings(1, Constants.DEFAULT_TOGGLE_VALUE, Constants.DEFAULT_TOGGLE_VALUE,
-                Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE, Constants.DEFAULT_SLIDER_VALUE);
+            playerSettings = new PlayerSettings(1, gameSettings.DefaultToggleValue, gameSettings.DefaultToggleValue,
+                gameSettings.DefaultSliderValue, gameSettings.DefaultSliderValue,gameSettings.DefaultSliderValue);
         }
 
         private void InitiateSaveInfo(string username, string difficultyLevel, string levelName,
@@ -100,7 +134,7 @@ namespace Game
         /// </summary>
         private void CheckForExistingSettings()
         {
-            List<PlayerSettings> settings = saveSettingsRepo.FindAll();
+            var settings = saveSettingsRepo.FindAll();
             
             if (settings.Count == 0)
             {
@@ -118,7 +152,7 @@ namespace Game
         /// </summary>
         private void CheckForExistingSaves()
         {
-            List<SaveInfos> saves = saveGameRepo.FindAll();
+            List<SaveInfos> saves = FindAll();
 
             if (saves.Count == 0)
             {
@@ -134,9 +168,10 @@ namespace Game
             }
         }
 
-        public void UpdateSettings()
+        public void UpdateSettings(PlayerSettings playerSettings)
         {
-            saveSettingsRepo.Update(playerSettings);
+            this.playerSettings = playerSettings;
+            saveSettingsRepo.Update(this.playerSettings);
         }
         
         #region CreateSave
@@ -144,7 +179,7 @@ namespace Game
         private void CreateSave(SaveInfos saveSlot)
         {
             saveGameRepo.Insert(saveSlot);
-            foreach (var character in saveSlot.characterInfos)
+            foreach (var character in saveSlot.CharacterInfos)
             {
                 characterStatusRepo.Insert(character);
             }
@@ -156,8 +191,8 @@ namespace Game
 
         public void DeleteSave(SaveInfos saveSlot)
         {
-            characterStatusRepo.Delete(saveSlot.id);
-            saveGameRepo.Delete(saveSlot.id);
+            characterStatusRepo.Delete(saveSlot.Id);
+            saveGameRepo.Delete(saveSlot.Id);
         }
 
         #endregion
@@ -170,7 +205,7 @@ namespace Game
             {
                 case 1:
                     saveGameRepo.Update(saveSlot1);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -178,7 +213,7 @@ namespace Game
                     break;
                 case 2:
                     saveGameRepo.Update(saveSlot2);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -186,7 +221,7 @@ namespace Game
                     break;
                 case 3:
                     saveGameRepo.Update(saveSlot3);
-                    foreach (var character in saveSlot1.characterInfos)
+                    foreach (var character in saveSlot1.CharacterInfos)
                     {
                         characterStatusRepo.Update(character);
                     }
@@ -206,23 +241,53 @@ namespace Game
 
             foreach (var characterInfo in characterInfos)
             {
-                switch (characterInfo.saveId)
+                switch (characterInfo.SaveId)
                 {
                     case 1:
-                        result[0].characterInfos.Add(characterInfo);
+                        result[0].CharacterInfos.Add(characterInfo);
                         break;
                     case 2:
-                        result[1].characterInfos.Add(characterInfo);
+                        result[1].CharacterInfos.Add(characterInfo);
                         break;
                     default:
-                        result[2].characterInfos.Add(characterInfo);
+                        result[2].CharacterInfos.Add(characterInfo);
                         break;
                 }
             }
             return result;
         }
 
+        public SaveInfos[] GetSaves()
+        {
+            return new SaveInfos[]{saveSlot1, saveSlot2, saveSlot3};
+        }
         #endregion
+
+        public void ResetSave()
+        {
+            var playableCharactersDictionary = CreateBaseCharacterDictionary();
+
+            SaveInfos cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
+                gameSettings.TutorialSceneName, playableCharactersDictionary);
+            
+            switch (SaveSelected)
+            {
+                case 1:
+                    saveSlot1 = cleanSave;
+                    UpdateSave(SaveSelected);
+                    break;
+                case 2:
+                    cleanSave.Id = 2;
+                    saveSlot2 = cleanSave;
+                    UpdateSave(SaveSelected);
+                    break;
+                case 3:
+                    cleanSave.Id = 3;
+                    saveSlot3 = cleanSave;
+                    UpdateSave(SaveSelected);
+                    break;
+            }
+        }
 
         public void OnDestroy()
         {

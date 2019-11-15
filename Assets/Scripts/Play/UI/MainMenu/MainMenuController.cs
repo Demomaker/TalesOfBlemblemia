@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//Author: Antoine Lessard
 namespace Game
 {
     public class MainMenuController : MonoBehaviour
@@ -28,7 +29,7 @@ namespace Game
         {
             navigator = Finder.Navigator;
             mainMenuCanvas = GetComponent<Canvas>();
-            onMainMenuEnter = new OnMainMenuEnter();
+            onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
         }
 
         public void Enter()

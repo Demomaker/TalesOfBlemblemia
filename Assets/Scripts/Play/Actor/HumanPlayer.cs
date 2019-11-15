@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Game
 {
+    /// <summary>
+    /// The human player that controls its units
+    /// Authors: Zacharie Lavigne, Mike Bédard, Antoine Lessard
+    /// </summary>
     public class HumanPlayer : UnitOwner
     {
 
@@ -13,6 +17,9 @@ namespace Game
         public int NumberOfUnits => ownedUnits.Count;
         public int NumberOfRecruitedUnitsFromAlternatePath => numberOfRecruitedUnitsFromAlternativePath;
         private static HumanPlayer instance = null;
+        private List<Unit> defeatedUnits = new List<Unit>();
+        public List<Unit> DefeatedUnits => defeatedUnits;
+
         public static HumanPlayer Instance
         {
             get
@@ -25,21 +32,17 @@ namespace Game
             }
         }
 
-        public override void CheckUnitDeaths()
-        {
-            base.CheckUnitDeaths();
-        }
-
         public override void RemoveOwnedUnit(Unit unit)
         {
             base.RemoveOwnedUnit(unit);
             hasLostAUnitInCurrentLevel = true;
             hasEverLostAUnit = true;
+            
+            defeatedUnits.Add(unit);
         }
 
-        public override void OnNewLevel()
+        public void OnNewLevel()
         {
-            base.OnNewLevel();
             hasLostAUnitInCurrentLevel = false;
         }
 

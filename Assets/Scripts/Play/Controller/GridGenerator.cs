@@ -11,8 +11,13 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    /// <summary>
+    /// Generates each level's grid
+    /// Authors : Mike Bédard, Jérémie Bertrand
+    /// </summary>
     public class GridGenerator : MonoBehaviour
     {
+        [SerializeField] private Vector2Int size;
         [Header("Prefabs")] [SerializeField] private GameObject emptyCellPrefab = null;
         [SerializeField] private GameObject forestCellPrefab = null;
         [SerializeField] private GameObject obstacleCellPrefab = null;
@@ -28,61 +33,29 @@ namespace Game
 
         public void CreateGridCells()
         {
-            BoundsInt bounds = backgroundTilemap.cellBounds;
+            BoundsInt bounds = new BoundsInt(Vector3Int.zero,  new Vector3Int(size.x, size.y, 1));
             TileBase[] allTiles = interactiveTilemap.GetTilesBlock(bounds);
             TileBase[] emptyTiles = tilemapOfTileToIncludeIfEmptyTile.GetTilesBlock(bounds);
             TileBase[] backgroundTiles = backgroundTilemap.GetTilesBlock(bounds);
-            Rect cellGridRectangle = GetComponent<RectTransform>().rect;
 
-            int minX = GetMinX(bounds, cellGridRectangle);
-            int minY = GetMinY(bounds, cellGridRectangle);
-            int maxX = GetMaxX(bounds, cellGridRectangle);
-            int maxY = GetMaxY(bounds, cellGridRectangle);
-
-            GetComponent<RectTransform>().sizeDelta = new Vector2(maxX - minX, maxY - minY);
-
-            for (int y = maxY - 1; y >= minY; y--)
+            var canvas = transform.parent.GetComponent<Canvas>();
+            if(canvas != null) canvas.GetComponent<RectTransform>().sizeDelta = size;
+            
+            for (int j = size.y - 1; j >= 0; j--)
             {
-                for (int x = minX; x < maxX; x++)
+                for (int i = 0; i < size.x; i++)
                 {
-                    TileBase currentTile = allTiles[x + y * bounds.size.x];
+                
+                    TileBase currentTile = allTiles[i + j * size.x];
                     GameObject createdGameObject = InstantiateCellPrefabFrom(currentTile);
                     if (currentTile == null)
-                        currentTile = emptyTiles[x + y * bounds.size.x];
+                        currentTile = emptyTiles[i + j * size.x];
                     if (currentTile == null)
-                        currentTile = backgroundTiles[x + y * bounds.size.x];
+                        currentTile = backgroundTiles[i + j * size.x];
                     if (createdGameObject != null)
                         createdGameObject.AddComponent<TileSprite>().SetSprite(((UnityEngine.Tilemaps.Tile)currentTile).sprite);
                 }
             }
-        }
-
-        private int GetMinX(BoundsInt bounds, Rect cellGridRectangle)
-        {
-            int minX = ((int) bounds.size.x - (int) cellGridRectangle.width) / 2;
-            if (minX < 0) minX = 0;
-            return minX;
-        }
-
-        private int GetMinY(BoundsInt bounds, Rect cellGridRectangle)
-        {
-            int minY = ((int) bounds.size.y - (int) cellGridRectangle.height) / 2;
-            if (minY < 0) minY = 0;
-            return minY;
-        }
-
-        private int GetMaxX(BoundsInt bounds, Rect cellGridRectangle)
-        {
-            int maxX = bounds.size.x - GetMinX(bounds, cellGridRectangle);
-            if (maxX > bounds.size.x) maxX = bounds.size.x;
-            return maxX;
-        }
-
-        private int GetMaxY(BoundsInt bounds, Rect cellGridRectangle)
-        {
-            int maxY = bounds.size.y - GetMinY(bounds, cellGridRectangle);
-            if (maxY > bounds.size.y) maxY = bounds.size.y;
-            return maxY;
         }
 
 

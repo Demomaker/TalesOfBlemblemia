@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game
 {
-    //Authors: Jérémie Bertrand, Zacharie Lavigne
+    //Authors: Jérémie Bertrand, Zacharie Lavigne, Pierre-Luc Maltais (Ce qui touche au ui)
     public class Unit : Targetable
     {
         #region Serialized fields
@@ -26,6 +27,8 @@ namespace Game
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private Weapon weapon;
+        private bool hasActed;
+        private GameSettings gameSettings;
 
         private UIController uiController;
 
@@ -42,6 +45,8 @@ namespace Game
         private bool isResting = false;
         private bool isGoingToDie = false;
         private Animator animator;
+        private SpriteRenderer spriteRenderer;
+
         #endregion
         
         #region Properties
@@ -65,7 +70,8 @@ namespace Game
                 return maxGain;
             }
         }
-
+        public bool IsMoving => isMoving;
+        public bool IsAttacking => isAttacking;
         public int[,] MovementCosts
         {
             get
@@ -90,7 +96,28 @@ namespace Game
         public WeaponType WeaponType => weapon.WeaponType;
         public WeaponType WeaponAdvantage => weapon.Advantage;
         public int MovesLeft => movesLeft;
-        public bool HasActed { get; set; }
+
+        public bool HasActed
+        {
+            get => hasActed;
+            set
+            {
+                if (spriteRenderer != null)
+                {
+                    //if the character has now acted
+                    if (!hasActed && value)
+                    {
+                        spriteRenderer.color = gameSettings.PaleAlpha;
+                    }
+                    //if the character had previously acted but can now act
+                    else if (hasActed && value == false)
+                    {
+                        spriteRenderer.color = gameSettings.OpaqueAlpha;
+                    }
+                }
+                hasActed = value;
+            }
+        }
         public int AttackRange => 1;
 
         public UnitGender Gender => gender;
@@ -98,36 +125,38 @@ namespace Game
         public UnitInfos UnitInfos => unitInfos;
 
         #endregion
-        
-        private void Awake()
+
+        public override void Awake()
         {
             uiController = Harmony.Finder.UIController;
+            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
             gridController = Finder.GridController;
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
-            onHurt = new OnHurt();
-            onAttack = new OnAttack();
-            onDodge = new OnDodge();
-            onUnitMove = new OnUnitMove();
-            onUnitDeath = new OnUnitDeath();
-            onPlayerUnitLoss = new OnPlayerUnitLoss();
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
-
+            gameSettings = Harmony.Finder.GameSettings;
+            base.Awake();
         }
 
         private void OnEnable()
         {
-            OnHurt.Notify += Hurt;
-            OnDodge.Notify += MakeDodge;
+            onHurt.Notify += Hurt;
+            onDodge.Notify += MakeDodge;
         }
 
         private void OnDisable()
         {
-            OnHurt.Notify -= Hurt;
-            OnDodge.Notify -= MakeDodge;
+            onHurt.Notify -= Hurt;
+            onDodge.Notify -= MakeDodge;
         }
 
         [UsedImplicitly]
@@ -158,12 +187,12 @@ namespace Game
         {
             if (isMoving) isResting = false;
             if (animator == null) return;
-            animator.SetBool(Constants.AnimationProperties.IS_MOVING, isMoving);
-            animator.SetBool(Constants.AnimationProperties.IS_ATTACKING, isAttacking);
-            animator.SetBool(Constants.AnimationProperties.IS_DODGING, isDodging);
-            animator.SetBool(Constants.AnimationProperties.IS_BEING_HURT, isBeingHurt);
-            animator.SetBool(Constants.AnimationProperties.IS_RESTING, isResting);
-            animator.SetBool(Constants.AnimationProperties.IS_GOING_TO_DIE, isGoingToDie);
+            animator.SetBool(gameSettings.IsMoving, isMoving);
+            animator.SetBool(gameSettings.IsAttacking, isAttacking);
+            animator.SetBool(gameSettings.IsDodging, isDodging);
+            animator.SetBool(gameSettings.IsBeingHurt, isBeingHurt);
+            animator.SetBool(gameSettings.IsResting, isResting);
+            animator.SetBool(gameSettings.IsGoingToDie, isGoingToDie);
         }
         
         public void ResetTurnStats()
@@ -174,35 +203,36 @@ namespace Game
         
         private void LookAt(Vector3 target)
         {
-            transform.localRotation = Quaternion.Euler(0, target.x < transform.position.x ? 180 : 0, 0);
+            gameObject.GetComponent<SpriteRenderer>().flipX = target.x < gameObject.transform.position.x;
         }
 
         #region Movements
-        public List<Tile> PrepareMove(Tile tile)
+        public List<Tile> PrepareMove(Tile targetTile, bool forArrow = true)
         {
-            isMoving = true;
-            if (tile != currentTile)
+            if (targetTile != currentTile)
             {
-                currentTile.UnlinkUnit();
-                List<Tile> path = PathFinder.PrepareFindPath(gridController, movementCosts,
-                    new Vector2Int(currentTile.LogicalPosition.x, currentTile.LogicalPosition.y), 
-                    new Vector2Int(tile.LogicalPosition.x, tile.LogicalPosition.y), this);
+                if (forArrow)
+                {
+                    currentTile.UnlinkUnit();
+                    movesLeft -= currentTile.CostToMove;
+                }
+                List<Tile> path = PathFinder.PrepareFindPath(gridController, MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.RemoveAt(0);
-                path.Add(tile);
-                movesLeft -= currentTile.CostToMove;
+                path.Add(targetTile);
                 return path;
             }
             return null;
         }
         public Coroutine MoveByAction(Action action)
         {
-            return StartCoroutine(MoveByAction(action, Constants.MOVEMENT_DURATION));
+            return StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
-            var path = action.Path;
+            var path = action?.Path;
             if (path != null)
             {
+                isMoving = true;
                 Tile finalTile = null;
                 for (int i = 0; i < path.Count; i++)
                 {
@@ -243,11 +273,11 @@ namespace Game
                     if (TargetIsInRange(action.Target))
                     {
                         yield return Attack(action.Target);
+                        if (action.Target.GetType() == typeof(Unit))
+                            yield return uiController.LaunchBattleReport(IsEnemy);
                     }
                     else
-                    {
                         Rest();
-                    }
                 }
                 if (action.ActionType == ActionType.Recruit && action.Target != null)
                 {
@@ -284,30 +314,14 @@ namespace Game
             
             HasActed = true;
         }
-
-        public void AttackDistantTargetable(Targetable target)
-        {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
-            if (adjacentTile != null)
-                MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Attack, target));
-        }
+        
         public Coroutine Attack(Targetable target, bool isCountering = false)
         {
             Coroutine AttackRoutineHandle;
             
-            if(target.GetType() == typeof(Door))
+            if(target.GetType() == typeof(Unit))
             {
-                uiController.PrepareBattleReport(
-                    this.Stats.maxHealthPoints, 
-                    this.CurrentHealthPoints,
-                    ((Door)target).BaseHealth,
-                    target.CurrentHealthPoints, 
-                    IsEnemy
-                );
-            }
-            else
-            {
-                uiController.PrepareBattleReport(
+                uiController.SetupCharactersBattleInfo(
                     this.Stats.maxHealthPoints, 
                     this.CurrentHealthPoints,
                     ((Unit)target).classStats.maxHealthPoints,
@@ -315,8 +329,8 @@ namespace Game
                     IsEnemy
                 );
             }
-            
-            AttackRoutineHandle = StartCoroutine(Attack(target, isCountering, Constants.ATTACK_DURATION));
+            //TODO créer un CouroutineStarter qui sera dans le finder qui remplacera le Level Controller de la ligne suivante
+            AttackRoutineHandle = Harmony.Finder.LevelController.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 
@@ -355,8 +369,10 @@ namespace Game
             }
             
             target.CurrentHealthPoints -= damage;
+            
             //todo Will have to check for Doors in the future.
-            yield return uiController.LaunchBattleReport(IsEnemy, ((Unit) target).Stats.maxHealthPoints,CurrentHealthPoints);
+            if (target is Unit)
+                uiController.ChangeCharacterDamageTaken(damage, !IsEnemy);
             counter = 0;
             
             while (counter < duration)
@@ -373,8 +389,8 @@ namespace Game
             
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
-            if (target.GetType() == typeof(Unit) && !isCountering && !target.NoHealthLeft)
-                StartCoroutine(((Unit)target).Attack(this, true, Constants.ATTACK_DURATION));
+            if (!target.NoHealthLeft && !isCountering && target is Unit targetUnit)
+                yield return targetUnit.Attack(this, true, gameSettings.AttackDuration);
             
             if (!isCountering)
             {
@@ -382,12 +398,6 @@ namespace Game
             }
         }
         
-        public void RecruitDistantUnit(Unit target)
-        {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
-            if (adjacentTile != null)
-                MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Recruit, target));
-        }
         public bool RecruitUnit()
         {
             if (IsRecruitable)
@@ -423,15 +433,11 @@ namespace Game
             
             CurrentHealthPoints += HpGainedByHealing;
         }
-        public void HealDistantUnit(Unit target)
-        {
-            var adjacentTile = gridController.FindAvailableAdjacentTile(target.CurrentTile, this);
-            if (adjacentTile != null)
-                MoveByAction(new Action(PrepareMove(adjacentTile), ActionType.Heal, target));
-        }
 
         public bool TargetIsInMovementRange(Targetable target)
         {
+            if (currentTile == null || target == null || target.CurrentTile == null)
+                return false;
             if (currentTile.IsWithinRange(target.CurrentTile, 1))
                 return true;
             return gridController.FindAvailableAdjacentTile(target.CurrentTile, this) != null;

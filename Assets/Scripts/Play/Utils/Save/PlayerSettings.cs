@@ -1,6 +1,7 @@
 ﻿namespace Game
 {
-    public struct PlayerSettings
+    //Author : Antoine Lessard
+    public class PlayerSettings
     {
         public int Id { get; }
         public bool MusicToggle { get; set; }

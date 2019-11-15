@@ -8,6 +8,10 @@ using UnityEngine.SceneManagement;
 
 namespace Game
  { 
+     /// <summary>
+     /// Controller for game-wide functionalities
+     /// Author : Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
+     /// </summary>
      [Findable("GameController")]
      public class GameController : MonoBehaviour
      {
@@ -15,118 +19,63 @@ namespace Game
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
          
-         private DifficultyLevel difficultyLevel;
+         private GameSettings gameSettings;
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
          private int choiceRange;
          private bool permaDeath;
-         private string startingLevelName = Constants.LEVEL_3_SCENE_NAME;
-         private Coroutine lastLevelCoroutine;
-         private string lastLoadedLevelName = null;
-         private string nameOfLevelCompleted => (LevelsCompleted.Count <= 0) ? null : LevelsCompleted.Last();
-         private List<string> tagsOfObjectsToAlwaysKeep = new List<string>();
 
-         public string NameOfLevelCompleted => nameOfLevelCompleted;
-         public List<Level> Levels = new List<Level>();
-         public List<string> LevelsCompleted = new List<string>();
-         public string CurrentLevelName => lastLoadedLevelName; 
-         public string StartingLevelName => startingLevelName;
-         public bool AllLevelsCompleted => Levels.Count == LevelsCompleted.Count;
 
-         public DifficultyLevel DifficultyLevel => difficultyLevel;
+         private LevelLoader levelLoader;
 
+         private string previousLevelName;
+         private string currentLevelName;
+
+         public Level[] Levels;
+         
+         public string PreviousLevelName => previousLevelName;
+         public string CurrentLevelName => levelLoader.LoadedLevel;
+         public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
+
+         public DifficultyLevel DifficultyLevel { get; set; }
+
+         private void Awake()
+         {
+             levelLoader = Harmony.Finder.LevelLoader;
+             gameSettings = Harmony.Finder.GameSettings;
+             previousLevelName = gameSettings.JimsterburgSceneName;
+             Levels = new Level[]
+             {
+                 new Level("", gameSettings.TutorialSceneName),
+                 new Level(gameSettings.TutorialSceneName, gameSettings.JimsterburgSceneName),
+                 new Level(gameSettings.JimsterburgSceneName, gameSettings.ParabeneForestSceneName),
+                 new Level(gameSettings.ParabeneForestSceneName, gameSettings.BlemburgCitadelSceneName),
+                 new Level(gameSettings.BlemburgCitadelSceneName, gameSettings.DarkTowerSceneName),
+                 new Level(gameSettings.BlemburgCitadelSceneName, gameSettings.RinfretVillageSceneName),
+                 new Level(gameSettings.RinfretVillageSceneName, gameSettings.TulipValleySceneName),
+                 new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
+                 new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
+             };
+             choiceRange = choiceRangePerDifficulty[DifficultyLevel];
+             permaDeath = DifficultyLevel != DifficultyLevel.Easy;
+         }
+         
          private void Start()
          {
-             InstantiateLevelList();
-             ResetCompletedLevels();
-             SceneManager.LoadSceneAsync(Constants.MAINMENU_SCENE_NAME, LoadSceneMode.Additive);
+             levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
 
-         private void InstantiateLevelList()
-         {
-             Levels = new List<Level>
-             {
-                 new Level("", Constants.LEVEL_1_SCENE_NAME),
-                 new Level(Constants.LEVEL_1_SCENE_NAME, Constants.LEVEL_2_SCENE_NAME),
-                 new Level(Constants.LEVEL_2_SCENE_NAME, Constants.LEVEL_3_SCENE_NAME),
-                 new Level(Constants.LEVEL_3_SCENE_NAME, Constants.LEVEL_4_SCENE_NAME),
-                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_5_SCENE_NAME),
-                 new Level(Constants.LEVEL_4_SCENE_NAME, Constants.LEVEL_6_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_7_SCENE_NAME),
-                 new Level(Constants.LEVEL_7_SCENE_NAME, Constants.LEVEL_8_SCENE_NAME),
-                 new Level(Constants.LEVEL_6_SCENE_NAME, Constants.LEVEL_8_SCENE_NAME)
-             };
-         }
-         private void ResetCompletedLevels()
-         {
-             LevelsCompleted.Clear();
-         }
-
-         public void UnloadLevel(string levelname)
-         {
-             StartCoroutine(UnloadLevelCoroutine(levelname));
-         }
-         
-         public void LoadLevel(string levelname)
-         {
-             if(lastLevelCoroutine != null)
-                 StopCoroutine(lastLevelCoroutine);
-             lastLevelCoroutine = StartCoroutine(LoadLevelCoroutine(levelname));
-             
-             if(lastLoadedLevelName != null)
-                 UnloadLevel(lastLoadedLevelName);
-             lastLoadedLevelName = levelname;
-         }
-    
-         private IEnumerator LoadLevelCoroutine(string levelname)
-         {
-             if (!SceneManager.GetSceneByName(levelname).isLoaded)
-             {
-                 if (levelname != Constants.OVERWORLD_SCENE_NAME)
-                 {
-                     SceneManager.LoadScene(Constants.GAME_UI_SCENE_NAME, LoadSceneMode.Additive);
-                     SceneManager.UnloadSceneAsync(Constants.OVERWORLD_SCENE_NAME);
-                 }
-                 SceneManager.UnloadSceneAsync(Constants.GAME_UI_SCENE_NAME);
-                 yield return SceneManager.LoadSceneAsync(levelname,LoadSceneMode.Additive);
-             }
-             SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelname));
-         }
-         
-         private List<GameObject> GetObjectsToAlwaysKeep()
-         {
-             List<GameObject> gameObjects = new List<GameObject>();
-             foreach (string objectTag in tagsOfObjectsToAlwaysKeep)
-             {
-                 gameObjects.Add(GameObject.FindWithTag(objectTag));
-             }
-             return gameObjects;
-         }
-
-         private IEnumerator UnloadLevelCoroutine(string levelname)
-         {
-             if (SceneManager.GetSceneByName(levelname).isLoaded)
-                 yield return SceneManager.UnloadSceneAsync(levelname);
-         }
-
-         public GameController() : this(DifficultyLevel.Easy)
-         {
-             
-         }
+         public GameController() : this(DifficultyLevel.Easy) { }
          public GameController(DifficultyLevel difficultyLevel)
          {
-             this.difficultyLevel = difficultyLevel;
+             DifficultyLevel = difficultyLevel;
              choiceRangePerDifficulty.Add(DifficultyLevel.Easy, choiceForEasy);
              choiceRangePerDifficulty.Add(DifficultyLevel.Medium, choiceForMedium);
              choiceRangePerDifficulty.Add(DifficultyLevel.Hard, choiceForHard);
          }
 
-         public void Awake()
+         public void OnLevelCompleted(string levelName)
          {
-             choiceRange = choiceRangePerDifficulty[difficultyLevel];
-             permaDeath = difficultyLevel != DifficultyLevel.Easy;
-             tagsOfObjectsToAlwaysKeep.Add(Tags.SOUND_MANAGER);
-             tagsOfObjectsToAlwaysKeep.Add(Tags.GAME_CONTROLLER_TAG);
-             tagsOfObjectsToAlwaysKeep.Add(Tags.ACHIEVEMENT_CONTROLLER_TAG);
+             previousLevelName = levelName;
          }
      }
 

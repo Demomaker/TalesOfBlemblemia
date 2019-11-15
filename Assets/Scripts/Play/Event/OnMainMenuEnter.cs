@@ -2,9 +2,14 @@
 
 namespace Game
 {
+    /// <summary>
+    /// OnMainMenuEnter event channel
+    /// Author : Mike Bédard
+    /// </summary>
+    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class OnMainMenuEnter : EventChannel<MainMenuController>
     {
-        public static event EventHandler<MainMenuController> Notify;
+        public event EventHandler<MainMenuController> Notify;
         public override void Publish(MainMenuController eventParam)
         {
             Notify?.Invoke(eventParam);

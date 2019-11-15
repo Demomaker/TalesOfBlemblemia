@@ -3,12 +3,19 @@ using UnityEngine;
 
 namespace Game
 {
-    // Authors: Jérémie Bertrand
+    //Author: Jérémie Bertrand
     public class Cinematic : MonoBehaviour
     {
         [SerializeField] private CinematicTriggerType trigger = CinematicTriggerType.Manual;
-        [SerializeField] private List<CameraAction> cameraActions;
-        public IEnumerable<CameraAction> CameraActions => cameraActions;
+        [SerializeField] private List<CinematicAction> actions;
+        
+        private OnLevelVictory onLevelVictory;
+        public IEnumerable<CinematicAction> Actions => actions;
+
+        private void Awake()
+        {
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+        }
 
         private void Start()
         {
@@ -20,7 +27,7 @@ namespace Game
             switch (trigger)
             {
                 case CinematicTriggerType.OnLevelVictory:
-                    OnLevelVictory.Notify += TriggerCinematic;
+                    onLevelVictory.Notify += TriggerCinematic;
                     break;
             }
         }
@@ -30,7 +37,7 @@ namespace Game
             switch (trigger)
             {
                 case CinematicTriggerType.OnLevelVictory:
-                    OnLevelVictory.Notify -= TriggerCinematic;
+                    onLevelVictory.Notify -= TriggerCinematic;
                     break;
             }
         }
@@ -40,7 +47,7 @@ namespace Game
             Harmony.Finder.LevelController.CinematicController.LaunchCinematic(this);
         }
 
-        enum CinematicTriggerType
+        public enum CinematicTriggerType
         {
             Manual,
             OnStart,

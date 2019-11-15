@@ -3,11 +3,10 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Zacharie Lavigne
     public class Door : Targetable
     {
         [SerializeField] private int baseHealth = 1;
-
-        public int BaseHealth => baseHealth;
 
         protected override void Start()
         {
@@ -20,6 +19,7 @@ namespace Game
         public override void Die()
         {
             currentTile.UnlinkDoor();
+            Harmony.Finder.LevelController.IncrementTileUpdate();
             base.Die();
         }
     }

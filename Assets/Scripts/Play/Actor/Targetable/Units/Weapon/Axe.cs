@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace Game
+﻿namespace Game
 {
-    /// Auteur: Zacharie Lavigne
+    /// Auteur: Zacharie Lavigne, Jérémie Bertrand
     public class Axe : Weapon
     {
         private void Awake()
         {
             weaponType = WeaponType.Axe;
-            advantage = AXE_ADVANTAGE;
+            advantage = WeaponTypeExt.AXE_ADVANTAGE;
         }
     }
 }

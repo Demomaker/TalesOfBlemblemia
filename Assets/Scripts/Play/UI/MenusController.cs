@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+//Author: Antoine Lessard
 namespace Game
 {
     public class MenusController : MonoBehaviour

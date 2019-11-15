@@ -2,9 +2,14 @@
 
 namespace Game
 {
+    /// <summary>
+    /// OnHurt event channel
+    /// Author : Mike Bédard
+    /// </summary>
+    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class OnHurt : EventChannel<Unit>
     {
-        public static event EventHandler<Unit> Notify;
+        public event EventHandler<Unit> Notify;
         public override void Publish(Unit eventParam)
         {
             Notify?.Invoke(eventParam);

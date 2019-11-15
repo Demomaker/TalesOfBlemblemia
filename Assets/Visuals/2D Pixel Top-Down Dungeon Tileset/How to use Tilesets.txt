@@ -1,0 +1,27 @@
+I receive a lot of emails of people asking me how to best use the tiles.
+
+The best way to make use of tiles is not by placing individual sprites in the scene, but by building a bigger tilemap with it.
+
+I recommend one of two ways to building tilemaps for your games:
+
+1) Tiled + Tiled2Unity
+
+Tiled ( http://www.mapeditor.org/ ) is probably the best and most user-friendly tilemap editor out there. You can create as many layers as you want and use multiple tilesets per layer.
+
+Tiled2Unity ( http://www.seanba.com/tiled2unity ) is a tool you can use to import your Tiled maps into Unity.
+
+Both tools are free.
+
+It takes a bit to set up the workflow, but once that is done, making tilemaps is a breeze. I've used this technique the most in my own projects.
+
+
+2) Unity 2017.2 and up
+
+Since 2017.2 Unity comes with its own set of tilemap editing tools. I haven't used them a whole lot but what I have seen so far was impressive.
+
+Here are some videos that showcase the new tools:
+
+https://www.youtube.com/watch?v=P58DieF9eBU
+
+https://www.youtube.com/watch?v=RkaEh--qUAY
+

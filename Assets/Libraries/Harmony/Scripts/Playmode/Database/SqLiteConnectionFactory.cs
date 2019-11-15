@@ -29,7 +29,7 @@ namespace Harmony
         
         private const string SQLITE_CONNECTION_TEMPLATE = "URI=file:{0}";
 
-        [SerializeField] private string databaseFileName = "Database.db";
+        [SerializeField] private string databaseFileName = "SaveGame.db";
 
         private string connexionString;
 

@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Game
 {
+    /// <summary>
+    /// Editor for the grid generator
+    /// Author : Mike Bédard
+    /// </summary>
     [CustomEditor(typeof(GridGenerator))]
     public class GridGeneratorEditor : Editor
     {

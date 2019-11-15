@@ -14,6 +14,13 @@ TagManager:
   - SaveController
   - PauseController
   - AchievementController
+  - OverWorldController
+  - DialogueManager
+  - UIController
+  - BattleReportAlly
+  - BattleReportEnemy
+  - OverheadHp
+  - LevelLoader
   layers:
   - Default
   - TransparentFX

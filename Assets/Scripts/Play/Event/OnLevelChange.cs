@@ -3,9 +3,14 @@ using Harmony;
 
 namespace Game
 {
+    /// <summary>
+    /// OnLevelChange event channel
+    /// Author : Mike Bédard
+    /// </summary>
+    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class OnLevelChange : EventChannel<LevelController>
     {
-        public static event EventHandler<LevelController> Notify;
+        public event EventHandler<LevelController> Notify;
         public override void Publish(LevelController eventParam)
         {
             Notify?.Invoke(eventParam);
