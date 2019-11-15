@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    /// <summary>
+    /// Manages the sounds and music of the game
+    /// Author : Mike Bédard
+    /// </summary>
     public class AudioManager : MonoBehaviour
     {
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;

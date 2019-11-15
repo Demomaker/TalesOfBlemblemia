@@ -2,6 +2,10 @@
 
 namespace Game
 {
+    /// <summary>
+    /// OnSFXToggle event channel
+    /// Author : Mike Bédard
+    /// </summary>
     [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
     public class OnSFXToggle : EventChannel<bool>
     {
