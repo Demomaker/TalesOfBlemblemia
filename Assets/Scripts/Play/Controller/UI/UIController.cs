@@ -51,6 +51,18 @@ namespace Game
         [SerializeField] private Color green;
         [SerializeField] private Color red;
         [SerializeField] private Color grey;
+        
+        [Header("Controls Hint")]
+        [SerializeField] private TMP_Text rightClickHintText;
+        [SerializeField] private TMP_Text leftClickHintText;
+        [SerializeField] private GameObject rightClickHintGameObject;
+        [SerializeField] private GameObject leftClickHintGameObject;
+
+        private const string SELECT_UNIT_TEXT = "Select unit";
+        private const string UNSELECT_UNIT_TEXT = "Unselect unit";
+        private const string ATTACK_TEXT = "Attack";
+        private const string REST_TEXT = "Rest";
+        private const string MOVE_TEXT = "Move";
 
 
         private const string UNREACHABLE_TILE_TEXT = "Unreachable";
