@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    //Authors : Pierre-Luc Maltais & Antoine Lessard
     public class CharacterInfo
     {
         public string CharacterName { get; set; }

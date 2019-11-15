@@ -52,8 +52,8 @@ namespace Game
                 {
                     yield return null;
                 } 
+                
                 var currentUnit = unit;
-                     
                 if (!currentUnit.HasActed)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //Code taken here : https://unity3d.college/2017/06/29/unity-slider-label-text/
+    //and adapted to current usage by Antoine Lessard
     public class SliderValueText : MonoBehaviour
     {
         [SerializeField] private string formatText;

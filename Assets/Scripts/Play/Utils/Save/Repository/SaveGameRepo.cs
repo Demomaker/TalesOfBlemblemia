@@ -5,6 +5,7 @@ using System.Data.Common;
 
 namespace Game
 {
+    //Authors : Pierre-Luc Maltais & Antoine Lessard
     public class SaveGameRepo : Repository<SaveInfos>
     {
         private readonly DbConnection connection;
@@ -68,40 +69,44 @@ namespace Game
 
         public void Update(SaveInfos myObject)
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = "UPDATE SaveGame SET player_name = ?, difficulty_level = ?, level_name = ? WHERE savegame_id = ?";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandType = CommandType.Text;
+                command.CommandText = "UPDATE SaveGame SET player_name = ?, difficulty_level = ?, level_name = ? WHERE savegame_id = ?";
 
-            var playerName = command.CreateParameter();
-            playerName.Value = myObject.Username;
-            command.Parameters.Add(playerName);
+                var playerName = command.CreateParameter();
+                playerName.Value = myObject.Username;
+                command.Parameters.Add(playerName);
 
-            var difficulty = command.CreateParameter();
-            difficulty.Value = myObject.DifficultyLevel;
-            command.Parameters.Add(difficulty);
+                var difficulty = command.CreateParameter();
+                difficulty.Value = myObject.DifficultyLevel;
+                command.Parameters.Add(difficulty);
             
-            var levelName = command.CreateParameter();
-            levelName.Value = myObject.LevelName;
-            command.Parameters.Add(levelName);
+                var levelName = command.CreateParameter();
+                levelName.Value = myObject.LevelName;
+                command.Parameters.Add(levelName);
 
-            var id = command.CreateParameter();
-            id.Value = myObject.Id;
-            command.Parameters.Add(id);
+                var id = command.CreateParameter();
+                id.Value = myObject.Id;
+                command.Parameters.Add(id);
             
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
 
         public void Delete(int id)
         {
-            var command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = "DELETE FROM SaveGame WHERE savegame_id = ?";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandType = CommandType.Text;
+                command.CommandText = "DELETE FROM SaveGame WHERE savegame_id = ?";
 
-            var saveGameId = command.CreateParameter();
-            saveGameId.Value = id;
-            command.Parameters.Add(saveGameId);
+                var saveGameId = command.CreateParameter();
+                saveGameId.Value = id;
+                command.Parameters.Add(saveGameId);
 
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
