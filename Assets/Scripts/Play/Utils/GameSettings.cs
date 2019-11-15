@@ -30,6 +30,7 @@ namespace Game
         [SerializeField] private R.E.Scene morktressScene;
         [SerializeField] private R.E.Scene overworldScene;
         [SerializeField] private R.E.Scene mainmenuScene;
+        [SerializeField] private R.E.Scene startingLevelScene;
 
         [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
         [SerializeField] private int saveSlotTwo = 2;
@@ -88,6 +89,9 @@ namespace Game
         public string MorktressSceneName => morktressScene.ToString();
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
+
+        public string StartingLevelSceneName => startingLevelScene.ToString();
+
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;
         public int SaveSlotThree => saveSlotThree;

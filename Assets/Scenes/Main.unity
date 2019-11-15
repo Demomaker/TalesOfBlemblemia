@@ -414,36 +414,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AchievementController
       objectReference: {fileID: 0}
-    - target: {fileID: 7235603942003285432, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_TagString
-      value: AchievementController
-      objectReference: {fileID: 0}
-    - target: {fileID: 7235603942003285432, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 543463051851212481, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 794288046011125022, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 814486647799031042, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2460208702438666549, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4186548872590960841, guid: 64ade3371008ec5468534e225a1a75af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -547,21 +517,6 @@ PrefabInstance:
     - target: {fileID: 4186548872590960841, guid: 64ade3371008ec5468534e225a1a75af,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632073262899533253, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 69
-      objectReference: {fileID: 0}
-    - target: {fileID: 5098479347417430921, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8237212012136305562, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

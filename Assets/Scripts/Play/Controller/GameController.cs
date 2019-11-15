@@ -35,7 +35,6 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             previousLevelName = gameSettings.JimsterburgSceneName;
              Levels = new Level[]
              {
                  new Level("", gameSettings.TutorialSceneName),
@@ -48,6 +47,7 @@ namespace Game
                  new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
                  new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
              };
+             previousLevelName = Levels.First(level => level.LevelName == gameSettings.StartingLevelSceneName).PreviousLevel;
              choiceRange = choiceRangePerDifficulty[DifficultyLevel];
              permaDeath = DifficultyLevel != DifficultyLevel.Easy;
          }

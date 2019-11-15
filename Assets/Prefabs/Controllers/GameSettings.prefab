@@ -51,20 +51,17 @@ MonoBehaviour:
   movementDuration: 0.3
   numberOfRecruitablesOnAlternatePath: 8
   skipComputerTurnKey: 32
-  tutorialScene: {fileID: 102900000, guid: 3a7818586c5ca584c8cf06b0f152b3ad, type: 3}
-  jimsterburgScene: {fileID: 102900000, guid: c787b87a96eb24d42970ca72d48a0649, type: 3}
-  parabeneForestScene: {fileID: 102900000, guid: 8a2366d1db21489409e5c5e7a8f5f560,
-    type: 3}
-  blemburgCitadelScene: {fileID: 102900000, guid: 836a255d2ae3d884285c915c0faf4e55,
-    type: 3}
-  rinfretVillageScene: {fileID: 102900000, guid: 5ab43a1befec026418e1fa93ae1ceb15,
-    type: 3}
-  darkTowerScene: {fileID: 102900000, guid: 69b9a6f1ea89f6840bfe90a27f5ea2cc, type: 3}
-  tulipValleyScene: {fileID: 102900000, guid: 262c9fff37ce64d40996e24056a8e0c7, type: 3}
-  morktressScene: {fileID: 102900000, guid: 91dc955b4bbf92648a2077868dcc6334, type: 3}
-  overworldScene: {fileID: 102900000, guid: f9f811e731d70d44aaea609d9c802999, type: 3}
-  mainmenuScene: {fileID: 102900000, guid: d540e464439e9b844bb331f27aa87fca, type: 3}
-  gameUiScene: {fileID: 102900000, guid: 0e670e403ccd0d84f9896035047f70b3, type: 3}
+  tutorialScene: 23585056
+  jimsterburgScene: 21787095
+  parabeneForestScene: 76988147
+  blemburgCitadelScene: 56039707
+  rinfretVillageScene: 15409662
+  darkTowerScene: 20786035
+  tulipValleyScene: 56662542
+  morktressScene: 96624225
+  overworldScene: 18175791
+  mainmenuScene: 10387227
+  startingLevelScene: 23585056
   saveSlotOne: 1
   saveSlotTwo: 2
   saveSlotThree: 3

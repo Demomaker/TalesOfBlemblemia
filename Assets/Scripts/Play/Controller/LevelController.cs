@@ -119,10 +119,7 @@ namespace Game
 
         private void ResetVariables()
         {
-            levelCompleted = false;
-            levelEnded = false;
             levelIsEnding = false;
-            levelFailed = false;
             units = null;
             levelTileUpdateKeeper = 0;
             levelName = "";

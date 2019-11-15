@@ -68,7 +68,16 @@ namespace Game
                 case CinematicActionType.GameObjectMovement:
                     yield return PlayGameObjectMovement(action.GameObjectToMove, action.GameObjectTarget.position, action.Duration, action.CameraZoom, action.CameraFollow);
                     break;
+                case CinematicActionType.Activate:
+                    yield return ActivateObject(action.GameObjectToActivate);
+                    break;
             }
+        }
+
+        private IEnumerator ActivateObject(GameObject actionGameObjectToActivate)
+        {
+            actionGameObjectToActivate.SetActive(true);
+            yield break;
         }
 
         private IEnumerator PlayQuote(Dialogue dialogue)

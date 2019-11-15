@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Morktress.unity
     guid: 91dc955b4bbf92648a2077868dcc6334
+  - enabled: 1
+    path: Assets/Scenes/Levels/Tutorial.unity
+    guid: 3a7818586c5ca584c8cf06b0f152b3ad
   m_configObjects: {}

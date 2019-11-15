@@ -12,6 +12,7 @@ namespace Game
         protected Tile currentTile;
         private int currentHealthPoints;
         private OverHeadHpController overHeadHpController;
+        private CinematicController cinematicController;
 
         public bool IsEnemyTarget => isEnemyTarget;
         public bool NoHealthLeft => CurrentHealthPoints <= 0;
@@ -48,6 +49,7 @@ namespace Game
 
         public virtual void Awake()
         {
+            cinematicController = Harmony.Finder.LevelController.CinematicController;
             try
             {
                 overHeadHpController = gameObject.GetComponent<OverHeadHpController>();
@@ -66,6 +68,8 @@ namespace Game
         private IEnumerator InitPosition()
         {
             yield return new WaitForEndOfFrame();
+            while (cinematicController.IsPlayingACinematic)
+                yield return null;
             var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
             if(transform != null && tile != null)
             {
