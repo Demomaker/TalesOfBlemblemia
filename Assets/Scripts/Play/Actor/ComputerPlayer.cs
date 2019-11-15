@@ -13,8 +13,6 @@ namespace Game
     {
         private static ComputerPlayer instance = null;
         private List<Targetable> targetsToDestroy;
-        
-        private UIController uiController;
 
         public static ComputerPlayer Instance
         {
@@ -35,7 +33,7 @@ namespace Game
 
         public void FetchUiController()
         {
-            uiController = Harmony.Finder.UIController;
+            //uiController = Harmony.Finder.UIController;
         }
 
         public void AddTarget(Targetable target)
@@ -46,8 +44,9 @@ namespace Game
         public IEnumerator PlayUnits()
         {
             //TODO les unités qui meurent altèrent la liste du foreach et font crasher si une unité meurt pendant sont tour
-            foreach (var unit in ownedUnits)
+            /*foreach (var unit in ownedUnits)
             {
+                var uiController = Harmony.Finder.UIController;
                 while (uiController.IsBattleReportActive)
                 {
                     yield return null;
@@ -61,6 +60,27 @@ namespace Game
                     {
                         yield return currentUnit.MoveByAction(action);
                     }
+                    base.CheckUnitDeaths();
+                }
+            }*/
+            for (int i = 0; i < ownedUnits.Count; i++)
+            {
+                var uiController = Harmony.Finder.UIController;
+                while (uiController.IsBattleReportActive)
+                {
+                    yield return null;
+                } 
+                var currentUnit = ownedUnits[i];
+                     
+                if (!currentUnit.HasActed)
+                {
+                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+                    
+                    while (!currentUnit.HasActed)
+                    {
+                        yield return currentUnit.MoveByAction(action);
+                    }
+
                     base.CheckUnitDeaths();
                 }
             }

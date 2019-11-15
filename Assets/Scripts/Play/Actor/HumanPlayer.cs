@@ -28,11 +28,6 @@ namespace Game
             }
         }
 
-        public override void CheckUnitDeaths()
-        {
-            base.CheckUnitDeaths();
-        }
-
         public override void RemoveOwnedUnit(Unit unit)
         {
             base.RemoveOwnedUnit(unit);
