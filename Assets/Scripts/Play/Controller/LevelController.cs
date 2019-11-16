@@ -195,7 +195,7 @@ namespace Game
 
         protected void Update()
         {
-            if(Input.GetKeyDown(KeyCode.O)))
+            if(Input.GetKeyDown(KeyCode.O))
             {
                 skipLevel = true;
             }
