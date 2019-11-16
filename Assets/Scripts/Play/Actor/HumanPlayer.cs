@@ -2,6 +2,10 @@
 
 namespace Game
 {
+    /// <summary>
+    /// The human player that controls its units
+    /// Authors: Zacharie Lavigne, Mike Bédard, Antoine Lessard
+    /// </summary>
     public class HumanPlayer : UnitOwner
     {
 
@@ -28,11 +32,6 @@ namespace Game
             }
         }
 
-        public override void CheckUnitDeaths()
-        {
-            base.CheckUnitDeaths();
-        }
-
         public override void RemoveOwnedUnit(Unit unit)
         {
             base.RemoveOwnedUnit(unit);
@@ -42,9 +41,8 @@ namespace Game
             defeatedUnits.Add(unit);
         }
 
-        public override void OnNewLevel()
+        public void OnNewLevel()
         {
-            base.OnNewLevel();
             hasLostAUnitInCurrentLevel = false;
         }
 

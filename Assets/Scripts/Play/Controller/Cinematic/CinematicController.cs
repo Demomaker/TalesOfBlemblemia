@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
-{
+{    
+    //Author: Jérémie Bertrand
     public class CinematicController : MonoBehaviour
     {
         private Camera mainCamera;

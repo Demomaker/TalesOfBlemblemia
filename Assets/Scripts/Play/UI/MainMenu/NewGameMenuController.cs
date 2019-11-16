@@ -5,6 +5,7 @@ using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//Author: Antoine Lessard
 namespace Game
 {
     public class NewGameMenuController : MonoBehaviour

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //Author: Antoine Lessard
     public class PauseController : MonoBehaviour
     {
         [Header("Controller")] 
@@ -20,6 +21,7 @@ namespace Game
 
         private bool isPaused;
 
+        //TODO necessaire?
         private Navigator navigator;
 
         private void Awake()

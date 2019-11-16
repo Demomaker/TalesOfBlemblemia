@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Permissions;
 using System.Linq;
-using Game;
 using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
-using Finder = Harmony.Finder;
 
 namespace Game
 {
@@ -103,6 +98,20 @@ namespace Game
         public AudioClip BackgroundMusic => backgroundMusic;
         public CinematicController CinematicController => cinematicController;
 
+        public bool PlayerUnitIsMovingOrAttacking
+        {
+            get
+            {
+                bool playerUnitIsMovingOrAttacking = false;
+                foreach (var unit in players[0].OwnedUnits)
+                {
+                    if (unit.IsMoving || unit.IsAttacking)
+                        playerUnitIsMovingOrAttacking = true;
+                }
+                return playerUnitIsMovingOrAttacking;
+            }
+        }
+
         private void Awake()
         {
             levelLoader = Harmony.Finder.LevelLoader;
@@ -133,7 +142,6 @@ namespace Game
             onLevelChange.Publish(this);
             InitializePlayersAndUnits();
             currentPlayer = players[0];
-            ComputerPlayer.Instance.FetchUiController();
             OnTurnGiven();
             if (dialogueUi != null)
             {
@@ -187,13 +195,14 @@ namespace Game
 
         protected void Update()
         {
-            if (Input.GetKeyDown(KeyCode.O))
+            if(Input.GetKeyDown(KeyCode.O)))
             {
                 skipLevel = true;
             }
-
+            
             if (!doNotEnd && levelEnded)
             {
+                ResetUnitsAlpha();
                 StartCoroutine(EndLevel());
             }
 
@@ -212,11 +221,7 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-            if (levelCompleted)
-            {
-                onLevelVictory.Publish(this);
-            }
-            
+            if(levelCompleted) onLevelVictory.Publish(this);
             while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
@@ -315,11 +320,13 @@ namespace Game
 
         private void Play(UnitOwner unitOwner)
         {
-            unitOwner.CheckUnitDeaths();
-            if (isComputerPlaying || !(unitOwner is ComputerPlayer)) return;
-            isComputerPlaying = true;
-            var currentComputerPlayer = unitOwner as ComputerPlayer;
-            StartCoroutine(currentComputerPlayer.PlayUnits());
+            unitOwner.RemoveDeadUnits();
+            if (!isComputerPlaying && unitOwner is ComputerPlayer)
+            {
+                isComputerPlaying = true;
+                var currentComputerPlayer = unitOwner as ComputerPlayer;
+                StartCoroutine(currentComputerPlayer.PlayUnits());
+            }
         }
 
         private void CheckForPlayerTurnSkip()
@@ -343,6 +350,10 @@ namespace Game
             var player1 = HumanPlayer.Instance;
             var player2 = ComputerPlayer.Instance;
 
+            player1.OwnedUnits.Clear();
+            player1.DefeatedUnits.Clear();
+            player2.OwnedUnits.Clear();
+            
             units = FindObjectsOfType<Unit>();
 
             GiveUnits(units, player1, player2);

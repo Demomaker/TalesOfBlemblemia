@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 namespace Game
 {
+    /// <summary>
+    /// Controls the overworld
+    /// Authors : Jérémie Bertrand
+    /// </summary>
     [Findable(Game.Tags.OVER_WORLD_CONTROLLER_TAG)]
     public class OverWorldController : MonoBehaviour
     {

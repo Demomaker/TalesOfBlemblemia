@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Jérémie Bertrand, Zacharie Lavigne, Pierre-Luc Maltais
     public abstract class Targetable : MonoBehaviour
     {
         [SerializeField] private Vector2Int initialPosition;
@@ -12,7 +13,8 @@ namespace Game
         protected Tile currentTile;
         private int currentHealthPoints;
         private OverHeadHpController overHeadHpController;
-        private CinematicController cinematicController;
+
+        private LevelController levelController;
 
         public bool IsEnemyTarget => isEnemyTarget;
         public bool NoHealthLeft => CurrentHealthPoints <= 0;
@@ -37,7 +39,7 @@ namespace Game
                 if (currentTile != null) currentTile.UnlinkUnit();
                 currentTile = value;
                 if (value != null) value.LinkTargetable(this);
-                Harmony.Finder.LevelController.IncrementTileUpdate();
+                levelController.IncrementTileUpdate();
             }
         }
 
@@ -49,7 +51,7 @@ namespace Game
 
         public virtual void Awake()
         {
-            cinematicController = Harmony.Finder.LevelController.CinematicController;
+            levelController = Harmony.Finder.LevelController;
             try
             {
                 overHeadHpController = gameObject.GetComponent<OverHeadHpController>();
@@ -68,14 +70,12 @@ namespace Game
         private IEnumerator InitPosition()
         {
             yield return new WaitForEndOfFrame();
-            while (cinematicController.IsPlayingACinematic)
-                yield return null;
-            var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
-            if(transform != null && tile != null)
+            while (levelController.CinematicController.IsPlayingACinematic)
             {
-                transform.position = tile.WorldPosition;
+                yield return null;
             }
-
+            var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
+            transform.position = tile.WorldPosition;
             CurrentTile = tile;
         }
     }

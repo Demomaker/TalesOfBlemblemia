@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game
 {
-    //Author Pierre-Luc Maltais and Antoine Lessard
+    //Authors: Pierre-Luc Maltais, Antoine Lessard, Zacharie Lavigne
     public static class PathFinder
     {
         public static int[,] PrepareComputeCost(Vector2Int from, bool unitIsEnemy)
@@ -149,7 +149,7 @@ namespace Game
             }
             
         }
-
+        //TODO il trouve un path impossible et donne donc une list contenant 1 élément
         #region CheckTargets
         private static List<Tile> CheckLeftOfTarget(
             GridController grid, 
@@ -237,7 +237,7 @@ namespace Game
         }
         #endregion
 
-        private static List<Tile> FindPath(
+        public static List<Tile> FindPath(
             GridController grid, 
             int[,] movementCosts, 
             List<Tile> path, 
@@ -312,15 +312,17 @@ namespace Game
         private static bool CheckIfTileInaccessible(Vector2Int to, int[,] movementCosts)
         {
             bool tileIsInaccessible = true;
-            if (tileIsInaccessible && to.x > 0)
-                tileIsInaccessible = movementCosts[to.x - 1, to.y] == Int32.MaxValue;
-            if (tileIsInaccessible && to.y > 0)
-                tileIsInaccessible = movementCosts[to.x, to.y - 1] == Int32.MaxValue;
-            if (tileIsInaccessible && to.x < movementCosts.GetLength(0) - 1)
-                tileIsInaccessible = movementCosts[to.x + 1, to.y] == Int32.MaxValue;
-            if (tileIsInaccessible && to.y < movementCosts.GetLength(1) - 1)
-                tileIsInaccessible = movementCosts[to.x, to.y + 1] == Int32.MaxValue;
-            
+            if (to.x >= 0 && to.y >= 0)
+            {
+                if (tileIsInaccessible && to.x > 0)
+                    tileIsInaccessible = movementCosts[to.x - 1, to.y] == Int32.MaxValue;
+                if (tileIsInaccessible && to.y > 0)
+                    tileIsInaccessible = movementCosts[to.x, to.y - 1] == Int32.MaxValue;
+                if (tileIsInaccessible && to.x < movementCosts.GetLength(0) - 1)
+                    tileIsInaccessible = movementCosts[to.x + 1, to.y] == Int32.MaxValue;
+                if (tileIsInaccessible && to.y < movementCosts.GetLength(1) - 1)
+                    tileIsInaccessible = movementCosts[to.x, to.y + 1] == Int32.MaxValue;
+            }
             return tileIsInaccessible;
         }
 
@@ -331,7 +333,7 @@ namespace Game
             {
                 var tile = grid.GetTile(to.x, to.y + 1);
                 //The first tile in the path should be available
-                if (path.Count == 1 && !tile.IsAvailable && unitIsEnemy)
+                if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
                 if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {
@@ -350,7 +352,7 @@ namespace Game
             {
                 var tile = grid.GetTile(to.x, to.y - 1);
                 //The first tile in the path should be available
-                if (path.Count == 1 && !tile.IsAvailable)
+                if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
                 if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {
@@ -369,7 +371,7 @@ namespace Game
             {
                 var tile = grid.GetTile(to.x + 1, to.y);
                 //The first tile in the path should be available
-                if (path.Count == 1 && !tile.IsAvailable)
+                if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
                 if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {
@@ -388,7 +390,7 @@ namespace Game
             {
                 var tile = grid.GetTile(to.x - 1, to.y);
                 //The first tile in the path should be available
-                if (path.Count == 1 && !tile.IsAvailable)
+                if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
                 if (path.Last() == null || (path.Last().CostToMove > tile.CostToMove && (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy != unitIsEnemy)))
                 {

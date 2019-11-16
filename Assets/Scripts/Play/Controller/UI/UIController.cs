@@ -6,12 +6,13 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+
+//Author: Pierre-Luc Maltais
 namespace Game
 {
     [Findable("UIController")]
     public class UIController : MonoBehaviour
     {
-
         [Header("Canvas")] [SerializeField] private Canvas canvas;
         [Header("TileInfo")] 
         [SerializeField] private TMP_Text tileType;

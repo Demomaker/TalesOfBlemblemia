@@ -3,6 +3,10 @@ using Harmony;
 
 namespace Game
 {
+    /// <summary>
+    /// OnLevelChange event channel
+    /// Author : Mike Bédard
+    /// </summary>
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class OnLevelChange : EventChannel<LevelController>
     {

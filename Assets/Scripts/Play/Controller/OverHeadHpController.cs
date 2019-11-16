@@ -1,8 +1,8 @@
-﻿
-using System;
-using System.Linq;
+﻿using System;
 using UnityEngine;
 
+//Author: Pierre-Luc Maltais
+//Todo Complete this class. The numbers are not update yet.
 namespace Game
 {
     public class OverHeadHpController : MonoBehaviour

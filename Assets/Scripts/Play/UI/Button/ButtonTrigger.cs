@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Game;
+﻿using Game;
 using UnityEngine;
 using UnityEngine.UI;
 using Finder = Harmony.Finder;
 
+/// <summary>
+/// Trigger for button presses
+/// Author : Mike Bédard
+/// </summary>
 public class ButtonTrigger : MonoBehaviour
 {
     public static OnButtonClick onButtonClick = null;

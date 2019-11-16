@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author : Antoine Lessard
     public class SaveSettingsRepo : Repository<PlayerSettings>
     {
         private readonly DbConnection connection;
@@ -16,91 +17,101 @@ namespace Game
 
         public void Insert(PlayerSettings myObject)
         {
-            var command = connection.CreateCommand();
-            command.CommandText =
-                "INSERT INTO playersettings(musicToggle, sfxToggle, mainVolume, musicVolume, sfxVolume) VALUES(?,?,?,?,?)";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText =
+                    "INSERT INTO playersettings(musicToggle, sfxToggle, mainVolume, musicVolume, sfxVolume) VALUES(?,?,?,?,?)";
             
-            #region SettingUpParameters
-            var musicToggleParameter = command.CreateParameter();
-            musicToggleParameter.Value = Convert.ToInt32(myObject.MusicToggle);
-            command.Parameters.Add(musicToggleParameter);
+                #region SettingUpParameters
+                var musicToggleParameter = command.CreateParameter();
+                musicToggleParameter.Value = Convert.ToInt32(myObject.MusicToggle);
+                command.Parameters.Add(musicToggleParameter);
 
-            var sfxToggleParameter = command.CreateParameter();
-            sfxToggleParameter.Value = Convert.ToInt32(myObject.SfxToggle);
-            command.Parameters.Add(sfxToggleParameter);
+                var sfxToggleParameter = command.CreateParameter();
+                sfxToggleParameter.Value = Convert.ToInt32(myObject.SfxToggle);
+                command.Parameters.Add(sfxToggleParameter);
 
-            var mainVolumeParameter = command.CreateParameter();
-            mainVolumeParameter.Value = myObject.MainVolume;
-            command.Parameters.Add(mainVolumeParameter);
+                var mainVolumeParameter = command.CreateParameter();
+                mainVolumeParameter.Value = myObject.MainVolume;
+                command.Parameters.Add(mainVolumeParameter);
 
-            var musicVolumeParameter = command.CreateParameter();
-            musicVolumeParameter.Value = myObject.MusicVolume;
-            command.Parameters.Add(musicVolumeParameter);
+                var musicVolumeParameter = command.CreateParameter();
+                musicVolumeParameter.Value = myObject.MusicVolume;
+                command.Parameters.Add(musicVolumeParameter);
 
-            var sfxVolumeParameter = command.CreateParameter();
-            sfxVolumeParameter.Value = myObject.SfxVolume;
-            command.Parameters.Add(sfxVolumeParameter);
-            #endregion
+                var sfxVolumeParameter = command.CreateParameter();
+                sfxVolumeParameter.Value = myObject.SfxVolume;
+                command.Parameters.Add(sfxVolumeParameter);
+                #endregion
             
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
 
         public List<PlayerSettings> FindAll()
         {
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM playersettings";
-            
-            List<PlayerSettings> result = new List<PlayerSettings>();
-            DbDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            using (var command = connection.CreateCommand())
             {
-                result.Add(PlayerSettingsBuilder(reader));
-            }
+                command.CommandText = "SELECT * FROM playersettings";
+            
+                List<PlayerSettings> result = new List<PlayerSettings>();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(PlayerSettingsBuilder(reader));
+                    }
+                }
 
-            return result;
+                return result;
+            }
         }
 
         public void Update(PlayerSettings myObject)
         {
-            var command = connection.CreateCommand();
-            command.CommandText =
-                "UPDATE playersettings SET musicToggle = ?, sfxToggle = ?, mainVolume = ?, musicVolume = ?, sfxVolume = ? WHERE id = ?";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText =
+                    "UPDATE playersettings SET musicToggle = ?, sfxToggle = ?, mainVolume = ?, musicVolume = ?, sfxVolume = ? WHERE id = ?";
 
-            #region SettingUpParameters
-            var musicToggleParameter = command.CreateParameter();
-            musicToggleParameter.Value = myObject.MusicToggle;
-            command.Parameters.Add(musicToggleParameter);
+                #region SettingUpParameters
+                var musicToggleParameter = command.CreateParameter();
+                musicToggleParameter.Value = myObject.MusicToggle;
+                command.Parameters.Add(musicToggleParameter);
             
-            var sfxToggleParameter = command.CreateParameter();
-            sfxToggleParameter.Value = myObject.SfxToggle;
-            command.Parameters.Add(sfxToggleParameter);
+                var sfxToggleParameter = command.CreateParameter();
+                sfxToggleParameter.Value = myObject.SfxToggle;
+                command.Parameters.Add(sfxToggleParameter);
             
-            var mainVolumeParameter = command.CreateParameter();
-            mainVolumeParameter.Value = myObject.MainVolume;
-            command.Parameters.Add(mainVolumeParameter);
+                var mainVolumeParameter = command.CreateParameter();
+                mainVolumeParameter.Value = myObject.MainVolume;
+                command.Parameters.Add(mainVolumeParameter);
             
-            var musicVolumeParameter = command.CreateParameter();
-            musicVolumeParameter.Value = myObject.MusicVolume;
-            command.Parameters.Add(musicVolumeParameter);
+                var musicVolumeParameter = command.CreateParameter();
+                musicVolumeParameter.Value = myObject.MusicVolume;
+                command.Parameters.Add(musicVolumeParameter);
             
-            var sfxVolumeParameter = command.CreateParameter();
-            sfxVolumeParameter.Value = myObject.SfxVolume;
-            command.Parameters.Add(sfxVolumeParameter);
+                var sfxVolumeParameter = command.CreateParameter();
+                sfxVolumeParameter.Value = myObject.SfxVolume;
+                command.Parameters.Add(sfxVolumeParameter);
             
-            var id = command.CreateParameter();
-            id.Value = myObject.Id;
-            command.Parameters.Add(id);
-            #endregion
+                var id = command.CreateParameter();
+                id.Value = myObject.Id;
+                command.Parameters.Add(id);
+                #endregion
             
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
         
         public void Delete(int id)
         {
-            var command = connection.CreateCommand();
-            command.CommandText = "DELETE * FROM playersettings";
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "DELETE * FROM playersettings";
 
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -111,7 +122,7 @@ namespace Game
         private static PlayerSettings PlayerSettingsBuilder(DbDataReader reader)
         {
             var gameSettings = Harmony.Finder.GameSettings;
-            PlayerSettings playerSettings = new PlayerSettings(0, gameSettings.DefaultToggleValue,
+            var playerSettings = new PlayerSettings(0, gameSettings.DefaultToggleValue,
                 gameSettings.DefaultToggleValue, gameSettings.DefaultSliderValue, gameSettings.DefaultSliderValue,
                 gameSettings.DefaultSliderValue);
             try

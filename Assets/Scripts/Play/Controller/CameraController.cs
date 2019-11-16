@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using static Game.CameraConstants;
 
+//Author: Jérémie Bertrand.
 namespace Game
 {
     [RequireComponent(typeof(Camera))]
@@ -11,7 +12,6 @@ namespace Game
         [Range(MIN_CAM_SCROLL_AREA, MAX_CAM_SCROLL_AREA)][SerializeField] private float scrollArea;
         [Range(MIN_CAM_MOVE_SPEED, MAX_CAM_MOVE_SPEED)][SerializeField] private float moveSpeed;
         [Range(MIN_CAM_ZOOM_SPEED, MAX_CAM_ZOOM_SPEED)][SerializeField] private float zoomSpeed;
-        [Range(MIN_CAM_ORTHOGRAPHIC_SIZE, MAX_CAM_ORTHOGRAPHIC_SIZE)][SerializeField] private float minZoom;
         [Range(MIN_CAM_X, MAX_CAM_X)][SerializeField] private int minX;
         [Range(MIN_CAM_X, MAX_CAM_X)][SerializeField] private int maxX;
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int minY;
@@ -48,8 +48,6 @@ namespace Game
             get => xMovement;
             set => xMovement = Mathf.Clamp(value, -1, 1);
         }
-        
-        public float MaxZoom => maxZoom;
         
         private bool IsMovingLeft => Input.mousePosition.x < scrollArea || Input.GetKey(MOVE_LEFT_KEY);
         private bool IsMovingRight => Input.mousePosition.x >= Screen.width - scrollArea || Input.GetKey(MOVE_RIGHT_KEY);
@@ -185,7 +183,7 @@ namespace Game
 
         private void ClampCameraPosition()
         {
-            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
+            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
             var topRight = mainCamera.ScreenToWorldPoint(new Vector3(mainCamera.pixelWidth, mainCamera.pixelHeight, 0));
             var bottomLeft = mainCamera.ScreenToWorldPoint(Vector3.zero);
 
@@ -220,12 +218,12 @@ namespace Game
 
         private void ZoomIn()
         {
-            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize - 1, minZoom, maxZoom);
+            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize - 1, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
         }
 
         private void ZoomOut()
         {
-            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize + 1, minZoom, maxZoom);
+            targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize + 1, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
         }
 
         public void EnableControls()
@@ -242,7 +240,7 @@ namespace Game
         private void InitCamera()
         {
             targetPos = transform.position;
-            mainCamera.orthographicSize = targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
+            mainCamera.orthographicSize = targetOrthographicSize = Mathf.Clamp(mainCamera.orthographicSize, MIN_CAM_ORTHOGRAPHIC_SIZE, maxZoom);
         }
 
 
