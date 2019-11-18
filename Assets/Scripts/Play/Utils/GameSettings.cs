@@ -90,7 +90,6 @@ namespace Game
         public string MorktressSceneName => morktressScene.ToString();
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
-
         public string StartingLevelSceneName => startingLevelScene.ToString();
 
         public int SaveSlotOne => saveSlotOne;
