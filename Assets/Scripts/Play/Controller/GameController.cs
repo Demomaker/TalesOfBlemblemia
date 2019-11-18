@@ -24,15 +24,14 @@ namespace Game
          private LevelLoader levelLoader;
          private DifficultyLevel difficultyLevel;
          private GameSettings gameSettings;
-         private string previousLevelName;
          private int choiceRange;
          private bool permaDeath;
          
          public Level[] Levels { get; private set; }
-         public string PreviousLevelName => previousLevelName;
+         public string PreviousLevelName { get; set; }
          public string CurrentLevelName => levelLoader.LoadedLevel;
          public bool PermaDeath => permaDeath;
-         public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
+         public bool AllLevelsCompleted => PreviousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel
          {
@@ -63,7 +62,7 @@ namespace Game
                  new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
                  new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
              };
-             previousLevelName = Levels.First(level => level.LevelName == gameSettings.StartingLevelSceneName).PreviousLevel;
+             PreviousLevelName = Levels.First(level => level.LevelName == gameSettings.StartingLevelSceneName).PreviousLevel;
              choiceRange = choiceRangePerDifficulty[DifficultyLevel];
              permaDeath = DifficultyLevel != DifficultyLevel.Easy;
          }
@@ -84,7 +83,7 @@ namespace Game
 
          public void OnLevelCompleted(string levelName)
          {
-             previousLevelName = levelName;
+             PreviousLevelName = levelName;
          }
      }
 
