@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Harmony;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,8 +8,11 @@ namespace Game
 {
     [Findable("LevelLoader")]
     [RequireComponent(typeof(Animator))]
-    public class LevelLoader : MonoBehaviour {
-
+    public class LevelLoader : MonoBehaviour
+    {
+        private const string FADE_IN_TRIGGER = "FadeIn";
+        private const string FADE_OUT_TRIGGER = "FadeOut";
+        
         private Animator animator;
         private string loadedLevel;
         private LoadSceneMode sceneMode = LoadSceneMode.Single;
@@ -17,7 +21,6 @@ namespace Game
         private bool canLoadNewLevel = true;
 
         public bool CanLoadNewLevel => canLoadNewLevel;
-
         public string LoadedLevel => loadedLevel;
 
         private void Awake()
@@ -34,7 +37,7 @@ namespace Game
             
             if (SceneManager.GetSceneByName(loadedLevel).name != gameSettings.OverworldSceneName)
             {
-                animator.SetTrigger("FadeOut");
+                animator.SetTrigger(FADE_OUT_TRIGGER);
             }
         }
 
@@ -46,6 +49,7 @@ namespace Game
             this.sceneMode = loadSceneMode;
         }
 
+        [UsedImplicitly]
         public void OnFadeComplete ()
         {
             fadeOutCompleted = true;
@@ -70,7 +74,7 @@ namespace Game
                     {
                         yield return null;
                     }
-                    animator.SetTrigger("FadeOut");
+                    animator.SetTrigger(FADE_OUT_TRIGGER);
                 }
                 SceneManager.UnloadSceneAsync(loadedLevel);
                 while (SceneManager.GetSceneByName(loadedLevel).isLoaded)
@@ -79,7 +83,7 @@ namespace Game
                 }
             }
 
-            loadedLevel = levelName;
+            this.loadedLevel = levelName;
             this.sceneMode = loadSceneMode;
             
             while (!fadeOutCompleted)
@@ -89,7 +93,8 @@ namespace Game
             
             scene.allowSceneActivation = true;
 
-            animator.SetTrigger("FadeIn");
+            animator.SetTrigger(FADE_IN_TRIGGER);
+            
             fadeOutCompleted = false;
             canLoadNewLevel = true;
         }
