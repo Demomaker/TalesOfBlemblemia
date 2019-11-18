@@ -406,7 +406,7 @@ namespace Game
             {
                 playerType = PlayerType.Ally;
                 HumanPlayer.Instance.AddOwnedUnit(this);
-                GetComponent<DialogueTrigger>()?.TriggerDialogue();
+                GetComponent<Cinematic>()?.TriggerCinematic();
                 
             }
             return IsRecruitable;
