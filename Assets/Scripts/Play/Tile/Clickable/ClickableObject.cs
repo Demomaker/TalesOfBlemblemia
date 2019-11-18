@@ -13,9 +13,11 @@ namespace Game
     {
         private Tile tile;
         private UIController uiController;
+        private LevelController levelController;
 
         private void Awake()
         {
+            levelController = Harmony.Finder.LevelController;
             tile = GetComponent<Tile>();
         }
 
@@ -27,7 +29,7 @@ namespace Game
         public void OnPointerClick(PointerEventData eventData)
         {
             //Player cannot play while a cinematic is playing or if another of its units is moving
-            if (tile == null || Harmony.Finder.LevelController.PlayerUnitIsMovingOrAttacking) return;
+            if (tile == null || levelController.PlayerUnitIsMovingOrAttacking || levelController.CinematicController.IsPlayingACinematic) return;
             
             var gridController = Finder.GridController;
             ClickButton clickButton = ReadClick(eventData);

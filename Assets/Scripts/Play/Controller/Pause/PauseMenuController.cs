@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //Author: Antoine Lessard
     public class PauseMenuController : MonoBehaviour
     {
+        //TODO nécessaire?
         [Header("Buttons")] 
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button optionsButton;

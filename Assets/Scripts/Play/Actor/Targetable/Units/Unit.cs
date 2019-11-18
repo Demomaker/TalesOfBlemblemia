@@ -229,7 +229,7 @@ namespace Game
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
-            var path = action.Path;
+            var path = action?.Path;
             if (path != null)
             {
                 isMoving = true;

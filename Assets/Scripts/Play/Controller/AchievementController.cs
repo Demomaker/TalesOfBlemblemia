@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    /// <summary>
+    /// Controls the achievements and sends messages if achievements are completed
+    /// Author : Mike Bédard
+    /// </summary>
     public class AchievementController : MonoBehaviour
     {
 

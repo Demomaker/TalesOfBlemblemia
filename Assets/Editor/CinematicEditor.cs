@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author: Jérémie Bertrand
     [CustomEditor(typeof(Cinematic))]
     public class CinematicEditor : Editor
     {

@@ -6,9 +6,12 @@ using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//Author: Pierre-Luc Maltais, Jérémie Bertrand, Antoine Lessard
 namespace Game
  { 
+     /// <summary>
+     /// Controller for game-wide functionalities
+     /// Author : Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
+     /// </summary>
      [Findable("GameController")]
      public class GameController : MonoBehaviour
      {

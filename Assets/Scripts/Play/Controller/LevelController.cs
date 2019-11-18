@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Permissions;
 using System.Linq;
-using Game;
 using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
-using Finder = Harmony.Finder;
 
 namespace Game
 {
@@ -124,7 +119,6 @@ namespace Game
             onLevelChange.Publish(this);
             InitializePlayersAndUnits();
             currentPlayer = players[0];
-            ComputerPlayer.Instance.FetchUiController();
             OnTurnGiven();
             if (dialogueUi != null && dialogueTriggerStartFranklem != null)
             {
@@ -162,7 +156,7 @@ namespace Game
             var retval = "";
             foreach (var enemy in targetsToDefeat)
             {
-                retval += enemy.ToString() + " ";
+                retval += enemy + " ";
             }
             retval = retval.Substring(retval.Length - 1);
             return retval;
@@ -341,7 +335,7 @@ namespace Game
 
         private void Play(UnitOwner unitOwner)
         {
-            unitOwner.CheckUnitDeaths();
+            unitOwner.RemoveDeadUnits();
             if (!isComputerPlaying && unitOwner is ComputerPlayer)
             {
                 isComputerPlaying = true;

@@ -11,6 +11,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    /// <summary>
+    /// Generates each level's grid
+    /// Authors : Mike Bédard, Jérémie Bertrand
+    /// </summary>
     public class GridGenerator : MonoBehaviour
     {
         [SerializeField] private Vector2Int size;
