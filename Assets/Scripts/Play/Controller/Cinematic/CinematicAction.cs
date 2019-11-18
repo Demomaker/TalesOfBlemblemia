@@ -4,6 +4,7 @@ using static Game.CameraConstants;
 
 namespace Game
 {
+    //Author: Jérémie Bertrand
     [Serializable]
     public class CinematicAction
     {

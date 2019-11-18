@@ -4,31 +4,31 @@ using UnityEngine.UI;
 
  namespace Game
  {
-    //Authors: Jérémie Bertrand & Mike Bédard
+    //Authors: Jérémie Bertrand, Mike Bédard, Zacharie Lavigne
     public class GridController : MonoBehaviour
     {
         private GridLayoutGroup gridLayoutGroup;
-        [SerializeField] private Sprite movementTileSprite = null;
-        [SerializeField] private Sprite normalTileSprite = null;
-        [SerializeField] private Sprite selectedTileSprite = null;
-        [SerializeField] private Sprite attackableTileSprite = null;
-        [SerializeField] private Sprite healableTileSprite = null;
-        [SerializeField] private Sprite recruitableTileSprite = null;
-        [SerializeField] private Sprite protectableTileSprite = null;
-        [SerializeField] private Sprite verticalPathTileSprite = null;
-        [SerializeField] private Sprite horizontalPathTileSprite = null;
-        [SerializeField] private Sprite downToRightPathTileSprite = null;
-        [SerializeField] private Sprite downToLeftPathTileSprite = null;
-        [SerializeField] private Sprite upToRightPathTileSprite = null;
-        [SerializeField] private Sprite upToLeftPathTileSprite = null;
-        [SerializeField] private Sprite leftArrowPathTileSprite = null;
-        [SerializeField] private Sprite rightArrowPathTileSprite = null;
-        [SerializeField] private Sprite downArrowPathTileSprite = null;
-        [SerializeField] private Sprite upArrowPathTileSprite = null;
-        [SerializeField] private Sprite leftStartPathTileSprite = null;
-        [SerializeField] private Sprite rightStartPathTileSprite = null;
-        [SerializeField] private Sprite downStartPathTileSprite = null;
-        [SerializeField] private Sprite upStartPathTileSprite = null;
+        [SerializeField] private Sprite movementTileSprite;
+        [SerializeField] private Sprite normalTileSprite;
+        [SerializeField] private Sprite selectedTileSprite;
+        [SerializeField] private Sprite attackableTileSprite;
+        [SerializeField] private Sprite healableTileSprite;
+        [SerializeField] private Sprite recruitableTileSprite;
+        [SerializeField] private Sprite protectableTileSprite;
+        [SerializeField] private Sprite verticalPathTileSprite;
+        [SerializeField] private Sprite horizontalPathTileSprite;
+        [SerializeField] private Sprite downToRightPathTileSprite;
+        [SerializeField] private Sprite downToLeftPathTileSprite;
+        [SerializeField] private Sprite upToRightPathTileSprite;
+        [SerializeField] private Sprite upToLeftPathTileSprite;
+        [SerializeField] private Sprite leftArrowPathTileSprite;
+        [SerializeField] private Sprite rightArrowPathTileSprite;
+        [SerializeField] private Sprite downArrowPathTileSprite;
+        [SerializeField] private Sprite upArrowPathTileSprite;
+        [SerializeField] private Sprite leftStartPathTileSprite;
+        [SerializeField] private Sprite rightStartPathTileSprite;
+        [SerializeField] private Sprite downStartPathTileSprite;
+        [SerializeField] private Sprite upStartPathTileSprite;
 
 
         public Unit SelectedUnit
@@ -60,8 +60,8 @@ using UnityEngine.UI;
 
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
 
-        public int NbColumns { get; private set; } = 0;
-        public int NbLines { get; private set; } = 0;
+        public int NbColumns { get; private set; }
+        public int NbLines { get; private set; }
         
         private void Awake()
         {

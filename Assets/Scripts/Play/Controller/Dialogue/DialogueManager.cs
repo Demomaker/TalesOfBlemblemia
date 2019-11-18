@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Author: Pierre-Luc Maltais et Jérémie Bertrand
+//Authors: Pierre-Luc Maltais, Jérémie Bertrand
 //Parts of this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
 //https://www.youtube.com/watch?v=_nRzoTzeyxU
 namespace Game

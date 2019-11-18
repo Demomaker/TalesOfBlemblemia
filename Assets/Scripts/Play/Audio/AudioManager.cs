@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    /// <summary>
+    /// Manages the sounds and music of the game
+    /// Author : Mike Bédard
+    /// </summary>
     public class AudioManager : MonoBehaviour
     {
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
-        [SerializeField] private float lowPitchRange = .95f;               
-        [SerializeField] private float highPitchRange = 1.05f;
         private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
@@ -270,13 +272,13 @@ namespace Game
         private void PlayUnitLossMusic(Unit unit)
         {
             if(musicSource.clip != audioClips.SadMusic)
-            PlayMusic(audioClips.SadMusic);
+                PlayMusic(audioClips.SadMusic);
         }
 
         private void PlayLevelVictoryMusic(LevelController levelController)
         {
             if(musicSource.clip != audioClips.LevelVictoryMusic)
-            PlayMusic(audioClips.LevelVictoryMusic);
+                PlayMusic(audioClips.LevelVictoryMusic);
         }
 
         private void PlayBackgroundMusicOfLevel(LevelController level)

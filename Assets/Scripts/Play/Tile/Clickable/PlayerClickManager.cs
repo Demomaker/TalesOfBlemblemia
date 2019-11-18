@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Game
 {
+    //Author: Zacharie Lavigne
     public static class PlayerClickManager
     {
         private static Action unitTurnAction;

@@ -6,9 +6,12 @@ using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//Author: Pierre-Luc Maltais, Jérémie Bertrand, Antoine Lessard
 namespace Game
  { 
+     /// <summary>
+     /// Controller for game-wide functionalities
+     /// Author : Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
+     /// </summary>
      [Findable("GameController")]
      public class GameController : MonoBehaviour
      {
@@ -39,7 +42,7 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             previousLevelName = gameSettings.TutorialSceneName;
+             previousLevelName = gameSettings.JimsterburgSceneName;
              Levels = new Level[]
              {
                  new Level("", gameSettings.TutorialSceneName),

@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 namespace Game.UI.Achievement
 {
+    /// <summary>
+    /// Achievement
+    /// Author : Mike Bédard
+    /// </summary>
     public class Achievement
     {
         private string achievementName;

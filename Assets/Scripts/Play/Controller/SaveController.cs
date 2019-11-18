@@ -19,18 +19,13 @@ namespace Game
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
         private SqliteConnection connection;
-        private int saveSelected;
 
-        public int SaveSelected
-        {
-            get => saveSelected;
-            set => saveSelected = value;
-        }
-        
+        public int SaveSelected { get; set; }
+
         public SaveInfos GetCurrentSaveSelectedInfos()
         {
             SaveInfos currentSave = new SaveInfos();
-            switch (saveSelected)
+            switch (SaveSelected)
             {
                 case 1:
                     currentSave = saveSlot1;
@@ -275,21 +270,21 @@ namespace Game
             SaveInfos cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
                 gameSettings.TutorialSceneName, playableCharactersDictionary);
             
-            switch (saveSelected)
+            switch (SaveSelected)
             {
                 case 1:
                     saveSlot1 = cleanSave;
-                    UpdateSave(saveSelected);
+                    UpdateSave(SaveSelected);
                     break;
                 case 2:
                     cleanSave.Id = 2;
                     saveSlot2 = cleanSave;
-                    UpdateSave(saveSelected);
+                    UpdateSave(SaveSelected);
                     break;
                 case 3:
                     cleanSave.Id = 3;
                     saveSlot3 = cleanSave;
-                    UpdateSave(saveSelected);
+                    UpdateSave(SaveSelected);
                     break;
             }
         }
