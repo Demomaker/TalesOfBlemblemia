@@ -545,8 +545,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfSFXThatCanBePlayedAtTheSameTime: 10
-  lowPitchRange: 0.95
-  highPitchRange: 1.05
 --- !u!1001 &1993359352
 PrefabInstance:
   m_ObjectHideFlags: 0
