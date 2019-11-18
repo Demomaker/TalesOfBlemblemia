@@ -979,6 +979,20 @@ MonoBehaviour:
   recruitableTileSprite: {fileID: 4060697602963108084, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
     type: 3}
   protectableTileSprite: {fileID: 0}
+  verticalPathTileSprite: {fileID: 0}
+  horizontalPathTileSprite: {fileID: 0}
+  downToRightPathTileSprite: {fileID: 0}
+  downToLeftPathTileSprite: {fileID: 0}
+  upToRightPathTileSprite: {fileID: 0}
+  upToLeftPathTileSprite: {fileID: 0}
+  leftArrowPathTileSprite: {fileID: 0}
+  rightArrowPathTileSprite: {fileID: 0}
+  downArrowPathTileSprite: {fileID: 0}
+  upArrowPathTileSprite: {fileID: 0}
+  leftStartPathTileSprite: {fileID: 0}
+  rightStartPathTileSprite: {fileID: 0}
+  downStartPathTileSprite: {fileID: 0}
+  upStartPathTileSprite: {fileID: 0}
 --- !u!114 &3193156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94538,61 +94552,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 10.989205
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 9.649301
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -11.4765625
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3809288141195027915, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -95286,6 +95245,61 @@ PrefabInstance:
     - target: {fileID: 5476860978489749607, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.989205
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 9.649301
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -11.4765625
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 932219948472158935, guid: 623c911082da5da4db1e7fc3a7896563,
@@ -128245,432 +128259,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1d58ddd5b6f4d64d88d87fcbf91a64c, type: 3}
---- !u!1 &2026582184
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2026582186}
-  - component: {fileID: 2026582185}
-  - component: {fileID: 2026582187}
-  m_Layer: 0
-  m_Name: Cinematic
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2026582185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2026582184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trigger: 1
-  actions:
-  - cinematicActionType: 1
-    cameraTarget: {fileID: 261018176}
-    duration: 1
-    cameraZoom: 5
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: We made it to the castle!
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 1
-    cameraTarget: {fileID: 134249747}
-    duration: 1
-    cameraZoom: 5
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Looks like we're too late, the Morks are already here!
-    name: Myriam
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 1
-    cameraTarget: {fileID: 1255473834}
-    duration: 1
-    cameraZoom: 5
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: My prince! The castle was overrun and your father was in his chambers.
-      Please let me and Rass help you save him.
-    name: Ulric
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: The Morks are guarding the path to the throne room, we'll have to use
-      force to bust down those doors.
-    name: Ulric
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 1
-    cameraTarget: {fileID: 261018176}
-    duration: 1
-    cameraZoom: 8
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: We welcome your aid my friends! Lets go save him and put an end to this
-      invasion!
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Ulric and Rass joined the party.
-    name: Narrator
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
---- !u!4 &2026582186
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2026582184}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.5, y: 3.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2026582187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2026582184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trigger: 2
-  actions:
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 2
-    cameraZoom: 8
-    sentence: The way to the throne room is open, you go ahead Franklem, we will guard
-      the door and prevent any incoming Morks to get in. Go save the king and reclaim
-      Blemblemia.
-    name: Rass
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 261018176}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 1
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Thank you my friends, I won't be long.
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 2
-    cameraTarget: {fileID: 0}
-    duration: 1
-    cameraZoom: 6
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 261018176}
-    gameObjectTarget: {fileID: 873352279}
-    cameraFollow: 1
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: FATHER!
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 1
-    cameraTarget: {fileID: 1725613670}
-    duration: 1
-    cameraZoom: 6
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Who would've thought you puny humans could best us and get here...
-    name: Dark Knight
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: No matter, you're too late Franklem, Blemblemia is ours and nothing
-      you can do here today will change that.
-    name: Dark Knight
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Look at this miserable excuse of a king, he couldn't even defend himself
-      against one of our servants. Lord Mork deserves to take over this land and will
-      teach all of you what is true power and you shall obey him!
-    name: Dark Knight
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Never! You have been beaten. The castle is ours and now it is time for
-      you to die!
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: You're barely an inconvenience, a thorn in my side. If you truly believe
-      you stand a chance against me, I'll be waiting for you at the dark tower to
-      the north. Until we meet again.
-    name: Dark Knight
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 2
-    cameraTarget: {fileID: 0}
-    duration: 2
-    cameraZoom: 3
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 1352947634}
-    gameObjectTarget: {fileID: 1975646552}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: I WON'T LET YOU GET AWAY!
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 1
-    cameraTarget: {fileID: 1806301441}
-    duration: 1
-    cameraZoom: 4
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: (Weakly)Franklem... don't.. he is to strong for you as you are now.
-    name: Pierlem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: 'Father! I tought you were gone! '
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 2
-    cameraTarget: {fileID: 0}
-    duration: 1
-    cameraZoom: 3
-    sentence: 
-    name: 
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 261018176}
-    gameObjectTarget: {fileID: 1806301441}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Unfortunately I don't have long to live, my wounds are too severe, nothing
-      will change that.
-    name: Pierlem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: 'However, I can give you this last gift : the legendary Triblemblem.'
-    name: Pierlem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: 'Father, I''m sorry, I was too late.. '
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Do not worry my son, you are more than prepared to take over and lead
-      Blemblemia to a prosperous future. I believe in you.
-    name: Pierlem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: I won't let you down father!
-    name: Franklem
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
-  - cinematicActionType: 0
-    cameraTarget: {fileID: 0}
-    duration: 0
-    cameraZoom: 3
-    sentence: Franklem now possesses the power of the Triblemblem, granting him immunity
-      to critical hits.
-    name: Narrator
-    targetUnit: {fileID: 0}
-    damage: 0
-    gameObjectToMove: {fileID: 0}
-    gameObjectTarget: {fileID: 0}
-    cameraFollow: 0
 --- !u!1 &2031195532
 GameObject:
   m_ObjectHideFlags: 0
@@ -135580,3 +135168,137 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2146446859}
   m_CullTransparentMesh: 0
+--- !u!1001 &5697240634564072551
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5697240632563066063, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_Name
+      value: CinematicBlemburg
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066061, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697240632563066062, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[0].cameraTarget
+      value: 
+      objectReference: {fileID: 261018176}
+    - target: {fileID: 5697240632563066062, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[2].cameraTarget
+      value: 
+      objectReference: {fileID: 134249747}
+    - target: {fileID: 5697240632563066062, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[4].cameraTarget
+      value: 
+      objectReference: {fileID: 1255473834}
+    - target: {fileID: 5697240632563066062, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[7].cameraTarget
+      value: 
+      objectReference: {fileID: 261018176}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[0].gameObjectToMove
+      value: 
+      objectReference: {fileID: 261018176}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[2].gameObjectToMove
+      value: 
+      objectReference: {fileID: 261018176}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[2].gameObjectTarget
+      value: 
+      objectReference: {fileID: 873352279}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[4].cameraTarget
+      value: 
+      objectReference: {fileID: 1725613670}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[10].gameObjectToMove
+      value: 
+      objectReference: {fileID: 1352947634}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[10].gameObjectTarget
+      value: 
+      objectReference: {fileID: 1975646552}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[12].cameraTarget
+      value: 
+      objectReference: {fileID: 1806301441}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[15].gameObjectToMove
+      value: 
+      objectReference: {fileID: 261018176}
+    - target: {fileID: 5697240632563066060, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47,
+        type: 3}
+      propertyPath: actions.Array.data[15].gameObjectTarget
+      value: 
+      objectReference: {fileID: 1806301441}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 84e1a63d3ee5d7c41b395e4d7da7ca47, type: 3}

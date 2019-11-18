@@ -39,7 +39,7 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             previousLevelName = gameSettings.TutorialSceneName;
+             previousLevelName = gameSettings.BlemburgCitadelSceneName;
              Levels = new Level[]
              {
                  new Level("", gameSettings.TutorialSceneName),
