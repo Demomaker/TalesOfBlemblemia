@@ -111,6 +111,9 @@ namespace Game
             levelName = "";
             numberOfPlayerTurns = 0;
             players.Clear();
+            HumanPlayer.Instance.OwnedUnits.Clear();
+            HumanPlayer.Instance.DefeatedUnits.Clear();
+            ComputerPlayer.Instance.OwnedUnits.Clear();
         }
 
         private void Start()
@@ -198,12 +201,6 @@ namespace Game
 
             UpdatePlayerSave();
 
-            //We need to clear the unit list of the players since they are singletons
-            foreach (var player in players)
-            {
-                player.OwnedUnits.Clear();
-            }
-            
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
 
