@@ -28,12 +28,24 @@ namespace Game
          private int choiceRange;
          private bool permaDeath;
          
-         public DifficultyLevel DifficultyLevel { get; set; }
          public Level[] Levels { get; private set; }
          public string PreviousLevelName => previousLevelName;
          public string CurrentLevelName => levelLoader.LoadedLevel;
+         public bool PermaDeath => permaDeath;
          public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
 
+         public DifficultyLevel DifficultyLevel
+         {
+             get => difficultyLevel;
+             set
+             {
+                 difficultyLevel = value;
+                 if (difficultyLevel != DifficultyLevel.Easy)
+                 {
+                     permaDeath = true;
+                 }
+             }
+         }
 
          private void Awake()
          {
@@ -41,7 +53,7 @@ namespace Game
              gameSettings = Harmony.Finder.GameSettings;
              Levels = new Level[]
              {
-                 new Level("", gameSettings.TutorialSceneName),
+                 new Level(gameSettings.EmptyLevelString, gameSettings.TutorialSceneName),
                  new Level(gameSettings.TutorialSceneName, gameSettings.JimsterburgSceneName),
                  new Level(gameSettings.JimsterburgSceneName, gameSettings.ParabeneForestSceneName),
                  new Level(gameSettings.ParabeneForestSceneName, gameSettings.BlemburgCitadelSceneName),

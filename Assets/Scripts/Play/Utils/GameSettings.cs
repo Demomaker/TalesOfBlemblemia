@@ -20,6 +20,7 @@ namespace Game
         [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
 
         [Header("Scene names")] 
+        [SerializeField] private string emptyLevelString = "";
         [SerializeField] private R.E.Scene tutorialScene;
         [SerializeField] private R.E.Scene jimsterburgScene;
         [SerializeField] private R.E.Scene parabeneForestScene;
@@ -125,5 +126,6 @@ namespace Game
         public int DefaultSliderValue => defaultSliderValue;
         public string DefaultUsername => defaultUsername;
         public int Percent => percent;
+        public string EmptyLevelString => emptyLevelString;
     }
 }
