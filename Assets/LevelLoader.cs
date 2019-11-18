@@ -14,6 +14,9 @@ namespace Game
         private LoadSceneMode sceneMode = LoadSceneMode.Single;
         private GameSettings gameSettings;
         private bool fadeOutCompleted;
+        private bool canLoadNewLevel = true;
+
+        public bool CanLoadNewLevel => canLoadNewLevel;
 
         public string LoadedLevel => loadedLevel;
 
@@ -25,7 +28,7 @@ namespace Game
 
         public void FadeToLevel(string levelName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
         {
-            if (SceneManager.GetSceneByName(levelName).isLoaded) return;
+            if (SceneManager.GetSceneByName(levelName).isLoaded || !canLoadNewLevel) return;
             
             StartCoroutine(FadeToLevelAsync(levelName, loadSceneMode));
             
@@ -35,6 +38,14 @@ namespace Game
             }
         }
 
+        public void LoadLevel(string levelName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
+        {
+            if (SceneManager.GetSceneByName(levelName).isLoaded || !canLoadNewLevel) return;
+            SceneManager.LoadScene(levelName, loadSceneMode);
+            loadedLevel = levelName;
+            this.sceneMode = loadSceneMode;
+        }
+
         public void OnFadeComplete ()
         {
             fadeOutCompleted = true;
@@ -42,6 +53,7 @@ namespace Game
 
         private IEnumerator FadeToLevelAsync(string levelName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
         {
+            canLoadNewLevel = false;
             var scene = SceneManager.LoadSceneAsync(levelName, loadSceneMode);
             scene.allowSceneActivation = false;
             while (scene.progress < 0.9f)
@@ -54,7 +66,7 @@ namespace Game
                 if (SceneManager.GetSceneByName(loadedLevel).name == gameSettings.OverworldSceneName)
                 {
                     var overWorldController = Harmony.Finder.OverWorldController;
-                    while (!overWorldController.CanLoadANewLevel)
+                    while (overWorldController.CharacterIsMoving)
                     {
                         yield return null;
                     }
@@ -79,6 +91,7 @@ namespace Game
 
             animator.SetTrigger("FadeIn");
             fadeOutCompleted = false;
+            canLoadNewLevel = true;
         }
     }
 }

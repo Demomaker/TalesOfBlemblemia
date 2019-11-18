@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,19 +17,12 @@ public class LevelEntry : MonoBehaviour
     private OverWorldController overWorldController;
     private GameController gameController;
     private string representedLevelName;
-    private bool IsFirstLevel => string.IsNullOrEmpty(gameController.PreviousLevelName);
-    private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && previousLevelName.Count != 0 || PreviousLevelNameListContainsElement(gameController.PreviousLevelName);
+    private bool IsFirstLevel => gameSettings.StartingLevelSceneName == representedLevelName;
+    private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && previousLevelName.Count <= 0 || PreviousLevelNameListContainsElement(gameController.PreviousLevelName);
 
     private bool PreviousLevelNameListContainsElement(string previousLevel)
     {
-        foreach (var levelName in previousLevelName)
-        {
-            if (levelName == previousLevel)
-            {
-                return true;
-            }
-        }
-        return false;
+        return previousLevelName.Any(levelName => levelName == previousLevel);
     }
 
 
@@ -65,7 +59,7 @@ public class LevelEntry : MonoBehaviour
     public void OnLevelEntry()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        if (CanBeClicked && overWorldController.CanLoadANewLevel)
+        if (CanBeClicked && overWorldController.CanLoadANewLevel && !overWorldController.CharacterIsMoving)
         {
             StartCoroutine(overWorldController.LoadLevel(representedLevelName, transform.position));
         }

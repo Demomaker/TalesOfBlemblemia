@@ -6,7 +6,7 @@ namespace Game
     /// OnMainMenuEnter event channel
     /// Author : Mike Bédard
     /// </summary>
-    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class OnMainMenuEnter : EventChannel<MainMenuController>
     {
         public event EventHandler<MainMenuController> Notify;

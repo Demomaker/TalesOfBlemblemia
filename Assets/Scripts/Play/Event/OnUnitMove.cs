@@ -5,7 +5,7 @@ namespace Game
     /// <summary>
     /// OnUnitMove event channel
     /// </summary>
-    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class OnUnitMove : EventChannel<Unit>
     {
         public event EventHandler<Unit> Notify;

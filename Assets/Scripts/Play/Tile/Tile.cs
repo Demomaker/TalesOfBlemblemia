@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -272,13 +273,13 @@ namespace Game
                     return gridController.UpToLeftPathTileSprite;
             }
             //Comes from below
-            else if (prevPosition.x > currentPosition.x)
+            else if (prevPosition.y > currentPosition.y)
             {
                 //Goes right
-                if (currentPosition.x > nextPosition.x)
+                if (currentPosition.x < nextPosition.x)
                     return gridController.DownToRightPathTileSprite;
                 //Goes left
-                if (currentPosition.x < nextPosition.x)
+                if (currentPosition.x > nextPosition.x)
                     return gridController.DownToLeftPathTileSprite;
             }
             return null;
@@ -299,6 +300,37 @@ namespace Game
             else if (currentPosition.y < nextPosition.y) 
                 return gridController.DownStartPathTileSprite;
             return null;
+        }
+
+        public IEnumerator Blink(Sprite blinkSprite)
+        {
+            var isBlinking = true;
+            var fadeIn = false;
+            var fadeValue = 1f;
+            tileImage.sprite = blinkSprite;
+            var faded = tileImage.color;
+            while (isBlinking)
+            {
+                if (tileImage.sprite != blinkSprite) tileImage.sprite = blinkSprite;
+                if (fadeIn) fadeValue+=0.01f;
+                else
+                {
+                    fadeValue-=0.01f;
+                }
+
+                faded.a = fadeValue;
+                tileImage.color = faded;
+                if (fadeValue <= 0f) fadeIn = true;
+                if (fadeValue >= 1f) fadeIn = false;
+                yield return null;
+            }
+
+        }
+
+        public void ResetTileImage()
+        {
+            tileImage.sprite = gridController.NormalSprite;
+            tileImage.color = new Color(tileImage.color.r, tileImage.color.g, tileImage.color.b, 1f);
         }
     }
 }
