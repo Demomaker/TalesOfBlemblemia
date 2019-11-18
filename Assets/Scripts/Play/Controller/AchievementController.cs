@@ -114,7 +114,7 @@ namespace Game
         {
             nameText.text = "";
             descriptionText.text = "";
-            const int secondsBeforeTypingStart = 1;
+            const float secondsBeforeTypingStart = 1;
             const float secondsBeforeTitleCharacterPrint = 0.1f;
             const float secondsBeforeTextCharacterPrint = 0.2f;
             yield return new WaitForSeconds(secondsBeforeTypingStart);
