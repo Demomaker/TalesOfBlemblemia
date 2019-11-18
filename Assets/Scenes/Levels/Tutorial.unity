@@ -108008,7 +108008,7 @@ PrefabInstance:
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.size
-      value: 53
+      value: 59
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
@@ -109863,22 +109863,22 @@ PrefabInstance:
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[47].cameraZoom
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[47].cinematicActionType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[47].duration
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[48].cameraZoom
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
@@ -109893,17 +109893,17 @@ PrefabInstance:
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[49].cameraZoom
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[49].cinematicActionType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[49].duration
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
@@ -110203,8 +110203,8 @@ PrefabInstance:
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[46].sentence
-      value: As you can see, he has an axe, so it should be easy to slay with your
-        sword. Remember the law of the Triblemblem!
+      value: 'As you can see, he has an axe, so it should be easy to slay with your
+        sword. '
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
@@ -110234,12 +110234,12 @@ PrefabInstance:
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[47].sentence
-      value: 
+      value: Remember the law of the Triblemblem!
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[47].name
-      value: 
+      value: Edgar
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
@@ -110265,12 +110265,12 @@ PrefabInstance:
         type: 3}
       propertyPath: actions.Array.data[47].gameObjectToMove
       value: 
-      objectReference: {fileID: 469562509}
+      objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[47].gameObjectTarget
       value: 
-      objectReference: {fileID: 790289999}
+      objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[48].sentence
@@ -110339,28 +110339,27 @@ PrefabInstance:
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[47].cameraFollow
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[48].gameObjectToMove
       value: 
-      objectReference: {fileID: 349002263}
+      objectReference: {fileID: 469562509}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[48].gameObjectTarget
       value: 
-      objectReference: {fileID: 2073221802}
+      objectReference: {fileID: 790289999}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[49].sentence
-      value: 'Attacking: Click on Franklem and right click the mork''s tile to prepare
-        an attack. Click on the same tile again to confirm the action.'
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[49].name
-      value: Narrator
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
@@ -110370,7 +110369,7 @@ PrefabInstance:
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[51].cinematicActionType
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
@@ -110391,28 +110390,271 @@ PrefabInstance:
         type: 3}
       propertyPath: actions.Array.data[51].gameObjectToActivate
       value: 
-      objectReference: {fileID: 1229981644}
+      objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[52].cinematicActionType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[52].cameraTarget
       value: 
-      objectReference: {fileID: 469562509}
+      objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[52].duration
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
         type: 3}
       propertyPath: actions.Array.data[50].sentence
-      value: 'Law of the Triblemblem: Weapons have advantages and disadvantages. An
-        axe can do a critical hit on a spear, a spear on a sword and a sword on an
-        axe. '
+      value: 'Attacking: Click on Franklem and right click...'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[53].cameraZoom
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[53].name
+      value: Narrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[53].sentence
+      value: 'Law of the Triblemblem:'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[48].cameraFollow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[49].gameObjectToMove
+      value: 
+      objectReference: {fileID: 349002263}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[49].gameObjectTarget
+      value: 
+      objectReference: {fileID: 2073221802}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[50].name
+      value: Narrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[51].sentence
+      value: '...the mork''s tile to prepare an attack.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[52].gameObjectToActivate
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[53].cinematicActionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[53].cameraTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[53].duration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[51].name
+      value: Narrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[54].cameraZoom
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[55].cameraZoom
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[54].name
+      value: Narrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[55].name
+      value: Narrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[55].sentence
+      value: An axe can do a critical hit on a spear, a spear on a sword...
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[54].sentence
+      value: 'Weapons have advantages and disadvantages. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[52].sentence
+      value: Click on the same tile again to confirm the action.
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[52].name
+      value: Narrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[53].gameObjectToActivate
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[54].cinematicActionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[54].cameraTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[54].duration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[54].gameObjectToActivate
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[55].cinematicActionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[55].cameraTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[55].duration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[56].cameraZoom
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[56].sentence
+      value: '...and a sword on an axe. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[55].gameObjectToActivate
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[56].cinematicActionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[56].cameraTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[56].duration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[57].cameraZoom
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[57].name
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[57].sentence
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[56].gameObjectToActivate
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[57].cinematicActionType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[57].cameraTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[57].duration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[58].cameraZoom
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[58].sentence
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[56].name
+      value: Narrator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[57].gameObjectToActivate
+      value: 
+      objectReference: {fileID: 1229981644}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[58].cinematicActionType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[58].cameraTarget
+      value: 
+      objectReference: {fileID: 469562509}
+    - target: {fileID: 2873029233558449036, guid: 3577e14a113823b43923ef196eda8758,
+        type: 3}
+      propertyPath: actions.Array.data[58].duration
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3577e14a113823b43923ef196eda8758, type: 3}
