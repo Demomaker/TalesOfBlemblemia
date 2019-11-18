@@ -304,7 +304,7 @@ namespace Game
 
         public IEnumerator Blink(Sprite blinkSprite)
         {
-            const bool isBlinking = true;
+            var isBlinking = true;
             var fadeIn = false;
             var fadeValue = 1f;
             tileImage.sprite = blinkSprite;
