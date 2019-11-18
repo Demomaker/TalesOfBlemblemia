@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 145245772127181636}
   - component: {fileID: 1010459013385063281}
   - component: {fileID: 1824144597954225741}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Continue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 5599132082848160248}
   - component: {fileID: 3680158464737393750}
   - component: {fileID: 5402370477992662859}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: AchievementBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 3855605419911137543}
   - component: {fileID: 3626066921877102234}
   - component: {fileID: 3680158465727784022}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 6081117257877104949}
   - component: {fileID: 832074574288521655}
   - component: {fileID: 3680158466383251956}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Achievement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,9 +406,9 @@ GameObject:
   - component: {fileID: 2902678245110853660}
   - component: {fileID: 3447886938287043238}
   - component: {fileID: 1108177660}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: AchievementController
-  m_TagString: Untagged
+  m_TagString: AchievementController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -452,7 +452,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &2902678245110853660
 MonoBehaviour:
@@ -508,6 +508,7 @@ MonoBehaviour:
   nameText: {fileID: 3680158465727784022}
   descriptionText: {fileID: 3680158466383251956}
   animator: {fileID: 3680158464737393750}
+  skipButton: {fileID: 5402370477992662859}
 --- !u!1 &8237212012136305562
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,7 +519,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6969038947913926204}
   - component: {fileID: 6232266087747596074}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

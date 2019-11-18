@@ -6,7 +6,7 @@ namespace Game
     /// OnSFXToggle event channel
     /// Author : Mike Bédard
     /// </summary>
-    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class OnSFXToggle : EventChannel<bool>
     {
         public event EventHandler<bool> Notify; 

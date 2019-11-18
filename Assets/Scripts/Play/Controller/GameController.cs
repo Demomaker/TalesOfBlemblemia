@@ -19,23 +19,18 @@ namespace Game
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
          
-         private GameSettings gameSettings;
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
-         private int choiceRange;
-         private bool permaDeath;
-
-
+         
          private LevelLoader levelLoader;
          private DifficultyLevel difficultyLevel;
-         private string currentLevelName;
-
-         public Level[] Levels;
+         private GameSettings gameSettings;
+         private int choiceRange;
+         private bool permaDeath;
          
+         public Level[] Levels { get; private set; }
          public string PreviousLevelName { get; set; }
-
-         public bool PermaDeath => permaDeath;
-
          public string CurrentLevelName => levelLoader.LoadedLevel;
+         public bool PermaDeath => permaDeath;
          public bool AllLevelsCompleted => PreviousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel
@@ -55,7 +50,6 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             PreviousLevelName = gameSettings.EmptyLevelString;
              Levels = new Level[]
              {
                  new Level(gameSettings.EmptyLevelString, gameSettings.TutorialSceneName),
@@ -68,13 +62,14 @@ namespace Game
                  new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
                  new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
              };
+             PreviousLevelName = Levels.First(level => level.LevelName == gameSettings.StartingLevelSceneName).PreviousLevel;
              choiceRange = choiceRangePerDifficulty[DifficultyLevel];
              permaDeath = DifficultyLevel != DifficultyLevel.Easy;
          }
          
          private void Start()
          {
-             levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
+             levelLoader.LoadLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
 
          public GameController() : this(DifficultyLevel.Easy) { }

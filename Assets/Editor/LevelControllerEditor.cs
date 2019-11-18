@@ -17,23 +17,40 @@ namespace Game
     {
         /*Property Indexes in Property Names List*/
         private const int FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST = 10;
-        private const int BACKGROUND_MUSIC_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST;
-        private const int DO_NOT_END_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 2;
-        private const int COMPLETE_IF_ALL_ENEMIES_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 3;
-        private const int COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 4;
+        private const int BACKGROUND_MUSIC_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST;
+        private const int DO_NOT_END_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 1;
+        private const int CUSTOM_OBJECTIVE_MESSAGE_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 2;
+        private const int COMPLETE_IF_ALL_ENEMIES_DEFEATED_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 3;
+        private const int COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 4;
         private const int COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX =
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 5;
-        private const int COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 6;
-        private const int DEFEAT_IF_ALL_PLAYER_UNITS_DIED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 9;
+        private const int COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 6;
+        private const int DEFEAT_IF_ALL_PLAYER_UNITS_DIED_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 7;
         private const int DEFEAT_IF_NOT_COMPLETE_LEVEL_IN_CERTAIN_AMOUNT_OF_TURNS_PROPERTY_INDEX =
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 8;
-        private const int DEFEAT_IF_PROTECTED_IS_KILLED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 7;
-        private const int POINT_TO_ACHIEVE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
-        private const int ENEMY_TO_DEFEAT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
-        private const int TARGETS_TO_PROTECT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
-        private const int NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 13;
-        private const int NUMBER_OF_TURNS_BEFORE_DEFEAT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 14;
-        private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 15;
+        private const int DEFEAT_IF_PROTECTED_IS_KILLED_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 9;
+        private const int POINT_TO_ACHIEVE_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
+        private const int TARGETS_TO_DEFEAT_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
+        private const int ALL_TARGETS_NEED_TO_BE_DEFEATED_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
+        private const int TARGETS_TO_PROTECT_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 13;
+        private const int NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 14;
+        private const int NUMBER_OF_TURNS_BEFORE_DEFEAT_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 15;
+        private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = 
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 16;
 
         /*Header and Field Names*/
         private const string LEVEL_HEADER = "Level";
@@ -42,6 +59,7 @@ namespace Game
         private const string LEVEL_DEFEAT_HEADER = "Conditions For Level Defeat";
         private const string BACKGROUND_MUSIC_FIELD_NAME = "Background Music";
         private const string DO_NOT_END_FIELD_NAME = "Do Not End Level";
+        private const string CUSTOM_OBJECTIVE_MESSAGE_FIELD_NAME = "Custom Objective Message";
         private const string COMPLETE_IF_ALL_ENEMIES_DEFEATED_FIELD_NAME = "Complete If All Enemies Defeated";
         private const string COMPLETE_IF_POINT_ACHIEVED_FIELD_NAME = "Complete If Point Achieved";
         private const string COMPLETE_IF_CERTAIN_ENEMIES_DEFEATED_FIELD_NAME = "Complete If Certain Targets Defeated";
@@ -49,6 +67,7 @@ namespace Game
         private const string DEFEAT_IF_ALL_PLAYER_UNITS_DIED_FIELD_NAME = "Defeat If All Player Units Die";
         private const string DEFEAT_IF_PROTECTED_IS_KILLED_FIELD_NAME = "Defeat If Protected Unit Is Killed";
         private const string DEFEAT_IF_NOT_COMPLETE_LEVEL_IN_CERTAIN_AMOUNT_OF_TURNS_FIELD_NAME = "Defeat If Level Not Completed In Certain Amount Of Turns";
+        private const string ALL_TARGETS_NEED_TO_BE_DEFEATED_FIELD_NAME = "All Targets Need To Be Defeated";
         private const string POINT_TO_ACHIEVE_FIELD_NAME = "Point To Achieve";
         private const string NUMBER_OF_TURNS_BEFORE_COMPLETION_FIELD_NAME = "Number Of Turns Before Level Completion";
         private const string NUMBER_OF_TURNS_BEFORE_DEFEAT_FIELD_NAME = "Number Of Turns Before Level Defeat";
@@ -59,6 +78,7 @@ namespace Game
         /*Properties*/
         private SerializedProperty backgroundMusic;
         private SerializedProperty doNotEnd;
+        private SerializedProperty customObjectiveMessage;
         private SerializedProperty completeIfAllEnemiesDefeated;
         private SerializedProperty completeIfPointAchieved;
         private SerializedProperty completeIfSurvivedCertainNumberOfTurns;
@@ -68,6 +88,7 @@ namespace Game
         private SerializedProperty defeatIfNotCompleteLevelInCertainAmountOfTurns;
         private SerializedProperty pointToAchieve;
         private SerializedProperty targetsToProtect;
+        private SerializedProperty allTargetsNeedToBeDefeated;
         private SerializedProperty targetsToDefeat;
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty numberOfTurnsBeforeDefeat;
@@ -100,21 +121,28 @@ namespace Game
 
         private void InitializeSerializedProperties()
         {
-            backgroundMusic = serializedObject.FindProperty(serializedPropertyNames[BACKGROUND_MUSIC_PROPERTY_INDEX]);
-            doNotEnd = serializedObject.FindProperty(serializedPropertyNames[DO_NOT_END_PROPERTY_INDEX]);
-            completeIfAllEnemiesDefeated = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_ALL_ENEMIES_DEFEATED_PROPERTY_INDEX]);
-            completeIfPointAchieved = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX]);
-            completeIfSurvivedCertainNumberOfTurns = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX]);
-            completeIfCertainTargetsDefeated = serializedObject.FindProperty(serializedPropertyNames[COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX]);
-            defeatIfAllPlayerUnitsDied = serializedObject.FindProperty(serializedPropertyNames[DEFEAT_IF_ALL_PLAYER_UNITS_DIED_PROPERTY_INDEX]);
-            defeatIfNotCompleteLevelInCertainAmountOfTurns = serializedObject.FindProperty(serializedPropertyNames[DEFEAT_IF_NOT_COMPLETE_LEVEL_IN_CERTAIN_AMOUNT_OF_TURNS_PROPERTY_INDEX]);
-            defeatIfProtectedIsKilled = serializedObject.FindProperty(serializedPropertyNames[DEFEAT_IF_PROTECTED_IS_KILLED_PROPERTY_INDEX]);
-            pointToAchieve = serializedObject.FindProperty(serializedPropertyNames[POINT_TO_ACHIEVE_PROPERTY_INDEX]);
-            targetsToProtect = serializedObject.FindProperty(serializedPropertyNames[TARGETS_TO_PROTECT_PROPERTY_INDEX]);
-            targetsToDefeat = serializedObject.FindProperty(serializedPropertyNames[ENEMY_TO_DEFEAT_PROPERTY_INDEX]);
-            numberOfTurnsBeforeCompletion = serializedObject.FindProperty(serializedPropertyNames[NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX]);
-            numberOfTurnsBeforeDefeat = serializedObject.FindProperty(serializedPropertyNames[NUMBER_OF_TURNS_BEFORE_DEFEAT_PROPERTY_INDEX]);
-            revertWeaponTriangle = serializedObject.FindProperty(serializedPropertyNames[REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX]);
+            backgroundMusic = GetPropertyAtIndex(BACKGROUND_MUSIC_PROPERTY_INDEX);
+            doNotEnd = GetPropertyAtIndex(DO_NOT_END_PROPERTY_INDEX);
+            customObjectiveMessage = GetPropertyAtIndex(CUSTOM_OBJECTIVE_MESSAGE_PROPERTY_INDEX);
+            completeIfAllEnemiesDefeated = GetPropertyAtIndex(COMPLETE_IF_ALL_ENEMIES_DEFEATED_PROPERTY_INDEX);
+            completeIfPointAchieved = GetPropertyAtIndex(COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX);
+            completeIfSurvivedCertainNumberOfTurns = GetPropertyAtIndex(COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX);
+            completeIfCertainTargetsDefeated = GetPropertyAtIndex(COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX);
+            defeatIfAllPlayerUnitsDied = GetPropertyAtIndex(DEFEAT_IF_ALL_PLAYER_UNITS_DIED_PROPERTY_INDEX);
+            defeatIfNotCompleteLevelInCertainAmountOfTurns = GetPropertyAtIndex(DEFEAT_IF_NOT_COMPLETE_LEVEL_IN_CERTAIN_AMOUNT_OF_TURNS_PROPERTY_INDEX);
+            defeatIfProtectedIsKilled = GetPropertyAtIndex(DEFEAT_IF_PROTECTED_IS_KILLED_PROPERTY_INDEX);
+            pointToAchieve = GetPropertyAtIndex(POINT_TO_ACHIEVE_PROPERTY_INDEX);
+            targetsToProtect = GetPropertyAtIndex(TARGETS_TO_PROTECT_PROPERTY_INDEX);
+            targetsToDefeat = GetPropertyAtIndex(TARGETS_TO_DEFEAT_PROPERTY_INDEX);
+            allTargetsNeedToBeDefeated = GetPropertyAtIndex(ALL_TARGETS_NEED_TO_BE_DEFEATED_PROPERTY_INDEX);
+            numberOfTurnsBeforeCompletion = GetPropertyAtIndex(NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX);
+            numberOfTurnsBeforeDefeat = GetPropertyAtIndex(NUMBER_OF_TURNS_BEFORE_DEFEAT_PROPERTY_INDEX);
+            revertWeaponTriangle = GetPropertyAtIndex(REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX);
+        }
+
+        private SerializedProperty GetPropertyAtIndex(int serializedPropertyNamesIndex)
+        {
+            return serializedObject.FindProperty(serializedPropertyNames[serializedPropertyNamesIndex]);
         }
 
         private bool DoNotEndLevel()
@@ -136,6 +164,7 @@ namespace Game
             EditorGUILayout.LabelField(LEVEL_HEADER, EditorStyles.boldLabel);
             ShowAndEditBackgroundMusic();
             ShowAndEditDoNotEnd();
+            ShowAndEditCustomObjectiveMessage();
         }
 
         private void ShowAndEditWeaponProperties()
@@ -172,6 +201,12 @@ namespace Game
             doNotEnd.boolValue = EditorGUILayout.Toggle(DO_NOT_END_FIELD_NAME, doNotEnd.boolValue);
         }
 
+        private void ShowAndEditCustomObjectiveMessage()
+        {
+            customObjectiveMessage.stringValue = EditorGUILayout.TextField(CUSTOM_OBJECTIVE_MESSAGE_FIELD_NAME,
+                customObjectiveMessage.stringValue);
+        }
+
         private void ShowAndEditRevertWeaponTriangle()
         {
             revertWeaponTriangle.boolValue = EditorGUILayout.Toggle(REVERT_WEAPON_TRIANGLE_FIELD_NAME, revertWeaponTriangle.boolValue);
@@ -202,7 +237,9 @@ namespace Game
         {
             completeIfCertainTargetsDefeated.boolValue =
                 EditorGUILayout.Toggle(COMPLETE_IF_CERTAIN_ENEMIES_DEFEATED_FIELD_NAME, completeIfCertainTargetsDefeated.boolValue);
-            if (completeIfCertainTargetsDefeated.boolValue) EditorGUILayout.PropertyField(targetsToDefeat,true);
+            if (!completeIfCertainTargetsDefeated.boolValue) return;
+            EditorGUILayout.PropertyField(targetsToDefeat,true);
+            allTargetsNeedToBeDefeated.boolValue = EditorGUILayout.Toggle(ALL_TARGETS_NEED_TO_BE_DEFEATED_FIELD_NAME,allTargetsNeedToBeDefeated.boolValue);
         }
 
         private void ShowAndEditDefeatIfAllPlayerUnitsDied()

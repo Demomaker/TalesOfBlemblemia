@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6757921886440334873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6757921886440334874}
+  - component: {fileID: 6757921886440334875}
+  m_Layer: 0
+  m_Name: GameSettings
+  m_TagString: GameSettings
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6757921886440334874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6757921886440334873}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14.749668, y: 9.852345, z: -861.0503}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6757921886440334875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6757921886440334873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82d6ca751fd64d9b9061ab4f4aac6c5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMovementRange: 3
+  enemyMovementRange: 3
+  playerAttackRange: 1
+  enemyAttackRange: 1
+  attackDuration: 0.3
+  movementDuration: 0.3
+  numberOfRecruitablesOnAlternatePath: 8
+  skipComputerTurnKey: 32
+  tutorialScene: 23585056
+  jimsterburgScene: 21787095
+  parabeneForestScene: 76988147
+  blemburgCitadelScene: 56039707
+  rinfretVillageScene: 15409662
+  darkTowerScene: 20786035
+  tulipValleyScene: 56662542
+  morktressScene: 96624225
+  overworldScene: 18175791
+  mainmenuScene: 10387227
+  startingLevelScene: 23585056
+  saveSlotOne: 1
+  saveSlotTwo: 2
+  saveSlotThree: 3
+  franklemName: Franklem
+  myriamName: Myriam
+  bramName: Bram
+  rassName: Rass
+  ulricName: Ulric
+  jebediahName: Jebediah
+  thomasName: Thomas
+  abrahamName: Abraham
+  achievementGetString: Achievement Unlocked!
+  completeCampaignOnEasy: Baby Steps
+  completeCampaignOnMedium: Now you're getting it!
+  completeCampaignOnHard: You mad man!
+  defeatBlackKnight: In my own castle...
+  reachFinalLevelWith8Players: The Octet
+  finishALevelWithoutUnitLoss: No one left behind...
+  finishCampaignWithoutUnitLoss: Great leader
+  saveAllRecruitablesFromAlternatePath: Champion of the people!
+  isMoving: IsMoving
+  isAttacking: IsAttacking
+  isGoingToDie: IsGoingToDie
+  isBeingHurt: IsBeingHurt
+  isDodging: IsDodging
+  isResting: IsResting
+  nameString: Name
+  difficultyString: Difficulty
+  stageString: Stage
+  defaultToggleValue: 1
+  defaultSliderValue: 100
+  defaultUsername: Franklem
+  percent: 100

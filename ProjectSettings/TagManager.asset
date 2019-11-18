@@ -15,12 +15,14 @@ TagManager:
   - PauseController
   - AchievementController
   - OverWorldController
-  - DialogueManager
-  - UIController
+  - OverheadHp
   - BattleReportAlly
   - BattleReportEnemy
-  - OverheadHp
-  - LevelLoader
+  - UIController
+  - DialogueManager
+  - AnimationManager
+  - GameEventHandler
+  - GameSettings
   layers:
   - Default
   - TransparentFX
@@ -60,4 +62,7 @@ TagManager:
     locked: 0
   - name: Characters
     uniqueID: 18170363
+    locked: 0
+  - name: Arrows
+    uniqueID: 3972060513
     locked: 0

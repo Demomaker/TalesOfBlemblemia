@@ -31,6 +31,7 @@ namespace Game
         private GameSettings gameSettings;
 
         private UIController uiController;
+        private LevelController levelController;
 
         /// <summary>
         /// Array representing the movement cost needed to move to every tile on the grid
@@ -143,6 +144,7 @@ namespace Game
             onUnitDeath = Harmony.Finder.OnUnitDeath;
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
+            levelController = Harmony.Finder.LevelController;
             gameSettings = Harmony.Finder.GameSettings;
             base.Awake();
         }
@@ -273,7 +275,7 @@ namespace Game
                     if (TargetIsInRange(action.Target))
                     {
                         yield return Attack(action.Target);
-                        if (action.Target.GetType() == typeof(Unit))
+                        if (action.Target.GetType() == typeof(Unit) && !levelController.CinematicController.IsPlayingACinematic)
                             yield return uiController.LaunchBattleReport(IsEnemy);
                     }
                     else
@@ -357,11 +359,11 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                //onDodge.Publish((Unit)target);
+                onDodge.Publish((Unit)target);
             }
             else
             {
-                //onHurt.Publish((Unit)target);
+                onHurt.Publish((Unit)target);
             }
             if (!isCountering && (target.GetType() == typeof(Unit) || (target.GetType() == typeof(Unit) && ((Unit)target).WeaponType == WeaponAdvantage)))
             {

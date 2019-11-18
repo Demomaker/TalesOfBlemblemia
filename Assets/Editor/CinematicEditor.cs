@@ -43,6 +43,7 @@ namespace Game
                 var gameObjectToMove = element.FindPropertyRelative("gameObjectToMove");
                 var gameObjectTarget = element.FindPropertyRelative("gameObjectTarget");
                 var cameraFollow = element.FindPropertyRelative("cameraFollow");
+                var gameObjectToActivate = element.FindPropertyRelative("gameObjectToActivate");
                 
                 rect.y += EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), cinematicActionType);
@@ -88,6 +89,9 @@ namespace Game
                         EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), damage);
                         rect.y += EditorGUIUtility.singleLineHeight;
                         break;
+                    case CinematicActionType.Activate:
+                        EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), gameObjectToActivate);
+                        break;
                 }
 
             },
@@ -130,6 +134,7 @@ namespace Game
                 var gameObjectToMove = element.FindPropertyRelative("gameObjectToMove");
                 var gameObjectTarget = element.FindPropertyRelative("gameObjectTarget");
                 var cameraFollow = element.FindPropertyRelative("cameraFollow");
+                var gameObjectToActivate = element.FindPropertyRelative("gameObjectToActivate");
                 
                 cinematicActionType.intValue = (int) CinematicActionType.Quote;
                 name.stringValue = "";
@@ -142,6 +147,7 @@ namespace Game
                 gameObjectToMove.objectReferenceValue = null;
                 gameObjectTarget.objectReferenceValue = null;
                 cameraFollow.boolValue = false;
+                gameObjectToActivate.objectReferenceValue = null;
             }
         };
         }
