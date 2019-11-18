@@ -76,7 +76,6 @@ namespace Game
             }
             
             saveController.UpdateSave(saveSlotSelectedNumber);
-            saveController.SaveSelected = saveSlotSelectedNumber;
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
         
