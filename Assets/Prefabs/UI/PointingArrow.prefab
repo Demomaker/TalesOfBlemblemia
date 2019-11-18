@@ -68,8 +68,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -322906783
-  m_SortingLayer: 2
+  m_SortingLayerID: -152235183
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ec8c26fbbfe88404aa461934a88d5f72, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -94,10 +94,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b2649c5aff8e149ad4da761d1866a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highestYPositionDifference: 10
-  lowestYPositionDifference: -10
+  unitToAttack: {fileID: 0}
+  unitToMove: {fileID: 0}
+  specificUnitMovePosition: {x: -1, y: -1, z: -1}
+  maxYPositionDifference: 0.5
+  yPositionChange: 0.01
   startingYDirection: 1
   transformToPoint: {fileID: 0}
+  nextArrowToActivate: {fileID: 0}
+  cinematicToTriggerOnStop: {fileID: 0}
+  cinematicToTriggerOnStart: {fileID: 0}
 --- !u!114 &215045943551267698
 MonoBehaviour:
   m_ObjectHideFlags: 0
