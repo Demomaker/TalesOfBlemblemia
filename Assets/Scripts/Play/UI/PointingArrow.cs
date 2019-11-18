@@ -16,6 +16,8 @@ public class PointingArrow : MonoBehaviour
     [SerializeField] private YDirection startingYDirection = YDirection.Up;
     [SerializeField] private Transform transformToPoint;
     [SerializeField] private PointingArrow nextArrowToActivate = null;
+    [SerializeField] private Cinematic cinematicToTriggerOnStop = null;
+    [SerializeField] private Cinematic cinematicToTriggerOnStart = null;
     private float yPositionDifference = 0;
     private YDirection yDirection;
     private OnHurt onHurt;
@@ -34,6 +36,8 @@ public class PointingArrow : MonoBehaviour
 
     private void OnEnable()
     {
+        if(cinematicToTriggerOnStart != null)
+            cinematicToTriggerOnStart.TriggerCinematic();
         onHurt.Notify += UnitToAttackWasAttacked;
         onDodge.Notify += UnitToAttackWasAttacked;
         onUnitDeath.Notify += UnitToAttackWasAttacked;
@@ -47,6 +51,12 @@ public class PointingArrow : MonoBehaviour
         onDodge.Notify -= UnitToAttackWasAttacked;
         onUnitDeath.Notify -= UnitToAttackWasAttacked;
         onUnitMove.Notify -= UnitToMoveWasMoved;
+    }
+
+    public void OnStopEvent()
+    {
+        if(gameObject.activeSelf)
+        StopPointing();
     }
 
     private void UnitToAttackWasAttacked(Unit unit)
@@ -78,6 +88,8 @@ public class PointingArrow : MonoBehaviour
     {
         if(nextArrowToActivate != null)
         nextArrowToActivate.gameObject.SetActive(true);
+        if(cinematicToTriggerOnStop != null)
+            cinematicToTriggerOnStop.TriggerCinematic();
         gameObject.SetActive(false);
     }
 

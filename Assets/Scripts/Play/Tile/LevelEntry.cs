@@ -59,7 +59,7 @@ public class LevelEntry : MonoBehaviour
     public void OnLevelEntry()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        if (CanBeClicked && overWorldController.CanLoadANewLevel)
+        if (CanBeClicked && overWorldController.CanLoadANewLevel && !overWorldController.CharacterIsMoving)
         {
             StartCoroutine(overWorldController.LoadLevel(representedLevelName, transform.position));
         }

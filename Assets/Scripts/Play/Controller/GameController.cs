@@ -58,7 +58,7 @@ namespace Game
          
          private void Start()
          {
-             levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
+             levelLoader.LoadLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
 
          public GameController() : this(DifficultyLevel.Easy) { }

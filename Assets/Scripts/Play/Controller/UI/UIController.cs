@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Harmony;
 using JetBrains.Annotations;
 using TMPro;
@@ -69,7 +70,10 @@ namespace Game
         private GameObject[] playerHealthBar;
         private GameObject[] enemyHealthBar;
 
+
         public bool IsBattleReportActive => battleReports.activeSelf;
+
+
 
         private void Start()
         {
