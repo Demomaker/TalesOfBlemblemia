@@ -43,10 +43,11 @@ namespace Game
             }
         }
 
-        public virtual void Die()
+        public virtual IEnumerator Die()
         {
             currentTile.UnlinkUnit();
             gameObject.SetActive(false);
+            yield break;
         }
 
         public virtual void Awake()

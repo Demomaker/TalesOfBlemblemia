@@ -295,14 +295,19 @@ namespace Game
                 }
             }
         }
-        public override void Die()
+        public override IEnumerator Die()
         {
+            GetComponent<Cinematic>()?.TriggerCinematic();
+            while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+            {
+                yield return null;
+            }
             isGoingToDie = true;
             onUnitDeath.Publish(this);
             if(playerType == PlayerType.Ally)
                 onPlayerUnitLoss.Publish(this);
             isGoingToDie = false;
-            base.Die();
+            yield return base.Die();
         }
         #endregion
         
@@ -449,6 +454,10 @@ namespace Game
             return false;
         }
         #endregion
-        
+
+        public void RemoveInitialMovement()
+        {
+            movesLeft -= currentTile.CostToMove;
+        }
     } 
 }
