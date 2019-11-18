@@ -49,7 +49,7 @@ namespace Game
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
             gameSettings = Harmony.Finder.GameSettings;
             InitiateSaveController(gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
-                gameSettings.TutorialSceneName, playableCharactersDictionary);
+                gameSettings.EmptyString, playableCharactersDictionary);
         }
 
 
@@ -268,7 +268,7 @@ namespace Game
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
 
             SaveInfos cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
-                gameSettings.TutorialSceneName, playableCharactersDictionary);
+                gameSettings.EmptyString, playableCharactersDictionary);
             
             switch (SaveSelected)
             {

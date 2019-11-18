@@ -198,6 +198,7 @@ namespace Game
 
             UpdatePlayerSave();
 
+            //We need to clear the unit list of the players since they are singletons
             foreach (var player in players)
             {
                 player.OwnedUnits.Clear();
@@ -215,15 +216,7 @@ namespace Game
             if (!levelCompleted) return;
             gameController.OnLevelCompleted(levelName);
 
-            var levels = gameController.Levels;
-            foreach (var level in levels)
-            {
-                if (level.PreviousLevel == levelName)
-                {
-                    saveController.GetCurrentSaveSelectedInfos().LevelName = level.LevelName;
-                    break;
-                }
-            }
+            saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;
 
             saveController.UpdateSave(saveController.SaveSelected);
         }
@@ -247,7 +240,7 @@ namespace Game
                     break;
                 }
 
-                if (gameController.DifficultyLevel != DifficultyLevel.Easy)
+                if (gameController.PermaDeath)
                 {
                     foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
                     {

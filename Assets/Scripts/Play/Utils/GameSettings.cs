@@ -64,6 +64,7 @@ namespace Game
         [SerializeField] private int defaultSliderValue = 100;
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
+        [SerializeField] private string emptyString = "";
 
         private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
         private static readonly Color opaqueAlpha = new Color(1,1,1,1f);
@@ -121,5 +122,6 @@ namespace Game
         public int DefaultSliderValue => defaultSliderValue;
         public string DefaultUsername => defaultUsername;
         public int Percent => percent;
+        public string EmptyString => emptyString;
     }
 }
