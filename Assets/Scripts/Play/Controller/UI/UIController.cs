@@ -26,15 +26,6 @@ namespace Game
         [SerializeField] private TMP_Text turnInfo;
 
         [Header("Victory Condition")] [SerializeField] private TMP_Text victoryCondition;
-        
-        [FormerlySerializedAs("nameCharacter")]
-        [Header("CharacterInfos")]
-        [SerializeField] private TMP_Text characterName;
-        [SerializeField] private TMP_Text characterClass;
-        [SerializeField] private TMP_Text weapon;
-        [SerializeField] private TMP_Text movement;
-        [SerializeField] private TMP_Text atk;
-        [SerializeField] private TMP_Text hp;
 
         [Header("Battle Report")] 
         [SerializeField] private GameObject battleReports;
@@ -231,14 +222,6 @@ namespace Game
             if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
 
             tileTexture.sprite = tile.GetSprite();
-
-            if (tile.LinkedUnit == null || tile.LinkedUnit.UnitInfos == null) return;
-            characterName.text = tile.LinkedUnit.UnitInfos.characterName;
-            characterClass.text = tile.LinkedUnit.UnitInfos.className;
-            weapon.text = tile.LinkedUnit.UnitInfos.weaponName;
-            movement.text = tile.LinkedUnit.MovesLeft.ToString();
-            atk.text = tile.LinkedUnit.Stats.AttackStrength.ToString();
-            hp.text = tile.LinkedUnit.CurrentHealthPoints.ToString();
         }
 
         public void ModifyTurnCounter(int turns)
