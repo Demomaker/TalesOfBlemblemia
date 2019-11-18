@@ -55,10 +55,10 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             PreviousLevelName = gameSettings.EmptyString;
+             PreviousLevelName = gameSettings.EmptyLevelString;
              Levels = new Level[]
              {
-                 new Level(gameSettings.EmptyString, gameSettings.TutorialSceneName),
+                 new Level(gameSettings.EmptyLevelString, gameSettings.TutorialSceneName),
                  new Level(gameSettings.TutorialSceneName, gameSettings.JimsterburgSceneName),
                  new Level(gameSettings.JimsterburgSceneName, gameSettings.ParabeneForestSceneName),
                  new Level(gameSettings.ParabeneForestSceneName, gameSettings.BlemburgCitadelSceneName),
