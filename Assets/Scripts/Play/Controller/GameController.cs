@@ -26,26 +26,39 @@ namespace Game
 
 
          private LevelLoader levelLoader;
-
-         private string previousLevelName;
+         private DifficultyLevel difficultyLevel;
          private string currentLevelName;
 
          public Level[] Levels;
          
-         public string PreviousLevelName => previousLevelName;
-         public string CurrentLevelName => levelLoader.LoadedLevel;
-         public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
+         public string PreviousLevelName { get; set; }
 
-         public DifficultyLevel DifficultyLevel { get; set; }
+         public bool PermaDeath => permaDeath;
+
+         public string CurrentLevelName => levelLoader.LoadedLevel;
+         public bool AllLevelsCompleted => PreviousLevelName == Levels[Levels.Length - 1].LevelName;
+
+         public DifficultyLevel DifficultyLevel
+         {
+             get => difficultyLevel;
+             set
+             {
+                 difficultyLevel = value;
+                 if (difficultyLevel != DifficultyLevel.Easy)
+                 {
+                     permaDeath = true;
+                 }
+             }
+         }
 
          private void Awake()
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             previousLevelName = gameSettings.BlemburgCitadelSceneName;
+             PreviousLevelName = gameSettings.EmptyLevelString;
              Levels = new Level[]
              {
-                 new Level("", gameSettings.TutorialSceneName),
+                 new Level(gameSettings.EmptyLevelString, gameSettings.TutorialSceneName),
                  new Level(gameSettings.TutorialSceneName, gameSettings.JimsterburgSceneName),
                  new Level(gameSettings.JimsterburgSceneName, gameSettings.ParabeneForestSceneName),
                  new Level(gameSettings.ParabeneForestSceneName, gameSettings.BlemburgCitadelSceneName),
@@ -75,7 +88,7 @@ namespace Game
 
          public void OnLevelCompleted(string levelName)
          {
-             previousLevelName = levelName;
+             PreviousLevelName = levelName;
          }
      }
 
