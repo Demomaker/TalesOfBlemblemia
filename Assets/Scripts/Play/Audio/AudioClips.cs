@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game;
 using UnityEngine;
+using Finder = Harmony.Finder;
 
 /// <summary>
 /// Audio clips that represent the sounds and music of the game
@@ -22,6 +24,7 @@ public class AudioClips : MonoBehaviour
     [SerializeField] private AudioClip levelVictoryMusic;
     [SerializeField] private AudioClip mainMenuMusic;
     
+    private GameSettings gameSettings = null;
     public AudioClip MaleAttackSound => maleAttackSound;
     public AudioClip FemaleAttackSound => femaleAttackSound;
     public AudioClip MorkAttackSound => morkAttackSound;
@@ -34,4 +37,10 @@ public class AudioClips : MonoBehaviour
     public AudioClip SadMusic => sadMusic;
     public AudioClip LevelVictoryMusic => levelVictoryMusic;
     public AudioClip MainMenuMusic => mainMenuMusic;
+
+    private void Awake()
+    {
+        gameSettings = Finder.GameSettings;
+        Resources.LoadAll(gameSettings.AudioPath);
+    }
 }

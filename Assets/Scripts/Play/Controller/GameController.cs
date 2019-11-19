@@ -19,33 +19,37 @@ namespace Game
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
          
-         private GameSettings gameSettings;
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
+         
+         private LevelLoader levelLoader;
+         private DifficultyLevel difficultyLevel;
+         private GameSettings gameSettings;
          private int choiceRange;
          private bool permaDeath;
-
-
-         private LevelLoader levelLoader;
-
-         private string previousLevelName;
-         private string currentLevelName;
-
-         public Level[] Levels;
          
-         public string PreviousLevelName => previousLevelName;
+         public Level[] Levels { get; private set; }
+         public string PreviousLevelName { get; set; }
          public string CurrentLevelName => levelLoader.LoadedLevel;
-         public bool AllLevelsCompleted => previousLevelName == Levels[Levels.Length - 1].LevelName;
+         public bool PermaDeath => permaDeath;
+         public bool AllLevelsCompleted => PreviousLevelName == Levels[Levels.Length - 1].LevelName;
 
-         public DifficultyLevel DifficultyLevel { get; set; }
+         public DifficultyLevel DifficultyLevel
+         {
+             get => difficultyLevel;
+             set
+             {
+                 difficultyLevel = value;
+                 permaDeath = difficultyLevel != DifficultyLevel.Easy;
+             }
+         }
 
          private void Awake()
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             previousLevelName = "";
              Levels = new Level[]
              {
-                 new Level("", gameSettings.TutorialSceneName),
+                 new Level(gameSettings.EmptyLevelString, gameSettings.TutorialSceneName),
                  new Level(gameSettings.TutorialSceneName, gameSettings.JimsterburgSceneName),
                  new Level(gameSettings.JimsterburgSceneName, gameSettings.ParabeneForestSceneName),
                  new Level(gameSettings.ParabeneForestSceneName, gameSettings.BlemburgCitadelSceneName),
@@ -55,13 +59,14 @@ namespace Game
                  new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
                  new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
              };
+             PreviousLevelName = Levels.First(level => level.LevelName == gameSettings.StartingLevelSceneName).PreviousLevel;
              choiceRange = choiceRangePerDifficulty[DifficultyLevel];
              permaDeath = DifficultyLevel != DifficultyLevel.Easy;
          }
          
          private void Start()
          {
-             levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
+             levelLoader.LoadLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
 
          public GameController() : this(DifficultyLevel.Easy) { }
@@ -75,7 +80,7 @@ namespace Game
 
          public void OnLevelCompleted(string levelName)
          {
-             previousLevelName = levelName;
+             PreviousLevelName = levelName;
          }
      }
 

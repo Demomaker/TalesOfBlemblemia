@@ -7,7 +7,7 @@ namespace Game
     /// Game settings (Variables with constant values that are customizable for the game)
     /// Author : Mike Bédard
     /// </summary>
-    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
     {
         [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
@@ -20,6 +20,7 @@ namespace Game
         [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
 
         [Header("Scene names")] 
+        [SerializeField] private string emptyLevelString = "";
         [SerializeField] private R.E.Scene tutorialScene;
         [SerializeField] private R.E.Scene jimsterburgScene;
         [SerializeField] private R.E.Scene parabeneForestScene;
@@ -30,6 +31,7 @@ namespace Game
         [SerializeField] private R.E.Scene morktressScene;
         [SerializeField] private R.E.Scene overworldScene;
         [SerializeField] private R.E.Scene mainmenuScene;
+        [SerializeField] private R.E.Scene startingLevelScene;
 
         [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
         [SerializeField] private int saveSlotTwo = 2;
@@ -42,7 +44,7 @@ namespace Game
         [SerializeField] private string jebediahName = "Jebediah";
         [SerializeField] private string thomasName = "Thomas";
         [SerializeField] private string abrahamName = "Abraham";
-        [SerializeField] [Header("Achievements")] private string achievementGetString = "Achievement Get!";
+        [SerializeField] [Header("Achievements")] private string achievementGetString = "Achievement Completed!";
         [SerializeField] [Header("Achievement Names")] private string completeCampaignOnEasy = "Baby Steps";
         [SerializeField] private string completeCampaignOnMedium = "Now you're getting it!";
         [SerializeField] private string completeCampaignOnHard = "You mad man!";
@@ -64,6 +66,7 @@ namespace Game
         [SerializeField] private int defaultSliderValue = 100;
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
+        [SerializeField] private string audioPath = "Audio";
 
         private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
         private static readonly Color opaqueAlpha = new Color(1,1,1,1f);
@@ -88,6 +91,8 @@ namespace Game
         public string MorktressSceneName => morktressScene.ToString();
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
+        public string StartingLevelSceneName => startingLevelScene.ToString();
+
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;
         public int SaveSlotThree => saveSlotThree;
@@ -121,5 +126,7 @@ namespace Game
         public int DefaultSliderValue => defaultSliderValue;
         public string DefaultUsername => defaultUsername;
         public int Percent => percent;
+        public string EmptyLevelString => emptyLevelString;
+        public string AudioPath => audioPath;
     }
 }

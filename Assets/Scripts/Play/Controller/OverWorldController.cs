@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using Harmony;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -13,18 +15,19 @@ namespace Game
     public class OverWorldController : MonoBehaviour
     {
         [SerializeField] private bool isDebugging;
+        [SerializeField] private Button returnToMainMenu;
         private OnOverWorldEnter onOverWorldEnter;
         private Transform characterTransform;
         private GameObject overWorldPath;
         private LevelLoader levelLoader;
         private GameSettings gameSettings;
 
-        private bool canLoadANewLevel = true;
+        public bool CharacterIsMoving { get; private set; }
 
         public Transform CharacterTransform => characterTransform;
         public bool IsDebugging => isDebugging;
 
-        public bool CanLoadANewLevel => canLoadANewLevel;
+        public bool CanLoadANewLevel => levelLoader.CanLoadNewLevel;
 
         private void Awake()
         {
@@ -91,10 +94,17 @@ namespace Game
         
         public IEnumerator LoadLevel(string levelName, Vector3 position)
         {
-            canLoadANewLevel = false;
+            if(!CanLoadANewLevel || CharacterIsMoving) yield break;
+            CharacterIsMoving = true;
             levelLoader.FadeToLevel(levelName, LoadSceneMode.Additive);
             yield return MoveCharacterToLevelEntry(position);
-            canLoadANewLevel = true;
+            CharacterIsMoving = false;
+        }
+
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
         }
     }
 }

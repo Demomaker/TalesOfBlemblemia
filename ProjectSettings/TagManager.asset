@@ -15,11 +15,14 @@ TagManager:
   - PauseController
   - AchievementController
   - OverWorldController
-  - DialogueManager
-  - UIController
+  - OverheadHp
   - BattleReportAlly
   - BattleReportEnemy
-  - OverheadHp
+  - UIController
+  - DialogueManager
+  - AnimationManager
+  - GameEventHandler
+  - GameSettings
   - LevelLoader
   layers:
   - Default
@@ -60,4 +63,7 @@ TagManager:
     locked: 0
   - name: Characters
     uniqueID: 18170363
+    locked: 0
+  - name: UI
+    uniqueID: 4142732113
     locked: 0

@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15002b0eeb1d4d788e1ef566ba1d7282, type: 3}
+  m_Name: TutorialOnStartCinematic
+  m_EditorClassIdentifier: 
+  cameraActions:
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.58
+    cameraZoom: 8
+    quotes: []
+  - cameraTarget: {x: 6, y: 7}
+    duration: 1.16
+    cameraZoom: 4.43
+    quotes:
+    - name: Edgar
+      sentence: Oh, Franklem, these are some beautiful mountains!
+  - cameraTarget: {x: 7, y: 7}
+    duration: 1.66
+    cameraZoom: 4.22
+    quotes:
+    - name: Franklem
+      sentence: Don't get carried away by the beauty of this land, Edgar!
+    - name: Franklem
+      sentence: We need to prepare for the next big fight...
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Edgar
+      sentence: Franklem! Watch out! It's a Mork!
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Mork
+      sentence: "\u266AYeah, It's been years now, yeah, it's been years now\u266A"
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Franklem
+      sentence: Still singing, huh. We need to get rid of it.
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes:
+    - name: Edgar
+      sentence: It's pretty simple, Franklem, just move to him and attack!
+    - name: Edgar
+      sentence: Scatter the lands before that to be sure nothing can go wrong.
+    - name: Edgar
+      sentence: I wonder if some more could be behind us...
+  - cameraTarget: {x: 8.5, y: 8.5}
+    duration: 0.08
+    cameraZoom: 8
+    quotes: []
