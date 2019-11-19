@@ -22,6 +22,8 @@ public class AudioClips : MonoBehaviour
     [SerializeField] private AudioClip levelVictoryMusic;
     [SerializeField] private AudioClip mainMenuMusic;
     
+    private const string AUDIO_PATH = "Audio";
+    
     public AudioClip MaleAttackSound => maleAttackSound;
     public AudioClip FemaleAttackSound => femaleAttackSound;
     public AudioClip MorkAttackSound => morkAttackSound;
@@ -37,6 +39,6 @@ public class AudioClips : MonoBehaviour
 
     private void Awake()
     {
-        Resources.LoadAll("Audio");
+        Resources.LoadAll(AUDIO_PATH);
     }
 }
