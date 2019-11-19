@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using Harmony;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -13,6 +15,7 @@ namespace Game
     public class OverWorldController : MonoBehaviour
     {
         [SerializeField] private bool isDebugging;
+        [SerializeField] private Button returnToMainMenu;
         private OnOverWorldEnter onOverWorldEnter;
         private Transform characterTransform;
         private GameObject overWorldPath;
@@ -96,6 +99,12 @@ namespace Game
             levelLoader.FadeToLevel(levelName, LoadSceneMode.Additive);
             yield return MoveCharacterToLevelEntry(position);
             CharacterIsMoving = false;
+        }
+
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
         }
     }
 }

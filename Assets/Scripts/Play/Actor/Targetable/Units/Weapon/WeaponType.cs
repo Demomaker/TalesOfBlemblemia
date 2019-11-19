@@ -9,7 +9,7 @@
         Axe,
         HealingStaff
     }
-
+    
     public static class WeaponTypeExt
     {
         public const WeaponType SWORD_ADVANTAGE = WeaponType.Axe;
@@ -31,5 +31,4 @@
             }
         }
     }
-
 }

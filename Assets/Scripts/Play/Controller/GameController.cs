@@ -39,10 +39,7 @@ namespace Game
              set
              {
                  difficultyLevel = value;
-                 if (difficultyLevel != DifficultyLevel.Easy)
-                 {
-                     permaDeath = true;
-                 }
+                 permaDeath = difficultyLevel != DifficultyLevel.Easy;
              }
          }
 

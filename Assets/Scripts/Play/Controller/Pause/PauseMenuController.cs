@@ -12,6 +12,7 @@ namespace Game
         [Header("Buttons")] 
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button optionsButton;
+        [SerializeField] private Button returnToOverWorldButton;
         [SerializeField] private Button returnToMainMenuButton;
 
         [Header("Controller")] 
@@ -20,12 +21,16 @@ namespace Game
         private Navigator navigator;
         private Canvas pauseMenuScreen;
         private PauseController pauseController;
+        private LevelLoader levelLoader;
+        private GameSettings gameSettings;
 
         private void Start()
         {
             navigator = Finder.Navigator;
             pauseMenuScreen = GetComponent<Canvas>();
             pauseController = Finder.PauseController;
+            levelLoader = Harmony.Finder.LevelLoader;
+            gameSettings = Harmony.Finder.GameSettings;
         }
 
         public void Enter()
@@ -54,7 +59,14 @@ namespace Game
         public void ReturnToMainMenu()
         {
             pauseController.Resume();
-            SceneManager.LoadSceneAsync("Main");
+            levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
+        }
+
+        [UsedImplicitly]
+        public void ReturnToOverWorld()
+        {
+            pauseController.Resume();
+            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
     }
 }
