@@ -34,4 +34,9 @@ public class AudioClips : MonoBehaviour
     public AudioClip SadMusic => sadMusic;
     public AudioClip LevelVictoryMusic => levelVictoryMusic;
     public AudioClip MainMenuMusic => mainMenuMusic;
+
+    private void Awake()
+    {
+        Resources.LoadAll("Audio");
+    }
 }
