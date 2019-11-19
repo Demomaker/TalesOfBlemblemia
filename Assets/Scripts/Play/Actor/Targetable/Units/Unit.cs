@@ -274,7 +274,10 @@ namespace Game
                     {
                         yield return Attack(action.Target);
                         if (action.Target.GetType() == typeof(Unit))
-                            yield return uiController.LaunchBattleReport(IsEnemy);
+                            if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+                                yield return uiController.LaunchBattleReport(IsEnemy);
+                            else
+                                yield break;    
                     }
                     else
                         Rest();
@@ -435,7 +438,6 @@ namespace Game
         }
         private void Heal()
         {
-            
             CurrentHealthPoints += HpGainedByHealing;
         }
 

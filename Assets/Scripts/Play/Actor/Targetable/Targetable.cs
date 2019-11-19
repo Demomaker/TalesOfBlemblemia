@@ -27,7 +27,8 @@ namespace Game
                 currentHealthPoints = value;
                 if(overHeadHpController != null) overHeadHpController.ModifyOverHeadHp(currentHealthPoints);
                 if (NoHealthLeft) 
-                    Die();
+                    //TODO objet Coroutine Starter
+                    Harmony.Finder.LevelController.StartCoroutine(Die());
             }
         }
         
@@ -62,7 +63,7 @@ namespace Game
                 Debug.Log("The gameobject doesn't have a overheadHp object and it requires it");
             }
         }
-
+        
         protected virtual void Start()
         {
             StartCoroutine(InitPosition());
@@ -72,9 +73,7 @@ namespace Game
         {
             yield return new WaitForEndOfFrame();
             while (levelController.CinematicController.IsPlayingACinematic)
-            {
                 yield return null;
-            }
             var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
             transform.position = tile.WorldPosition;
             CurrentTile = tile;
