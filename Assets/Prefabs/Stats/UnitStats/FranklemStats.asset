@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae361f60e5e4f045871ba281a2d6c81, type: 3}
   m_Name: FranklemStats
   m_EditorClassIdentifier: 
-  maxHealthPoints: 15
+  maxHealthPoints: 1
   moveSpeed: 3
-  attackStrength: 3
+  attackStrength: 0
   hitRate: 1
   critRate: 0

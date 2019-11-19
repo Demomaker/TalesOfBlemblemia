@@ -67,9 +67,10 @@ namespace Game
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
+        [SerializeField] private KeyCode skipLevelKey = KeyCode.O;
 
         private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
-        private static readonly Color opaqueAlpha = new Color(1,1,1,1f);
+        private static readonly Color opaqueAlpha = new Color(1, 1, 1, 1f);
 
         public Color PaleAlpha => paleAlpha;
         public Color OpaqueAlpha => opaqueAlpha;
@@ -81,6 +82,7 @@ namespace Game
         public float MovementDuration => movementDuration;
         public int NumberOfRecruitablesOnAlternatePath => numberOfRecruitablesOnAlternatePath;
         public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
+        public KeyCode SkipLevelKey => skipLevelKey;
         public string TutorialSceneName => tutorialScene.ToString();
         public string JimsterburgSceneName => jimsterburgScene.ToString();
         public string ParabeneForestSceneName => parabeneForestScene.ToString();

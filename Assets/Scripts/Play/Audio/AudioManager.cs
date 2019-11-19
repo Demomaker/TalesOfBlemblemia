@@ -3,6 +3,7 @@ using System.Collections;
 using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = System.Diagnostics.Debug;
 
 namespace Game
 {
@@ -56,12 +57,11 @@ namespace Game
 
         private void OnEnable()
         {
-            StartCoroutine(ActivateEventChannels());
+            EnableEventChannels();
         }
 
         private void OnDisable()
         {
-            if(onHurt != null)
             DisableEventChannels();
         }
 

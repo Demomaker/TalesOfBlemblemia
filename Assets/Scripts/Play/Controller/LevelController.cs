@@ -51,6 +51,7 @@ namespace Game
         private bool levelIsEnding;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
+        private OnLevelDefeat onLevelDefeat;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
         private UIController uiController;
@@ -114,6 +115,7 @@ namespace Game
 
         private void Awake()
         {
+            InitializeEvents();
             levelLoader = Harmony.Finder.LevelLoader;
             ResetVariables();
             saveController = Finder.SaveController;
@@ -121,9 +123,14 @@ namespace Game
             gameSettings = Harmony.Finder.GameSettings;
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
-            onLevelVictory = Harmony.Finder.OnLevelVictory;
-            onLevelChange = Harmony.Finder.OnLevelChange;
             levelName = gameObject.scene.name;
+        }
+
+        private void InitializeEvents()
+        {
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelDefeat = Harmony.Finder.OnLevelDefeat;
+            onLevelChange = Harmony.Finder.OnLevelChange;
         }
 
         private void ResetVariables()
@@ -198,7 +205,7 @@ namespace Game
 
         protected void Update()
         {
-            if(Input.GetKeyDown(KeyCode.O))
+            if(Input.GetKeyDown(gameSettings.SkipLevelKey))
             {
                 skipLevel = true;
             }
@@ -225,6 +232,7 @@ namespace Game
             if (levelIsEnding) yield break;
             levelIsEnding = true;
             if(levelCompleted) onLevelVictory.Publish(this);
+            if(levelFailed) onLevelDefeat.Publish(this);
             while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
@@ -10,11 +12,32 @@ namespace Game
         [SerializeField] private List<CinematicAction> actions;
         
         private OnLevelVictory onLevelVictory;
+        private OnLevelDefeat onLevelDefeat;
         public IEnumerable<CinematicAction> Actions => actions;
 
         private void Awake()
         {
+            InitializeEvents();
+        }
+        
+
+        private void EnableEvents()
+        {
+            switch (trigger)
+            {
+                case CinematicTriggerType.OnLevelVictory:
+                    onLevelVictory.Notify += TriggerCinematic;
+                    break;
+                case CinematicTriggerType.OnLevelFailed:
+                    onLevelDefeat.Notify += TriggerCinematic;
+                    break;
+            }
+        }
+
+        private void InitializeEvents()
+        {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelDefeat = Harmony.Finder.OnLevelDefeat;
         }
 
         private void Start()
@@ -24,20 +47,23 @@ namespace Game
 
         private void OnEnable()
         {
-            switch (trigger)
-            {
-                case CinematicTriggerType.OnLevelVictory:
-                    onLevelVictory.Notify += TriggerCinematic;
-                    break;
-            }
+            EnableEvents();
         }
 
         private void OnDisable()
+        {
+            DisableEvents();
+        }
+
+        private void DisableEvents()
         {
             switch (trigger)
             {
                 case CinematicTriggerType.OnLevelVictory:
                     onLevelVictory.Notify -= TriggerCinematic;
+                    break;
+                case CinematicTriggerType.OnLevelFailed:
+                    onLevelDefeat.Notify -= TriggerCinematic;
                     break;
             }
         }
