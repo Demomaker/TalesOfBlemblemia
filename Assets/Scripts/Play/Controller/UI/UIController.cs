@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Harmony;
 using JetBrains.Annotations;
 using TMPro;
@@ -7,13 +6,18 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-
 //Author: Pierre-Luc Maltais
 namespace Game
 {
     [Findable("UIController")]
     public class UIController : MonoBehaviour
     {
+        private const string TURN_FORMAT_TEXT = "00";
+        private const string TURN_DISPLAY_TEXT = " turn";
+        private const string UNREACHABLE_TILE_TEXT = "Unreachable";
+        private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
+        private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
+        
         [Header("Canvas")] [SerializeField] private Canvas canvas;
         [Header("TileInfo")] 
         [SerializeField] private TMP_Text tileType;
@@ -44,11 +48,6 @@ namespace Game
         [SerializeField] private Color green;
         [SerializeField] private Color red;
         [SerializeField] private Color grey;
-
-
-        private const string UNREACHABLE_TILE_TEXT = "Unreachable";
-        private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
-        private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
 
         private Animator playerAnimator;
         private Animator enemyAnimator;
@@ -226,12 +225,12 @@ namespace Game
 
         public void ModifyTurnCounter(int turns)
         {
-            turnCounter.text = turns.ToString(("00"));
+            turnCounter.text = turns.ToString(TURN_FORMAT_TEXT);
         }
 
         public void ModifyTurnInfo(string player)
         {
-            turnInfo.text = player + " turn";
+            turnInfo.text = player + TURN_DISPLAY_TEXT;
         }
 
         public void ModifyVictoryCondition(string victoryCondition)

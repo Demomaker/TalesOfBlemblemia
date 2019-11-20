@@ -12,13 +12,16 @@ namespace Game
     public class Unit : Targetable
     {
         #region Serialized fields
+        
         [SerializeField] private UnitInfos unitInfos;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
         [SerializeField] private UnitGender gender;
+        
         #endregion
         
         #region Fields
+        
         private OnHurt onHurt;
         private OnAttack onAttack;
         private OnDodge onDodge;
@@ -51,6 +54,7 @@ namespace Game
         #endregion
         
         #region Properties
+        
         public int HpGainedByResting
         {
             get
@@ -71,6 +75,7 @@ namespace Game
                 return maxGain;
             }
         }
+        
         public bool IsMoving => isMoving;
         public bool IsAttacking => isAttacking;
         public int[,] MovementCosts
