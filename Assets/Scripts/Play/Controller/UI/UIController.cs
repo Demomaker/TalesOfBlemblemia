@@ -13,8 +13,8 @@ namespace Game
     public class UIController : MonoBehaviour
     {
         private const string TURN_FORMAT_TEXT = "00";
-        private const string TURN_DISPLAY_TEXT = " turn";
-        private const string UNREACHABLE_TILE_TEXT = "Unreachable";
+        private const string TURN_DISPLAY_TEXT = "Turn ";
+        private const string UNREACHABLE_TILE_TEXT = "\u221E";
         private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
         private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
         
@@ -28,6 +28,8 @@ namespace Game
         [Header("Turn")] 
         [SerializeField] private TMP_Text turnCounter;
         [SerializeField] private TMP_Text turnInfo;
+        [SerializeField] private Image playerTurnsLeftBackground;
+        [SerializeField] private Image playerTurnsRightBackground;
 
         [Header("Victory Condition")] [SerializeField] private TMP_Text victoryCondition;
 
@@ -62,9 +64,7 @@ namespace Game
 
 
         public bool IsBattleReportActive => battleReports.activeSelf;
-
-
-
+        
         private void Start()
         {
             playerHealthBar = playerHealthBarLayout.Children();
@@ -225,12 +225,22 @@ namespace Game
 
         public void ModifyTurnCounter(int turns)
         {
-            turnCounter.text = turns.ToString(TURN_FORMAT_TEXT);
+            turnCounter.text = TURN_DISPLAY_TEXT + turns.ToString(TURN_FORMAT_TEXT);
         }
 
         public void ModifyTurnInfo(string player)
         {
-            turnInfo.text = player + TURN_DISPLAY_TEXT;
+            turnInfo.text = player;
+            if (player == "Player")
+            {
+                playerTurnsLeftBackground.color = green;
+                playerTurnsRightBackground.color = green;
+            }
+            else
+            {
+                playerTurnsLeftBackground.color = red;
+                playerTurnsRightBackground.color = red;
+            }
         }
 
         public void ModifyVictoryCondition(string victoryCondition)
