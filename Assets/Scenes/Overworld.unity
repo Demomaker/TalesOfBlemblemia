@@ -10298,6 +10298,37 @@ PrefabInstance:
       propertyPath: m_textInfo.spaceCount
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197377276833123741, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5822cbf66cec60c449ca1419144cc8c2,
+        type: 3}
+    - target: {fileID: 6197377276833123741, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f71eadbc065baf14aa4d11249b55841d, type: 3}
 --- !u!224 &1135699379 stripped
