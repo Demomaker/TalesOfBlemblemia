@@ -40,6 +40,22 @@ namespace Game
              {
                  difficultyLevel = value;
                  permaDeath = difficultyLevel != DifficultyLevel.Easy;
+
+                 switch (difficultyLevel)
+                 {
+                     case DifficultyLevel.Easy:
+                         choiceRange = choiceForEasy;
+                         break;
+                     case DifficultyLevel.Medium:
+                         choiceRange = choiceForMedium;
+                         break;
+                     case DifficultyLevel.Hard:
+                         choiceRange = choiceForHard;
+                         break;
+                     default:
+                         choiceRange = choiceForMedium;
+                         break;
+                 }
              }
          }
 
