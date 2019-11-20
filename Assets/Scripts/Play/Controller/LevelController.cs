@@ -48,38 +48,39 @@ namespace Game
         private OnLevelChange onLevelChange;
         private UIController uiController;
         private LevelLoader levelLoader;
-
         private Unit[] units;
         private UnitOwner currentPlayer;
         private int numberOfPlayerTurns = 0;
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
-        private bool allEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
-        private bool pointAchieved => completeIfPointAchieved && 
+        private bool skipLevel = false;
+        
+        private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
+        private bool PointAchieved => completeIfPointAchieved && 
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile != null) &&
                                       GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve;
-        private bool allTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
-        private bool survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
+        private bool AllTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
+        private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
 
         private bool protagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
                                          GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
-        private bool skipLevel = false;
-        private bool levelCompleted => 
+        private bool LevelCompleted => 
             skipLevel || 
-            allEnemiesDied ||
-            pointAchieved || 
-            allTargetsDefeated || 
-            survived;
+            AllEnemiesDied ||
+            PointAchieved || 
+            AllTargetsDefeated || 
+            Survived;
         private bool levelFailed => protagonistDied;
-        private bool levelEnded => levelCompleted || levelFailed;
+        private bool levelEnded => LevelCompleted || levelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
         public AudioClip BackgroundMusic => backgroundMusic;
         public CinematicController CinematicController => cinematicController;
+        public UnitOwner CurrentPlayer => currentPlayer;
 
         public bool PlayerUnitIsMovingOrAttacking
         {
@@ -208,7 +209,7 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-            if(levelCompleted) onLevelVictory.Publish(this);
+            if(LevelCompleted) onLevelVictory.Publish(this);
             while (cinematicController.IsPlayingACinematic)
                 yield return null;
             if (endGameCredits != null)
@@ -230,7 +231,7 @@ namespace Game
         private void UpdatePlayerSave()
         {
             //If the level was successfully completed, mark it as completed
-            if (!levelCompleted) return;
+            if (!LevelCompleted) return;
             gameController.OnLevelCompleted(levelName);
 
             saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;

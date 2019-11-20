@@ -107,8 +107,11 @@ namespace Game
             
             for (int i = maxHealthPoints; i > currentHealthPoint; i--)
             {
-                RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                healthBarImage.color = grey;
+                if (i > 0)
+                {
+                    RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
+                    healthBarImage.color = grey;
+                }
             }
 
             if (beforeBattle == false)

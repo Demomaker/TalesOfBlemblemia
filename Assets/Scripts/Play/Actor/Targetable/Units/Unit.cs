@@ -272,37 +272,46 @@ namespace Game
                 isMoving = false;
             }
 
-            if (action.ActionType != ActionType.Nothing)
+            if (action != null)
             {
-                if (action.ActionType == ActionType.Attack && action.Target != null)
+                if (action.ActionType != ActionType.Nothing)
                 {
-                    onAttack.Publish(this);
-                    if (TargetIsInRange(action.Target))
+                    if (action.ActionType == ActionType.Attack && action.Target != null)
                     {
-                        yield return Attack(action.Target);
-                        if (action.Target.GetType() == typeof(Unit))
-                            if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
-                                yield return uiController.LaunchBattleReport(IsEnemy);
-                            else
-                                yield break;  
+                        onAttack.Publish(this);
+                        if (TargetIsInRange(action.Target))
+                        {
+                            yield return Attack(action.Target);
+                            if (action.Target.GetType() == typeof(Unit))
+                                if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+                                    yield return uiController.LaunchBattleReport(IsEnemy);
+                                else
+                                    yield break;
+                        }
+                        else
+                            Rest();
+                    }
+
+                    if (action.ActionType == ActionType.Recruit && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit) action.Target))
+                            Rest();
+                    }
+
+                    if (action.ActionType == ActionType.Heal && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit) action.Target))
+                            Rest();
                     }
                     else
+                    {
                         Rest();
+                    }
                 }
-                if (action.ActionType == ActionType.Recruit && action.Target != null)
-                {
-                    if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit)action.Target))
-                        Rest();
-                }
-                if (action.ActionType == ActionType.Heal && action.Target != null)
-                {
-                    if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit)action.Target))
-                        Rest();
-                }
-                else
-                {
-                    Rest();
-                }
+            }
+            else
+            {
+                Rest();
             }
         }
         public override IEnumerator Die()
@@ -372,11 +381,12 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                onDodge.Publish((Unit)target);
+                if (target is Unit unit)
+                    onDodge.Publish(unit);
             }
-            else
+            else if (target is Unit unit)
             {
-                onHurt.Publish((Unit)target);
+                onHurt.Publish(unit);
             }
             if (!isCountering && (target.GetType() == typeof(Unit) || (target.GetType() == typeof(Unit) && ((Unit)target).WeaponType == WeaponAdvantage)))
             {
@@ -419,7 +429,7 @@ namespace Game
             {
                 playerType = PlayerType.Ally;
                 HumanPlayer.Instance.AddOwnedUnit(this);
-                GetComponent<Cinematic>()?.TriggerCinematic();
+                GetComponentInChildren<Cinematic>()?.TriggerCinematic();
                 
             }
             return IsRecruitable;
