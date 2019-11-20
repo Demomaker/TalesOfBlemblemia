@@ -8,7 +8,7 @@ namespace Game
     //Authors: Pierre-Luc Maltais, Antoine Lessard, Zacharie Lavigne
     public static class PathFinder
     {
-        public static int[,] PrepareComputeCost(Vector2Int from, bool unitIsEnemy)
+        public static int[,] ComputeCost(Vector2Int from, bool unitIsEnemy)
         {
             GridController grid = Finder.GridController;
             //Initialize movementCosts array
@@ -28,127 +28,131 @@ namespace Game
         private static int[,] ComputeCosts(GridController grid, int[,] movementCosts, Vector2Int from, bool unitIsEnemy)
         {
             int costToMove = grid.GetTile(from.x, from.y).CostToMove;
-            
+
             //We check if the cost to move is smaller then the cost of the current tile. We do so for each direction
-            IsRightMovementPossible(grid, movementCosts, from, costToMove, unitIsEnemy);
+            //Checking right movement first.
+            IsMovementPossible(grid, movementCosts, from, 1, 0, costToMove, unitIsEnemy);
             
-            IsDownMovementPossible(grid, movementCosts, from, costToMove, unitIsEnemy);
+            //Checking downward movement.
+            IsMovementPossible(grid, movementCosts, from, 0, -1, costToMove, unitIsEnemy);
 
-            IsLeftMovementPossible(grid, movementCosts, from, costToMove, unitIsEnemy);
+            //Checking left movement
+            IsMovementPossible(grid, movementCosts, from, -1, 0, costToMove, unitIsEnemy);
 
-            IsUpMovementPossible(grid, movementCosts, from, costToMove, unitIsEnemy);
+            //Checking upward movement.
+            IsMovementPossible(grid, movementCosts, from, 0, 1, costToMove, unitIsEnemy);
 
             //Once all movements are calculated, the array with the cost to move to every cell is returned
             return movementCosts;
         }
 
-        #region IsMovementPossible
-        private static void IsRightMovementPossible(
-            GridController grid, 
-            int[,] movementCosts, 
-            Vector2Int from, 
-            int costToMove, 
+        private static bool IsTileAccessible(Tile tile)
+        {
+            return tile.CostToMove != int.MaxValue;
+        }
+
+        private static bool IsTileOccupied(Tile tile)
+        {
+            return tile.LinkedUnit == null;
+        }
+
+        private static bool CostToMoveIsSmallerThenCurrentTile(int currentTileCost, int targetedTileCost)
+        {
+            return currentTileCost < targetedTileCost;
+        }
+
+        private static bool UnitOnTileIsFriendly(Tile tile, bool unitIsEnemy)
+        {
+            return unitIsEnemy == tile.LinkedUnit.IsEnemy;
+        }
+
+        private static void IsMovementPossible(
+            GridController grid,
+            int[,] movementCosts,
+            Vector2Int from,
+            int xModifier,
+            int yModifier,
+            int costToMove,
             bool unitIsEnemy
         )
         {
-            if (from.x < grid.NbColumns - 1 && movementCosts[from.x, from.y] + costToMove < movementCosts[from.x + 1, from.y]
-                                            && grid.GetTile(from.x + 1, from.y).CostToMove != int.MaxValue
-                                            && (grid.GetTile(from.x + 1, from.y).LinkedUnit == null 
-                                            || unitIsEnemy == grid.GetTile(from.x +1, from.y).LinkedUnit.IsEnemy))
+            if (from.x < grid.NbColumns - 1 
+                && CostToMoveIsSmallerThenCurrentTile(movementCosts[from.x, from.y] + costToMove, movementCosts[from.x + xModifier, from.y + yModifier] )
+                && IsTileAccessible(grid.GetTile(from.x + xModifier, from.y + yModifier))
+                && IsTileOccupied(grid.GetTile(from.x + xModifier, from.y + yModifier)) 
+                || UnitOnTileIsFriendly(grid.GetTile(from.x + xModifier, from.y + yModifier), unitIsEnemy)
+            )
             {
                 //Changing the value to move to the cell 
-                movementCosts[from.x + 1, from.y] = movementCosts[from.x, from.y] + costToMove;
+                movementCosts[from.x + xModifier, from.y + yModifier] = movementCosts[from.x, from.y] + costToMove;
                 //Recursive call with the next cell as the starting point
-                ComputeCosts(grid, movementCosts, new Vector2Int(from.x + 1, from.y), unitIsEnemy);
-            }
-        }
-        
-        private static void IsDownMovementPossible(
-            GridController grid, 
-            int[,] movementCosts, 
-            Vector2Int from,
-            int costToMove, 
-            bool unitIsEnemy
-        )
-        {
-            if (from.y < grid.NbLines - 1 && movementCosts[from.x, from.y] + costToMove < movementCosts[from.x, from.y + 1]
-                                          && grid.GetTile(from.x, from.y + 1).CostToMove != int.MaxValue
-                                          && (grid.GetTile(from.x, from.y + 1).LinkedUnit == null 
-                                          || unitIsEnemy == grid.GetTile(from.x, from.y + 1).LinkedUnit.IsEnemy))
-            {
-                movementCosts[from.x, from.y + 1] = movementCosts[from.x, from.y] + costToMove;
-                ComputeCosts(grid, movementCosts, new Vector2Int(from.x,from.y + 1), unitIsEnemy);
-            }
-        }
-        
-        private static void IsLeftMovementPossible(
-            GridController grid, 
-            int[,] movementCosts, 
-            Vector2Int from, 
-            int costToMove, 
-            bool unitIsEnemy
-        )
-        {
-            if (from.x > 0 && movementCosts[from.x, from.y] + costToMove < movementCosts[from.x - 1, from.y]
-                           && grid.GetTile(from.x - 1, from.y).CostToMove != int.MaxValue
-                           && (grid.GetTile(from.x - 1, from.y).LinkedUnit == null 
-                           || unitIsEnemy == grid.GetTile(from.x -1, from.y).LinkedUnit.IsEnemy))
-            {
-                movementCosts[from.x - 1, from.y] = movementCosts[from.x, from.y] + costToMove;
-                ComputeCosts(grid, movementCosts, new Vector2Int(from.x-1,from.y), unitIsEnemy);
+                ComputeCosts(grid, movementCosts, new Vector2Int(from.x + xModifier, from.y + yModifier), unitIsEnemy);
             }
         }
 
-        private static void IsUpMovementPossible(
-            GridController grid, 
-            int[,] movementCosts, 
-            Vector2Int from, 
-            int costToMove, 
-            bool unitIsEnemy
-        )
-        {
-            if (from.y > 0 && movementCosts[from.x, from.y] + costToMove < movementCosts[from.x, from.y - 1]
-                          && grid.GetTile(from.x, from.y - 1).CostToMove != int.MaxValue
-                          && (grid.GetTile(from.x, from.y - 1).LinkedUnit == null 
-                          || unitIsEnemy == grid.GetTile(from.x, from.y - 1).LinkedUnit.IsEnemy))
-            {
-                movementCosts[from.x, from.y - 1] = movementCosts[from.x, from.y] + costToMove;
-                ComputeCosts(grid, movementCosts, new Vector2Int(from.x,from.y-1), unitIsEnemy);
-            }
-        }
-        #endregion
-        
-        public static List<Tile> PrepareFindPath(
-            GridController grid, 
+        public static List<Tile> FindPath(
             int[,] movementCosts, 
             Vector2Int from, 
             Vector2Int to, 
             Unit unit
         )
         {
+            GridController grid = Finder.GridController;
             //If there is a unit on the target the unit must find the closest available tile.
             if (grid.GetTile(to.x, to.y).LinkedUnit != null)
             {
-                List<Tile> currentPath = null;
+                List<Tile> currentPath;
                 //check for the closest available tile to target
-                
+                List<List<Tile>> possiblePaths = new List<List<Tile>>();
                 //Check left
-                currentPath = CheckLeftOfTarget(grid, movementCosts, from, to, currentPath, unit);
+                possiblePaths.Add(CheckTarget(grid, movementCosts, from, to, -1, 0, unit));
                 //Check right
-                currentPath = CheckRightOfTarget(grid, movementCosts, from, to, currentPath, unit);
+                possiblePaths.Add(CheckTarget(grid, movementCosts, from, to, 1, 0, unit));  
                 //Check up
-                currentPath = CheckUpOfTarget(grid, movementCosts, from, to , currentPath, unit);
+                possiblePaths.Add(CheckTarget(grid, movementCosts, from, to, 0, -1, unit));
                 //Check down
-                currentPath = CheckDownOfTarget(grid, movementCosts, from, to, currentPath, unit);
+                possiblePaths.Add(CheckTarget(grid, movementCosts, from, to, 0, +1, unit));
+
+                currentPath = ChooseTarget(movementCosts, possiblePaths, null);
                 
                 return currentPath;
             }
-            else
-            {
-                return FindPath(grid, movementCosts, new List<Tile>(), from, to, unit);
-            }
-            
+            return FindPath(grid, movementCosts, new List<Tile>(), from, to, unit);
         }
+
+        private static List<Tile> ChooseTarget(int[,] movementCosts, List<List<Tile>> possiblePaths, List<Tile> currentPath)
+        {
+            foreach (var possiblePath in possiblePaths)
+            {
+                if (currentPath == null ||
+                    movementCosts[currentPath.Last().LogicalPosition.x, currentPath.Last().LogicalPosition.y]
+                    > movementCosts[possiblePath.Last().LogicalPosition.x, possiblePath.Last().LogicalPosition.y])
+                {
+                    currentPath = possiblePath;
+                }
+            }
+
+            return currentPath;
+        }
+
+        private static List<Tile> CheckTarget(
+            GridController grid,
+            int[,] movementCosts,
+            Vector2Int from,
+            Vector2Int to,
+            int toXModifier,
+            int toYModifier,
+            Unit unit
+            )
+        {
+            List<Tile> newPath = new List<Tile>();
+            if (grid.GetTile(to.x + toXModifier, to.y + toYModifier).LinkedUnit == null)
+            {
+                    newPath = FindPath(grid, movementCosts, new List<Tile>(), from, new Vector2Int(to.x + toXModifier,to.y + toYModifier), unit);
+            }
+            return newPath;
+        }
+        
         //TODO il trouve un path impossible et donne donc une list contenant 1 élément
         #region CheckTargets
         private static List<Tile> CheckLeftOfTarget(
@@ -275,7 +279,7 @@ namespace Game
                     {
                         TileType lastTileType = lastTileInTurn.TileType;
                         grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).MakeObstacle();
-                        movementCosts = PrepareComputeCost(from, unit.IsEnemy);
+                        movementCosts = ComputeCost(from, unit.IsEnemy);
                         var t = grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y);
                         grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).UnMakeObstacle(lastTileType);
                         int lastIndex = path.Count - 1;
@@ -413,7 +417,7 @@ namespace Game
             Unit unit
         )
         {
-            List <Tile> pathInOrder = FindPath(grid, PrepareComputeCost(from, unit.IsEnemy), new List<Tile>(), from, to, unit);
+            List <Tile> pathInOrder = FindPath(grid, ComputeCost(from, unit.IsEnemy), new List<Tile>(), from, to, unit);
             if (path != null)
                 pathInOrder.Reverse();
             return pathInOrder;
