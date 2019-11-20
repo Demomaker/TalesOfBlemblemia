@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game
@@ -39,26 +39,39 @@ namespace Game
         private void Awake ()
         {
             gameSettings = Harmony.Finder.GameSettings;
-            musicSource = gameObject.AddComponent<AudioSource>();
             sfxSources = new AudioSource[numberOfSFXThatCanBePlayedAtTheSameTime];
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
             {
                 sfxSources[i] = gameObject.AddComponent<AudioSource>();
             }
+            musicSource = gameObject.AddComponent<AudioSource>();
 
+            InitializeEventChannels();
             audioClips = Finder.AudioClips;
             if(audioClips == null) audioClips = new NullAudioClips();
-            InitializeEventChannels();
         }
 
         private void OnEnable()
         {
-            EnableEventChannels();
+            StartCoroutine(ActivateEventChannels());
         }
 
         private void OnDisable()
         {
+            if(onHurt != null)
             DisableEventChannels();
+        }
+
+        private IEnumerator ActivateEventChannels()
+        {
+            //Wait for the events to be loaded in the game and initialize them
+            while (onHurt == null)
+            {
+                yield return null;
+                InitializeEventChannels();
+            }
+            //Enable the event channels by associating the correct methods
+            EnableEventChannels();
         }
 
         private void InitializeEventChannels()

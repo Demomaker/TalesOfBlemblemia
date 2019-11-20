@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using Finder = Harmony.Finder;
 
 namespace Game
 {
@@ -20,7 +21,8 @@ namespace Game
         [SerializeField] private AudioClip sadMusic;
         [SerializeField] private AudioClip levelVictoryMusic;
         [SerializeField] private AudioClip mainMenuMusic;
-    
+
+        private GameSettings gameSettings = null;
         public AudioClip MaleAttackSound => maleAttackSound;
         public AudioClip FemaleAttackSound => femaleAttackSound;
         public AudioClip MorkAttackSound => morkAttackSound;
@@ -33,5 +35,11 @@ namespace Game
         public AudioClip SadMusic => sadMusic;
         public AudioClip LevelVictoryMusic => levelVictoryMusic;
         public AudioClip MainMenuMusic => mainMenuMusic;
+
+        private void Awake()
+        {
+            gameSettings = Finder.GameSettings;
+            Resources.LoadAll(gameSettings.AudioPath);
+        }
     }
 }

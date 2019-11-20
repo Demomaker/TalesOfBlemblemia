@@ -6,7 +6,7 @@ namespace Game
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class GameEventHandler : MonoBehaviour
     {
-        void Awake()
+        private void Awake()
         {
             AddEventComponents();
         }
