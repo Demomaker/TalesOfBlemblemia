@@ -17,7 +17,9 @@ namespace Game
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
+        private AchievementsRepo achievementsRepo;
         private SqliteConnection connection;
+        private List<AchievementInfo> achievements;
 
         public int SaveSelected { get; set; }
 
@@ -86,9 +88,9 @@ namespace Game
             CheckForExistingSettings();
             //Check if saves were already created in the database
             CheckForExistingSaves();
+            CheckForAchievements();
         }
-
-
+        
         private static string GetPath()
         {
 #if UNITY_EDITOR
@@ -123,6 +125,7 @@ namespace Game
             saveGameRepo = new SaveGameRepo(connection);
             characterStatusRepo = new CharacterStatusRepo(connection);
             saveSettingsRepo = new SaveSettingsRepo(connection);
+            achievementsRepo = new AchievementsRepo(connection);
         }
 
         #endregion
@@ -143,6 +146,19 @@ namespace Game
             {
                 //There should always be only one set of settings
                 playerSettings = settings.First();
+            }
+        }
+        
+        /// <summary>
+        /// Check for existing achievements in the database, if there are, we load those achievements and their status, otherwise, we create and add them
+        /// </summary>
+        private void CheckForAchievements()
+        {
+            var achievements = achievementsRepo.FindAll();
+
+            if (achievements.Count == 0)
+            {
+                
             }
         }
         
