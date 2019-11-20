@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game;
 using Harmony;
 using UnityEngine;
 
@@ -20,7 +21,8 @@ namespace Game
             gameObject.AddComponent<OnButtonClick>();
             gameObject.AddComponent<OnLevelChange>();
             gameObject.AddComponent<OnLevelVictory>();
-            gameObject.AddComponent<OnLevelDefeat>();
+            gameObject.AddComponent<OnLevelFailed>();
+            gameObject.AddComponent<OnMissionFailed>();
             gameObject.AddComponent<OnMusicToggle>();
             gameObject.AddComponent<OnUnitDeath>();
             gameObject.AddComponent<OnUnitMove>();

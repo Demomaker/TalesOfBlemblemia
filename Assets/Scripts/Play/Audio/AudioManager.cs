@@ -39,7 +39,7 @@ namespace Game
         private OnMainVolumeChange onMainVolumeChange;
         private OnMusicVolumeChange onMusicVolumeChange;
         private OnSFXVolumeChange onSFXVolumeChange;
-
+        #region Unity Event Functions
         private void Awake ()
         {
             gameSettings = Harmony.Finder.GameSettings;
@@ -64,19 +64,8 @@ namespace Game
         {
             DisableEventChannels();
         }
-
-        private IEnumerator ActivateEventChannels()
-        {
-            //Wait for the events to be loaded in the game and initialize them
-            while (onHurt == null)
-            {
-                yield return null;
-                InitializeEventChannels();
-            }
-            //Enable the event channels by associating the correct methods
-            EnableEventChannels();
-        }
-
+        #endregion
+        #region Event Channel Handling
         private void InitializeEventChannels()
         {
             onHurt = Harmony.Finder.OnHurt;
@@ -136,7 +125,9 @@ namespace Game
             onMusicVolumeChange.Notify -= ChangeMusicVolume;
             onSFXVolumeChange.Notify -= ChangeSFXVolume;
         }
-
+        
+        #endregion
+        #region Audio Management
         private void UpdateMusicVolume()
         {
             musicSource.volume = mainVolume * musicVolume / (gameSettings.Percent * gameSettings.Percent);
@@ -312,5 +303,6 @@ namespace Game
             StopCurrentMusic();
             PlayMusic(audioClips.MainMenuMusic);
         }
+        #endregion
     }
 }

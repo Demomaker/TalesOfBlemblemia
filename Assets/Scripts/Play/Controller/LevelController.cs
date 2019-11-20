@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Game;
 using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,8 +36,6 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeDefeat;
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
-        
-        
 
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
@@ -51,9 +50,10 @@ namespace Game
         private bool levelIsEnding;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
-        private OnLevelDefeat onLevelDefeat;
+        private OnLevelFailed onLevelFailed;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
+        private OnMissionFailed onMissionFailed;
         private UIController uiController;
         private LevelLoader levelLoader;
 
@@ -103,16 +103,16 @@ namespace Game
         {
             get
             {
-                bool playerUnitIsMovingOrAttacking = false;
-                foreach (var unit in players[0].OwnedUnits)
+                var playerUnitIsMovingOrAttacking = false;
+                foreach (var unit in players[0].OwnedUnits.Where(unit => unit.IsMoving || unit.IsAttacking))
                 {
-                    if (unit.IsMoving || unit.IsAttacking)
-                        playerUnitIsMovingOrAttacking = true;
+                    playerUnitIsMovingOrAttacking = true;
                 }
                 return playerUnitIsMovingOrAttacking;
             }
         }
 
+        #region Unity Event Functions
         private void Awake()
         {
             InitializeEvents();
@@ -125,27 +125,7 @@ namespace Game
             cinematicController = GetComponent<CinematicController>();
             levelName = gameObject.scene.name;
         }
-
-        private void InitializeEvents()
-        {
-            onLevelVictory = Harmony.Finder.OnLevelVictory;
-            onLevelDefeat = Harmony.Finder.OnLevelDefeat;
-            onLevelChange = Harmony.Finder.OnLevelChange;
-        }
-
-        private void ResetVariables()
-        {
-            levelIsEnding = false;
-            units = null;
-            levelTileUpdateKeeper = 0;
-            levelName = "";
-            numberOfPlayerTurns = 0;
-            players.Clear();
-            HumanPlayer.Instance.OwnedUnits.Clear();
-            HumanPlayer.Instance.DefeatedUnits.Clear();
-            ComputerPlayer.Instance.OwnedUnits.Clear();
-        }
-
+        
         private void Start()
         {
             uiController = Harmony.Finder.UIController;
@@ -162,7 +142,53 @@ namespace Game
 
             PrepareVictoryConditionForUI();
         }
+        
+        protected void Update()
+        {
+            if(Input.GetKeyDown(gameSettings.SkipLevelKey))
+            {
+                skipLevel = true;
+            }
+            
+            if (!doNotEnd && levelEnded)
+            {
+                ResetUnitsAlpha();
+                StartCoroutine(EndLevel());
+            }
 
+            if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
+            
+            //TODO enlever ca avant la release
+            CheckForComputerTurnSkip();
+            CheckForPlayerTurnSkip();
+            CheckForCurrentPlayerWin();
+            CheckForCurrentPlayerLoss();
+            CheckForCurrentPlayerEndOfTurn();
+            Play(currentPlayer);
+        }
+        #endregion
+        #region Event Channel Handling
+        private void InitializeEvents()
+        {
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelFailed = Harmony.Finder.OnLevelFailed;
+            onLevelChange = Harmony.Finder.OnLevelChange;
+            onMissionFailed = Harmony.Finder.OnMissionFailed;
+        }
+        
+        private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)
+        {
+            if (difficultyLevel == DifficultyLevel.Easy)
+            {
+                onLevelFailed.Publish(this);
+            }
+            else
+            {
+                onMissionFailed.Publish(this);
+            }
+        }
+        #endregion
+        #region UI-related Functions
         private void PrepareVictoryConditionForUI()
         {
             if (!string.IsNullOrEmpty(customObjectiveMessage))
@@ -202,37 +228,34 @@ namespace Game
             }
             return result;
         }
-
-        protected void Update()
+        #endregion
+        #region Level Controlling Functions
+        private void InitializePlayersAndUnits()
         {
-            if(Input.GetKeyDown(gameSettings.SkipLevelKey))
-            {
-                skipLevel = true;
-            }
-            
-            if (!doNotEnd && levelEnded)
-            {
-                ResetUnitsAlpha();
-                StartCoroutine(EndLevel());
-            }
+            var player1 = HumanPlayer.Instance;
+            var player2 = ComputerPlayer.Instance;
 
-            if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
+            player1.OwnedUnits.Clear();
+            player1.DefeatedUnits.Clear();
+            player2.OwnedUnits.Clear();
             
-            //TODO enlever ca avant la release
-            CheckForComputerTurnSkip();
-            CheckForPlayerTurnSkip();
-            CheckForCurrentPlayerWin();
-            CheckForCurrentPlayerLoss();
-            CheckForCurrentPlayerEndOfTurn();
-            Play(currentPlayer);
+            units = FindObjectsOfType<Unit>();
+
+            GiveUnits(units, player1, player2);
+
+            player1.UpdateNumberOfStartingOwnedUnits();
+            player1.OnNewLevel();
+            player2.OnNewLevel();
+            
+            players.Add(player1);
+            players.Add(player2);
         }
-
         private IEnumerator EndLevel()
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
             if(levelCompleted) onLevelVictory.Publish(this);
-            if(levelFailed) onLevelDefeat.Publish(this);
+            if(levelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
             while (cinematicController.IsPlayingACinematic)
             {
                 yield return null;
@@ -244,21 +267,6 @@ namespace Game
 
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
-
-        /// <summary>
-        /// Saves if the level was successfully completed
-        /// </summary>
-        private void UpdatePlayerSave()
-        {
-            //If the level was successfully completed, mark it as completed
-            if (!levelCompleted) return;
-            gameController.OnLevelCompleted(levelName);
-
-            saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;
-
-            saveController.UpdateSave(saveController.SaveSelected);
-        }
-
         /// <summary>
         /// Check for the player units defeated during the level and mark them as defeated in the player save if the difficulty
         /// is medium or hard. Resets the save of the player if Franklem was defeated.
@@ -310,7 +318,6 @@ namespace Game
                 ? targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length
                 : targetsToDefeat.Count(target => target == null || target.NoHealthLeft) > 0;
         }
-
         private bool TargetToProtectHasDied()
         {
             return targetsToProtect.Any(target => target != null && target.NoHealthLeft);
@@ -342,28 +349,6 @@ namespace Game
             currentPlayer = players.Find(player => player is HumanPlayer);
             OnTurnGiven();
         }
-        
-        private void InitializePlayersAndUnits()
-        {
-            var player1 = HumanPlayer.Instance;
-            var player2 = ComputerPlayer.Instance;
-
-            player1.OwnedUnits.Clear();
-            player1.DefeatedUnits.Clear();
-            player2.OwnedUnits.Clear();
-            
-            units = FindObjectsOfType<Unit>();
-
-            GiveUnits(units, player1, player2);
-
-            player1.UpdateNumberOfStartingOwnedUnits();
-            player1.OnNewLevel();
-            player2.OnNewLevel();
-            
-            players.Add(player1);
-            players.Add(player2);
-        }
-
         private void GiveUnits(   
             IEnumerable<Unit> units,
             HumanPlayer player, 
@@ -398,14 +383,7 @@ namespace Game
                 OnTurnGiven();
             }
         }
-
-        private void ResetUnitsAlpha()
-        {
-            foreach (var unit in currentPlayer.OwnedUnits)
-            {
-                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
-            }
-        }
+        
 
         private void CheckForCurrentPlayerWin()
         {
@@ -455,10 +433,46 @@ namespace Game
                 gameUnit.gameObject.SetActive(false);
             }
         }
+        #endregion
+        #region Other Functions
+        private void ResetVariables()
+        {
+            levelIsEnding = false;
+            units = null;
+            levelTileUpdateKeeper = 0;
+            levelName = "";
+            numberOfPlayerTurns = 0;
+            players.Clear();
+            HumanPlayer.Instance.OwnedUnits.Clear();
+            HumanPlayer.Instance.DefeatedUnits.Clear();
+            ComputerPlayer.Instance.OwnedUnits.Clear();
+        }
+        /// <summary>
+        /// Saves if the level was successfully completed
+        /// </summary>
+        private void UpdatePlayerSave()
+        {
+            //If the level was successfully completed, mark it as completed
+            if (!levelCompleted) return;
+            gameController.OnLevelCompleted(levelName);
+
+            saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;
+
+            saveController.UpdateSave(saveController.SaveSelected);
+        }
+        
+        private void ResetUnitsAlpha()
+        {
+            foreach (var unit in currentPlayer.OwnedUnits)
+            {
+                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
+            }
+        }
         
         public void IncrementTileUpdate()
         {
             levelTileUpdateKeeper++;
         }
+        #endregion
     }
 }

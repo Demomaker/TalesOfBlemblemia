@@ -1,5 +1,4 @@
 ﻿using Harmony;
-
 namespace Game
 {
     /// <summary>
@@ -7,7 +6,7 @@ namespace Game
     /// Author : Mike Bédard
     /// </summary>
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
-    public class OnLevelDefeat : EventChannel<LevelController>
+    public class OnMissionFailed : EventChannel<LevelController>
     {
         public event EventHandler<LevelController> Notify; 
         public override void Publish(LevelController eventParam)
