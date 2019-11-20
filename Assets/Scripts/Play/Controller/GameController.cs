@@ -77,7 +77,7 @@ namespace Game
              choiceRange = choiceRangePerDifficulty[DifficultyLevel];
              permaDeath = DifficultyLevel != DifficultyLevel.Easy;
          }
-         
+
          private void Start()
          {
              levelLoader.LoadLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
@@ -96,6 +96,7 @@ namespace Game
          {
              PreviousLevelName = levelName;
          }
+
      }
 
      public enum DifficultyLevel

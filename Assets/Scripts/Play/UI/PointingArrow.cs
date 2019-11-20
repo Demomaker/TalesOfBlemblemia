@@ -24,6 +24,7 @@ public class PointingArrow : MonoBehaviour
     private OnDodge onDodge;
     private OnUnitDeath onUnitDeath;
     private OnUnitMove onUnitMove;
+    private Vector3 transformToPointPosition;
 
     private void Awake()
     {
@@ -32,6 +33,8 @@ public class PointingArrow : MonoBehaviour
         onDodge = Harmony.Finder.OnDodge;
         onUnitMove = Harmony.Finder.OnUnitMove;
         onUnitDeath = Harmony.Finder.OnUnitDeath;
+        if (transformToPoint != null)
+        transformToPointPosition = transformToPoint.position;
     }
 
     private void OnEnable()
@@ -57,6 +60,11 @@ public class PointingArrow : MonoBehaviour
     {
         if(gameObject.activeSelf)
         StopPointing();
+    }
+
+    public void SetTransformToPointPosition(Vector3 position)
+    {
+        transformToPointPosition = position;
     }
 
     private void UnitToAttackWasAttacked(Unit unit)
@@ -117,7 +125,8 @@ public class PointingArrow : MonoBehaviour
             yDirection = YDirection.Up;
         }
 
-        transform.position = transformToPoint.position + new Vector3(0,GetComponent<SpriteRenderer>().size.y,0) + transform.up * yPositionDifference;
+        if(transformToPointPosition != nullVector3)
+        transform.position = transformToPointPosition + new Vector3(0,GetComponent<SpriteRenderer>().size.y,0) + transform.up * yPositionDifference;
     }
 
     private enum YDirection
