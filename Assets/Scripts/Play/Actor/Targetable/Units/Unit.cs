@@ -134,6 +134,7 @@ namespace Game
 
         public override void Awake()
         {
+            InitializeEvents();
             uiController = Harmony.Finder.UIController;
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             weapon = GetComponentInParent<Weapon>();
@@ -142,25 +143,39 @@ namespace Game
             gridController = Finder.GridController;
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
-            onHurt = Harmony.Finder.OnHurt;
-            onAttack = Harmony.Finder.OnAttack;
-            onDodge = Harmony.Finder.OnDodge;
-            onUnitMove = Harmony.Finder.OnUnitMove;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
-            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
             levelController = Harmony.Finder.LevelController;
             gameSettings = Harmony.Finder.GameSettings;
             base.Awake();
         }
 
+        private void InitializeEvents()
+        {
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
+        }
+
         private void OnEnable()
+        {
+            EnableEvents();
+        }
+
+        private void EnableEvents()
         {
             onHurt.Notify += Hurt;
             onDodge.Notify += MakeDodge;
         }
 
         private void OnDisable()
+        {
+            DisableEvents();
+        }
+
+        private void DisableEvents()
         {
             onHurt.Notify -= Hurt;
             onDodge.Notify -= MakeDodge;
@@ -381,7 +396,7 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                if (target is Unit unit)
+                if(target is Unit unit)
                     onDodge.Publish(unit);
             }
             else if (target is Unit unit)

@@ -15,13 +15,12 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
-        
         private const string PROTAGONIST_NAME = "Franklem";
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
-        const int CREDITS_DURATION = 20;
+        private const int CREDITS_DURATION = 20;
         
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private bool doNotEnd;
@@ -35,6 +34,7 @@ namespace Game
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
+        [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
         
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         
@@ -43,9 +43,12 @@ namespace Game
         private string levelName;
         private bool levelIsEnding;
         private bool isComputerPlaying;
+        private bool skipLevel = false;
         private OnLevelVictory onLevelVictory;
+        private OnLevelFailed onLevelFailed;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
+        private OnCampaignFailed onCampaignFailed;
         private UIController uiController;
         private LevelLoader levelLoader;
         private Unit[] units;
@@ -54,18 +57,17 @@ namespace Game
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
-        private bool skipLevel = false;
+        private EndGameCredits endGameCredits;
         
         private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
-        private bool PointAchieved => completeIfPointAchieved && 
+        private bool PointAchieved => completeIfPointAchieved &&
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile != null) &&
                                       GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve;
         private bool AllTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
         private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
-
-        private bool protagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
+        private bool ProtagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
                                          GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
         private bool LevelCompleted => 
             skipLevel || 
@@ -73,8 +75,8 @@ namespace Game
             PointAchieved || 
             AllTargetsDefeated || 
             Survived;
-        private bool levelFailed => protagonistDied;
-        private bool levelEnded => LevelCompleted || levelFailed;
+        private bool LevelFailed => ProtagonistDied;
+        private bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
@@ -86,20 +88,19 @@ namespace Game
         {
             get
             {
-                bool playerUnitIsMovingOrAttacking = false;
-                foreach (var unit in players[0].OwnedUnits)
+                var playerUnitIsMovingOrAttacking = false;
+                foreach (var unit in players[0].OwnedUnits.Where(unit => unit.IsMoving || unit.IsAttacking))
                 {
-                    if (unit.IsMoving || unit.IsAttacking)
-                        playerUnitIsMovingOrAttacking = true;
+                    playerUnitIsMovingOrAttacking = true;
                 }
                 return playerUnitIsMovingOrAttacking;
             }
         }
 
-        private EndGameCreditsController endGameCredits;
-        
+        #region Unity Event Functions
         private void Awake()
         {
+            InitializeEvents();
             levelLoader = Harmony.Finder.LevelLoader;
             ResetVariables();
             saveController = Finder.SaveController;
@@ -107,27 +108,12 @@ namespace Game
             gameSettings = Harmony.Finder.GameSettings;
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
-            onLevelVictory = Harmony.Finder.OnLevelVictory;
-            onLevelChange = Harmony.Finder.OnLevelChange;
             levelName = gameObject.scene.name;
             endGameCredits = GetComponentInChildren<EndGameCreditsController>();
             if (endGameCredits != null)
                 endGameCredits.gameObject.SetActive(false);
         }
-
-        private void ResetVariables()
-        {
-            levelIsEnding = false;
-            units = null;
-            levelTileUpdateKeeper = 0;
-            levelName = "";
-            numberOfPlayerTurns = 0;
-            players.Clear();
-            HumanPlayer.Instance.OwnedUnits.Clear();
-            HumanPlayer.Instance.DefeatedUnits.Clear();
-            ComputerPlayer.Instance.OwnedUnits.Clear();
-        }
-
+        
         private void Start()
         {
             uiController = Harmony.Finder.UIController;
@@ -144,7 +130,53 @@ namespace Game
 
             PrepareVictoryConditionForUI();
         }
+        
+        protected void Update()
+        {
+            if(Input.GetKeyDown(gameSettings.SkipLevelKey))
+            {
+                skipLevel = true;
+            }
+            
+            if (!doNotEnd && LevelEnded)
+            {
+                ResetUnitsAlpha();
+                StartCoroutine(EndLevel());
+            }
 
+            if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
+            
+            //TODO enlever ca avant la release
+            CheckForComputerTurnSkip();
+            CheckForPlayerTurnSkip();
+            CheckForCurrentPlayerWin();
+            CheckForCurrentPlayerLoss();
+            CheckForCurrentPlayerEndOfTurn();
+            Play(currentPlayer);
+        }
+        #endregion
+        #region Event Channel Handling
+        private void InitializeEvents()
+        {
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelFailed = Harmony.Finder.OnLevelFailed;
+            onLevelChange = Harmony.Finder.OnLevelChange;
+            onCampaignFailed = Harmony.Finder.OnCampaignFailed;
+        }
+        
+        private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)
+        {
+            if (difficultyLevel == DifficultyLevel.Easy)
+            {
+                onLevelFailed.Publish(this);
+            }
+            else
+            {
+                onCampaignFailed.Publish(this);
+            }
+        }
+        #endregion
+        #region UI-related Functions
         private void PrepareVictoryConditionForUI()
         {
             if (!string.IsNullOrEmpty(customObjectiveMessage))
@@ -155,6 +187,7 @@ namespace Game
             if (completeIfPointAchieved)
             {
                 uiController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+                CreatePointToAchievePointingArrow();
             }
             else if (completeIfCertainTargetsDefeated)
             {
@@ -164,6 +197,13 @@ namespace Game
             {
                 uiController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
             }
+        }
+
+        private void CreatePointToAchievePointingArrow()
+        {
+            var pointingArrowTransformOffset = new Vector2(0.5f, 0.5f);
+            GameObject pointingArrow = (GameObject)GameObject.Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity);
+            pointingArrow.GetComponent<PointingArrow>().SetTransformToPointPosition(new Vector3(pointToAchieve.x + pointingArrowTransformOffset.x, pointToAchieve.y + pointingArrowTransformOffset.y, 0));
         }
 
         private string GetStringOfTargetsToDefeat()
@@ -180,36 +220,34 @@ namespace Game
             }
             return result;
         }
-
-        protected void Update()
+        #endregion
+        #region Level Controlling Functions
+        private void InitializePlayersAndUnits()
         {
-            if(Input.GetKeyDown(KeyCode.O))
-            {
-                skipLevel = true;
-            }
-            
-            if (!doNotEnd && levelEnded)
-            {
-                ResetUnitsAlpha();
-                StartCoroutine(EndLevel());
-            }
+            var player1 = HumanPlayer.Instance;
+            var player2 = ComputerPlayer.Instance;
 
-            if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
+            player1.OwnedUnits.Clear();
+            player1.DefeatedUnits.Clear();
+            player2.OwnedUnits.Clear();
             
-            //TODO enlever ca avant la release?
-            CheckForComputerTurnSkip();
-            CheckForPlayerTurnSkip();
-            CheckForCurrentPlayerWin();
-            CheckForCurrentPlayerLoss();
-            CheckForCurrentPlayerEndOfTurn();
-            Play(currentPlayer);
+            units = FindObjectsOfType<Unit>();
+
+            GiveUnits(units, player1, player2);
+
+            player1.UpdateNumberOfStartingOwnedUnits();
+            player1.OnNewLevel();
+            player2.OnNewLevel();
+            
+            players.Add(player1);
+            players.Add(player2);
         }
-
         private IEnumerator EndLevel()
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
             if(LevelCompleted) onLevelVictory.Publish(this);
+            if(LevelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
             while (cinematicController.IsPlayingACinematic)
                 yield return null;
             if (endGameCredits != null)
@@ -223,20 +261,6 @@ namespace Game
             UpdatePlayerSave();
 
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
-        }
-
-        /// <summary>
-        /// Saves if the level was successfully completed
-        /// </summary>
-        private void UpdatePlayerSave()
-        {
-            //If the level was successfully completed, mark it as completed
-            if (!LevelCompleted) return;
-            gameController.OnLevelCompleted(levelName);
-
-            saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;
-
-            saveController.UpdateSave(saveController.SaveSelected);
         }
 
         /// <summary>
@@ -290,7 +314,7 @@ namespace Game
                 ? targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length
                 : targetsToDefeat.Count(target => target == null || target.NoHealthLeft) > 0;
         }
-
+        
         private bool TargetToProtectHasDied()
         {
             return targetsToProtect.Any(target => target != null && target.NoHealthLeft);
@@ -323,27 +347,6 @@ namespace Game
             OnTurnGiven();
         }
         
-        private void InitializePlayersAndUnits()
-        {
-            var player1 = HumanPlayer.Instance;
-            var player2 = ComputerPlayer.Instance;
-
-            player1.OwnedUnits.Clear();
-            player1.DefeatedUnits.Clear();
-            player2.OwnedUnits.Clear();
-            
-            units = FindObjectsOfType<Unit>();
-
-            GiveUnits(units, player1, player2);
-
-            player1.UpdateNumberOfStartingOwnedUnits();
-            player1.OnNewLevel();
-            player2.OnNewLevel();
-            
-            players.Add(player1);
-            players.Add(player2);
-        }
-
         private void GiveUnits(   
             IEnumerable<Unit> units,
             HumanPlayer player, 
@@ -376,14 +379,6 @@ namespace Game
                 ResetUnitsAlpha();
                 GiveTurnToNextPlayer();
                 OnTurnGiven();
-            }
-        }
-
-        private void ResetUnitsAlpha()
-        {
-            foreach (var unit in currentPlayer.OwnedUnits)
-            {
-                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
             }
         }
 
@@ -435,10 +430,46 @@ namespace Game
                 gameUnit.gameObject.SetActive(false);
             }
         }
+        #endregion
+        #region Other Functions
+        private void ResetVariables()
+        {
+            levelIsEnding = false;
+            units = null;
+            levelTileUpdateKeeper = 0;
+            levelName = "";
+            numberOfPlayerTurns = 0;
+            players.Clear();
+            HumanPlayer.Instance.OwnedUnits.Clear();
+            HumanPlayer.Instance.DefeatedUnits.Clear();
+            ComputerPlayer.Instance.OwnedUnits.Clear();
+        }
+        /// <summary>
+        /// Saves if the level was successfully completed
+        /// </summary>
+        private void UpdatePlayerSave()
+        {
+            //If the level was successfully completed, mark it as completed
+            if (!LevelCompleted) return;
+            gameController.OnLevelCompleted(levelName);
+
+            saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;
+
+            saveController.UpdateSave(saveController.SaveSelected);
+        }
+        
+        private void ResetUnitsAlpha()
+        {
+            foreach (var unit in currentPlayer.OwnedUnits)
+            {
+                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
+            }
+        }
         
         public void IncrementTileUpdate()
         {
             levelTileUpdateKeeper++;
         }
+        #endregion
     }
 }
