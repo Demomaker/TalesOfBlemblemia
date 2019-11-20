@@ -1,5 +1,4 @@
 using UnityEngine;
-using Finder = Harmony.Finder;
 
 namespace Game
 {
@@ -38,7 +37,7 @@ namespace Game
 
         private void Awake()
         {
-            gameSettings = Finder.GameSettings;
+            gameSettings = Harmony.Finder.GameSettings;
             Resources.LoadAll(gameSettings.AudioPath);
         }
     }
