@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Game
@@ -12,7 +11,6 @@ namespace Game
 
         protected Tile currentTile;
         private int currentHealthPoints;
-        private OverHeadHpController overHeadHpController;
 
         private LevelController levelController;
 
@@ -25,9 +23,7 @@ namespace Game
             protected internal set
             {
                 currentHealthPoints = value;
-                if(overHeadHpController != null) overHeadHpController.ModifyOverHeadHp(currentHealthPoints);
-                if (NoHealthLeft) 
-                    Die();
+                if (NoHealthLeft) Die();
             }
         }
         
@@ -52,14 +48,6 @@ namespace Game
         public virtual void Awake()
         {
             levelController = Harmony.Finder.LevelController;
-            try
-            {
-                overHeadHpController = gameObject.GetComponent<OverHeadHpController>();
-            }
-            catch (Exception e)
-            {
-                Debug.Log("The gameobject doesn't have a overheadHp object and it requires it");
-            }
         }
 
         protected virtual void Start()

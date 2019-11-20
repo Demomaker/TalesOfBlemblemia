@@ -1,6 +1,4 @@
-﻿using System;
-using Harmony;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game

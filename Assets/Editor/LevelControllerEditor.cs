@@ -1,10 +1,6 @@
-﻿using System;
-using UnityEditor;
-using System.Collections;
+﻿using UnityEditor;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
 
 namespace Game
 {
