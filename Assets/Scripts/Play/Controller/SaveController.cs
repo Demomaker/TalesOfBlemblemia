@@ -169,9 +169,9 @@ namespace Game
         /// </summary>
         private void CheckForAchievements()
         {
-            var achievements = achievementsRepo.FindAll();
+            var achievementsInDatabase = achievementsRepo.FindAll();
 
-            if (achievements.Count == 0)
+            if (achievementsInDatabase.Count == 0)
             {
                 foreach (var achievement in this.achievements)
                 {
@@ -180,10 +180,10 @@ namespace Game
             }
             else
             {
-                this.achievements.Clear();
-                foreach (var achievement in achievements)
+                achievements.Clear();
+                foreach (var achievement in achievementsInDatabase)
                 {
-                    this.achievements.Add(achievement);
+                    achievements.Add(achievement);
                 }
             }
         }

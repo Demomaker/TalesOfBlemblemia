@@ -251,16 +251,15 @@ namespace Game
 
             foreach (var unit in defeatedPlayerUnits)
             {
-                if (unit.name == gameSettings.FranklemName)
-                {
-                    saveController.ResetSave();
-                    break;
-                }
-
                 if (gameController.PermaDeath)
                 {
                     foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
                     {
+                        if (character.CharacterName == gameSettings.FranklemName)
+                        {
+                            saveController.ResetSave();
+                            break;
+                        }
                         character.CharacterStatus = false;
                     }
                 }
