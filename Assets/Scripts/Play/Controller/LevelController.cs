@@ -43,11 +43,12 @@ namespace Game
         private string levelName;
         private bool levelIsEnding;
         private bool isComputerPlaying;
+        private bool skipLevel = false;
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
         private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
-        private OnMissionFailed onMissionFailed;
+        private OnCampaignFailed onCampaignFailed;
         private UIController uiController;
         private LevelLoader levelLoader;
 
@@ -58,25 +59,24 @@ namespace Game
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
-        private bool allEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
-        private bool pointAchieved => completeIfPointAchieved && 
+        private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
+        private bool PointAchieved => completeIfPointAchieved && 
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile != null) &&
                                       GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve;
-        private bool allTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
-        private bool survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
-        private bool protagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
+        private bool AllTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
+        private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
+        private bool ProtagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
                                          GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
-        private bool skipLevel = false;
-        private bool levelCompleted => 
+        private bool LevelCompleted => 
             skipLevel || 
-            allEnemiesDied ||
-            pointAchieved || 
-            allTargetsDefeated || 
-            survived;
-        private bool levelFailed => protagonistDied;
-        private bool levelEnded => levelCompleted || levelFailed;
+            AllEnemiesDied ||
+            PointAchieved || 
+            AllTargetsDefeated || 
+            Survived;
+        private bool LevelFailed => ProtagonistDied;
+        private bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
@@ -137,7 +137,7 @@ namespace Game
                 skipLevel = true;
             }
             
-            if (!doNotEnd && levelEnded)
+            if (!doNotEnd && LevelEnded)
             {
                 ResetUnitsAlpha();
                 StartCoroutine(EndLevel());
@@ -160,7 +160,7 @@ namespace Game
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelFailed = Harmony.Finder.OnLevelFailed;
             onLevelChange = Harmony.Finder.OnLevelChange;
-            onMissionFailed = Harmony.Finder.OnMissionFailed;
+            onCampaignFailed = Harmony.Finder.OnCampaignFailed;
         }
         
         private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)
@@ -171,7 +171,7 @@ namespace Game
             }
             else
             {
-                onMissionFailed.Publish(this);
+                onCampaignFailed.Publish(this);
             }
         }
         #endregion
@@ -245,8 +245,8 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-            if(levelCompleted) onLevelVictory.Publish(this);
-            if(levelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
+            if(LevelCompleted) onLevelVictory.Publish(this);
+            if(LevelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
             while (cinematicController.IsPlayingACinematic)
                 yield return null;
             if (endGameCredits != null)
@@ -448,7 +448,7 @@ namespace Game
         private void UpdatePlayerSave()
         {
             //If the level was successfully completed, mark it as completed
-            if (!levelCompleted) return;
+            if (!LevelCompleted) return;
             gameController.OnLevelCompleted(levelName);
 
             saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;

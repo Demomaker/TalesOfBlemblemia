@@ -6,6 +6,6 @@
         OnStart,
         OnLevelVictory,
         OnLevelFailed,
-        OnMissionFailed
+        OnCampaignFailed
     }
 }

@@ -14,7 +14,7 @@ namespace Game
         
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
-        private OnMissionFailed onMissionFailed;
+        private OnCampaignFailed onCampaignFailed;
         public IEnumerable<CinematicAction> Actions => actions;
 
         #region Unity Event Functions
@@ -44,7 +44,7 @@ namespace Game
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelFailed = Harmony.Finder.OnLevelFailed;
-            onMissionFailed = Harmony.Finder.OnMissionFailed;
+            onCampaignFailed = Harmony.Finder.OnCampaignFailed;
         }
 
         private void EnableEvents()
@@ -57,8 +57,8 @@ namespace Game
                 case CinematicTriggerType.OnLevelFailed:
                     onLevelFailed.Notify += TriggerCinematic;
                     break;
-                case CinematicTriggerType.OnMissionFailed:
-                    onMissionFailed.Notify += TriggerCinematic;
+                case CinematicTriggerType.OnCampaignFailed:
+                    onCampaignFailed.Notify += TriggerCinematic;
                     break;
             }
         }
@@ -73,8 +73,8 @@ namespace Game
                 case CinematicTriggerType.OnLevelFailed:
                     onLevelFailed.Notify -= TriggerCinematic;
                     break;
-                case CinematicTriggerType.OnMissionFailed:
-                    onMissionFailed.Notify -= TriggerCinematic;
+                case CinematicTriggerType.OnCampaignFailed:
+                    onCampaignFailed.Notify -= TriggerCinematic;
                     break;
             }
         }

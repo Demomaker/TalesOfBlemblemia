@@ -19,7 +19,7 @@ namespace Game
             gameObject.AddComponent<OnLevelChange>();
             gameObject.AddComponent<OnLevelVictory>();
             gameObject.AddComponent<OnLevelFailed>();
-            gameObject.AddComponent<OnMissionFailed>();
+            gameObject.AddComponent<OnCampaignFailed>();
             gameObject.AddComponent<OnMusicToggle>();
             gameObject.AddComponent<OnUnitDeath>();
             gameObject.AddComponent<OnUnitMove>();
