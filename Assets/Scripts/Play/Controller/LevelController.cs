@@ -18,29 +18,23 @@ namespace Game
     {
         
         private const string PROTAGONIST_NAME = "Franklem";
-        
-        [SerializeField] private AudioClip backgroundMusic;
-        [SerializeField] private bool doNotEnd;
-        [SerializeField] private string customObjectiveMessage = null;
-        [SerializeField] private bool completeIfAllEnemiesDefeated = false;
-        [SerializeField] private bool completeIfPointAchieved = false;
-        [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
-        [SerializeField] private bool completeIfCertainTargetsDefeated = false;
-        [SerializeField] private bool defeatIfNotCompleteLevelInCertainAmountOfTurns = false;
-        [SerializeField] private bool defeatIfProtectedIsKilled = false;
-        [SerializeField] private bool defeatIfAllPlayerUnitsDied = false;
-        [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
-        [SerializeField] private Targetable[] targetsToDefeat = null;
-        [SerializeField] private bool allTargetsNeedToBeDefeated;
-        [SerializeField] private Targetable[] targetsToProtect = null;
-        [SerializeField] private int numberOfTurnsBeforeDefeat;
-        [SerializeField] private int numberOfTurnsBeforeCompletion;
-        [SerializeField] private bool revertWeaponTriangle = false;
-
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
+        
+        [SerializeField] private AudioClip backgroundMusic;
+        [SerializeField] private bool doNotEnd;
+        [SerializeField] private string customObjectiveMessage = null;
+        [SerializeField] private bool completeIfPointAchieved = false;
+        [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
+        [SerializeField] private bool completeIfCertainTargetsDefeated = false;
+        [SerializeField] private Vector2Int pointToAchieve = new Vector2Int();
+        [SerializeField] private Targetable[] targetsToDefeat = null;
+        [SerializeField] private bool allTargetsNeedToBeDefeated;
+        [SerializeField] private Targetable[] targetsToProtect = null;
+        [SerializeField] private int numberOfTurnsBeforeCompletion;
+        [SerializeField] private bool revertWeaponTriangle = false;
         
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         
@@ -63,35 +57,25 @@ namespace Game
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
-        private bool allEnemiesDefeated => !completeIfAllEnemiesDefeated || completeIfAllEnemiesDefeated && ComputerPlayer.Instance.HaveAllUnitsDied();
-        private bool pointAchieved => !completeIfPointAchieved || completeIfPointAchieved && 
+        private bool allEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
+        private bool pointAchieved => completeIfPointAchieved && 
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile != null) &&
                                       GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve;
-        private bool allTargetsDefeated => !completeIfCertainTargetsDefeated || completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
-        private bool survived => !completeIfSurvivedCertainNumberOfTurns || completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
-
-        private bool allPlayerUnitsDied => (defeatIfAllPlayerUnitsDied &&
-                                            HumanPlayer.Instance.HaveAllUnitsDied());
-        private bool protectedWasKilled => (defeatIfProtectedIsKilled && TargetToProtectHasDied());
-        private bool didNotSurvive => defeatIfNotCompleteLevelInCertainAmountOfTurns &&
-                                      (numberOfPlayerTurns >= numberOfTurnsBeforeDefeat);
+        private bool allTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
+        private bool survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
 
         private bool protagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
                                          GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
         private bool skipLevel = false;
         private bool levelCompleted => 
             skipLevel || 
-            allEnemiesDefeated && 
-            pointAchieved && 
-            allTargetsDefeated && 
+            allEnemiesDied ||
+            pointAchieved || 
+            allTargetsDefeated || 
             survived;
-        private bool levelFailed => 
-            didNotSurvive ||
-            protectedWasKilled ||
-            allPlayerUnitsDied || 
-            protagonistDied;
+        private bool levelFailed => protagonistDied;
         private bool levelEnded => levelCompleted || levelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
@@ -199,10 +183,6 @@ namespace Game
             if (completeIfPointAchieved)
             {
                 uiController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
-            }
-            else if (completeIfAllEnemiesDefeated)
-            {
-                uiController.ModifyVictoryCondition(DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT);
             }
             else if (completeIfCertainTargetsDefeated)
             {

@@ -14,11 +14,13 @@ namespace Game
     [Findable(Game.Tags.OVER_WORLD_CONTROLLER_TAG)]
     public class OverWorldController : MonoBehaviour
     {
+        [SerializeField] private Transform characterTransform;
+        [SerializeField] private GameObject overWorldPath;
+        
         [SerializeField] private bool isDebugging;
         [SerializeField] private Button returnToMainMenu;
+        
         private OnOverWorldEnter onOverWorldEnter;
-        private Transform characterTransform;
-        private GameObject overWorldPath;
         private LevelLoader levelLoader;
         private GameSettings gameSettings;
 
@@ -34,9 +36,6 @@ namespace Game
             gameSettings = Harmony.Finder.GameSettings;
             onOverWorldEnter = Harmony.Finder.OnOverWorldEnter;
             levelLoader = Harmony.Finder.LevelLoader;
-            characterTransform = GameObject.FindWithTag(Tags.PLAYER_TAG)?.transform;
-            overWorldPath = GameObject.Find("Path");
-            if(characterTransform == null) Debug.LogError("Missing GameObject with tag 'Player' in OverWorld Scene.");
         }
         
         private void Start()
@@ -46,27 +45,24 @@ namespace Game
 
         private IEnumerator MoveCharacterToLevelEntry(Vector3 to)
         {
-            if(characterTransform == null) yield break;
+            if(characterTransform == null || overWorldPath == null) yield break;
             while (characterTransform.position != to)
             {
                 var startPosition = characterTransform.position;
                 var endPosition = to;
-                if(overWorldPath != null)
+                foreach (var node in overWorldPath.Children())
                 {
-                    foreach (var node in overWorldPath.Children())
+                    while (node.transform.position.x == startPosition.x && startPosition.y != endPosition.y)
                     {
-                        while (node.transform.position.x == startPosition.x && startPosition.y != endPosition.y)
+                        if (endPosition.y > startPosition.y)
                         {
-                            if (endPosition.y > startPosition.y)
-                            {
-                                yield return MoveCharacterToPosition(startPosition + new Vector3(0, 1, 0));
-                            }
-                            else
-                            {
-                                yield return MoveCharacterToPosition(startPosition + new Vector3(0, -1, 0));
-                            }
-                            startPosition = characterTransform.position;
+                            yield return MoveCharacterToPosition(startPosition + new Vector3(0, 1, 0));
                         }
+                        else
+                        {
+                            yield return MoveCharacterToPosition(startPosition + new Vector3(0, -1, 0));
+                        }
+                        startPosition = characterTransform.position;
                     }
                 }
                 if (endPosition.x > startPosition.x)

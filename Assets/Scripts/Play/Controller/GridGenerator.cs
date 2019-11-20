@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using Boo.Lang;
-using UnityEditor;
+﻿using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 namespace Game
 {

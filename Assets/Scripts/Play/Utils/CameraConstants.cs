@@ -1,7 +1,4 @@
-﻿﻿using JetBrains.Annotations;
- using UnityEngine;
- 
- namespace Game
+﻿namespace Game
 {
     //Authors: Jérémie Bertrand & Mike Bédard
     public static class CameraConstants

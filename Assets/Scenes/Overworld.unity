@@ -10460,6 +10460,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1ff118d5d163544abe0eb7c611557d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterTransform: {fileID: 4535949221009170941}
+  overWorldPath: {fileID: 1938653789}
   isDebugging: 0
   returnToMainMenu: {fileID: 1135699380}
 --- !u!1001 &1353857792
