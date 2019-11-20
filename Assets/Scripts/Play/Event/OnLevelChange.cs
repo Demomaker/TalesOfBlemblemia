@@ -1,5 +1,4 @@
-﻿using Game;
-using Harmony;
+﻿using Harmony;
 
 namespace Game
 {
