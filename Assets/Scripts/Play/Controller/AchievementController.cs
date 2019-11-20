@@ -65,7 +65,7 @@ namespace Game
             achievements.Add(new Achievement(gameSettings.FinishALevelWithoutUnitLoss,  () => FinishedALevelWithoutUnitLoss));
             achievements.Add(new Achievement(gameSettings.SaveAllRecruitablesFromAlternatePath,  () => SavedAllRecruitablesFromAlternatePath));
             achievements.Add(new Achievement(gameSettings.FinishCampaignWithoutUnitLoss,  () => FinishedCampaignWithoutUnitLoss));
-            nameText.text = gameSettings.AchievementGetString;
+            nameText.text = gameSettings.AchievementUnlockedString;
         }
 
         private void OnEnable()
@@ -117,14 +117,14 @@ namespace Game
             const float secondsBeforeTitleCharacterPrint = 0.1f;
             const float secondsBeforeTextCharacterPrint = 0.2f;
             yield return new WaitForSeconds(secondsBeforeTypingStart);
-            foreach (var character in gameSettings.AchievementGetString)
+            foreach (var character in gameSettings.AchievementUnlockedString)
             {
                 if (skipAchievementShow) break;
                 nameText.text += character;
                 yield return new WaitForSeconds(secondsBeforeTitleCharacterPrint);
             }
 
-            nameText.text = gameSettings.AchievementGetString;
+            nameText.text = gameSettings.AchievementUnlockedString;
             foreach (var character in text)
             {
                 if (skipAchievementShow) break;

@@ -21,11 +21,15 @@ namespace Game
             {
                 command.CommandType = CommandType.Text;
 
-                command.CommandText = "INSERT INTO Achievements(id, achievement_name, achieved) VALUES (Null,?,?)";
+                command.CommandText = "INSERT INTO Achievements(id, achievement_name, achievement_description, achieved) VALUES (Null,?,?,?)";
                 
                 var achievementName = command.CreateParameter();
                 achievementName.Value = myObject.AchievementName;
                 command.Parameters.Add(achievementName);
+
+                var achievementDescription = command.CreateParameter();
+                achievementDescription.Value = myObject.AchievementDescription;
+                command.Parameters.Add(achievementDescription);
 
                 var achieved = command.CreateParameter();
                 achieved.Value = myObject.Achieved;
@@ -51,6 +55,7 @@ namespace Game
                         bool achieved = Convert.ToBoolean(reader["achieved"]);
                         result.Add(new AchievementInfo(
                             reader["achievement_name"].ToString(),
+                            reader["achievement_description"].ToString(),
                             achieved));
                     }
                 }

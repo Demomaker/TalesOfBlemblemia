@@ -133,14 +133,14 @@ namespace Game
         {
             achievements = new List<AchievementInfo>
             {
-                new AchievementInfo(gameSettings.CompleteCampaignOnEasy, false),
-                new AchievementInfo(gameSettings.CompleteCampaignOnMedium, false),
-                new AchievementInfo(gameSettings.CompleteCampaignOnHard, false),
-                new AchievementInfo(gameSettings.DefeatBlackKnight, false),
-                new AchievementInfo(gameSettings.ReachFinalLevelWith8Players, false),
-                new AchievementInfo(gameSettings.FinishALevelWithoutUnitLoss, false),
-                new AchievementInfo(gameSettings.FinishCampaignWithoutUnitLoss, false),
-                new AchievementInfo(gameSettings.SaveAllRecruitablesFromAlternatePath, false)
+                new AchievementInfo(gameSettings.CompleteCampaignOnEasy, gameSettings.CompleteCampaignOnEasyDescription, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnMedium, gameSettings.CompleteCampaignOnMediumDescription, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnHard, gameSettings.CompleteCampaignOnHardDescription,  false),
+                new AchievementInfo(gameSettings.DefeatBlackKnight, gameSettings.DefeatBlackKnightDescription, false),
+                new AchievementInfo(gameSettings.ReachFinalLevelWith8Players, gameSettings.ReachFinalLevelWith8PlayersDescription,  false),
+                new AchievementInfo(gameSettings.FinishALevelWithoutUnitLoss, gameSettings.FinishALevelWithoutUnitLossDescription, false),
+                new AchievementInfo(gameSettings.FinishCampaignWithoutUnitLoss, gameSettings.FinishCampaignWithoutUnitLossDescription, false),
+                new AchievementInfo(gameSettings.SaveAllRecruitablesFromAlternatePath, gameSettings.SaveAllRecruitablesFromAlternatePathDescription,  false)
             };
         }
         #endregion
