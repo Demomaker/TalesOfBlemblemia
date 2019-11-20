@@ -21,6 +21,7 @@ namespace Game
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
+        const int CREDITS_DURATION = 20;
         
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private bool doNotEnd;
@@ -213,7 +214,7 @@ namespace Game
             if (endGameCredits != null)
             {
                 endGameCredits.RollCredits();
-                yield return new WaitForSeconds(20);
+                yield return new WaitForSeconds(CREDITS_DURATION);
             }
             
             CheckForPermadeath();
