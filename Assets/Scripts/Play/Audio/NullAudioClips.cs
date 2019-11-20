@@ -6,6 +6,5 @@
     /// </summary>
     public class NullAudioClips : AudioClips
     {
-        // Empty on purpose TODO what? @Michel
     }
 }

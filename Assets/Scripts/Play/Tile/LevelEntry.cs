@@ -9,22 +9,22 @@ using Finder = Harmony.Finder;
 [RequireComponent(typeof(Button))]
 public class LevelEntry : MonoBehaviour
 {
-    [SerializeField] private LevelName.LevelNameEnum representedLevelId;
+    #region Serialized Fields
+    [SerializeField] private LevelID representedLevelId;
+    #endregion Serialized Fields
+    #region Other Fields
     private GameSettings gameSettings;
     private Button levelEntryButton;
     private List<string> previousLevelName;
     private OverWorldController overWorldController;
     private GameController gameController;
     private string representedLevelName;
+    #endregion Other Fields
+    #region Accessors
     private bool IsFirstLevel => gameSettings.StartingLevelSceneName == representedLevelName;
     private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && previousLevelName.Count <= 0 || PreviousLevelNameListContainsElement(gameController.PreviousLevelName);
-
-    private bool PreviousLevelNameListContainsElement(string previousLevel)
-    {
-        return previousLevelName.Any(levelName => levelName == previousLevel);
-    }
-
-
+    #endregion Accessors
+    #region Unity Event Functions
     private void Awake()
     {
         previousLevelName = new List<string>();
@@ -54,7 +54,8 @@ public class LevelEntry : MonoBehaviour
             overWorldController.CharacterTransform.position = new Vector3(target.x + 1, target.y, target.z);
         }
     }
-
+    #endregion Unity Event Functions
+    #region Level-entering-related Functions
     public void OnLevelEntry()
     {
         EventSystem.current.SetSelectedGameObject(null);
@@ -63,4 +64,10 @@ public class LevelEntry : MonoBehaviour
             StartCoroutine(overWorldController.LoadLevel(representedLevelName, transform.position));
         }
     }
+    
+    private bool PreviousLevelNameListContainsElement(string previousLevel)
+    {
+        return previousLevelName.Any(levelName => levelName == previousLevel);
+    }
+    #endregion Level-entering-related Functions
 }

@@ -9,14 +9,18 @@ namespace Game
     //Author: Jérémie Bertrand, Mike Bédard
     public class Cinematic : MonoBehaviour
     {
+        #region Serialized Fields
         [SerializeField] private CinematicTriggerType trigger = CinematicTriggerType.Manual;
         [SerializeField] private List<CinematicAction> actions;
-        
+        #endregion Serialized Fields
+        #region Other Fields
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
         private OnCampaignFailed onCampaignFailed;
+        #endregion Other Fields
+        #region Accessors
         public IEnumerable<CinematicAction> Actions => actions;
-
+        #endregion Accessors
         #region Unity Event Functions
         private void Awake()
         {

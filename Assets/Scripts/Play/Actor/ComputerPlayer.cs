@@ -9,9 +9,11 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
+        #region Fields
         private static ComputerPlayer instance = null;
         private List<Targetable> targetsToDestroy;
-
+        #endregion Fields
+        #region Accessors
         public static ComputerPlayer Instance
         {
             get
@@ -23,12 +25,14 @@ namespace Game
                 return instance;
             }
         }
-
+        #endregion Accessors
+        #region Constructors
         private ComputerPlayer()
         {
             targetsToDestroy = new List<Targetable>();  
         }
-
+        #endregion Constructors
+        #region ComputerPlayer-related Functions
         public void AddTarget(Targetable target)
         {
             targetsToDestroy.Add(target);
@@ -78,5 +82,6 @@ namespace Game
                 }
             }
         }
+        #endregion ComputerPlayer-related Functions
     }
 }

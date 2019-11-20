@@ -12,7 +12,8 @@ namespace Game
     [CustomEditor(typeof(LevelController))]
     public class LevelControllerEditor : Editor
     {
-        /*Property Indexes in Property Names List*/
+        #region Constants
+        #region Property Indexes in Property Names List
         private const int FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST = 10;
         private const int BACKGROUND_MUSIC_PROPERTY_INDEX = 
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST;
@@ -40,8 +41,8 @@ namespace Game
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
         private const int POINTING_ARROW_PREFAB_PROPERTY_INDEX =
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
-
-        /*Header and Field Names*/
+        #endregion Property Indexes in Property Names List
+        #region Header and Field Names
         private const string LEVEL_HEADER = "Level";
         private const string WEAPON_TRANSFORMATION_HEADER = "Weapon Transformation";
         private const string LEVEL_COMPLETION_HEADER = "Conditions For Level Completion";
@@ -56,10 +57,11 @@ namespace Game
         private const string NUMBER_OF_TURNS_BEFORE_COMPLETION_FIELD_NAME = "Number Of Turns Before Level Completion";
         private const string REVERT_WEAPON_TRIANGLE_FIELD_NAME = "Revert Weapon Triangle";
         private const string POINTING_ARROW_PREFAB_FIELD_NAME = "Pointing Arrow Prefab";
-        
+        #endregion Header and Field Names
+        #endregion Constants
+        #region Fields
         private List<string> serializedPropertyNames;
-        
-        /*Properties*/
+        #region Serialized Properties
         private SerializedProperty backgroundMusic;
         private SerializedProperty doNotEnd;
         private SerializedProperty customObjectiveMessage;
@@ -73,7 +75,9 @@ namespace Game
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty revertWeaponTriangle;
         private SerializedProperty pointingArrowPrefab;
-
+        #endregion Serialized Properties
+        #endregion Fields
+        #region Unity Event Functions
         private void OnEnable()
         {
             InitializeSerializedPropertyNamesList();
@@ -86,7 +90,8 @@ namespace Game
             ShowAndEditProperties();
             serializedObject.ApplyModifiedProperties();
         }
-
+        #endregion Unity Event Functions
+        #region Level Controller Editing Methods
         private void InitializeSerializedPropertyNamesList()
         {
             serializedPropertyNames = new List<string>();
@@ -208,6 +213,6 @@ namespace Game
             EditorGUILayout.PropertyField(targetsToDefeat,true);
             allTargetsNeedToBeDefeated.boolValue = EditorGUILayout.Toggle(ALL_TARGETS_NEED_TO_BE_DEFEATED_FIELD_NAME,allTargetsNeedToBeDefeated.boolValue);
         }
-
+        #endregion Level Controller Editing Methods
     }
 }
