@@ -83,6 +83,7 @@ namespace Game
             connection.Open();
             InitiateSaveInfo(username, difficultyLevel, levelName, characterStatus);
             InitiateSettingsInfo();
+            InitializeAchievements();
             InitiateRepos();
             //Check if there are any settings in the database
             CheckForExistingSettings();
@@ -127,7 +128,21 @@ namespace Game
             saveSettingsRepo = new SaveSettingsRepo(connection);
             achievementsRepo = new AchievementsRepo(connection);
         }
-
+        
+        private void InitializeAchievements()
+        {
+            achievements = new List<AchievementInfo>
+            {
+                new AchievementInfo(gameSettings.CompleteCampaignOnEasy, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnMedium, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnHard, false),
+                new AchievementInfo(gameSettings.DefeatBlackKnight, false),
+                new AchievementInfo(gameSettings.ReachFinalLevelWith8Players, false),
+                new AchievementInfo(gameSettings.FinishALevelWithoutUnitLoss, false),
+                new AchievementInfo(gameSettings.FinishCampaignWithoutUnitLoss, false),
+                new AchievementInfo(gameSettings.SaveAllRecruitablesFromAlternatePath, false)
+            };
+        }
         #endregion
 
         //Author : Antoine Lessard
@@ -158,10 +173,21 @@ namespace Game
 
             if (achievements.Count == 0)
             {
-                
+                foreach (var achievement in this.achievements)
+                {
+                    achievementsRepo.Insert(achievement);
+                }
+            }
+            else
+            {
+                this.achievements.Clear();
+                foreach (var achievement in achievements)
+                {
+                    this.achievements.Add(achievement);
+                }
             }
         }
-        
+
         /// <summary>
         /// Check for existing saves in the database, if there are, we load those saves, otherwise, we create them as "new saves"
         /// </summary>
