@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Game
@@ -16,11 +17,11 @@ namespace Game
             base.Start();
         }
 
-        public override void Die()
+        public override IEnumerator Die()
         {
             currentTile.UnlinkDoor();
             Harmony.Finder.LevelController.IncrementTileUpdate();
-            base.Die();
+            yield return base.Die();
         }
     }
 }

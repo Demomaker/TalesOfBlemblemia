@@ -21,6 +21,7 @@ namespace Game
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
+        const int CREDITS_DURATION = 20;
         
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private bool doNotEnd;
@@ -94,6 +95,8 @@ namespace Game
             }
         }
 
+        private EndGameCreditsController endGameCredits;
+        
         private void Awake()
         {
             levelLoader = Harmony.Finder.LevelLoader;
@@ -106,6 +109,9 @@ namespace Game
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelChange = Harmony.Finder.OnLevelChange;
             levelName = gameObject.scene.name;
+            endGameCredits = GetComponentInChildren<EndGameCreditsController>();
+            if (endGameCredits != null)
+                endGameCredits.gameObject.SetActive(false);
         }
 
         private void ResetVariables()
@@ -189,7 +195,7 @@ namespace Game
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
-            //TODO enlever ca avant la release
+            //TODO enlever ca avant la release?
             CheckForComputerTurnSkip();
             CheckForPlayerTurnSkip();
             CheckForCurrentPlayerWin();
@@ -204,8 +210,11 @@ namespace Game
             levelIsEnding = true;
             if(levelCompleted) onLevelVictory.Publish(this);
             while (cinematicController.IsPlayingACinematic)
-            {
                 yield return null;
+            if (endGameCredits != null)
+            {
+                endGameCredits.RollCredits();
+                yield return new WaitForSeconds(CREDITS_DURATION);
             }
             
             CheckForPermadeath();
