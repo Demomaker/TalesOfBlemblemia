@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Game

@@ -23,6 +23,8 @@ TagManager:
   - AnimationManager
   - GameEventHandler
   - GameSettings
+  - LevelLoader
+  - GameUI
   layers:
   - Default
   - TransparentFX
@@ -63,6 +65,6 @@ TagManager:
   - name: Characters
     uniqueID: 18170363
     locked: 0
-  - name: Arrows
-    uniqueID: 3972060513
+  - name: UI
+    uniqueID: 4142732113
     locked: 0

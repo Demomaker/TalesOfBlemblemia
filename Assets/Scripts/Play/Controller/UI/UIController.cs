@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Harmony;
 using JetBrains.Annotations;
 using TMPro;
@@ -7,13 +6,18 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-
 //Author: Pierre-Luc Maltais
 namespace Game
 {
     [Findable("UIController")]
     public class UIController : MonoBehaviour
     {
+        private const string TURN_FORMAT_TEXT = "00";
+        private const string TURN_DISPLAY_TEXT = " turn";
+        private const string UNREACHABLE_TILE_TEXT = "Unreachable";
+        private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
+        private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
+        
         [Header("Canvas")] [SerializeField] private Canvas canvas;
         [Header("TileInfo")] 
         [SerializeField] private TMP_Text tileType;
@@ -26,15 +30,6 @@ namespace Game
         [SerializeField] private TMP_Text turnInfo;
 
         [Header("Victory Condition")] [SerializeField] private TMP_Text victoryCondition;
-        
-        [FormerlySerializedAs("nameCharacter")]
-        [Header("CharacterInfos")]
-        [SerializeField] private TMP_Text characterName;
-        [SerializeField] private TMP_Text characterClass;
-        [SerializeField] private TMP_Text weapon;
-        [SerializeField] private TMP_Text movement;
-        [SerializeField] private TMP_Text atk;
-        [SerializeField] private TMP_Text hp;
 
         [Header("Battle Report")] 
         [SerializeField] private GameObject battleReports;
@@ -53,11 +48,6 @@ namespace Game
         [SerializeField] private Color green;
         [SerializeField] private Color red;
         [SerializeField] private Color grey;
-
-
-        private const string UNREACHABLE_TILE_TEXT = "Unreachable";
-        private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
-        private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
 
         private Animator playerAnimator;
         private Animator enemyAnimator;
@@ -231,24 +221,16 @@ namespace Game
             if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
 
             tileTexture.sprite = tile.GetSprite();
-
-            if (tile.LinkedUnit == null || tile.LinkedUnit.UnitInfos == null) return;
-            characterName.text = tile.LinkedUnit.UnitInfos.characterName;
-            characterClass.text = tile.LinkedUnit.UnitInfos.className;
-            weapon.text = tile.LinkedUnit.UnitInfos.weaponName;
-            movement.text = tile.LinkedUnit.MovesLeft.ToString();
-            atk.text = tile.LinkedUnit.Stats.AttackStrength.ToString();
-            hp.text = tile.LinkedUnit.CurrentHealthPoints.ToString();
         }
 
         public void ModifyTurnCounter(int turns)
         {
-            turnCounter.text = turns.ToString(("00"));
+            turnCounter.text = turns.ToString(TURN_FORMAT_TEXT);
         }
 
         public void ModifyTurnInfo(string player)
         {
-            turnInfo.text = player + " turn";
+            turnInfo.text = player + TURN_DISPLAY_TEXT;
         }
 
         public void ModifyVictoryCondition(string victoryCondition)

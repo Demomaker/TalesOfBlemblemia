@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-[System.Serializable]
 
+[System.Serializable]
 //Author: Pierre-Luc Maltais, Jérémie Bertrand.
 public class Quote
 {

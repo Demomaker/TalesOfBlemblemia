@@ -92,6 +92,7 @@ namespace Game
 
         public static void ExecuteAction()
         {
+            playerUnit.RemoveInitialMovement();
             playerUnit.MoveByAction(unitTurnAction);
             Reset();
         }
