@@ -24,6 +24,7 @@ TagManager:
   - GameEventHandler
   - GameSettings
   - LevelLoader
+  - GameUI
   layers:
   - Default
   - TransparentFX

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Game;
 using Harmony;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,6 +21,7 @@ namespace Game
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
+        const int CREDITS_DURATION = 20;
         
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private bool doNotEnd;
@@ -57,6 +57,7 @@ namespace Game
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
+        private EndGameCreditsController endGameCredits;
         private bool allEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
         private bool pointAchieved => completeIfPointAchieved && 
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
@@ -108,6 +109,9 @@ namespace Game
             dialogueUi = GameObject.FindWithTag("DialogueUi");
             cinematicController = GetComponent<CinematicController>();
             levelName = gameObject.scene.name;
+            endGameCredits = GetComponentInChildren<EndGameCreditsController>();
+            if (endGameCredits != null)
+                endGameCredits.gameObject.SetActive(false);
         }
         
         private void Start()
@@ -237,8 +241,11 @@ namespace Game
             if(levelCompleted) onLevelVictory.Publish(this);
             if(levelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
             while (cinematicController.IsPlayingACinematic)
-            {
                 yield return null;
+            if (endGameCredits != null)
+            {
+                endGameCredits.RollCredits();
+                yield return new WaitForSeconds(CREDITS_DURATION);
             }
             
             CheckForPermadeath();
@@ -298,6 +305,7 @@ namespace Game
                 ? targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length
                 : targetsToDefeat.Count(target => target == null || target.NoHealthLeft) > 0;
         }
+        
         private bool TargetToProtectHasDied()
         {
             return targetsToProtect.Any(target => target != null && target.NoHealthLeft);
@@ -329,6 +337,7 @@ namespace Game
             currentPlayer = players.Find(player => player is HumanPlayer);
             OnTurnGiven();
         }
+        
         private void GiveUnits(   
             IEnumerable<Unit> units,
             HumanPlayer player, 
@@ -363,7 +372,6 @@ namespace Game
                 OnTurnGiven();
             }
         }
-        
 
         private void CheckForCurrentPlayerWin()
         {

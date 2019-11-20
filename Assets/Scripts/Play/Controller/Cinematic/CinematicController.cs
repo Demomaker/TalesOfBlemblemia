@@ -17,7 +17,7 @@ namespace Game
         public bool IsPlayingACinematic
         {
             get => isPlayingACinematic;
-            private set 
+            set 
             { 
                 isPlayingACinematic = value;
                 if (isPlayingACinematic)
