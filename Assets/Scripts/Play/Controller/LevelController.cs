@@ -15,13 +15,12 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
-        
         private const string PROTAGONIST_NAME = "Franklem";
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
-        const int CREDITS_DURATION = 20;
+        private const int CREDITS_DURATION = 20;
         
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private bool doNotEnd;
@@ -35,6 +34,7 @@ namespace Game
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
+        [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
         
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         
@@ -66,7 +66,6 @@ namespace Game
                                       GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve;
         private bool allTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
         private bool survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
-
         private bool protagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
                                          GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
         private bool skipLevel = false;
@@ -187,6 +186,7 @@ namespace Game
             if (completeIfPointAchieved)
             {
                 uiController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
+                CreatePointToAchievePointingArrow();
             }
             else if (completeIfCertainTargetsDefeated)
             {
@@ -196,6 +196,13 @@ namespace Game
             {
                 uiController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
             }
+        }
+
+        private void CreatePointToAchievePointingArrow()
+        {
+            var pointingArrowTransformOffset = new Vector2(0.5f, 0.5f);
+            GameObject pointingArrow = (GameObject)GameObject.Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity);
+            pointingArrow.GetComponent<PointingArrow>().SetTransformToPointPosition(new Vector3(pointToAchieve.x + pointingArrowTransformOffset.x, pointToAchieve.y + pointingArrowTransformOffset.y, 0));
         }
 
         private string GetStringOfTargetsToDefeat()

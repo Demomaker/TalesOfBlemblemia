@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using System.Collections.Generic;
+using Harmony;
 using UnityEngine;
 
 namespace Game
@@ -37,6 +38,8 @@ namespace Game
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
         private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = 
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
+        private const int POINTING_ARROW_PREFAB_PROPERTY_INDEX =
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
 
         /*Header and Field Names*/
         private const string LEVEL_HEADER = "Level";
@@ -52,6 +55,7 @@ namespace Game
         private const string POINT_TO_ACHIEVE_FIELD_NAME = "Point To Achieve";
         private const string NUMBER_OF_TURNS_BEFORE_COMPLETION_FIELD_NAME = "Number Of Turns Before Level Completion";
         private const string REVERT_WEAPON_TRIANGLE_FIELD_NAME = "Revert Weapon Triangle";
+        private const string POINTING_ARROW_PREFAB_FIELD_NAME = "Pointing Arrow Prefab";
         
         private List<string> serializedPropertyNames;
         
@@ -68,6 +72,7 @@ namespace Game
         private SerializedProperty targetsToDefeat;
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty revertWeaponTriangle;
+        private SerializedProperty pointingArrowPrefab;
 
         private void OnEnable()
         {
@@ -108,6 +113,7 @@ namespace Game
             allTargetsNeedToBeDefeated = GetPropertyAtIndex(ALL_TARGETS_NEED_TO_BE_DEFEATED_PROPERTY_INDEX);
             numberOfTurnsBeforeCompletion = GetPropertyAtIndex(NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX);
             revertWeaponTriangle = GetPropertyAtIndex(REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX);
+            pointingArrowPrefab = GetPropertyAtIndex(POINTING_ARROW_PREFAB_PROPERTY_INDEX);
         }
 
         private SerializedProperty GetPropertyAtIndex(int serializedPropertyNamesIndex)
@@ -122,10 +128,17 @@ namespace Game
 
         private void ShowAndEditProperties()
         {
+            ShowAndEditPointingArrowProperty();
             ShowAndEditBasicLevelProperties();
             ShowAndEditWeaponProperties();
             if (DoNotEndLevel()) return;
             ShowAndEditLevelCompletionProperties();
+        }
+
+        private void ShowAndEditPointingArrowProperty()
+        {
+            pointingArrowPrefab.objectReferenceValue =
+                EditorGUILayout.ObjectField(POINTING_ARROW_PREFAB_FIELD_NAME, pointingArrowPrefab.objectReferenceValue, typeof(UnityEngine.Object),true );
         }
 
         private void ShowAndEditBasicLevelProperties()

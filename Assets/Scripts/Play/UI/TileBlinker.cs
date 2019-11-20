@@ -12,11 +12,13 @@ public class TileBlinker : MonoBehaviour
     // Update is called once per frame
     private void Start()
     {
+        if(tileToBlink != null)
         blinkCoroutine = StartCoroutine(tileToBlink.Blink(blinkSprite));
     }
 
     private void OnDisable()
     {
+        if(blinkCoroutine != null)
         StopCoroutine(blinkCoroutine);
         if(tileToBlink != null)
         tileToBlink.ResetTileImage();
