@@ -10,6 +10,7 @@ namespace Game
     [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
     {
+        #region Serialized Fields
         [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
         [SerializeField] private int enemyMovementRange = 3;
         [SerializeField] private int playerAttackRange = 1;
@@ -18,8 +19,9 @@ namespace Game
         [SerializeField] private float movementDuration = 0.3f;
         [SerializeField] private int numberOfRecruitablesOnAlternatePath = 8;
         [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
+        [SerializeField] private KeyCode skipLevelKey = KeyCode.O;
 
-        [Header("Scene names")] 
+        [Header("Scene Names")] 
         [SerializeField] private string emptyLevelString = "";
         [SerializeField] private R.E.Scene tutorialScene;
         [SerializeField] private R.E.Scene jimsterburgScene;
@@ -69,13 +71,17 @@ namespace Game
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
-        [SerializeField] private KeyCode skipLevelKey = KeyCode.O;
-
+        #endregion Serialized Fields
+        #region ReadOnly Fields
         private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
         private static readonly Color opaqueAlpha = new Color(1, 1, 1, 1f);
-
+        #endregion ReadOnly Fields
+        #region Accessors
+        #region Colors
         public Color PaleAlpha => paleAlpha;
         public Color OpaqueAlpha => opaqueAlpha;
+        #endregion Colors
+        #region Unit Settings
         public int PlayerMovementRange => playerMovementRange;
         public int EnemyMovementRange => enemyMovementRange;
         public int PlayerAttackRange => playerAttackRange;
@@ -83,8 +89,12 @@ namespace Game
         public float AttackDuration => attackDuration;
         public float MovementDuration => movementDuration;
         public int NumberOfRecruitablesOnAlternatePath => numberOfRecruitablesOnAlternatePath;
+        #endregion Unit Settings
+        #region Input Settings
         public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
         public KeyCode SkipLevelKey => skipLevelKey;
+        #endregion Input Settings
+        #region Scene Names
         public string TutorialSceneName => tutorialScene.ToString();
         public string JimsterburgSceneName => jimsterburgScene.ToString();
         public string ParabeneForestSceneName => parabeneForestScene.ToString();
@@ -96,10 +106,13 @@ namespace Game
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
         public string StartingLevelSceneName => startingLevelScene.ToString();
-
+        #endregion Scene Names
+        #region Saves
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;
         public int SaveSlotThree => saveSlotThree;
+        #endregion Saves
+        #region Playable Characters
         public string FranklemName => franklemName;
         public string MyriamName => myriamName;
         public string BramName => bramName;
@@ -108,7 +121,10 @@ namespace Game
         public string JebediahName => jebediahName;
         public string ThomasName => thomasName;
         public string AbrahamName => abrahamName;
+        #endregion Playable Characters
+        #region Achievements
         public string AchievementGetString => achievementGetString;
+        #region Achievement Names
         public string CompleteCampaignOnEasy => completeCampaignOnEasy;
         public string CompleteCampaignOnMedium => completeCampaignOnMedium;
         public string CompleteCampaignOnHard => completeCampaignOnHard;
@@ -117,14 +133,21 @@ namespace Game
         public string FinishALevelWithoutUnitLoss => finishALevelWithoutUnitLoss;
         public string FinishCampaignWithoutUnitLoss => finishCampaignWithoutUnitLoss;
         public string SaveAllRecruitablesFromAlternatePath => saveAllRecruitablesFromAlternatePath;
+        #endregion Achievement Names
+        #endregion Achievements
+        #region Animation and Actions
         public string IsMoving => isMoving;
         public string IsAttacking => isAttacking;
         public string IsGoingToDie => isGoingToDie;
         public string IsBeingHurt => isBeingHurt;
         public string IsDodging => isDodging;
         public string IsResting => isResting;
+        #endregion Animation and Actions
+        #region Colors
         public Color HumanUnitIdentificationColor => humanUnitIdentificationColor;
         public Color ComputerUnitIdentificationColor => computerUnitIdentificationColor;
+        #endregion Colors
+        #region Other
         public string NameString => nameString;
         public string DifficultyString => difficultyString;
         public string StageString => stageString;
@@ -134,5 +157,7 @@ namespace Game
         public int Percent => percent;
         public string EmptyLevelString => emptyLevelString;
         public string AudioPath => audioPath;
+        #endregion Other
+        #endregion Accessors
     }
 }
