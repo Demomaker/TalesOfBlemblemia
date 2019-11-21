@@ -23,7 +23,9 @@ namespace Game
             protected internal set
             {
                 currentHealthPoints = value;
-                if (NoHealthLeft) Die();
+                if (NoHealthLeft) 
+                    //TODO objet Coroutine Starter
+                    Harmony.Finder.LevelController.StartCoroutine(Die());
             }
         }
         
@@ -39,17 +41,18 @@ namespace Game
             }
         }
 
-        public virtual void Die()
+        public virtual IEnumerator Die()
         {
             currentTile.UnlinkUnit();
             gameObject.SetActive(false);
+            yield break;
         }
 
         public virtual void Awake()
         {
             levelController = Harmony.Finder.LevelController;
         }
-
+        
         protected virtual void Start()
         {
             StartCoroutine(InitPosition());
@@ -59,9 +62,7 @@ namespace Game
         {
             yield return new WaitForEndOfFrame();
             while (levelController.CinematicController.IsPlayingACinematic)
-            {
                 yield return null;
-            }
             var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
             transform.position = tile.WorldPosition;
             CurrentTile = tile;

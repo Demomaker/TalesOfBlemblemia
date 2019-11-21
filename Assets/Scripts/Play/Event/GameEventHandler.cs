@@ -1,4 +1,4 @@
-﻿using Harmony;
+using Harmony;
 using UnityEngine;
 
 namespace Game
@@ -18,6 +18,8 @@ namespace Game
             gameObject.AddComponent<OnButtonClick>();
             gameObject.AddComponent<OnLevelChange>();
             gameObject.AddComponent<OnLevelVictory>();
+            gameObject.AddComponent<OnLevelFailed>();
+            gameObject.AddComponent<OnCampaignFailed>();
             gameObject.AddComponent<OnMusicToggle>();
             gameObject.AddComponent<OnUnitDeath>();
             gameObject.AddComponent<OnUnitMove>();
