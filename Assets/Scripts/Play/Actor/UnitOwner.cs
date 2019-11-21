@@ -34,15 +34,18 @@ namespace Game
 
         public bool HasLost { get; set; }
 
-        public void RemoveDeadUnits()
+        public int RemoveDeadUnits()
         {
+            int unitsRemoved = 0;
             for (int i = 0; i < ownedUnits.Count; i++)
             {
                 if (ownedUnits[i].NoHealthLeft)
                 {
                     RemoveOwnedUnit(ownedUnits[i]);
+                    unitsRemoved++;
                 }
             }
+            return unitsRemoved;
         }
 
         public void Lose()

@@ -11,6 +11,7 @@ namespace Game
     {
         private static ComputerPlayer instance = null;
         private List<Targetable> targetsToDestroy;
+        private OnUnitDeath onUnitDeath;
 
         public static ComputerPlayer Instance
         {
@@ -26,45 +27,42 @@ namespace Game
 
         private ComputerPlayer()
         {
-            targetsToDestroy = new List<Targetable>();  
+            targetsToDestroy = new List<Targetable>();
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onUnitDeath.Notify += OnUnitDeath;
         }
 
+        
         public void AddTarget(Targetable target)
         {
             targetsToDestroy.Add(target);
         }
         
+        private void OnUnitDeath(Unit unit)
+        {
+            if (unit == currentUnit)
+            {
+                dynamicUnitCount--;
+                dynamicUnitCounter--;
+            }
+        }
+
+        private int dynamicUnitCounter;
+        private int dynamicUnitCount;
+        private Unit currentUnit = null;
+
         public IEnumerator PlayUnits()
         {
-            //TODO les unités qui meurent altèrent la liste du foreach et font crasher si une unité meurt pendant sont tour
-            /*foreach (var unit in ownedUnits)
+            dynamicUnitCount = ownedUnits.Count;
+            for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
                 var uiController = Harmony.Finder.UIController;
                 while (uiController.IsBattleReportActive)
                 {
                     yield return null;
                 } 
+                currentUnit = ownedUnits[dynamicUnitCounter];
                 
-                var currentUnit = unit;
-                if (!currentUnit.HasActed)
-                {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
-                    while (!currentUnit.HasActed)
-                    {
-                        yield return currentUnit.MoveByAction(action);
-                    }
-                    base.CheckUnitDeaths();
-                }
-            }*/
-            for (int i = 0; i < ownedUnits.Count; i++)
-            {
-                var uiController = Harmony.Finder.UIController;
-                while (uiController.IsBattleReportActive)
-                {
-                    yield return null;
-                } 
-                var currentUnit = ownedUnits[i];
-                     
                 if (!currentUnit.HasActed)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
@@ -73,8 +71,6 @@ namespace Game
                     {
                         yield return currentUnit.MoveByAction(action);
                     }
-
-                    base.RemoveDeadUnits();
                 }
             }
         }
