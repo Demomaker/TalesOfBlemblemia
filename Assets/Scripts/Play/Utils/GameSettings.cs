@@ -59,6 +59,8 @@ namespace Game
         [SerializeField] private string isBeingHurt = "IsBeingHurt";
         [SerializeField] private string isDodging = "IsDodging";
         [SerializeField] private string isResting = "IsResting";
+        [SerializeField] [Header("Colors")] private Color humanUnitIdentificationColor = new Color(175/255f,255/255f,175/255f,255/255f);
+        [SerializeField] private Color computerUnitIdentificationColor = new Color(255/255f,175/255f,175/255f,255/255f);
         [SerializeField] [Header("Other")] private string nameString = "Name";
         [SerializeField] private string difficultyString = "Difficulty";
         [SerializeField] private string stageString = "Stage";
@@ -121,6 +123,8 @@ namespace Game
         public string IsBeingHurt => isBeingHurt;
         public string IsDodging => isDodging;
         public string IsResting => isResting;
+        public Color HumanUnitIdentificationColor => humanUnitIdentificationColor;
+        public Color ComputerUnitIdentificationColor => computerUnitIdentificationColor;
         public string NameString => nameString;
         public string DifficultyString => difficultyString;
         public string StageString => stageString;

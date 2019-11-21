@@ -17,7 +17,6 @@ namespace Game
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
         [SerializeField] private UnitGender gender;
-        
         #endregion
         
         #region Fields
@@ -173,6 +172,11 @@ namespace Game
         private void OnDisable()
         {
             DisableEvents();
+        }
+
+        public void SetIdentificationColor(Color color)
+        {
+            spriteRenderer.color = color;
         }
 
         private void DisableEvents()

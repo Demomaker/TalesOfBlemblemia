@@ -356,11 +356,13 @@ namespace Game
                 {
                     player.AddOwnedUnit(unit);
                     aiPlayer.AddEnemyUnit(unit);
+                    unit.SetIdentificationColor(gameSettings.HumanUnitIdentificationColor);
                 }
                 else if (unit.IsEnemy)
                 {
                     aiPlayer.AddOwnedUnit(unit);
                     player.AddEnemyUnit(unit);
+                    unit.SetIdentificationColor(gameSettings.ComputerUnitIdentificationColor);
                 }
             }
 
