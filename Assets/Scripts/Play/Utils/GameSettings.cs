@@ -44,7 +44,7 @@ namespace Game
         [SerializeField] private string jebediahName = "Jebediah";
         [SerializeField] private string thomasName = "Thomas";
         [SerializeField] private string abrahamName = "Abraham";
-        [SerializeField] [Header("Achievements")] private string achievementUnlockedString = "Achievement Completed!";
+        [SerializeField] [Header("Achievements")] private string achievementUnlockedString = "Achievement unlocked!";
         [SerializeField] [Header("Achievement Names")] private string completeCampaignOnEasy = "Baby Steps";
         [SerializeField] private string completeCampaignOnMedium = "Now you're getting it!";
         [SerializeField] private string completeCampaignOnHard = "You mad man!";

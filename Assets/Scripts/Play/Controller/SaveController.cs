@@ -44,6 +44,7 @@ namespace Game
 
         public PlayerSettings PlayerSettings => playerSettings;
 
+        public List<AchievementInfo> Achievements => achievements;
 
         public void Awake()
         {
@@ -173,7 +174,7 @@ namespace Game
 
             if (achievementsInDatabase.Count == 0)
             {
-                foreach (var achievement in this.achievements)
+                foreach (var achievement in achievements)
                 {
                     achievementsRepo.Insert(achievement);
                 }
@@ -206,6 +207,15 @@ namespace Game
                 saveSlot1 = saves[0];
                 saveSlot2 = saves[1];
                 saveSlot3 = saves[2];
+            }
+        }
+
+        public void UpdateAchievements(List<AchievementInfo> newAchievementsInfo)
+        {
+            achievements = newAchievementsInfo;
+            foreach (var achievement in achievements)
+            {
+                achievementsRepo.Update(achievement);
             }
         }
 
@@ -308,7 +318,7 @@ namespace Game
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
 
-            SaveInfos cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
+            var cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
                 gameSettings.EmptyLevelString, playableCharactersDictionary);
             
             switch (SaveSelected)
