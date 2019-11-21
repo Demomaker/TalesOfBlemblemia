@@ -11,6 +11,7 @@ namespace Game
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI movementText;
         [SerializeField] private TextMeshProUGUI attackText;
+        [SerializeField] private Image[] nameBackground;
         [SerializeField] private Image attackIcon;
         [SerializeField] private Sprite axeSprite;
         [SerializeField] private Sprite spearSprite;
@@ -44,6 +45,21 @@ namespace Game
                 case WeaponType.HealingStaff:
                     attackIcon.sprite = healingStaffSprite;
                     break;
+            }
+
+            if (unit.IsEnemy)
+            {
+                for (int i = 0; i < nameBackground.Length; i++)
+                {
+                    nameBackground[i].color = Color.red;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < nameBackground.Length; i++)
+                {
+                    nameBackground[i].color = Color.green;
+                }
             }
             attackText.text = unit.Stats.AttackStrength.ToString();
         }
