@@ -1,45 +1,39 @@
 ﻿using System;
 
-//Author Mike Bedard, Correction: Pierre-Luc Maltais et Antoine Lessard.
 namespace Game
 {
+    /// <summary>
+    /// Level name
+    /// Author Mike Bedard, Correction: Pierre-Luc Maltais et Antoine Lessard.
+    /// </summary>
     public static class LevelName
     {
-        public static string GetLevelNameFromLevelID(this LevelNameEnum levelNameEnum)
+        #region LevelName-related Functions
+        public static string GetLevelNameFromLevelID(this LevelID levelID)
         {
             var gameSettings = Harmony.Finder.GameSettings;
-            switch (levelNameEnum)
+            switch (levelID)
             {
-                case LevelNameEnum.SnowyPeaks:
+                case LevelID.SnowyPeaks:
                     return gameSettings.TutorialSceneName;
-                case LevelNameEnum.Jimsterburg:
+                case LevelID.Jimsterburg:
                     return gameSettings.JimsterburgSceneName;
-                case LevelNameEnum.ParabeneForest:
+                case LevelID.ParabeneForest:
                     return gameSettings.ParabeneForestSceneName;
-                case LevelNameEnum.BlemburgCitadel:
+                case LevelID.BlemburgCitadel:
                     return gameSettings.BlemburgCitadelSceneName;
-                case LevelNameEnum.DarkTower:
+                case LevelID.DarkTower:
                     return gameSettings.DarkTowerSceneName;
-                case LevelNameEnum.RinfretVillage:
+                case LevelID.RinfretVillage:
                     return gameSettings.RinfretVillageSceneName;
-                case LevelNameEnum.TulipValley:
+                case LevelID.TulipValley:
                     return gameSettings.TulipValleySceneName;
-                case LevelNameEnum.Morktress:
+                case LevelID.Morktress:
                     return gameSettings.MorktressSceneName;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(levelNameEnum), levelNameEnum, null);
+                    throw new ArgumentOutOfRangeException(nameof(levelID), levelID, null);
             }
         }
-        public enum LevelNameEnum
-        {
-            SnowyPeaks,
-            Jimsterburg,
-            ParabeneForest,
-            BlemburgCitadel,
-            DarkTower,
-            RinfretVillage,
-            TulipValley,
-            Morktress
-        }
+        #endregion LevelName-related Functions
     }
 }

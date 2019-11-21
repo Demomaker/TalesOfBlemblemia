@@ -6,12 +6,15 @@ using Debug = System.Diagnostics.Debug;
 namespace Game
 {
     /// <summary>
-    /// Manages the sounds and music of the game
+    /// Manages the audio of the game
     /// Author : Mike Bédard
     /// </summary>
     public class AudioManager : MonoBehaviour
     {
+        #region Serialized Fields
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
+        #endregion Serialized Fields
+        #region Other Fields
         private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
@@ -37,6 +40,7 @@ namespace Game
         private OnMainVolumeChange onMainVolumeChange;
         private OnMusicVolumeChange onMusicVolumeChange;
         private OnSFXVolumeChange onSFXVolumeChange;
+        #endregion Other Fields
         #region Unity Event Functions
         private void Awake ()
         {
@@ -50,7 +54,7 @@ namespace Game
 
             InitializeEventChannels();
             audioClips = Finder.AudioClips;
-            if(audioClips == null) audioClips = new NullAudioClips();
+            if(audioClips == null) audioClips = new AudioClips();
         }
 
         private void OnEnable()
