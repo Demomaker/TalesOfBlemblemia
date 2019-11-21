@@ -15,6 +15,8 @@ namespace Game
         public string Name => name;
         public List<Unit> OwnedUnits => ownedUnits;
 
+        
+        
         public bool HasNoMorePlayableUnits
         {
             get

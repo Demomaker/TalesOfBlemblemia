@@ -3,8 +3,9 @@
     //Author: Jérémie Bertrand
     public enum PlayerType 
     {
-        None = 0,
+        Recruitable = 0,
         Ally = 1,
-        Enemy = 2
+        Enemy = 2,
+        None = 3
     }
 }
