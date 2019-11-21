@@ -192,7 +192,7 @@ namespace Game
         //Used to play single sound clips.
         private void PlaySFX(AudioClip clip, Vector2 position = new Vector2())
         {
-            if (audioClips is NullAudioClips) return;
+            if (audioClips is null) return;
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
             {
                 if (sfxSources[i].isPlaying == false)
@@ -213,7 +213,7 @@ namespace Game
         //Used to play music clips
         private void PlayMusic(AudioClip clip)
         {
-            if (audioClips is NullAudioClips) return;
+            if (audioClips is null) return;
             StopCurrentMusic();
             
             //Set the clip of our musicSource audio source to the clip passed in as a parameter.
