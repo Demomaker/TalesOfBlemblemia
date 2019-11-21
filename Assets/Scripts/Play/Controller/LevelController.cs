@@ -201,7 +201,8 @@ namespace Game
         private void CreatePointToAchievePointingArrow()
         {
             var pointingArrowTransformOffset = new Vector2(0.5f, 0.5f);
-            GameObject pointingArrow = (GameObject)GameObject.Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity);
+            GameObject pointingArrow = (GameObject)GameObject.Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity, transform);
+            pointingArrow.transform.SetParent(null);
             pointingArrow.GetComponent<PointingArrow>().SetTransformToPointPosition(new Vector3(pointToAchieve.x + pointingArrowTransformOffset.x, pointToAchieve.y + pointingArrowTransformOffset.y, 0));
         }
 
