@@ -38,8 +38,10 @@ namespace Game
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
         #endregion Serialized Fields
-        #region Other Fields
+        #region ReadOnly Fields
         private readonly List<UnitOwner> players = new List<UnitOwner>();
+        #endregion ReadOnly Fields
+        #region Other Fields
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
