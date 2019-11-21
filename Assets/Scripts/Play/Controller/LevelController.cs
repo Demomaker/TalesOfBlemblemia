@@ -65,7 +65,7 @@ namespace Game
         #endregion Other Fields
         #region Accessors
         private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
-        private bool PointAchieved => completeIfPointAchieved && 
+        private bool PointAchieved => completeIfPointAchieved &&
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile != null) &&
@@ -87,6 +87,7 @@ namespace Game
 
         public AudioClip BackgroundMusic => backgroundMusic;
         public CinematicController CinematicController => cinematicController;
+        public UnitOwner CurrentPlayer => currentPlayer;
 
         public bool PlayerUnitIsMovingOrAttacking
         {
@@ -151,8 +152,11 @@ namespace Game
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
             //TODO enlever ca avant la release
-            CheckForComputerTurnSkip();
-            CheckForPlayerTurnSkip();
+            if (!cinematicController.IsPlayingACinematic)
+            {
+                CheckForComputerTurnSkip();
+                CheckForPlayerTurnSkip();
+            }
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play(currentPlayer);
@@ -263,6 +267,7 @@ namespace Game
 
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
+
         /// <summary>
         /// Check for the player units defeated during the level and mark them as defeated in the player save if the difficulty
         /// is medium or hard. Resets the save of the player if Franklem was defeated.

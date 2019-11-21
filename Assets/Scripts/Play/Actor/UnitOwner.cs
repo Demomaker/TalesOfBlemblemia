@@ -17,7 +17,8 @@ namespace Game
         #endregion Other Fields
         #region Accessors
         public string Name => name;
-        public List<Unit> OwnedUnits => ownedUnits;public bool HasNoMorePlayableUnits
+        public List<Unit> OwnedUnits => ownedUnits;
+        public bool HasNoMorePlayableUnits
         {
             get
             {
