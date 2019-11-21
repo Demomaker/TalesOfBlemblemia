@@ -57,7 +57,7 @@ namespace Game
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
-        private EndGameCredits endGameCredits;
+        private EndGameCreditsController endGameCredits;
         
         private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
         private bool PointAchieved => completeIfPointAchieved &&
@@ -147,8 +147,12 @@ namespace Game
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
             //TODO enlever ca avant la release
-            CheckForComputerTurnSkip();
-            CheckForPlayerTurnSkip();
+            if (!cinematicController.IsPlayingACinematic)
+            {
+                CheckForComputerTurnSkip();
+                CheckForPlayerTurnSkip();
+            }
+            
             CheckForCurrentPlayerWin();
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();

@@ -97,7 +97,7 @@ namespace Game
         }
         public bool IsEnemy => playerType == PlayerType.Enemy;
         public bool IsPlayer => playerType == PlayerType.Ally;
-        public bool IsRecruitable => playerType == PlayerType.None;
+        public bool IsRecruitable => playerType == PlayerType.Recruitable;
         public UnitStats Stats => classStats + weapon.WeaponStats;
         public WeaponType WeaponType => weapon.WeaponType;
         public WeaponType WeaponAdvantage => weapon.Advantage;
