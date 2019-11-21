@@ -331,19 +331,28 @@ namespace Game
                 Rest();
             }
         }
+
+        private bool hasDiedOnce = false;
+        
         public override IEnumerator Die()
         {
-            GetComponent<Cinematic>()?.TriggerCinematic();
-            while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+            if (!hasDiedOnce)
             {
-                yield return null;
+                hasDiedOnce = true;
+                GetComponent<Cinematic>()?.TriggerCinematic();
+                while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
+                       Harmony.Finder.UIController.IsBattleReportActive)
+                {
+                    yield return null;
+                }
+
+                isGoingToDie = true;
+                onUnitDeath.Publish(this);
+                if (playerType == PlayerType.Ally)
+                    onPlayerUnitLoss.Publish(this);
+                isGoingToDie = false;
+                yield return base.Die();
             }
-            isGoingToDie = true;
-            onUnitDeath.Publish(this);
-            if(playerType == PlayerType.Ally)
-                onPlayerUnitLoss.Publish(this);
-            isGoingToDie = false;
-            yield return base.Die();
         }
         #endregion
         

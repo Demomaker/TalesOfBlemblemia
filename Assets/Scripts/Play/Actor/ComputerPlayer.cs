@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Game
@@ -60,17 +61,24 @@ namespace Game
                 while (uiController.IsBattleReportActive)
                 {
                     yield return null;
-                } 
-                currentUnit = ownedUnits[dynamicUnitCounter];
+                }
+
+                try
+                {
+                    currentUnit = ownedUnits[dynamicUnitCounter];
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
                 
                 if (!currentUnit.HasActed)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     
-                    while (!currentUnit.HasActed)
-                    {
-                        yield return currentUnit.MoveByAction(action);
-                    }
+                    yield return currentUnit.MoveByAction(action);
+                    
                 }
             }
         }
