@@ -54,7 +54,7 @@ namespace Game
 
             InitializeEventChannels();
             audioClips = Finder.AudioClips;
-            if(audioClips == null) audioClips = new NullAudioClips();
+            if(audioClips == null) audioClips = new AudioClips();
         }
 
         private void OnEnable()
