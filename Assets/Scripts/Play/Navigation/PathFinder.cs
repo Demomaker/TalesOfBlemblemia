@@ -126,7 +126,9 @@ namespace Game
                 
                 return currentPath;
             }
-            return FindPath(grid, movementCosts, new List<Tile>(), from, to, unit);
+
+            List<Tile> path = new List<Tile>();
+            return FindPath(grid, movementCosts, path , from, to, unit);
         }
 
         private static List<Tile> ChooseTarget(int[,] movementCosts, List<List<Tile>> possiblePaths, List<Tile> currentPath)
@@ -340,7 +342,10 @@ namespace Game
             Unit unit
         )
         {
-            List <Tile> pathInOrder = FindPath(grid, ComputeCost(from, unit.IsEnemy), new List<Tile>(), from, to, unit);
+            int[,] moveCosts = ComputeCost(from, unit.IsEnemy);
+            List<Tile> currentPath = new List<Tile>();
+            
+            List <Tile> pathInOrder = FindPath(grid, moveCosts , currentPath, from, to, unit);
             if (path != null)
                 pathInOrder.Reverse();
             return pathInOrder;
