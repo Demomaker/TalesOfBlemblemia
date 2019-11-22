@@ -15,13 +15,15 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
+        #region Constants
         private const string PROTAGONIST_NAME = "Franklem";
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const string PLAYER_TURN_INFO = "Player";
         private const string ENEMY_TURN_INFO = "Enemy";
         private const int CREDITS_DURATION = 20;
-        
+        #endregion Constants
+        #region Serialized Fields
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private string customObjectiveMessage = null;
@@ -35,9 +37,11 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
-        
+        #endregion Serialized Fields
+        #region ReadOnly Fields
         private readonly List<UnitOwner> players = new List<UnitOwner>();
-        
+        #endregion ReadOnly Fields
+        #region Other Fields
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
@@ -58,7 +62,8 @@ namespace Game
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
-        
+        #endregion Other Fields
+        #region Accessors
         private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
         private bool PointAchieved => completeIfPointAchieved &&
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
@@ -96,7 +101,7 @@ namespace Game
                 return playerUnitIsMovingOrAttacking;
             }
         }
-
+        #endregion Accessors
         #region Unity Event Functions
         private void Awake()
         {
@@ -152,8 +157,6 @@ namespace Game
                 CheckForComputerTurnSkip();
                 CheckForPlayerTurnSkip();
             }
-            
-            CheckForCurrentPlayerWin();
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play(currentPlayer);
@@ -240,9 +243,7 @@ namespace Game
 
             GiveUnits(units, player1, player2);
 
-            player1.UpdateNumberOfStartingOwnedUnits();
             player1.OnNewLevel();
-            player2.OnNewLevel();
             
             players.Add(player1);
             players.Add(player2);
@@ -387,19 +388,11 @@ namespace Game
             }
         }
 
-        private void CheckForCurrentPlayerWin()
-        {
-            if (HasWon(currentPlayer))
-            {
-                currentPlayer.Win();
-            }
-        }
 
         private void CheckForCurrentPlayerLoss()
         {
             if (!currentPlayer.HaveAllUnitsDied()) return;
             currentPlayer.Lose();
-            var playerWhoLost = currentPlayer;
             GiveTurnToNextPlayer();
         }
 

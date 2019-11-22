@@ -8,15 +8,16 @@ namespace Game
     /// </summary>
     public class UnitOwner
     {
+        #region ReadOnly Fields
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
-        protected int numberOfStartingOwnedUnits;
+        #endregion ReadOnly Fields
+        #region Other Fields
         private string name = "";
+        #endregion Other Fields
+        #region Accessors
         public string Name => name;
         public List<Unit> OwnedUnits => ownedUnits;
-
-        
-        
         public bool HasNoMorePlayableUnits
         {
             get
@@ -34,26 +35,25 @@ namespace Game
 
         public bool HasLost { get; set; }
 
-        public void RemoveDeadUnits()
+        public int RemoveDeadUnits()
         {
+            int unitsRemoved = 0;
             for (int i = 0; i < ownedUnits.Count; i++)
             {
                 if (ownedUnits[i].NoHealthLeft)
                 {
                     RemoveOwnedUnit(ownedUnits[i]);
+                    unitsRemoved++;
                 }
             }
+            return unitsRemoved;
         }
-
+        #endregion Accessors
+        #region UnitOwner-related Functions
         public void Lose()
         {
             MakeOwnedUnitsUnplayable();
             HasLost = true;
-        }
-
-        public virtual void Win()
-        {
-            //TODO: Remove or to be completed
         }
 
         public void MakeOwnedUnitsUnplayable()
@@ -87,11 +87,6 @@ namespace Game
             ownedUnits.Add(unit);
         }
 
-        public void UpdateNumberOfStartingOwnedUnits()
-        {
-            numberOfStartingOwnedUnits = ownedUnits.Count;
-        }
-
         public virtual void RemoveOwnedUnit(Unit unit)
         {
             unit.HasActed = true;
@@ -105,10 +100,6 @@ namespace Game
         {
             enemyUnits.Add(enemy);
         }
-
-        public virtual void OnNewLevel()
-        {
-            //Nothing to do on purpose
-        }
+        #endregion UnitOwner-related Functions
     }
 }
