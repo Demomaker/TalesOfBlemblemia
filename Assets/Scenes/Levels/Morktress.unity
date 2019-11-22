@@ -12650,6 +12650,11 @@ PrefabInstance:
       propertyPath: initialPosition.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7098078026787903970, guid: 6dbe32c1b0afbc04f96f189ab398b277,
+        type: 3}
+      propertyPath: canCritOnEverybody
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3505995741242016081, guid: 6dbe32c1b0afbc04f96f189ab398b277,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -64261,6 +64266,11 @@ PrefabInstance:
         type: 3}
       propertyPath: initialPosition.y
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 21817845905552890, guid: 386cff33803d9e742ab386963032c720,
+        type: 3}
+      propertyPath: isImmuneToCrits
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7396827236966625451, guid: 386cff33803d9e742ab386963032c720,
         type: 3}

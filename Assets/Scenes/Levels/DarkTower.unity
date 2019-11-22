@@ -92646,6 +92646,11 @@ PrefabInstance:
       propertyPath: initialPosition.y
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 21817845905552890, guid: 386cff33803d9e742ab386963032c720,
+        type: 3}
+      propertyPath: isImmuneToCrits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7396827236966625451, guid: 386cff33803d9e742ab386963032c720,
         type: 3}
       propertyPath: m_AnchorMin.y
