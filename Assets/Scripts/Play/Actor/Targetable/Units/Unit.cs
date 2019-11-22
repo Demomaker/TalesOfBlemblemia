@@ -17,6 +17,7 @@ namespace Game
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
         [SerializeField] private UnitGender gender;
+        [SerializeField] private int detectionRadius;
         
         #endregion
         
@@ -35,6 +36,11 @@ namespace Game
 
         private UIController uiController;
         private LevelController levelController;
+        
+        /// <summary>
+        /// Determines if an ai unit has been triggered by a player unit entering it's radius
+        /// </summary>
+        private bool isAwake;
 
         /// <summary>
         /// Array representing the movement cost needed to move to every tile on the grid
@@ -75,7 +81,22 @@ namespace Game
                 return maxGain;
             }
         }
-        
+        public int DetectionRadius => detectionRadius;
+        /// <summary>
+        /// Once a unit is awake, it cannot go back to sleep
+        /// </summary>
+        public bool IsAwake
+        {
+            get => isAwake;
+            set
+            {
+                if (isAwake != true)
+                {
+                    isAwake = value;
+                }
+            }
+        }
+
         public bool IsMoving => isMoving;
         public bool IsAttacking => isAttacking;
         public int[,] MovementCosts

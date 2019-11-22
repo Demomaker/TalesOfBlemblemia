@@ -40,26 +40,6 @@ namespace Game
         
         public IEnumerator PlayUnits()
         {
-            //TODO les unités qui meurent altèrent la liste du foreach et font crasher si une unité meurt pendant sont tour
-            /*foreach (var unit in ownedUnits)
-            {
-                var uiController = Harmony.Finder.UIController;
-                while (uiController.IsBattleReportActive)
-                {
-                    yield return null;
-                } 
-                
-                var currentUnit = unit;
-                if (!currentUnit.HasActed)
-                {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
-                    while (!currentUnit.HasActed)
-                    {
-                        yield return currentUnit.MoveByAction(action);
-                    }
-                    base.CheckUnitDeaths();
-                }
-            }*/
             for (int i = 0; i < ownedUnits.Count; i++)
             {
                 var uiController = Harmony.Finder.UIController;
