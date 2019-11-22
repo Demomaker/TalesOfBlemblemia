@@ -9,6 +9,7 @@ namespace Game
     public class HumanPlayer : UnitOwner
     {
 
+        private const string HUMAN_PLAYER_NAME = "Player";
         private bool hasEverLostAUnit = false;
         private bool hasLostAUnitInCurrentLevel = false;
         private int numberOfRecruitedUnitsFromAlternativePath = 0;
@@ -31,6 +32,11 @@ namespace Game
                 return instance;
             }
         }
+        
+        private HumanPlayer()
+        {
+            name = HUMAN_PLAYER_NAME;
+        }
 
         public override void RemoveOwnedUnit(Unit unit)
         {
@@ -45,11 +51,5 @@ namespace Game
         {
             hasLostAUnitInCurrentLevel = false;
         }
-
-        private HumanPlayer()
-        {
-        }
-        
-        
     }
 }

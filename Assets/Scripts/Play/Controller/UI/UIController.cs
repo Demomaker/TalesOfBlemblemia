@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Harmony;
 using JetBrains.Annotations;
 using TMPro;
@@ -19,8 +20,7 @@ namespace Game
         private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
         
         [Header("Canvas")] [SerializeField] private Canvas canvas;
-        [Header("TileInfo")] 
-        [SerializeField] private TMP_Text tileType;
+        [Header("TileInfo")]
         [SerializeField] private TMP_Text tileDefense;
         [SerializeField] private TMP_Text tileMouvementEffect;
         [SerializeField] private Image tileTexture;
@@ -28,8 +28,7 @@ namespace Game
         [Header("Turn")] 
         [SerializeField] private TMP_Text turnCounter;
         [SerializeField] private TMP_Text turnInfo;
-        [SerializeField] private Image playerTurnsLeftBackground;
-        [SerializeField] private Image playerTurnsRightBackground;
+        [SerializeField] private Animator playerInfoAnimator;
 
         [Header("Victory Condition")] [SerializeField] private TMP_Text victoryCondition;
 
@@ -46,14 +45,10 @@ namespace Game
         [SerializeField] private LayoutGroup enemyHealthBarLayout;
         [SerializeField] private GameObject enemyDeathSymbol;
 
-        [Header("Colors")] 
-        [SerializeField] private Color green;
-        [SerializeField] private Color red;
-        [SerializeField] private Color grey;
-
         private Animator playerAnimator;
         private Animator enemyAnimator;
         private static readonly int IS_ATTACKING = Animator.StringToHash("IsAttacking");
+        private static readonly int IS_ENEMY_TURN = Animator.StringToHash("IsEnemyTurn");
 
         private bool animationIsPlaying;
         private BattleInfos playerBattleInfos;
@@ -62,9 +57,16 @@ namespace Game
         private GameObject[] playerHealthBar;
         private GameObject[] enemyHealthBar;
 
+        private GameSettings gameSettings;
+
 
         public bool IsBattleReportActive => battleReports.activeSelf;
-        
+
+        private void Awake()
+        {
+            gameSettings = Harmony.Finder.GameSettings;
+        }
+
         private void Start()
         {
             playerHealthBar = playerHealthBarLayout.Children();
@@ -102,7 +104,7 @@ namespace Game
             for (int i = 0; i < currentHealthPoint; i++)
             {
                 RawImage healthBarImage = healthBar[i].GetComponentInChildren<RawImage>();
-                healthBarImage.color = green;
+                healthBarImage.color = gameSettings.Green;
             }
             
             for (int i = maxHealthPoints; i > currentHealthPoint; i--)
@@ -110,7 +112,7 @@ namespace Game
                 if (i - 1 < 0) continue;
                 RawImage healthBarImage;
                 healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                healthBarImage.color = grey;
+                healthBarImage.color = gameSettings.Grey;
 
             }
 
@@ -120,7 +122,7 @@ namespace Game
                 {
                     if (i <= 0) break;
                     RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                    healthBarImage.color = red;
+                    healthBarImage.color = gameSettings.Red;
                 }
             }
         }
@@ -214,32 +216,44 @@ namespace Game
 
         public void ModifyPlayerUi(Tile tile)
         {
-            tileType.text = tile.TileType.ToString();
-            tileDefense.text = (tile.DefenseRate * 100) + "%";
+            tileDefense.text = tile.DefenseRate * 100 + "%";
             tileMouvementEffect.text = tile.CostToMove.ToString();
-            if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
+            if (tileMouvementEffect.text == int.MaxValue.ToString())
+            {
+                tileMouvementEffect.color = gameSettings.DarkRed;
+                tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
+            }
+            else if (tileMouvementEffect.text == "1")
+            {
+                tileMouvementEffect.color = gameSettings.DarkGreen;
+            }
+            else
+            {
+                tileMouvementEffect.color = gameSettings.DarkYellow;
+            }
+            
+            if (tile.DefenseRate > .3)
+            {
+                tileDefense.color = gameSettings.DarkGreen;
+            }
+            else if (tile.DefenseRate > .1)
+            {
+                tileDefense.color = gameSettings.DarkYellow;
+            }
+            else
+            {
+                tileDefense.color = gameSettings.DarkRed;
+            }
+            
 
             tileTexture.sprite = tile.GetSprite();
         }
 
-        public void ModifyTurnCounter(int turns)
+        public void ModifyTurnInfo(UnitOwner player, int turns)
         {
+            turnInfo.text = player.Name;
+            playerInfoAnimator.SetBool(IS_ENEMY_TURN, player is ComputerPlayer);
             turnCounter.text = TURN_DISPLAY_TEXT + turns.ToString(TURN_FORMAT_TEXT);
-        }
-
-        public void ModifyTurnInfo(string player)
-        {
-            turnInfo.text = player;
-            if (player == "Player")
-            {
-                playerTurnsLeftBackground.color = green;
-                playerTurnsRightBackground.color = green;
-            }
-            else
-            {
-                playerTurnsLeftBackground.color = red;
-                playerTurnsRightBackground.color = red;
-            }
         }
 
         public void ModifyVictoryCondition(string victoryCondition)

@@ -9,6 +9,7 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
+        private const string COMPUTER_PLAYER_NAME = "Enemy";
         private static ComputerPlayer instance = null;
         private List<Targetable> targetsToDestroy;
 
@@ -26,7 +27,8 @@ namespace Game
 
         private ComputerPlayer()
         {
-            targetsToDestroy = new List<Targetable>();  
+            targetsToDestroy = new List<Targetable>(); 
+            name = COMPUTER_PLAYER_NAME;
         }
 
         public void AddTarget(Targetable target)

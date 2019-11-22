@@ -20,11 +20,13 @@ namespace Game
 
         private Unit unit;
         private Canvas canvas;
+        private GameSettings gameSettings;
 
         private void Awake()
         {
             unit = transform.root.GetComponent<Unit>();
             canvas = GetComponent<Canvas>();
+            gameSettings = Harmony.Finder.GameSettings;
         }
 
         private void Start()
@@ -51,14 +53,14 @@ namespace Game
             {
                 for (int i = 0; i < nameBackground.Length; i++)
                 {
-                    nameBackground[i].color = Color.red;
+                    nameBackground[i].color = gameSettings.Red;
                 }
             }
             else
             {
                 for (int i = 0; i < nameBackground.Length; i++)
                 {
-                    nameBackground[i].color = Color.green;
+                    nameBackground[i].color = gameSettings.Green;
                 }
             }
             attackText.text = unit.Stats.AttackStrength.ToString();

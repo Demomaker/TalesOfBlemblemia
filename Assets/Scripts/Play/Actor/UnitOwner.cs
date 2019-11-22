@@ -10,8 +10,7 @@ namespace Game
     {
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
-        protected int numberOfStartingOwnedUnits;
-        private string name = "";
+        protected string name;
         public string Name => name;
         public List<Unit> OwnedUnits => ownedUnits;
 
@@ -83,11 +82,6 @@ namespace Game
         public void AddOwnedUnit(Unit unit)
         {
             ownedUnits.Add(unit);
-        }
-
-        public void UpdateNumberOfStartingOwnedUnits()
-        {
-            numberOfStartingOwnedUnits = ownedUnits.Count;
         }
 
         public virtual void RemoveOwnedUnit(Unit unit)

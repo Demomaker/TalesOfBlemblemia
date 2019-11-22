@@ -32,6 +32,14 @@ namespace Game
         [SerializeField] private R.E.Scene overworldScene;
         [SerializeField] private R.E.Scene mainmenuScene;
         [SerializeField] private R.E.Scene startingLevelScene;
+        
+        [Header("Colors")] 
+        [SerializeField] private Color green;
+        [SerializeField] private Color red;
+        [SerializeField] private Color grey;
+        [SerializeField] private Color darkGreen;
+        [SerializeField] private Color darkYellow;
+        [SerializeField] private Color darkRed;
 
         [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
         [SerializeField] private int saveSlotTwo = 2;
@@ -94,6 +102,14 @@ namespace Game
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
         public string StartingLevelSceneName => startingLevelScene.ToString();
+
+
+        public Color Green => green;
+        public Color Red => red;
+        public Color Grey => grey;
+        public Color DarkGreen => darkGreen;
+        public Color DarkYellow => darkYellow;
+        public Color DarkRed => darkRed;
 
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;

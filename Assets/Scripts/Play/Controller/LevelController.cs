@@ -18,8 +18,6 @@ namespace Game
         private const string PROTAGONIST_NAME = "Franklem";
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
-        private const string PLAYER_TURN_INFO = "Player";
-        private const string ENEMY_TURN_INFO = "Enemy";
         private const int CREDITS_DURATION = 20;
         
         [SerializeField] private AudioClip backgroundMusic;
@@ -233,8 +231,7 @@ namespace Game
             units = FindObjectsOfType<Unit>();
 
             GiveUnits(units, player1, player2);
-
-            player1.UpdateNumberOfStartingOwnedUnits();
+            
             player1.OnNewLevel();
             player2.OnNewLevel();
             
@@ -295,14 +292,8 @@ namespace Game
             if (currentPlayer is HumanPlayer)
             {
                 numberOfPlayerTurns++;
-                uiController.ModifyTurnInfo(PLAYER_TURN_INFO);
             }
-            else
-            {
-                uiController.ModifyTurnInfo(ENEMY_TURN_INFO);
-            }
-            uiController.ModifyTurnCounter(numberOfPlayerTurns);
-            
+            uiController.ModifyTurnInfo(currentPlayer, numberOfPlayerTurns);
             currentPlayer.OnTurnGiven();
         }
 
