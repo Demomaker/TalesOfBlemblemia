@@ -232,7 +232,7 @@ namespace Game
                 tileMouvementEffect.color = gameSettings.DarkYellow;
             }
             
-            if (tile.DefenseRate > .3)
+            if (tile.DefenseRate >= .3)
             {
                 tileDefense.color = gameSettings.DarkGreen;
             }
@@ -248,12 +248,16 @@ namespace Game
 
             tileTexture.sprite = tile.GetSprite();
         }
+        
+        public void ModifyTurnCounter(int turns)
+        {
+            turnCounter.text = TURN_DISPLAY_TEXT + turns.ToString(TURN_FORMAT_TEXT);
+        }
 
-        public void ModifyTurnInfo(UnitOwner player, int turns)
+        public void ModifyTurnInfo(UnitOwner player)
         {
             turnInfo.text = player.Name;
             playerInfoAnimator.SetBool(IS_ENEMY_TURN, player is ComputerPlayer);
-            turnCounter.text = TURN_DISPLAY_TEXT + turns.ToString(TURN_FORMAT_TEXT);
         }
 
         public void ModifyVictoryCondition(string victoryCondition)

@@ -293,7 +293,8 @@ namespace Game
             {
                 numberOfPlayerTurns++;
             }
-            uiController.ModifyTurnInfo(currentPlayer, numberOfPlayerTurns);
+            uiController.ModifyTurnInfo(currentPlayer);
+            uiController.ModifyTurnCounter(numberOfPlayerTurns);
             currentPlayer.OnTurnGiven();
         }
 

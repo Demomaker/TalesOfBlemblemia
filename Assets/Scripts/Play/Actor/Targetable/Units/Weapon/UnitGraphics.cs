@@ -33,6 +33,7 @@ namespace Game
         {
             DisableUnitGraphics();
             nameText.text = unit.UnitInfos.characterName;
+            
             switch (unit.WeaponType)
             {
                 case WeaponType.Axe:
@@ -48,21 +49,12 @@ namespace Game
                     attackIcon.sprite = healingStaffSprite;
                     break;
             }
-
-            if (unit.IsEnemy)
+            
+            foreach (var image in nameBackground)
             {
-                for (int i = 0; i < nameBackground.Length; i++)
-                {
-                    nameBackground[i].color = gameSettings.Red;
-                }
+                image.color = unit.IsEnemy ? gameSettings.Red : gameSettings.Green;
             }
-            else
-            {
-                for (int i = 0; i < nameBackground.Length; i++)
-                {
-                    nameBackground[i].color = gameSettings.Green;
-                }
-            }
+            
             attackText.text = unit.Stats.AttackStrength.ToString();
         }
 
