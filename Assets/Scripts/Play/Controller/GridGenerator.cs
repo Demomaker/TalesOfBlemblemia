@@ -10,6 +10,7 @@ namespace Game
     /// </summary>
     public class GridGenerator : MonoBehaviour
     {
+        #region Serialized Fields
         [SerializeField] private Vector2Int size;
         [Header("Prefabs")] [SerializeField] private GameObject emptyCellPrefab = null;
         [SerializeField] private GameObject forestCellPrefab = null;
@@ -23,7 +24,8 @@ namespace Game
         [Header("Tilemap")] [SerializeField] private Tilemap interactiveTilemap = null;
         [SerializeField] private Tilemap backgroundTilemap = null;
         [SerializeField] private Tilemap tilemapOfTileToIncludeIfEmptyTile;
-
+        #endregion Serialized Fields
+        #region Grid-generating Functions
         public void CreateGridCells()
         {
             BoundsInt bounds = new BoundsInt(Vector3Int.zero,  new Vector3Int(size.x, size.y, 1));
@@ -84,6 +86,7 @@ namespace Game
             ClearGrid();
             CreateGridCells();
         }
+        #endregion Grid-generating Functions
     }
 }
     

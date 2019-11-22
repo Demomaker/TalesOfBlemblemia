@@ -10,10 +10,12 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
+        #region Fields
         private static ComputerPlayer instance = null;
         private List<Targetable> targetsToDestroy;
         private OnUnitDeath onUnitDeath;
-
+        #endregion Fields
+        #region Accessors
         public static ComputerPlayer Instance
         {
             get
@@ -25,13 +27,16 @@ namespace Game
                 return instance;
             }
         }
-
+        #endregion Accessors
+        #region Constructors
         private ComputerPlayer()
         {
             targetsToDestroy = new List<Targetable>();
             onUnitDeath = Harmony.Finder.OnUnitDeath;
             onUnitDeath.Notify += OnUnitDeath;
         }
+        #endregion Constructors
+        #region ComputerPlayer-related Functions
 
         
         public void AddTarget(Targetable target)
@@ -82,5 +87,6 @@ namespace Game
                 }
             }
         }
+        #endregion ComputerPlayer-related Functions
     }
 }

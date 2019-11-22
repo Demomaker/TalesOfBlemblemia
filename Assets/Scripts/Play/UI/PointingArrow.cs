@@ -5,9 +5,13 @@ using Game;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+/// <summary>
+/// Makes an arrow point to a specific transform to indicate a place to go to or click
+/// Author : Mike Bédard
+/// </summary>
 public class PointingArrow : MonoBehaviour
 {
-    private static Vector3 nullVector3 = new Vector3(-1,-1,-1);
+    #region Serialized Fields
     [SerializeField] private Unit unitToAttack;
     [SerializeField] private Unit unitToMove;
     [SerializeField] private Vector3 specificUnitMovePosition = nullVector3;
@@ -18,6 +22,9 @@ public class PointingArrow : MonoBehaviour
     [SerializeField] private PointingArrow nextArrowToActivate = null;
     [SerializeField] private Cinematic cinematicToTriggerOnStop = null;
     [SerializeField] private Cinematic cinematicToTriggerOnStart = null;
+    #endregion Serialized Fields
+    #region Other Fields
+    private static Vector3 nullVector3 = new Vector3(-1,-1,-1);
     private float yPositionDifference = 0;
     private YDirection yDirection;
     private OnHurt onHurt;
@@ -25,7 +32,8 @@ public class PointingArrow : MonoBehaviour
     private OnUnitDeath onUnitDeath;
     private OnUnitMove onUnitMove;
     private Vector3 transformToPointPosition;
-
+    #endregion Other Fields
+    #region Unity Event Functions
     private void Awake()
     {
         yDirection = startingYDirection;
@@ -55,7 +63,13 @@ public class PointingArrow : MonoBehaviour
         onUnitDeath.Notify -= UnitToAttackWasAttacked;
         onUnitMove.Notify -= UnitToMoveWasMoved;
     }
-
+    
+    private void Update()
+    {
+        DoPointingMovement();
+    }
+    #endregion Unity Event Functions
+    #region Pointing-related Functions
     public void OnStopEvent()
     {
         if(gameObject.activeSelf)
@@ -86,11 +100,6 @@ public class PointingArrow : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        DoPointingMovement();
-    }
 
     private void StopPointing()
     {
@@ -128,10 +137,5 @@ public class PointingArrow : MonoBehaviour
         if(transformToPointPosition != nullVector3)
         transform.position = transformToPointPosition + new Vector3(0,GetComponent<SpriteRenderer>().size.y,0) + transform.up * yPositionDifference;
     }
-
-    private enum YDirection
-    {
-        Up,
-        Down
-    }
+    #endregion Pointing-related Functions
 }
