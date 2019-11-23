@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game
@@ -16,8 +15,7 @@ namespace Game
         [SerializeField] private UnitInfos unitInfos;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
-        [SerializeField] private UnitGender gender;
-        
+
         #endregion
         
         #region Fields
@@ -125,8 +123,6 @@ namespace Game
             }
         }
         public int AttackRange => 1;
-
-        public UnitGender Gender => gender;
 
         public UnitInfos UnitInfos => unitInfos;
 

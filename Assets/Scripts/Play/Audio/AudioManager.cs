@@ -238,7 +238,7 @@ namespace Game
 
         private void PlayAttackSound(Unit unit)
         {
-            switch (unit.Gender)
+            switch (unit.UnitInfos.Gender)
             {
                 case UnitGender.Male :
                     PlaySFX(audioClips.MaleAttackSound, unit.transform.position);

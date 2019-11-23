@@ -32,7 +32,34 @@ namespace Game
         private void Start()
         {
             DisableUnitGraphics();
-            nameText.text = unit.UnitInfos.characterName;
+            InitUnitInfos();
+        }
+
+        private void OnMouseEnter()
+        {
+            UpdateUnitInfos();
+            EnableUnitGraphics();
+        }
+
+        protected void OnMouseExit()
+        {
+            DisableUnitGraphics();
+        }
+
+        private void EnableUnitGraphics()
+        {
+            if (canvas != null) canvas.enabled = true;
+        }
+
+        private void DisableUnitGraphics()
+        {
+            if (canvas != null) canvas.enabled = false;
+        }
+
+        private void InitUnitInfos()
+        {
+            nameText.text = unit.UnitInfos.CharacterName;
+            attackText.text = unit.Stats.AttackStrength.ToString();
             
             switch (unit.WeaponType)
             {
@@ -54,30 +81,12 @@ namespace Game
             {
                 image.color = unit.IsEnemy ? gameSettings.Red : gameSettings.Green;
             }
-            
-            attackText.text = unit.Stats.AttackStrength.ToString();
         }
 
-        private void OnMouseEnter()
-        {
-            EnableUnitGraphics();
-        }
-
-        protected void OnMouseExit()
-        {
-            DisableUnitGraphics();
-        }
-
-        private void EnableUnitGraphics()
+        private void UpdateUnitInfos()
         {
             movementText.text = unit.MovesLeft.ToString();
             healthText.text = unit.CurrentHealthPoints.ToString();
-            if (canvas != null) canvas.enabled = true;
-        }
-
-        private void DisableUnitGraphics()
-        {
-            if (canvas != null) canvas.enabled = false;
         }
     }
 }
