@@ -214,41 +214,6 @@ namespace Game
             battleReports.SetActive(false);
         }
 
-        public void ModifyPlayerUi(Tile tile)
-        {
-            tileDefense.text = tile.DefenseRate * 100 + "%";
-            tileMouvementEffect.text = tile.CostToMove.ToString();
-            if (tileMouvementEffect.text == int.MaxValue.ToString())
-            {
-                tileMouvementEffect.color = gameSettings.DarkRed;
-                tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
-            }
-            else if (tileMouvementEffect.text == "1")
-            {
-                tileMouvementEffect.color = gameSettings.DarkGreen;
-            }
-            else
-            {
-                tileMouvementEffect.color = gameSettings.DarkYellow;
-            }
-            
-            if (tile.DefenseRate >= .3)
-            {
-                tileDefense.color = gameSettings.DarkGreen;
-            }
-            else if (tile.DefenseRate > .1)
-            {
-                tileDefense.color = gameSettings.DarkYellow;
-            }
-            else
-            {
-                tileDefense.color = gameSettings.DarkRed;
-            }
-            
-
-            tileTexture.sprite = tile.GetSprite();
-        }
-        
         public void ModifyTurnCounter(int turns)
         {
             turnCounter.text = TURN_DISPLAY_TEXT + turns.ToString(TURN_FORMAT_TEXT);
@@ -263,6 +228,52 @@ namespace Game
         public void ModifyVictoryCondition(string victoryCondition)
         {
             this.victoryCondition.text = victoryCondition;
+        }
+        
+        public void UpdateTileInfos(Tile tile)
+        {
+            UpdateTileSprite(tile);
+            UpdateTileCostToMoveText(tile.CostToMove);
+            UpdateTileDefenseText(tile.DefenseRate);
+        }
+
+        private void UpdateTileSprite(Tile tile)
+        {
+            tileTexture.sprite = tile.GetSprite();
+        }
+
+        private void UpdateTileCostToMoveText(int costToMove)
+        {
+            switch (costToMove)
+            {
+                case TileTypeExt.LOW_COST_TO_MOVE:
+                    tileMouvementEffect.color = gameSettings.DarkGreen;
+                    break;
+                case TileTypeExt.MEDIUM_COST_TO_MOVE:
+                    tileMouvementEffect.color = gameSettings.DarkYellow;
+                    break;
+                case TileTypeExt.HIGH_COST_TO_MOVE:
+                    tileMouvementEffect.color = gameSettings.DarkRed;
+                    break;
+            }
+            tileMouvementEffect.text = costToMove == TileTypeExt.HIGH_COST_TO_MOVE ? UNREACHABLE_TILE_TEXT : costToMove.ToString();
+        }
+
+        private void UpdateTileDefenseText(float defenseRate)
+        {
+            switch (defenseRate)
+            {
+                case TileTypeExt.LOW_DEFENSE_RATE:
+                    tileDefense.color = gameSettings.DarkRed;
+                    break;
+                case TileTypeExt.MEDIUM_DEFENSE_RATE:
+                    tileDefense.color = gameSettings.DarkYellow;
+                    break;
+                case TileTypeExt.HIGH_DEFENSE_RATE:
+                    tileDefense.color = gameSettings.DarkGreen;
+                    break;
+            }
+            tileDefense.text = defenseRate * 100 + "%";
         }
     }
 }
