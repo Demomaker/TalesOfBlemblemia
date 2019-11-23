@@ -15,11 +15,13 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
+        #region Constants
         private const string PROTAGONIST_NAME = "Franklem";
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const int CREDITS_DURATION = 20;
-        
+        #endregion Constants
+        #region Serialized Fields
         [SerializeField] private AudioClip backgroundMusic;
         [SerializeField] private bool doNotEnd;
         [SerializeField] private string customObjectiveMessage = null;
@@ -33,9 +35,11 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
-        
+        #endregion Serialized Fields
+        #region ReadOnly Fields
         private readonly List<UnitOwner> players = new List<UnitOwner>();
-        
+        #endregion ReadOnly Fields
+        #region Other Fields
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
@@ -49,7 +53,6 @@ namespace Game
         private OnCampaignFailed onCampaignFailed;
         private UIController uiController;
         private LevelLoader levelLoader;
-
         private Unit[] units;
         private UnitOwner currentPlayer;
         private int numberOfPlayerTurns = 0;
@@ -57,8 +60,10 @@ namespace Game
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
+        #endregion Other Fields
+        #region Accessors
         private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
-        private bool PointAchieved => completeIfPointAchieved && 
+        private bool PointAchieved => completeIfPointAchieved &&
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() != null) &&
                                       (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile != null) &&
@@ -80,6 +85,7 @@ namespace Game
 
         public AudioClip BackgroundMusic => backgroundMusic;
         public CinematicController CinematicController => cinematicController;
+        public UnitOwner CurrentPlayer => currentPlayer;
 
         public bool PlayerUnitIsMovingOrAttacking
         {
@@ -93,7 +99,7 @@ namespace Game
                 return playerUnitIsMovingOrAttacking;
             }
         }
-
+        #endregion Accessors
         #region Unity Event Functions
         private void Awake()
         {
@@ -144,9 +150,11 @@ namespace Game
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
             
             //TODO enlever ca avant la release
-            CheckForComputerTurnSkip();
-            CheckForPlayerTurnSkip();
-            CheckForCurrentPlayerWin();
+            if (!cinematicController.IsPlayingACinematic)
+            {
+                CheckForComputerTurnSkip();
+                CheckForPlayerTurnSkip();
+            }
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play(currentPlayer);
@@ -231,9 +239,8 @@ namespace Game
             units = FindObjectsOfType<Unit>();
 
             GiveUnits(units, player1, player2);
-            
+
             player1.OnNewLevel();
-            player2.OnNewLevel();
             
             players.Add(player1);
             players.Add(player2);
@@ -258,6 +265,7 @@ namespace Game
 
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
+
         /// <summary>
         /// Check for the player units defeated during the level and mark them as defeated in the player save if the difficulty
         /// is medium or hard. Resets the save of the player if Franklem was defeated.
@@ -372,19 +380,11 @@ namespace Game
             }
         }
 
-        private void CheckForCurrentPlayerWin()
-        {
-            if (HasWon(currentPlayer))
-            {
-                currentPlayer.Win();
-            }
-        }
 
         private void CheckForCurrentPlayerLoss()
         {
             if (!currentPlayer.HaveAllUnitsDied()) return;
             currentPlayer.Lose();
-            var playerWhoLost = currentPlayer;
             GiveTurnToNextPlayer();
         }
 

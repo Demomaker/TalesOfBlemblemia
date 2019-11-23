@@ -8,11 +8,13 @@ namespace Game
     /// </summary>
     public class HumanPlayer : UnitOwner
     {
-
+        #region Fields
         private const string HUMAN_PLAYER_NAME = "Player";
         private bool hasEverLostAUnit = false;
         private bool hasLostAUnitInCurrentLevel = false;
         private int numberOfRecruitedUnitsFromAlternativePath = 0;
+        #endregion Fields
+        #region Accessors
         public bool HasEverLostAUnit => hasEverLostAUnit;
         public bool HasLostAUnitInCurrentLevel => hasLostAUnitInCurrentLevel;
         public int NumberOfUnits => ownedUnits.Count;
@@ -32,12 +34,19 @@ namespace Game
                 return instance;
             }
         }
-        
+        #endregion Accessors
+        #region Constructors
         private HumanPlayer()
         {
             name = HUMAN_PLAYER_NAME;
         }
-
+        #endregion Constructors
+        #region HumanPlayer-related Functions
+        public void OnNewLevel()
+        {
+            hasLostAUnitInCurrentLevel = false;
+        }
+        
         public override void RemoveOwnedUnit(Unit unit)
         {
             base.RemoveOwnedUnit(unit);
@@ -46,10 +55,6 @@ namespace Game
             
             defeatedUnits.Add(unit);
         }
-
-        public void OnNewLevel()
-        {
-            hasLostAUnitInCurrentLevel = false;
-        }
+        #endregion HumanPlayer-related Functions
     }
 }

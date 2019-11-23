@@ -29,7 +29,7 @@ namespace Game
         public void OnPointerClick(PointerEventData eventData)
         {
             //Player cannot play while a cinematic is playing or if another of its units is moving
-            if (tile == null || levelController.PlayerUnitIsMovingOrAttacking || levelController.CinematicController.IsPlayingACinematic) return;
+            if (tile == null || levelController.PlayerUnitIsMovingOrAttacking || levelController.CinematicController.IsPlayingACinematic || levelController.CurrentPlayer is ComputerPlayer) return;
             
             var gridController = Finder.GridController;
             ClickButton clickButton = ReadClick(eventData);

@@ -45,7 +45,7 @@ namespace Game
         {
             currentTile.UnlinkUnit();
             gameObject.SetActive(false);
-            yield break;
+            yield return null;
         }
 
         public virtual void Awake()
