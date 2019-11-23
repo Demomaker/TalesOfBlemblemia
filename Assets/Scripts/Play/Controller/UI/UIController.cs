@@ -232,14 +232,14 @@ namespace Game
         
         public void UpdateTileInfos(Tile tile)
         {
-            UpdateTileSprite(tile);
+            UpdateTileSprite(tile.GetSprite());
             UpdateTileCostToMoveText(tile.CostToMove);
             UpdateTileDefenseText(tile.DefenseRate);
         }
 
-        private void UpdateTileSprite(Tile tile)
+        private void UpdateTileSprite(Sprite tileSprite)
         {
-            tileTexture.sprite = tile.GetSprite();
+            tileTexture.sprite = tileSprite;
         }
 
         private void UpdateTileCostToMoveText(int costToMove)
