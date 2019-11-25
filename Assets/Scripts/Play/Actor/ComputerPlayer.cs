@@ -68,7 +68,7 @@ namespace Game
                 {
                     yield return null;
                 }
-
+                
                 currentUnit = ownedUnits[dynamicUnitCounter];
                 
                 if (!currentUnit.HasActed)
@@ -76,7 +76,6 @@ namespace Game
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     
                     yield return currentUnit.MoveByAction(action);
-                    
                 }
             }
         }
