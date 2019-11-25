@@ -32,9 +32,9 @@ namespace Game
         
         private void Start()
         {
-            int saveCounter = 0;
+            var saveCounter = 0;
 
-            SaveInfos[] saves = saveController.GetSaves();
+            var saves = saveController.GetSaves();
             
             foreach (var saveSlot in saveSlots)
             {

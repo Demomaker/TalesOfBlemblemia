@@ -18,6 +18,7 @@ namespace Game
         [SerializeField] private bool isImmuneToCrits;
         [SerializeField] private bool canCritOnEverybody;
         [SerializeField] private int detectionRadius;
+        [SerializeField] private Transform appearance;
         
         #endregion
         
@@ -35,8 +36,7 @@ namespace Game
         private GameSettings gameSettings;
 
         private UIController uiController;
-        private LevelController levelController;
-        
+
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
         /// </summary>
@@ -48,14 +48,13 @@ namespace Game
         private int[,] movementCosts;
         private int movesLeft;
         private int tileUpdateKeeper;
-        private bool isMoving = false;
-        private bool isAttacking = false;
-        private bool isDodging = false;
-        private bool isBeingHurt = false;
-        private bool isResting = false;
-        private bool isGoingToDie = false;
+        private bool isMoving;
+        private bool isAttacking;
+        private bool isDodging;
+        private bool isBeingHurt;
+        private bool isResting;
+        private bool isGoingToDie;
         private Animator animator;
-        private SpriteRenderer spriteRenderer;
 
         #endregion
         
@@ -129,20 +128,25 @@ namespace Game
             get => hasActed;
             set
             {
-                if (spriteRenderer != null)
-                {
-                    //if the character has now acted
+                //if the character has now acted
                     if (!hasActed && value)
                     {
-                        spriteRenderer.color = gameSettings.PaleAlpha;
+                       SpriteRenderer[] spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
+                       foreach (var spriteRenderer in spriteRenderers)
+                       {
+                           spriteRenderer.color = gameSettings.PaleAlpha;
+                       }
                     }
                     //if the character had previously acted but can now act
                     else if (hasActed && value == false)
                     {
-                        spriteRenderer.color = gameSettings.OpaqueAlpha;
+                        SpriteRenderer[] spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
+                        foreach (var spriteRenderer in spriteRenderers)
+                        {
+                            spriteRenderer.color = gameSettings.OpaqueAlpha;
+                        }
                     }
-                }
-                hasActed = value;
+                    hasActed = value;
             }
         }
         public int AttackRange => 1;
@@ -155,7 +159,6 @@ namespace Game
         {
             InitializeEvents();
             uiController = Harmony.Finder.UIController;
-            spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -163,7 +166,6 @@ namespace Game
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
             animator = GetComponent<Animator>();
-            levelController = Harmony.Finder.LevelController;
             gameSettings = Harmony.Finder.GameSettings;
             base.Awake();
         }
@@ -244,7 +246,15 @@ namespace Game
         
         private void LookAt(Vector3 target)
         {
-            gameObject.GetComponent<SpriteRenderer>().flipX = target.x < gameObject.transform.position.x;
+            int xModifier = 1;
+            if (target.x < appearance.transform.position.x)
+            {
+                xModifier = -1;
+            }
+            var localScale = appearance.localScale;
+            Vector2 scale = new Vector2(Math.Abs(localScale.x), localScale.y);
+            scale.x *= xModifier;
+            appearance.localScale = scale;
         }
 
         #region Movements
@@ -390,9 +400,9 @@ namespace Game
             if(target.GetType() == typeof(Unit))
             {
                 uiController.SetupCharactersBattleInfo(
-                    this.Stats.maxHealthPoints, 
+                    this.Stats.MaxHealthPoints, 
                     this.CurrentHealthPoints,
-                    ((Unit)target).classStats.maxHealthPoints,
+                    ((Unit)target).classStats.MaxHealthPoints,
                     target.CurrentHealthPoints, 
                     IsEnemy
                 );
