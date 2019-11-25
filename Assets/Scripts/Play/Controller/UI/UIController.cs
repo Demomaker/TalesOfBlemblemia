@@ -112,7 +112,7 @@ namespace Game
                 if (i - 1 < 0) continue;
                 RawImage healthBarImage;
                 healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                healthBarImage.color = gameSettings.Grey;
+                healthBarImage.color = gameSettings.Gray;
 
             }
 
