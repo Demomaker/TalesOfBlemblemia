@@ -1,18 +1,15 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Game
 {
     /// <summary>
     /// Personalized clickable to detect if a tile has been clicked on
-    /// Author: Zacharie Lavigne
+    /// Author: Zacharie Lavigne, Jérémie Bertrand
     /// </summary>
     public class ClickableObject : MonoBehaviour, IPointerClickHandler
     {
         private Tile tile;
-        private UIController uiController;
         private LevelController levelController;
 
         private void Awake()
@@ -21,16 +18,11 @@ namespace Game
             tile = GetComponent<Tile>();
         }
 
-        private void Start()
-        {
-            uiController = Harmony.Finder.UIController;
-        }
-
         public void OnPointerClick(PointerEventData eventData)
         {
             //Player cannot play while a cinematic is playing or if another of its units is moving
             if (tile == null || levelController.PlayerUnitIsMovingOrAttacking || levelController.CinematicController.IsPlayingACinematic || levelController.CurrentPlayer is ComputerPlayer) return;
-
+            
             var gridController = Finder.GridController;
             ClickButton clickButton = ReadClick(eventData);
             EventSystem.current.SetSelectedGameObject(null);

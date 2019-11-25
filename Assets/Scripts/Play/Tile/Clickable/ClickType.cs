@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    //Author: Jérémie Bertrand
     public enum ClickType
     {
         Select,
