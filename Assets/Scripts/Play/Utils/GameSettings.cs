@@ -5,7 +5,7 @@ namespace Game
 {
     /// <summary>
     /// Game settings (Variables with constant values that are customizable for the game)
-    /// Author : Mike Bédard
+    /// Author : Mike Bédard, Antoine Lessard
     /// </summary>
     [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
@@ -69,6 +69,7 @@ namespace Game
         [SerializeField] private string isDodging = "IsDodging";
         [SerializeField] private string isResting = "IsResting";
         [SerializeField] [Header("Other")] private string nameString = "Name";
+        [SerializeField] private string descriptionString = "Description";
         [SerializeField] private string difficultyString = "Difficulty";
         [SerializeField] private string stageString = "Stage";
         [SerializeField] private bool defaultToggleValue = true;
@@ -76,6 +77,7 @@ namespace Game
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
+        [SerializeField] private string darkKnightName = "DarkKnight";
 
         private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
         private static readonly Color opaqueAlpha = new Color(1,1,1,1f);
@@ -137,6 +139,7 @@ namespace Game
         public string IsDodging => isDodging;
         public string IsResting => isResting;
         public string NameString => nameString;
+        public string DescriptionString => descriptionString;
         public string DifficultyString => difficultyString;
         public string StageString => stageString;
         public bool DefaultToggleValue => defaultToggleValue;
@@ -145,5 +148,6 @@ namespace Game
         public int Percent => percent;
         public string EmptyLevelString => emptyLevelString;
         public string AudioPath => audioPath;
+        public string DarkKnightName => darkKnightName;
     }
 }

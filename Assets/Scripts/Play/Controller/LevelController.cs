@@ -141,7 +141,20 @@ namespace Game
             
             ActivatePlayerUnits();
 
+            CheckForDarkKnight();
+            
             PrepareVictoryConditionForUI();
+        }
+
+        private void CheckForDarkKnight()
+        {
+            if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
+            {
+                if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
+                {
+                    ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
+                }
+            }
         }
 
         private void PrepareVictoryConditionForUI()

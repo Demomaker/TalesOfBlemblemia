@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Game.UI.Achievement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +7,7 @@ namespace Game
 {
     /// <summary>
     /// Controls the achievements and sends messages if achievements are completed
-    /// Author : Mike Bédard
+    /// Author : Mike Bédard, Antoine Lessard
     /// </summary>
     public class AchievementController : MonoBehaviour
     {
