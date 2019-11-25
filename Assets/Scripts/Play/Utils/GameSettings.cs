@@ -6,7 +6,7 @@ namespace Game
 {
     /// <summary>
     /// Game settings (Variables with constant values that are customizable for the game)
-    /// Author : Mike Bédard
+    /// Author : Mike Bédard, Antoine Lessard
     /// </summary>
     [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
@@ -59,7 +59,7 @@ namespace Game
         [SerializeField] private string jebediahName = "Jebediah";
         [SerializeField] private string thomasName = "Thomas";
         [SerializeField] private string abrahamName = "Abraham";
-        [SerializeField] [Header("Achievements")] private string achievementGetString = "Achievement Completed!";
+        [SerializeField] [Header("Achievements")] private string achievementUnlockedString = "Achievement unlocked!";
         [SerializeField] [Header("Achievement Names")] private string completeCampaignOnEasy = "Baby Steps";
         [SerializeField] private string completeCampaignOnMedium = "Now you're getting it!";
         [SerializeField] private string completeCampaignOnHard = "You mad man!";
@@ -68,6 +68,15 @@ namespace Game
         [SerializeField] private string finishALevelWithoutUnitLoss = "No one left behind...";
         [SerializeField] private string finishCampaignWithoutUnitLoss = "Great leader";
         [SerializeField] private string saveAllRecruitablesFromAlternatePath = "Champion of the people!";
+        [Header("Achievement Descriptions")]
+        [SerializeField] private string completeCampaignOnEasyDescription = "Complete the campaign on easy.";
+        [SerializeField] private string completeCampaignOnMediumDescription = "Complete the campaign on medium.";
+        [SerializeField] private string completeCampaignOnHardDescription = "Complete the campaign on hard.";
+        [SerializeField] private string defeatBlackKnightDescription = "Defeated the Black Knight.";
+        [SerializeField] private string reachFinalLevelWith8PlayersDescription = "Reached the final level with a full party.";
+        [SerializeField] private string finishALevelWithoutUnitLossDescription = "Complete a level without losing a unit";
+        [SerializeField] private string finishCampaignWithoutUnitLossDescription = "Complete the campaign without losing a unit";
+        [SerializeField] private string saveAllRecruitablesFromAlternatePathDescription = "Recruited all recruitable units.";
         [SerializeField] [Header("Animation and actions")] private string isMoving = "IsMoving";
         [SerializeField] private string isAttacking = "IsAttacking";
         [SerializeField] private string isGoingToDie = "IsGoingToDie";
@@ -75,6 +84,7 @@ namespace Game
         [SerializeField] private string isDodging = "IsDodging";
         [SerializeField] private string isResting = "IsResting";
         [SerializeField] [Header("Other")] private string nameString = "Name";
+        [SerializeField] private string descriptionString = "Description";
         [SerializeField] private string difficultyString = "Difficulty";
         [SerializeField] private string stageString = "Stage";
         [SerializeField] private bool defaultToggleValue = true;
@@ -82,7 +92,9 @@ namespace Game
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
+        [SerializeField] private string darkKnightName = "Dark Knight";
         #endregion Serialized Fields
+        
         #region Accessors
         #region Colors
         public Color PaleAlpha => paleAlpha;
@@ -136,16 +148,24 @@ namespace Game
         public string AbrahamName => abrahamName;
         #endregion Playable Characters
         #region Achievements
-        public string AchievementGetString => achievementGetString;
+        public string AchievementUnlockedString => achievementUnlockedString;
         #region Achievement Names
         public string CompleteCampaignOnEasy => completeCampaignOnEasy;
+        public string CompleteCampaignOnEasyDescription => completeCampaignOnEasyDescription;
         public string CompleteCampaignOnMedium => completeCampaignOnMedium;
+        public string CompleteCampaignOnMediumDescription => completeCampaignOnMediumDescription;
         public string CompleteCampaignOnHard => completeCampaignOnHard;
+        public string CompleteCampaignOnHardDescription => completeCampaignOnHardDescription;
         public string DefeatBlackKnight => defeatBlackKnight;
+        public string DefeatBlackKnightDescription => defeatBlackKnightDescription;
         public string ReachFinalLevelWith8Players => reachFinalLevelWith8Players;
+        public string ReachFinalLevelWith8PlayersDescription => reachFinalLevelWith8PlayersDescription;
         public string FinishALevelWithoutUnitLoss => finishALevelWithoutUnitLoss;
+        public string FinishALevelWithoutUnitLossDescription => finishALevelWithoutUnitLossDescription;
         public string FinishCampaignWithoutUnitLoss => finishCampaignWithoutUnitLoss;
+        public string FinishCampaignWithoutUnitLossDescription => finishCampaignWithoutUnitLossDescription;
         public string SaveAllRecruitablesFromAlternatePath => saveAllRecruitablesFromAlternatePath;
+        public string SaveAllRecruitablesFromAlternatePathDescription => saveAllRecruitablesFromAlternatePathDescription;
         #endregion Achievement Names
         #endregion Achievements
         #region Animation and Actions
@@ -158,6 +178,7 @@ namespace Game
         #endregion Animation and Actions
         #region Other
         public string NameString => nameString;
+        public string DescriptionString => descriptionString;
         public string DifficultyString => difficultyString;
         public string StageString => stageString;
         public bool DefaultToggleValue => defaultToggleValue;
@@ -166,7 +187,9 @@ namespace Game
         public int Percent => percent;
         public string EmptyLevelString => emptyLevelString;
         public string AudioPath => audioPath;
+        public string DarkKnightName => darkKnightName;
         #endregion Other
         #endregion Accessors
+        
     }
 }

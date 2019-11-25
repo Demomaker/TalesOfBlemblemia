@@ -120,7 +120,7 @@ namespace Game
         
         private void Start()
         {
-            uiController = Harmony.Finder.UIController;
+ uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -132,6 +132,8 @@ namespace Game
             
             ActivatePlayerUnits();
 
+            CheckForDarkKnight();
+            
             PrepareVictoryConditionForUI();
         }
         
@@ -282,16 +284,15 @@ namespace Game
 
             foreach (var unit in defeatedPlayerUnits)
             {
-                if (unit.name == gameSettings.FranklemName)
-                {
-                    saveController.ResetSave();
-                    break;
-                }
-
                 if (gameController.PermaDeath)
                 {
                     foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
                     {
+                        if (character.CharacterName == gameSettings.FranklemName)
+                        {
+                            saveController.ResetSave();
+                            break;
+                        }
                         character.CharacterStatus = false;
                     }
                 }
@@ -468,6 +469,17 @@ namespace Game
         {
             levelTileUpdateKeeper++;
         }
+        
+        private void CheckForDarkKnight()
+                {
+                    if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
+                    {
+                        if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
+                        {
+                            ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
+                        }
+                    }
+                }
         #endregion
     }
 }
