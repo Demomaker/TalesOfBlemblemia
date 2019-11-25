@@ -81,6 +81,7 @@ namespace Game
         private bool LevelFailed => ProtagonistDied;
         private bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
+        
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
         public AudioClip BackgroundMusic => backgroundMusic;
@@ -136,11 +137,12 @@ namespace Game
         
         protected void Update()
         {
+            //TODO enlever ca
             if(Input.GetKeyDown(gameSettings.SkipLevelKey))
             {
                 skipLevel = true;
             }
-            
+            //TODO enlever doNotEnd du projet en entier, right?
             if (!doNotEnd && LevelEnded)
             {
                 ResetUnitsAlpha();
@@ -155,6 +157,7 @@ namespace Game
                 CheckForComputerTurnSkip();
                 CheckForPlayerTurnSkip();
             }
+            
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play(currentPlayer);
@@ -300,6 +303,11 @@ namespace Game
             if (currentPlayer is HumanPlayer)
             {
                 numberOfPlayerTurns++;
+                EnemyRangeController.OnPlayerTurn(players[1].OwnedUnits);
+            }
+            else
+            {
+                EnemyRangeController.OnComputerTurn();
             }
             uiController.ModifyTurnInfo(currentPlayer);
             uiController.ModifyTurnCounter(numberOfPlayerTurns);
