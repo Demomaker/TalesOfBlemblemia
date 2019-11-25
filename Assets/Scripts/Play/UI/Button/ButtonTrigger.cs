@@ -9,8 +9,10 @@ using Finder = Harmony.Finder;
 /// </summary>
 public class ButtonTrigger : MonoBehaviour
 {
+    #region Fields
     public static OnButtonClick onButtonClick = null;
-
+    #endregion Fields
+    #region Unity Event Functions
     private void Awake()
     {
         if (onButtonClick == null)
@@ -21,4 +23,5 @@ public class ButtonTrigger : MonoBehaviour
     {
         onButtonClick.Publish(GetComponent<Button>());
     }
+    #endregion Unity Event Functions
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Harmony;
 using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,8 +15,8 @@ namespace Game
     public class DialogueManager : MonoBehaviour
     {
         [SerializeField] private Texture[] textures;
-        [SerializeField] private Text nameText;
-        [SerializeField] private Text dialogueText;
+        [SerializeField] private TMP_Text nameText;
+        [SerializeField] private TMP_Text dialogueText;
         [SerializeField] private Animator animator;
         [SerializeField] private RawImage portrait;
         

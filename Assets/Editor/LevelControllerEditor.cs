@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using System.Collections.Generic;
+using Harmony;
 using UnityEngine;
 
 namespace Game
@@ -11,7 +12,8 @@ namespace Game
     [CustomEditor(typeof(LevelController))]
     public class LevelControllerEditor : Editor
     {
-        /*Property Indexes in Property Names List*/
+        #region Constants
+        #region Property Indexes in Property Names List
         private const int FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST = 10;
         private const int BACKGROUND_MUSIC_PROPERTY_INDEX = 
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST;
@@ -37,8 +39,10 @@ namespace Game
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
         private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = 
             FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
-
-        /*Header and Field Names*/
+        private const int POINTING_ARROW_PREFAB_PROPERTY_INDEX =
+            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
+        #endregion Property Indexes in Property Names List
+        #region Header and Field Names
         private const string LEVEL_HEADER = "Level";
         private const string WEAPON_TRANSFORMATION_HEADER = "Weapon Transformation";
         private const string LEVEL_COMPLETION_HEADER = "Conditions For Level Completion";
@@ -52,10 +56,12 @@ namespace Game
         private const string POINT_TO_ACHIEVE_FIELD_NAME = "Point To Achieve";
         private const string NUMBER_OF_TURNS_BEFORE_COMPLETION_FIELD_NAME = "Number Of Turns Before Level Completion";
         private const string REVERT_WEAPON_TRIANGLE_FIELD_NAME = "Revert Weapon Triangle";
-        
+        private const string POINTING_ARROW_PREFAB_FIELD_NAME = "Pointing Arrow Prefab";
+        #endregion Header and Field Names
+        #endregion Constants
+        #region Fields
         private List<string> serializedPropertyNames;
-        
-        /*Properties*/
+        #region Serialized Properties
         private SerializedProperty backgroundMusic;
         private SerializedProperty doNotEnd;
         private SerializedProperty customObjectiveMessage;
@@ -68,7 +74,10 @@ namespace Game
         private SerializedProperty targetsToDefeat;
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty revertWeaponTriangle;
-
+        private SerializedProperty pointingArrowPrefab;
+        #endregion Serialized Properties
+        #endregion Fields
+        #region Unity Event Functions
         private void OnEnable()
         {
             InitializeSerializedPropertyNamesList();
@@ -81,7 +90,8 @@ namespace Game
             ShowAndEditProperties();
             serializedObject.ApplyModifiedProperties();
         }
-
+        #endregion Unity Event Functions
+        #region Level Controller Editing Methods
         private void InitializeSerializedPropertyNamesList()
         {
             serializedPropertyNames = new List<string>();
@@ -108,6 +118,7 @@ namespace Game
             allTargetsNeedToBeDefeated = GetPropertyAtIndex(ALL_TARGETS_NEED_TO_BE_DEFEATED_PROPERTY_INDEX);
             numberOfTurnsBeforeCompletion = GetPropertyAtIndex(NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX);
             revertWeaponTriangle = GetPropertyAtIndex(REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX);
+            pointingArrowPrefab = GetPropertyAtIndex(POINTING_ARROW_PREFAB_PROPERTY_INDEX);
         }
 
         private SerializedProperty GetPropertyAtIndex(int serializedPropertyNamesIndex)
@@ -122,10 +133,17 @@ namespace Game
 
         private void ShowAndEditProperties()
         {
+            ShowAndEditPointingArrowProperty();
             ShowAndEditBasicLevelProperties();
             ShowAndEditWeaponProperties();
             if (DoNotEndLevel()) return;
             ShowAndEditLevelCompletionProperties();
+        }
+
+        private void ShowAndEditPointingArrowProperty()
+        {
+            pointingArrowPrefab.objectReferenceValue =
+                EditorGUILayout.ObjectField(POINTING_ARROW_PREFAB_FIELD_NAME, pointingArrowPrefab.objectReferenceValue, typeof(UnityEngine.Object),true );
         }
 
         private void ShowAndEditBasicLevelProperties()
@@ -195,6 +213,6 @@ namespace Game
             EditorGUILayout.PropertyField(targetsToDefeat,true);
             allTargetsNeedToBeDefeated.boolValue = EditorGUILayout.Toggle(ALL_TARGETS_NEED_TO_BE_DEFEATED_FIELD_NAME,allTargetsNeedToBeDefeated.boolValue);
         }
-
+        #endregion Level Controller Editing Methods
     }
 }

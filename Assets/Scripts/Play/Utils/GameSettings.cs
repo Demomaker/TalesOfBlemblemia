@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game
 {
@@ -10,6 +11,9 @@ namespace Game
     [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
     {
+        private const float RGB_MAX = 255f;
+        
+        #region Serialized Fields
         [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
         [SerializeField] private int enemyMovementRange = 3;
         [SerializeField] private int playerAttackRange = 1;
@@ -18,8 +22,9 @@ namespace Game
         [SerializeField] private float movementDuration = 0.3f;
         [SerializeField] private int numberOfRecruitablesOnAlternatePath = 8;
         [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
+        [SerializeField] private KeyCode skipLevelKey = KeyCode.O;
 
-        [Header("Scene names")] 
+        [Header("Scene Names")] 
         [SerializeField] private string emptyLevelString = "";
         [SerializeField] private R.E.Scene tutorialScene;
         [SerializeField] private R.E.Scene jimsterburgScene;
@@ -32,6 +37,16 @@ namespace Game
         [SerializeField] private R.E.Scene overworldScene;
         [SerializeField] private R.E.Scene mainmenuScene;
         [SerializeField] private R.E.Scene startingLevelScene;
+        
+        [Header("Colors")] 
+        [SerializeField] private Color green = Color.green;
+        [SerializeField] private Color red = Color.red;
+        [SerializeField] private Color gray = Color.gray;
+        [SerializeField] private Color darkGreen = new Color(0, 113f/RGB_MAX, 0);
+        [SerializeField] private Color darkYellow = new Color(226f/RGB_MAX, 218f/RGB_MAX, 0);
+        [SerializeField] private Color darkRed = new Color(159f/RGB_MAX, 0 ,0);
+        [SerializeField] private Color paleAlpha = new Color(1,1,1, 0.5f);
+        [SerializeField] private Color opaqueAlpha = new Color(1, 1, 1, 1f);
 
         [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
         [SerializeField] private int saveSlotTwo = 2;
@@ -78,12 +93,20 @@ namespace Game
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
         [SerializeField] private string darkKnightName = "DarkKnight";
-
-        private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
-        private static readonly Color opaqueAlpha = new Color(1,1,1,1f);
-
+        #endregion Serialized Fields
+        
+        #region Accessors
+        #region Colors
         public Color PaleAlpha => paleAlpha;
         public Color OpaqueAlpha => opaqueAlpha;
+        public Color Green => green;
+        public Color Red => red;
+        public Color Gray => gray;
+        public Color DarkGreen => darkGreen;
+        public Color DarkYellow => darkYellow;
+        public Color DarkRed => darkRed;
+        #endregion Colors
+        #region Unit Settings
         public int PlayerMovementRange => playerMovementRange;
         public int EnemyMovementRange => enemyMovementRange;
         public int PlayerAttackRange => playerAttackRange;
@@ -91,7 +114,12 @@ namespace Game
         public float AttackDuration => attackDuration;
         public float MovementDuration => movementDuration;
         public int NumberOfRecruitablesOnAlternatePath => numberOfRecruitablesOnAlternatePath;
+        #endregion Unit Settings
+        #region Input Settings
         public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
+        public KeyCode SkipLevelKey => skipLevelKey;
+        #endregion Input Settings
+        #region Scene Names
         public string TutorialSceneName => tutorialScene.ToString();
         public string JimsterburgSceneName => jimsterburgScene.ToString();
         public string ParabeneForestSceneName => parabeneForestScene.ToString();
@@ -103,10 +131,13 @@ namespace Game
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
         public string StartingLevelSceneName => startingLevelScene.ToString();
-
+        #endregion Scene Names
+        #region Saves
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;
         public int SaveSlotThree => saveSlotThree;
+        #endregion Saves
+        #region Playable Characters
         public string FranklemName => franklemName;
         public string MyriamName => myriamName;
         public string BramName => bramName;
@@ -115,7 +146,10 @@ namespace Game
         public string JebediahName => jebediahName;
         public string ThomasName => thomasName;
         public string AbrahamName => abrahamName;
-        public string AchievementUnlockedString => achievementUnlockedString;
+        #endregion Playable Characters
+        #region Achievements
+        public string AchievementGetString => achievementGetString;
+        #region Achievement Names
         public string CompleteCampaignOnEasy => completeCampaignOnEasy;
         public string CompleteCampaignOnEasyDescription => completeCampaignOnEasyDescription;
         public string CompleteCampaignOnMedium => completeCampaignOnMedium;
@@ -132,12 +166,17 @@ namespace Game
         public string FinishCampaignWithoutUnitLossDescription => finishCampaignWithoutUnitLossDescription;
         public string SaveAllRecruitablesFromAlternatePath => saveAllRecruitablesFromAlternatePath;
         public string SaveAllRecruitablesFromAlternatePathDescription => saveAllRecruitablesFromAlternatePathDescription;
+        #endregion Achievement Names
+        #endregion Achievements
+        #region Animation and Actions
         public string IsMoving => isMoving;
         public string IsAttacking => isAttacking;
         public string IsGoingToDie => isGoingToDie;
         public string IsBeingHurt => isBeingHurt;
         public string IsDodging => isDodging;
         public string IsResting => isResting;
+        #endregion Animation and Actions
+        #region Other
         public string NameString => nameString;
         public string DescriptionString => descriptionString;
         public string DifficultyString => difficultyString;
@@ -149,5 +188,8 @@ namespace Game
         public string EmptyLevelString => emptyLevelString;
         public string AudioPath => audioPath;
         public string DarkKnightName => darkKnightName;
+        #endregion Other
+        #endregion Accessors
+        
     }
 }

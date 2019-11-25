@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game
@@ -16,7 +15,9 @@ namespace Game
         [SerializeField] private UnitInfos unitInfos;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
-        [SerializeField] private UnitGender gender;
+        [SerializeField] private bool isImmuneToCrits;
+        [SerializeField] private bool canCritOnEverybody;
+        [SerializeField] private int detectionRadius;
         
         #endregion
         
@@ -35,6 +36,11 @@ namespace Game
 
         private UIController uiController;
         private LevelController levelController;
+        
+        /// <summary>
+        /// Determines if an ai unit has been triggered by a player unit entering it's radius
+        /// </summary>
+        private bool isAwake;
 
         /// <summary>
         /// Array representing the movement cost needed to move to every tile on the grid
@@ -75,7 +81,22 @@ namespace Game
                 return maxGain;
             }
         }
-        
+        public int DetectionRadius => detectionRadius;
+        /// <summary>
+        /// Once a unit is awake, it cannot go back to sleep
+        /// </summary>
+        public bool IsAwake
+        {
+            get => isAwake;
+            set
+            {
+                if (isAwake != true)
+                {
+                    isAwake = value;
+                }
+            }
+        }
+
         public bool IsMoving => isMoving;
         public bool IsAttacking => isAttacking;
         public int[,] MovementCosts
@@ -97,7 +118,7 @@ namespace Game
         }
         public bool IsEnemy => playerType == PlayerType.Enemy;
         public bool IsPlayer => playerType == PlayerType.Ally;
-        public bool IsRecruitable => playerType == PlayerType.None;
+        public bool IsRecruitable => playerType == PlayerType.Recruitable;
         public UnitStats Stats => classStats + weapon.WeaponStats;
         public WeaponType WeaponType => weapon.WeaponType;
         public WeaponType WeaponAdvantage => weapon.Advantage;
@@ -126,14 +147,13 @@ namespace Game
         }
         public int AttackRange => 1;
 
-        public UnitGender Gender => gender;
-
         public UnitInfos UnitInfos => unitInfos;
 
         #endregion
 
         public override void Awake()
         {
+            InitializeEvents();
             uiController = Harmony.Finder.UIController;
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             weapon = GetComponentInParent<Weapon>();
@@ -142,25 +162,39 @@ namespace Game
             gridController = Finder.GridController;
             CurrentHealthPoints = Stats.MaxHealthPoints;
             movesLeft = Stats.MoveSpeed;
-            onHurt = Harmony.Finder.OnHurt;
-            onAttack = Harmony.Finder.OnAttack;
-            onDodge = Harmony.Finder.OnDodge;
-            onUnitMove = Harmony.Finder.OnUnitMove;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
-            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             animator = GetComponent<Animator>();
             levelController = Harmony.Finder.LevelController;
             gameSettings = Harmony.Finder.GameSettings;
             base.Awake();
         }
 
+        private void InitializeEvents()
+        {
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
+        }
+
         private void OnEnable()
+        {
+            EnableEvents();
+        }
+
+        private void EnableEvents()
         {
             onHurt.Notify += Hurt;
             onDodge.Notify += MakeDodge;
         }
 
         private void OnDisable()
+        {
+            DisableEvents();
+        }
+
+        private void DisableEvents()
         {
             onHurt.Notify -= Hurt;
             onDodge.Notify -= MakeDodge;
@@ -232,7 +266,8 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            return StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
+            //TODO coroutine starter
+            return Harmony.Finder.LevelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -272,52 +307,70 @@ namespace Game
                 isMoving = false;
             }
 
-            if (action.ActionType != ActionType.Nothing)
+            if (action != null)
             {
-                if (action.ActionType == ActionType.Attack && action.Target != null)
+                if (action.ActionType != ActionType.Nothing)
                 {
-                    onAttack.Publish(this);
-                    if (TargetIsInRange(action.Target))
+                    if (action.ActionType == ActionType.Attack && action.Target != null)
                     {
-                        yield return Attack(action.Target);
-                        if (action.Target.GetType() == typeof(Unit))
-                            if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
-                                yield return uiController.LaunchBattleReport(IsEnemy);
-                            else
-                                yield break;  
+                        onAttack.Publish(this);
+                        if (TargetIsInRange(action.Target))
+                        {
+                            yield return Attack(action.Target);
+                            if (action.Target.GetType() == typeof(Unit))
+                                if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+                                    yield return uiController.LaunchBattleReport(IsEnemy);
+                                else
+                                    yield break;
+                        }
+                        else
+                            Rest();
+                    }
+
+                    if (action.ActionType == ActionType.Recruit && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit) action.Target))
+                            Rest();
+                    }
+
+                    if (action.ActionType == ActionType.Heal && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit) action.Target))
+                            Rest();
                     }
                     else
+                    {
                         Rest();
+                    }
                 }
-                if (action.ActionType == ActionType.Recruit && action.Target != null)
-                {
-                    if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit)action.Target))
-                        Rest();
-                }
-                if (action.ActionType == ActionType.Heal && action.Target != null)
-                {
-                    if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit)action.Target))
-                        Rest();
-                }
-                else
-                {
-                    Rest();
-                }
+            }
+            else
+            {
+                Rest();
             }
         }
+
+        private bool hasDiedOnce = false;
+        
         public override IEnumerator Die()
         {
-            GetComponent<Cinematic>()?.TriggerCinematic();
-            while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+            if (!hasDiedOnce)
             {
-                yield return null;
+                hasDiedOnce = true;
+                GetComponent<Cinematic>()?.TriggerCinematic();
+                while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
+                       Harmony.Finder.UIController.IsBattleReportActive)
+                {
+                    yield return null;
+                }
+
+                isGoingToDie = true;
+                onUnitDeath.Publish(this);
+                if (playerType == PlayerType.Ally)
+                    onPlayerUnitLoss.Publish(this);
+                isGoingToDie = false;
+                yield return base.Die();
             }
-            isGoingToDie = true;
-            onUnitDeath.Publish(this);
-            if(playerType == PlayerType.Ally)
-                onPlayerUnitLoss.Publish(this);
-            isGoingToDie = false;
-            yield return base.Die();
         }
         #endregion
         
@@ -372,13 +425,14 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
-                onDodge.Publish((Unit)target);
+                if(target is Unit unit)
+                    onDodge.Publish(unit);
             }
-            else
+            else if (target is Unit unit)
             {
-                onHurt.Publish((Unit)target);
+                onHurt.Publish(unit);
             }
-            if (!isCountering && (target.GetType() == typeof(Unit) || (target.GetType() == typeof(Unit) && ((Unit)target).WeaponType == WeaponAdvantage)))
+            if (!isCountering && !isImmuneToCrits && (target.GetType() == typeof(Unit) && (canCritOnEverybody || ((Unit)target).WeaponType == WeaponAdvantage)))
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
@@ -419,7 +473,7 @@ namespace Game
             {
                 playerType = PlayerType.Ally;
                 HumanPlayer.Instance.AddOwnedUnit(this);
-                GetComponent<Cinematic>()?.TriggerCinematic();
+                GetComponentInChildren<Cinematic>()?.TriggerCinematic();
                 
             }
             return IsRecruitable;

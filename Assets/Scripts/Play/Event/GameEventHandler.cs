@@ -1,4 +1,4 @@
-﻿using Harmony;
+using Harmony;
 using UnityEngine;
 
 namespace Game
@@ -6,10 +6,13 @@ namespace Game
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class GameEventHandler : MonoBehaviour
     {
+        #region Unity Event Functions
         private void Awake()
         {
             AddEventComponents();
         }
+        #endregion Unity Event Functions
+        #region Event Handling Functions
         private void AddEventComponents()
         {
             gameObject.AddComponent<OnAttack>();
@@ -18,6 +21,8 @@ namespace Game
             gameObject.AddComponent<OnButtonClick>();
             gameObject.AddComponent<OnLevelChange>();
             gameObject.AddComponent<OnLevelVictory>();
+            gameObject.AddComponent<OnLevelFailed>();
+            gameObject.AddComponent<OnCampaignFailed>();
             gameObject.AddComponent<OnMusicToggle>();
             gameObject.AddComponent<OnUnitDeath>();
             gameObject.AddComponent<OnUnitMove>();
@@ -29,6 +34,7 @@ namespace Game
             gameObject.AddComponent<OnSFXToggle>();
             gameObject.AddComponent<OnSFXVolumeChange>();
         }
+        #endregion Event Handling Functions
     }
 }
 
