@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: AxeDreadlordInfo
   m_EditorClassIdentifier: 
   characterName: DreadLord
-  gender: 0
+  gender: 2
