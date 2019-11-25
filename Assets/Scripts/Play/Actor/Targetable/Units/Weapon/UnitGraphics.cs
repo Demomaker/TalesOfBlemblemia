@@ -11,6 +11,7 @@ namespace Game
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI movementText;
         [SerializeField] private TextMeshProUGUI attackText;
+        [SerializeField] private Image[] nameBackground;
         [SerializeField] private Image attackIcon;
         [SerializeField] private Sprite axeSprite;
         [SerializeField] private Sprite spearSprite;
@@ -19,17 +20,47 @@ namespace Game
 
         private Unit unit;
         private Canvas canvas;
+        private GameSettings gameSettings;
 
         private void Awake()
         {
             unit = transform.root.GetComponent<Unit>();
             canvas = GetComponent<Canvas>();
+            gameSettings = Harmony.Finder.GameSettings;
         }
 
         private void Start()
         {
             DisableUnitGraphics();
-            nameText.text = unit.UnitInfos.characterName;
+            InitUnitInfos();
+        }
+
+        private void OnMouseEnter()
+        {
+            UpdateUnitInfos();
+            EnableUnitGraphics();
+        }
+
+        protected void OnMouseExit()
+        {
+            DisableUnitGraphics();
+        }
+
+        private void EnableUnitGraphics()
+        {
+            if (canvas != null) canvas.enabled = true;
+        }
+
+        private void DisableUnitGraphics()
+        {
+            if (canvas != null) canvas.enabled = false;
+        }
+
+        private void InitUnitInfos()
+        {
+            nameText.text = unit.UnitInfos.CharacterName;
+            attackText.text = unit.Stats.AttackStrength.ToString();
+            
             switch (unit.WeaponType)
             {
                 case WeaponType.Axe:
@@ -45,29 +76,17 @@ namespace Game
                     attackIcon.sprite = healingStaffSprite;
                     break;
             }
-            attackText.text = unit.Stats.AttackStrength.ToString();
+            
+            foreach (var image in nameBackground)
+            {
+                image.color = unit.IsEnemy ? gameSettings.Red : gameSettings.Green;
+            }
         }
 
-        private void OnMouseEnter()
-        {
-            EnableUnitGraphics();
-        }
-
-        protected void OnMouseExit()
-        {
-            DisableUnitGraphics();
-        }
-
-        private void EnableUnitGraphics()
+        private void UpdateUnitInfos()
         {
             movementText.text = unit.MovesLeft.ToString();
             healthText.text = unit.CurrentHealthPoints.ToString();
-            if (canvas != null) canvas.enabled = true;
-        }
-
-        private void DisableUnitGraphics()
-        {
-            if (canvas != null) canvas.enabled = false;
         }
     }
 }

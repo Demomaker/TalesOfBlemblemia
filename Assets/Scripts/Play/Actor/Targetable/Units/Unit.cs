@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game
@@ -16,10 +15,9 @@ namespace Game
         [SerializeField] private UnitInfos unitInfos;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
-        [SerializeField] private UnitGender gender;
         [SerializeField] private bool isImmuneToCrits;
         [SerializeField] private bool canCritOnEverybody;
-        
+
         #endregion
         
         #region Fields
@@ -127,8 +125,6 @@ namespace Game
             }
         }
         public int AttackRange => 1;
-
-        public UnitGender Gender => gender;
 
         public UnitInfos UnitInfos => unitInfos;
 
@@ -249,7 +245,7 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            return Harmony.Finder.LevelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
+            return levelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {

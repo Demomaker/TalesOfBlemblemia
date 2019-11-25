@@ -21,10 +21,9 @@ namespace Game
         private Unit linkedUnit;
         private Door linkedDoor;
         private GridController gridController;
+        private UIController uiController;
         public GridController GridController => gridController;
-        private readonly int costToMove;
-        private readonly float defenseRate;
-        
+
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedDoorCanBeAttackedByPlayer => IsOccupiedByADoor && IsPossibleAction && !linkedDoor.IsEnemyTarget;
@@ -41,26 +40,13 @@ namespace Game
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
         public Door LinkedDoor => linkedDoor;
-        public int CostToMove
-        {
-            get
-            {
-                if (tileType == TileType.Obstacle || IsOccupiedByADoor)
-                {
-                    return int.MaxValue;
-                }
-
-                return costToMove;
-            }
-        }
-        public float DefenseRate => defenseRate;
+        public int CostToMove => IsOccupiedByADoor ? TileTypeExt.HIGH_COST_TO_MOVE : tileType.GetCostToMove();
+        public float DefenseRate => tileType.GetDefenseRate();
 
 
-        protected Tile(TileType tileType, int costToMove = TileValues.DEFAULT_COST_TO_MOVE, float defenseRate = TileValues.DEFAULT_DEFENSE_RATE)
+        protected Tile(TileType tileType)
         {
             this.tileType = tileType;
-            this.costToMove = costToMove;
-            this.defenseRate = defenseRate;
         }
         
         protected virtual void Awake()
@@ -70,6 +56,7 @@ namespace Game
             tileSprite = GetComponent<TileSprite>();
             tilePathSprite = GetComponentInChildren<SpriteRenderer>();
             gridController = transform.parent.GetComponent<GridController>();
+            uiController = Harmony.Finder.UIController;
         }
 
         protected void Start()
@@ -151,7 +138,7 @@ namespace Game
 
         public void OnCursorEnter()
         {
-            Harmony.Finder.UIController.ModifyPlayerUi(this);
+            uiController.UpdateTileInfos(this);
         }
 
         public void LinkTargetable(Targetable targetable)

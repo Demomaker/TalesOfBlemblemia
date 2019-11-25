@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: AxeDreadlordInfo
   m_EditorClassIdentifier: 
   characterName: DreadLord
-  className: AxeMork
-  weaponName: Axe
+  gender: 0
