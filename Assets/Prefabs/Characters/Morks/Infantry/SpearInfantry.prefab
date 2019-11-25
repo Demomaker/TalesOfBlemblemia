@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1236791273442123043}
-  - component: {fileID: 1236791273442123044}
   - component: {fileID: 1623693741768872184}
   - component: {fileID: 5871683404405869898}
   m_Layer: 0
@@ -31,59 +30,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6166540461163505725}
+  - {fileID: 3426761589890545346}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1236791273442123044
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236791273442123046}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 18170363
-  m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 8434883990147102178, guid: 0443bd0c8b9847545a2d3b0c81966ca0,
-    type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
 --- !u!114 &1623693741768872184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +53,8 @@ MonoBehaviour:
   classStats: {fileID: 11400000, guid: 143503c0a7f07fe42bfde1c238f309b1, type: 2}
   isImmuneToCrits: 0
   canCritOnEverybody: 0
-  detectionRadius: 50
+  detectionRadius: 0
+  appearance: {fileID: 3426761589890545346}
 --- !u!114 &5871683404405869898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +68,77 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponStats: {fileID: 11400000, guid: 66a67c76d4b691c4dab5df2e88edd4a4, type: 2}
+--- !u!1001 &3422932424920138456
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1236791273442123043}
+    m_Modifications:
+    - target: {fileID: 1621237238671296, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_Name
+      value: GreenOrc_Spear
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.185
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.145
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5060986
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5681719
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ea6b370f82b4f32409f380e26c1996bd, type: 3}
+--- !u!4 &3426761589890545346 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4221459784856602, guid: ea6b370f82b4f32409f380e26c1996bd,
+    type: 3}
+  m_PrefabInstance: {fileID: 3422932424920138456}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7390392024759818700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -124,11 +146,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1236791273442123043}
     m_Modifications:
-    - target: {fileID: 8284443647987226290, guid: d726014a8bd43034da4b497b070ed793,
-        type: 3}
-      propertyPath: m_Name
-      value: UnitGraphics
-      objectReference: {fileID: 0}
     - target: {fileID: 3682820258676683249, guid: d726014a8bd43034da4b497b070ed793,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -233,6 +250,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8284443647987226290, guid: d726014a8bd43034da4b497b070ed793,
+        type: 3}
+      propertyPath: m_Name
+      value: UnitGraphics
       objectReference: {fileID: 0}
     - target: {fileID: 7052784884772697096, guid: d726014a8bd43034da4b497b070ed793,
         type: 3}

@@ -18,6 +18,7 @@ namespace Game
         [SerializeField] private bool isImmuneToCrits;
         [SerializeField] private bool canCritOnEverybody;
         [SerializeField] private int detectionRadius;
+        [SerializeField] private Transform appearance;
         
         #endregion
         
@@ -244,7 +245,15 @@ namespace Game
         
         private void LookAt(Vector3 target)
         {
-            gameObject.GetComponent<SpriteRenderer>().flipX = target.x < gameObject.transform.position.x;
+            int xModifier = 1;
+            if (target.x < appearance.transform.position.x)
+            {
+                xModifier = -1;
+            }
+            var localScale = appearance.localScale;
+            Vector2 scale = new Vector2(Math.Abs(localScale.x), localScale.y);
+            scale.x *= xModifier;
+            appearance.localScale = scale;
         }
 
         #region Movements
