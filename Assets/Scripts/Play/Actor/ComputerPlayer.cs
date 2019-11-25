@@ -60,7 +60,6 @@ namespace Game
 
         public IEnumerator PlayUnits()
         {
-            for (int i = 0; i < ownedUnits.Count; i++)
             dynamicUnitCount = ownedUnits.Count;
             for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
