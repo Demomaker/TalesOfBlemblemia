@@ -5584,6 +5584,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2713265489608731543, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 623c911082da5da4db1e7fc3a7896563, type: 3}
 --- !u!1 &72514618
@@ -52366,7 +52371,7 @@ MonoBehaviour:
     cameraTarget: {fileID: 0}
     duration: 0
     cameraZoom: 3
-    sentence: You are finished. And now you shall pay for your crimes agianst Blemblemia!
+    sentence: You are finished. And now you shall pay for your crimes against Blemblemia!
     name: Franklem
     targetUnit: {fileID: 0}
     damage: 0
@@ -103871,6 +103876,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dark Knight
       objectReference: {fileID: 0}
+    - target: {fileID: 827736190261684991, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 827736190261684991, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 827736190261684991, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 827736190261684991, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1710938785079114434, guid: 111931a6840c5a04cb76eabb89e47b7f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -103924,6 +103949,46 @@ PrefabInstance:
     - target: {fileID: 1710938785079114434, guid: 111931a6840c5a04cb76eabb89e47b7f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2437645138721828719, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2437645138721828719, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2437645138721828719, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2437645138721828719, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2482779148184024899, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2482779148184024899, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2482779148184024899, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2482779148184024899, guid: 111931a6840c5a04cb76eabb89e47b7f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
