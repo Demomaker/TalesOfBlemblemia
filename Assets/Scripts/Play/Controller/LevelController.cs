@@ -263,9 +263,25 @@ namespace Game
             
             CheckForPermadeath();
 
+            CheckIfUnitWasRecruited();
+            
             UpdatePlayerSave();
 
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+        }
+
+        private void CheckIfUnitWasRecruited()
+        {
+            foreach (var unit in units)
+            {
+                if (unit.IsRecruitable)
+                {
+                    var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+                    characterInfos.Find(info => info.CharacterName == unit.name).CharacterStatus = false;
+                    break;
+                }
+            }
         }
 
         /// <summary>
