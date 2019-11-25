@@ -266,9 +266,40 @@ namespace Game
             
             CheckForPermadeath();
 
+            CheckIfUnitWasRecruited();
+
+            CheckIfUpperPathWasTaken();
+            
             UpdatePlayerSave();
 
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+        }
+
+        private void CheckIfUpperPathWasTaken()
+        {
+            if (levelName == gameSettings.DarkTowerSceneName)
+            {
+                var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+                foreach (var character in characterInfos.Where(character =>
+                    character.CharacterName == gameSettings.AbrahamName || character.CharacterName == gameSettings.ThomasName))
+                {
+                    character.CharacterStatus = false;
+                }
+            }
+        }
+
+        private void CheckIfUnitWasRecruited()
+        {
+            foreach (var unit in units)
+            {
+                if (unit.IsRecruitable)
+                {
+                    var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+                    characterInfos.Find(info => info.CharacterName == unit.name).CharacterStatus = false;
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -479,9 +510,7 @@ namespace Game
                     if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
                     {
                         if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
-                        {
                             ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
-                        }
                     }
                 }
         #endregion
