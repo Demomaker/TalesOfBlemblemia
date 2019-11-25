@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Game
 {
@@ -35,19 +36,6 @@ namespace Game
 
         public bool HasLost { get; set; }
 
-        public int RemoveDeadUnits()
-        {
-            int unitsRemoved = 0;
-            for (int i = 0; i < ownedUnits.Count; i++)
-            {
-                if (ownedUnits[i].NoHealthLeft)
-                {
-                    RemoveOwnedUnit(ownedUnits[i]);
-                    unitsRemoved++;
-                }
-            }
-            return unitsRemoved;
-        }
         #endregion Accessors
         #region UnitOwner-related Functions
         public void Lose()
@@ -58,9 +46,9 @@ namespace Game
 
         public void MakeOwnedUnitsUnplayable()
         {
-            for (int i = 0; i < ownedUnits.Count; i++)
+            foreach (var unit in ownedUnits)
             {
-                ownedUnits[i].HasActed = true;
+                unit.HasActed = true;
             }
         }
 
@@ -99,6 +87,32 @@ namespace Game
         public void AddEnemyUnit(Unit enemy)
         {
             enemyUnits.Add(enemy);
+        }
+
+        public void RemoveEnemyUnit(Unit enemy)
+        {
+            if(enemyUnits.Contains(enemy))
+            enemyUnits.Remove(enemy);
+        }
+        
+        
+        public void RemoveDeadUnits()
+        {
+            var unitsRemoved = 0;
+            for (var index = ownedUnits.Count - 1; index >= 0; index--)
+            {
+                var unit = ownedUnits[index];
+                if (!unit.NoHealthLeft) continue;
+                RemoveOwnedUnit(unit);
+                unitsRemoved++;
+            }
+
+            for (var index = enemyUnits.Count - 1; index >= 0; --index)
+            {
+                var unit = enemyUnits[index];
+                if (unit.NoHealthLeft)
+                    RemoveEnemyUnit(unit);
+            }
         }
         #endregion UnitOwner-related Functions
     }
