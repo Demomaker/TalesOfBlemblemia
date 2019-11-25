@@ -26,6 +26,7 @@ namespace Game
         [SerializeField] private bool cameraFollow;
 
         [SerializeField] private GameObject gameObjectToActivate;
+        [SerializeField] private bool activateGameObject;
     
         public Transform CameraTarget => cameraTarget;
         public float Duration => duration;
@@ -38,6 +39,7 @@ namespace Game
         public Transform GameObjectTarget => gameObjectTarget;
         public bool CameraFollow => cameraFollow;
         public GameObject GameObjectToActivate => gameObjectToActivate;
+        public bool ActivateGameObject => activateGameObject;
     }
     public enum CinematicActionType
     {

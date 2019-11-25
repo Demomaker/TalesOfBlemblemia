@@ -15,7 +15,7 @@ namespace Game
             switch (levelID)
             {
                 case LevelID.SnowyPeaks:
-                    return gameSettings.TutorialSceneName;
+                    return gameSettings.SnowyPeaksSceneName;
                 case LevelID.Jimsterburg:
                     return gameSettings.JimsterburgSceneName;
                 case LevelID.ParabeneForest:

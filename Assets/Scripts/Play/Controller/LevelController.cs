@@ -120,7 +120,7 @@ namespace Game
         
         private void Start()
         {
- uiController = Harmony.Finder.UIController;
+            uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
             InitializePlayersAndUnits();
             currentPlayer = players[0];
@@ -212,7 +212,8 @@ namespace Game
         private void CreatePointToAchievePointingArrow()
         {
             var pointingArrowTransformOffset = new Vector2(0.5f, 0.5f);
-            GameObject pointingArrow = (GameObject)GameObject.Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity);
+            GameObject pointingArrow = (GameObject)GameObject.Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity, transform);
+            pointingArrow.transform.SetParent(null);
             pointingArrow.GetComponent<PointingArrow>().SetTransformToPointPosition(new Vector3(pointToAchieve.x + pointingArrowTransformOffset.x, pointToAchieve.y + pointingArrowTransformOffset.y, 0));
         }
 
@@ -352,21 +353,13 @@ namespace Game
                 ? targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length
                 : targetsToDefeat.Count(target => target == null || target.NoHealthLeft) > 0;
         }
-        
-        private bool TargetToProtectHasDied()
-        {
-            return targetsToProtect.Any(target => target != null && target.NoHealthLeft);
-        }
 
         private void Play(UnitOwner unitOwner)
         {
             unitOwner.RemoveDeadUnits();
-            if (!isComputerPlaying && unitOwner is ComputerPlayer)
-            {
-                isComputerPlaying = true;
-                var currentComputerPlayer = unitOwner as ComputerPlayer;
-                StartCoroutine(currentComputerPlayer.PlayUnits());
-            }
+            if (isComputerPlaying || !(unitOwner is ComputerPlayer currentComputerPlayer)) return;
+            isComputerPlaying = true;
+            StartCoroutine(currentComputerPlayer.PlayUnits());
         }
 
         private void CheckForPlayerTurnSkip()
@@ -412,25 +405,18 @@ namespace Game
 
         private void CheckForCurrentPlayerEndOfTurn()
         {
-            if (currentPlayer.HasNoMorePlayableUnits)
-            {
-                ResetUnitsAlpha();
-                GiveTurnToNextPlayer();
-                OnTurnGiven();
-            }
+            if (!currentPlayer.HasNoMorePlayableUnits) return;
+            ResetUnitsAlpha();
+            GiveTurnToNextPlayer();
+            OnTurnGiven();
         }
 
 
         private void CheckForCurrentPlayerLoss()
         {
-            if (!currentPlayer.HaveAllUnitsDied()) return;
+            if (currentPlayer != null && !currentPlayer.HaveAllUnitsDied()) return;
             currentPlayer.Lose();
             GiveTurnToNextPlayer();
-        }
-
-        private bool HasWon(UnitOwner unitOwner)
-        {
-            return players.Contains(unitOwner) && players.Count <= 1;
         }
 
         private void GiveTurnToNextPlayer()
@@ -450,14 +436,16 @@ namespace Game
         {
             var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
 
-            foreach (
-                var gameUnit in 
-                from gameUnit in currentPlayer.OwnedUnits
+            var unitsToRemove = (from gameUnit in currentPlayer.OwnedUnits
                 from saveUnit in characterInfos
                 where gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus
-                select gameUnit)
+                select gameUnit).ToList();
+
+            foreach (var unit in unitsToRemove)
             {
-                gameUnit.gameObject.SetActive(false);
+                unit.gameObject.SetActive(false);
+                currentPlayer.OwnedUnits.Remove(unit);
+                players.Find(owner => owner != currentPlayer).RemoveEnemyUnit(unit);
             }
         }
         #endregion
@@ -506,13 +494,13 @@ namespace Game
         }
         
         private void CheckForDarkKnight()
-                {
-                    if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
-                    {
-                        if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
-                            ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
-                    }
-                }
+        {
+            if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
+            {
+                if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
+                    ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
+            }
+        }
         #endregion
     }
 }

@@ -102,11 +102,9 @@ namespace Game
         {
             get
             {
-                if (tileUpdateKeeper != Harmony.Finder.LevelController.LevelTileUpdateKeeper)
-                {
-                    if (currentTile != null)
-                        MovementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
-                }
+                if (tileUpdateKeeper == Harmony.Finder.LevelController.LevelTileUpdateKeeper) return movementCosts;
+                if (currentTile != null)
+                    MovementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
                 return movementCosts;
             }
             set
@@ -364,23 +362,21 @@ namespace Game
         
         public override IEnumerator Die()
         {
-            if (!hasDiedOnce)
+            if (hasDiedOnce) yield break;
+            hasDiedOnce = true;
+            GetComponent<Cinematic>()?.TriggerCinematic();
+            while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
+                   Harmony.Finder.UIController.IsBattleReportActive)
             {
-                hasDiedOnce = true;
-                GetComponent<Cinematic>()?.TriggerCinematic();
-                while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
-                       Harmony.Finder.UIController.IsBattleReportActive)
-                {
-                    yield return null;
-                }
-
-                isGoingToDie = true;
-                onUnitDeath.Publish(this);
-                if (playerType == PlayerType.Ally)
-                    onPlayerUnitLoss.Publish(this);
-                isGoingToDie = false;
-                yield return base.Die();
+                yield return null;
             }
+
+            isGoingToDie = true;
+            onUnitDeath.Publish(this);
+            if (playerType == PlayerType.Ally)
+                onPlayerUnitLoss.Publish(this);
+            isGoingToDie = false;
+            yield return base.Die();
         }
         #endregion
         

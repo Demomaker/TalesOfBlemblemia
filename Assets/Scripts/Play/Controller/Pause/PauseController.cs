@@ -16,6 +16,7 @@ namespace Game
         [SerializeField] private KeyCode pauseButton = KeyCode.Escape;
 
         private bool isPaused;
+        private CinematicController cinematicController;
 
         private void Awake()
         {
@@ -26,6 +27,7 @@ namespace Game
         {
             pauseMenuCanvas.enabled = false;
             optionsMenuCanvas.enabled = false;
+            cinematicController = Harmony.Finder.LevelController.CinematicController;
         }
 
         private void Update()
@@ -44,6 +46,7 @@ namespace Game
 
         private void Pause()
         {
+            if (cinematicController.IsPlayingACinematic) return;
             pauseMenuController.Enter();
             Time.timeScale = 0;
             isPaused = true;
