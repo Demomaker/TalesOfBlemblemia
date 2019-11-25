@@ -19,8 +19,6 @@ namespace Game
         private const string PROTAGONIST_NAME = "Franklem";
         private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
         private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
-        private const string PLAYER_TURN_INFO = "Player";
-        private const string ENEMY_TURN_INFO = "Enemy";
         private const int CREDITS_DURATION = 20;
         #endregion Constants
         #region Serialized Fields
@@ -303,14 +301,9 @@ namespace Game
             if (currentPlayer is HumanPlayer)
             {
                 numberOfPlayerTurns++;
-                uiController.ModifyTurnInfo(PLAYER_TURN_INFO);
             }
-            else
-            {
-                uiController.ModifyTurnInfo(ENEMY_TURN_INFO);
-            }
+            uiController.ModifyTurnInfo(currentPlayer);
             uiController.ModifyTurnCounter(numberOfPlayerTurns);
-            
             currentPlayer.OnTurnGiven();
         }
 

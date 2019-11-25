@@ -13,7 +13,7 @@ namespace Game
         protected readonly List<Unit> enemyUnits = new List<Unit>();
         #endregion ReadOnly Fields
         #region Other Fields
-        private string name = "";
+        protected string name;
         #endregion Other Fields
         #region Accessors
         public string Name => name;

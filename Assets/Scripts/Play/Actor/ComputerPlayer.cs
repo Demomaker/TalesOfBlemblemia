@@ -12,6 +12,7 @@ namespace Game
     {
         #region Fields
         private static ComputerPlayer instance = null;
+        private const string COMPUTER_PLAYER_NAME = "Enemy";
         private List<Targetable> targetsToDestroy;
         private OnUnitDeath onUnitDeath;
         #endregion Fields
@@ -31,13 +32,13 @@ namespace Game
         #region Constructors
         private ComputerPlayer()
         {
-            targetsToDestroy = new List<Targetable>();
+            targetsToDestroy = new List<Targetable>(); 
+            name = COMPUTER_PLAYER_NAME;
             onUnitDeath = Harmony.Finder.OnUnitDeath;
             onUnitDeath.Notify += OnUnitDeath;
         }
         #endregion Constructors
         #region ComputerPlayer-related Functions
-
         
         public void AddTarget(Targetable target)
         {

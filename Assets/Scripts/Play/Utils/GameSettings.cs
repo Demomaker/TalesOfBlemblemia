@@ -34,6 +34,16 @@ namespace Game
         [SerializeField] private R.E.Scene overworldScene;
         [SerializeField] private R.E.Scene mainmenuScene;
         [SerializeField] private R.E.Scene startingLevelScene;
+        
+        [Header("Colors")] 
+        [SerializeField] private Color green;
+        [SerializeField] private Color red;
+        [SerializeField] private Color grey;
+        [SerializeField] private Color darkGreen;
+        [SerializeField] private Color darkYellow;
+        [SerializeField] private Color darkRed;
+        [SerializeField] private Color paleAlpha = new Color(1,1,1, 0.5f);
+        [SerializeField] private Color opaqueAlpha = new Color(1, 1, 1, 1f);
 
         [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
         [SerializeField] private int saveSlotTwo = 2;
@@ -70,14 +80,16 @@ namespace Game
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
         #endregion Serialized Fields
-        #region ReadOnly Fields
-        private static readonly Color paleAlpha = new Color(1,1,1, 0.5f);
-        private static readonly Color opaqueAlpha = new Color(1, 1, 1, 1f);
-        #endregion ReadOnly Fields
         #region Accessors
         #region Colors
         public Color PaleAlpha => paleAlpha;
         public Color OpaqueAlpha => opaqueAlpha;
+        public Color Green => green;
+        public Color Red => red;
+        public Color Grey => grey;
+        public Color DarkGreen => darkGreen;
+        public Color DarkYellow => darkYellow;
+        public Color DarkRed => darkRed;
         #endregion Colors
         #region Unit Settings
         public int PlayerMovementRange => playerMovementRange;

@@ -2,17 +2,14 @@
 
 namespace Game
 {
-    //Author: Pierre-Luc Maltais
+    //Author: Pierre-Luc Maltais, Jérémie Bertrand
     [CreateAssetMenu]
     public class UnitInfos : ScriptableObject
     {
-        //The name shown in the UI
-        public string characterName;
+        [SerializeField] private string characterName;
+        [SerializeField] private UnitGender gender;
 
-        //The class shown in the UI
-        public string className;
-        
-        //The weapon class shown in the ui
-        public string weaponName;
+        public string CharacterName => characterName;
+        public UnitGender Gender => gender;
     }
 }
