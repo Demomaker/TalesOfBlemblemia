@@ -92,7 +92,7 @@ namespace Game
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
-        [SerializeField] private string darkKnightName = "DarkKnight";
+        [SerializeField] private string darkKnightName = "Dark Knight";
         #endregion Serialized Fields
         
         #region Accessors
@@ -148,7 +148,7 @@ namespace Game
         public string AbrahamName => abrahamName;
         #endregion Playable Characters
         #region Achievements
-        public string AchievementGetString => achievementGetString;
+        public string AchievementUnlockedString => achievementUnlockedString;
         #region Achievement Names
         public string CompleteCampaignOnEasy => completeCampaignOnEasy;
         public string CompleteCampaignOnEasyDescription => completeCampaignOnEasyDescription;
