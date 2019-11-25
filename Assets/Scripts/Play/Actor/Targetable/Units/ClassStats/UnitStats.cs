@@ -12,27 +12,27 @@ namespace Game
         /// <summary>
         /// The max health points
         /// </summary>
-        public int maxHealthPoints;
+        [SerializeField] private int maxHealthPoints;
         public int MaxHealthPoints => maxHealthPoints;
         /// <summary>
         /// The unit's speed in tile per turn
         /// </summary>
-        public int moveSpeed;
+        [SerializeField] private int moveSpeed;
         public int MoveSpeed => moveSpeed;
         /// <summary>
         /// The base damage a unit's attack would do
         /// </summary>
-        public int attackStrength;
+        [SerializeField] private int attackStrength;
         public int AttackStrength => attackStrength;
         /// <summary>
         /// The chance that a unit lands his attack
         /// </summary>
-        public float hitRate;
+        [SerializeField] private float hitRate;
         public float HitRate => hitRate;
         /// <summary>
         /// The chance that a hit is critical
         /// </summary>
-        public float critRate;
+        [SerializeField] private float critRate;
         public float CritRate => critRate;
 
         public static UnitStats operator+ (UnitStats addends1, UnitStats addends2)
@@ -47,7 +47,5 @@ namespace Game
 
             return sum;
         }
-        
-        
     }
 }

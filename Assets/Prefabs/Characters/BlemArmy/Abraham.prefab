@@ -54,7 +54,7 @@ MonoBehaviour:
   isImmuneToCrits: 0
   canCritOnEverybody: 0
   detectionRadius: 0
-  appearance: {fileID: 0}
+  appearance: {fileID: 3712196334994945952}
 --- !u!114 &4982606448540058553
 MonoBehaviour:
   m_ObjectHideFlags: 0
