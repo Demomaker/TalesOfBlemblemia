@@ -189,6 +189,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff4be41750136d64aa87b75a8845786d, type: 3}
+--- !u!114 &111446872 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3680158465727784022, guid: 64ade3371008ec5468534e225a1a75af,
+    type: 3}
+  m_PrefabInstance: {fileID: 1108177655}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &600959403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -259,7 +271,7 @@ PrefabInstance:
     - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
         type: 3}
       propertyPath: startingLevelScene
-      value: 21787095
+      value: 56662542
       objectReference: {fileID: 0}
     - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
         type: 3}
@@ -544,6 +556,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AchievementController
       objectReference: {fileID: 0}
+    - target: {fileID: 3680158465727784022, guid: 64ade3371008ec5468534e225a1a75af,
+        type: 3}
+      propertyPath: m_Text
+      value: Achievement unlocked!
+      objectReference: {fileID: 0}
     - target: {fileID: 4186548872590960841, guid: 64ade3371008ec5468534e225a1a75af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -649,6 +666,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1108177660, guid: 64ade3371008ec5468534e225a1a75af, type: 3}
+      propertyPath: achievementUnlockedText
+      value: 
+      objectReference: {fileID: 111446872}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64ade3371008ec5468534e225a1a75af, type: 3}
 --- !u!1 &1777290530 stripped

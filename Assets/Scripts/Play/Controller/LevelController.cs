@@ -131,6 +131,8 @@ namespace Game
             
             ActivatePlayerUnits();
 
+            CheckForDarkKnight();
+            
             PrepareVictoryConditionForUI();
         }
         
@@ -280,16 +282,17 @@ namespace Game
 
             foreach (var unit in defeatedPlayerUnits)
             {
-                if (unit.name == gameSettings.FranklemName)
+                if (gameController.PermaDeath)
                 {
-                    saveController.ResetSave();
-                    break;
-                }
-
-                if (!gameController.PermaDeath) continue;
-                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
-                {
-                    character.CharacterStatus = false;
+                    foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                    {
+                        if (character.CharacterName == gameSettings.FranklemName)
+                        {
+                            saveController.ResetSave();
+                            break;
+                        }
+                        character.CharacterStatus = false;
+                    }
                 }
             }
         }
@@ -445,6 +448,17 @@ namespace Game
         public void IncrementTileUpdate()
         {
             levelTileUpdateKeeper++;
+        }
+        
+        private void CheckForDarkKnight()
+        {
+            if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
+            {
+                if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
+                {
+                    ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
+                }
+            }
         }
         #endregion
     }

@@ -17,7 +17,9 @@ namespace Game
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
+        private AchievementsRepo achievementsRepo;
         private SqliteConnection connection;
+        private List<AchievementInfo> achievements;
 
         public int SaveSelected { get; set; }
 
@@ -42,6 +44,7 @@ namespace Game
 
         public PlayerSettings PlayerSettings => playerSettings;
 
+        public List<AchievementInfo> Achievements => achievements;
 
         public void Awake()
         {
@@ -81,14 +84,15 @@ namespace Game
             connection.Open();
             InitiateSaveInfo(username, difficultyLevel, levelName, characterStatus);
             InitiateSettingsInfo();
+            InitializeAchievements();
             InitiateRepos();
             //Check if there are any settings in the database
             CheckForExistingSettings();
             //Check if saves were already created in the database
             CheckForExistingSaves();
+            CheckForAchievements();
         }
-
-
+        
         private static string GetPath()
         {
 #if UNITY_EDITOR
@@ -123,8 +127,23 @@ namespace Game
             saveGameRepo = new SaveGameRepo(connection);
             characterStatusRepo = new CharacterStatusRepo(connection);
             saveSettingsRepo = new SaveSettingsRepo(connection);
+            achievementsRepo = new AchievementsRepo(connection);
         }
-
+        
+        private void InitializeAchievements()
+        {
+            achievements = new List<AchievementInfo>
+            {
+                new AchievementInfo(gameSettings.CompleteCampaignOnEasy, gameSettings.CompleteCampaignOnEasyDescription, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnMedium, gameSettings.CompleteCampaignOnMediumDescription, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnHard, gameSettings.CompleteCampaignOnHardDescription,  false),
+                new AchievementInfo(gameSettings.DefeatBlackKnight, gameSettings.DefeatBlackKnightDescription, false),
+                new AchievementInfo(gameSettings.ReachFinalLevelWith8Players, gameSettings.ReachFinalLevelWith8PlayersDescription,  false),
+                new AchievementInfo(gameSettings.FinishALevelWithoutUnitLoss, gameSettings.FinishALevelWithoutUnitLossDescription, false),
+                new AchievementInfo(gameSettings.FinishCampaignWithoutUnitLoss, gameSettings.FinishCampaignWithoutUnitLossDescription, false),
+                new AchievementInfo(gameSettings.SaveAllRecruitablesFromAlternatePath, gameSettings.SaveAllRecruitablesFromAlternatePathDescription,  false)
+            };
+        }
         #endregion
 
         //Author : Antoine Lessard
@@ -147,6 +166,30 @@ namespace Game
         }
         
         /// <summary>
+        /// Check for existing achievements in the database, if there are, we load those achievements and their status, otherwise, we create and add them
+        /// </summary>
+        private void CheckForAchievements()
+        {
+            var achievementsInDatabase = achievementsRepo.FindAll();
+
+            if (achievementsInDatabase.Count == 0)
+            {
+                foreach (var achievement in achievements)
+                {
+                    achievementsRepo.Insert(achievement);
+                }
+            }
+            else
+            {
+                achievements.Clear();
+                foreach (var achievement in achievementsInDatabase)
+                {
+                    achievements.Add(achievement);
+                }
+            }
+        }
+
+        /// <summary>
         /// Check for existing saves in the database, if there are, we load those saves, otherwise, we create them as "new saves"
         /// </summary>
         private void CheckForExistingSaves()
@@ -164,6 +207,15 @@ namespace Game
                 saveSlot1 = saves[0];
                 saveSlot2 = saves[1];
                 saveSlot3 = saves[2];
+            }
+        }
+
+        public void UpdateAchievements(List<AchievementInfo> newAchievementsInfo)
+        {
+            achievements = newAchievementsInfo;
+            foreach (var achievement in achievements)
+            {
+                achievementsRepo.Update(achievement);
             }
         }
 
@@ -266,7 +318,7 @@ namespace Game
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
 
-            SaveInfos cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
+            var cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
                 gameSettings.EmptyLevelString, playableCharactersDictionary);
             
             switch (SaveSelected)

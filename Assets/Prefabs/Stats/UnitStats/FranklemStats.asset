@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FranklemStats
   m_EditorClassIdentifier: 
   maxHealthPoints: 15
-  moveSpeed: 3
+  moveSpeed: 100
   attackStrength: 3
   hitRate: 1
   critRate: 0
