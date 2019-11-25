@@ -65,13 +65,15 @@ namespace Game
                 {
                     yield return null;
                 }
-
+                
                 currentUnit = ownedUnits[dynamicUnitCounter];
-
-                if (currentUnit.HasActed) continue;
-                var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+                
+                if (!currentUnit.HasActed)
+                {
+                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     
-                yield return currentUnit.MoveByAction(action);
+                    yield return currentUnit.MoveByAction(action);
+                }
             }
         }
         #endregion ComputerPlayer-related Functions

@@ -81,6 +81,7 @@ namespace Game
         private bool LevelFailed => ProtagonistDied;
         private bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
+        
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
 
         public AudioClip BackgroundMusic => backgroundMusic;
@@ -138,11 +139,12 @@ namespace Game
         
         protected void Update()
         {
+            //TODO enlever ca
             if(Input.GetKeyDown(gameSettings.SkipLevelKey))
             {
                 skipLevel = true;
             }
-            
+            //TODO enlever doNotEnd du projet en entier, right?
             if (!doNotEnd && LevelEnded)
             {
                 ResetUnitsAlpha();
@@ -157,6 +159,7 @@ namespace Game
                 CheckForComputerTurnSkip();
                 CheckForPlayerTurnSkip();
             }
+            
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play(currentPlayer);
@@ -264,9 +267,40 @@ namespace Game
             
             CheckForPermadeath();
 
+            CheckIfUnitWasRecruited();
+
+            CheckIfUpperPathWasTaken();
+            
             UpdatePlayerSave();
 
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+        }
+
+        private void CheckIfUpperPathWasTaken()
+        {
+            if (levelName == gameSettings.DarkTowerSceneName)
+            {
+                var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+                foreach (var character in characterInfos.Where(character =>
+                    character.CharacterName == gameSettings.AbrahamName || character.CharacterName == gameSettings.ThomasName))
+                {
+                    character.CharacterStatus = false;
+                }
+            }
+        }
+
+        private void CheckIfUnitWasRecruited()
+        {
+            foreach (var unit in units)
+            {
+                if (unit.IsRecruitable)
+                {
+                    var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+
+                    characterInfos.Find(info => info.CharacterName == unit.name).CharacterStatus = false;
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -302,6 +336,11 @@ namespace Game
             if (currentPlayer is HumanPlayer)
             {
                 numberOfPlayerTurns++;
+                EnemyRangeController.OnPlayerTurn(players[1].OwnedUnits);
+            }
+            else
+            {
+                EnemyRangeController.OnComputerTurn();
             }
             uiController.ModifyTurnInfo(currentPlayer);
             uiController.ModifyTurnCounter(numberOfPlayerTurns);
@@ -459,9 +498,7 @@ namespace Game
             if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
             {
                 if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
-                {
                     ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
-                }
             }
         }
         #endregion
