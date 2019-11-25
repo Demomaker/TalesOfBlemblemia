@@ -58,6 +58,7 @@ public class PointingArrow : MonoBehaviour
 
     private void OnDisable()
     {
+        if(nextArrowToActivate == null || !nextArrowToActivate.gameObject.activeSelf)
         StopPointing();
         onHurt.Notify -= UnitToAttackWasAttacked;
         onDodge.Notify -= UnitToAttackWasAttacked;

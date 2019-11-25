@@ -11,6 +11,7 @@ namespace Game
 
         protected Tile currentTile;
         private int currentHealthPoints;
+        private OnUnitDeath onUnitDeath;
 
         private LevelController levelController;
 
@@ -51,6 +52,7 @@ namespace Game
         public virtual void Awake()
         {
             levelController = Harmony.Finder.LevelController;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
         }
         
         protected virtual void Start()

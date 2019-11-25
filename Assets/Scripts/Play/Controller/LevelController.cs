@@ -286,12 +286,10 @@ namespace Game
                     break;
                 }
 
-                if (gameController.PermaDeath)
+                if (!gameController.PermaDeath) continue;
+                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
                 {
-                    foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
-                    {
-                        character.CharacterStatus = false;
-                    }
+                    character.CharacterStatus = false;
                 }
             }
         }
@@ -313,21 +311,13 @@ namespace Game
                 ? targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length
                 : targetsToDefeat.Count(target => target == null || target.NoHealthLeft) > 0;
         }
-        
-        private bool TargetToProtectHasDied()
-        {
-            return targetsToProtect.Any(target => target != null && target.NoHealthLeft);
-        }
 
         private void Play(UnitOwner unitOwner)
         {
             unitOwner.RemoveDeadUnits();
-            if (!isComputerPlaying && unitOwner is ComputerPlayer)
-            {
-                isComputerPlaying = true;
-                var currentComputerPlayer = unitOwner as ComputerPlayer;
-                StartCoroutine(currentComputerPlayer.PlayUnits());
-            }
+            if (isComputerPlaying || !(unitOwner is ComputerPlayer currentComputerPlayer)) return;
+            isComputerPlaying = true;
+            StartCoroutine(currentComputerPlayer.PlayUnits());
         }
 
         private void CheckForPlayerTurnSkip()
@@ -373,25 +363,18 @@ namespace Game
 
         private void CheckForCurrentPlayerEndOfTurn()
         {
-            if (currentPlayer.HasNoMorePlayableUnits)
-            {
-                ResetUnitsAlpha();
-                GiveTurnToNextPlayer();
-                OnTurnGiven();
-            }
+            if (!currentPlayer.HasNoMorePlayableUnits) return;
+            ResetUnitsAlpha();
+            GiveTurnToNextPlayer();
+            OnTurnGiven();
         }
 
 
         private void CheckForCurrentPlayerLoss()
         {
-            if (!currentPlayer.HaveAllUnitsDied()) return;
+            if (currentPlayer != null && !currentPlayer.HaveAllUnitsDied()) return;
             currentPlayer.Lose();
             GiveTurnToNextPlayer();
-        }
-
-        private bool HasWon(UnitOwner unitOwner)
-        {
-            return players.Contains(unitOwner) && players.Count <= 1;
         }
 
         private void GiveTurnToNextPlayer()
@@ -411,14 +394,16 @@ namespace Game
         {
             var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
 
-            foreach (
-                var gameUnit in 
-                from gameUnit in currentPlayer.OwnedUnits
+            var unitsToRemove = (from gameUnit in currentPlayer.OwnedUnits
                 from saveUnit in characterInfos
                 where gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus
-                select gameUnit)
+                select gameUnit).ToList();
+
+            foreach (var unit in unitsToRemove)
             {
-                gameUnit.gameObject.SetActive(false);
+                unit.gameObject.SetActive(false);
+                currentPlayer.OwnedUnits.Remove(unit);
+                players.Find(owner => owner != currentPlayer).RemoveEnemyUnit(unit);
             }
         }
         #endregion

@@ -11,6 +11,9 @@ namespace Game
     public class ComputerPlayer : UnitOwner
     {
         #region Fields
+        private int dynamicUnitCounter;
+        private int dynamicUnitCount;
+        private Unit currentUnit = null;
         private static ComputerPlayer instance = null;
         private const string COMPUTER_PLAYER_NAME = "Enemy";
         private List<Targetable> targetsToDestroy;
@@ -47,16 +50,10 @@ namespace Game
         
         private void OnUnitDeath(Unit unit)
         {
-            if (unit == currentUnit)
-            {
-                dynamicUnitCount--;
-                dynamicUnitCounter--;
-            }
+            if (unit != currentUnit) return;
+            dynamicUnitCount--;
+            dynamicUnitCounter--;
         }
-
-        private int dynamicUnitCounter;
-        private int dynamicUnitCount;
-        private Unit currentUnit = null;
 
         public IEnumerator PlayUnits()
         {
@@ -70,14 +67,11 @@ namespace Game
                 }
 
                 currentUnit = ownedUnits[dynamicUnitCounter];
-                
-                if (!currentUnit.HasActed)
-                {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+
+                if (currentUnit.HasActed) continue;
+                var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     
-                    yield return currentUnit.MoveByAction(action);
-                    
-                }
+                yield return currentUnit.MoveByAction(action);
             }
         }
         #endregion ComputerPlayer-related Functions

@@ -8970,6 +8970,11 @@ PrefabInstance:
       propertyPath: nextArrowToActivate
       value: 
       objectReference: {fileID: 682070054}
+    - target: {fileID: 6664270035422016782, guid: 3816b382bc0d99044955b1efc5f4f115,
+        type: 3}
+      propertyPath: cinematicToTriggerOnStop
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 215045943551267698, guid: 3816b382bc0d99044955b1efc5f4f115,
         type: 3}
       propertyPath: blinkSprite
@@ -89232,6 +89237,11 @@ PrefabInstance:
     - target: {fileID: 5313399482183253931, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2713265489608731543, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
