@@ -30,7 +30,7 @@ namespace Game
         {
             //Player cannot play while a cinematic is playing or if another of its units is moving
             if (tile == null || levelController.PlayerUnitIsMovingOrAttacking || levelController.CinematicController.IsPlayingACinematic || levelController.CurrentPlayer is ComputerPlayer) return;
-            
+
             var gridController = Finder.GridController;
             ClickButton clickButton = ReadClick(eventData);
             EventSystem.current.SetSelectedGameObject(null);
@@ -71,6 +71,8 @@ namespace Game
                     DeselectUnit(gridController);
                 }
             }
+
+            tile.UpdateClickHint();
         }
 
         private void DeselectUnit(GridController gridController)
@@ -78,6 +80,7 @@ namespace Game
             gridController.DeselectUnit();
             gridController.RemoveActionPath();
             PlayerClickManager.Reset();
+            tile.UpdateClickHint();
         }
 
         private void SelectUnit(GridController gridController)
@@ -86,13 +89,12 @@ namespace Game
             PlayerClickManager.Reset();
             gridController.SelectUnit(tile.LinkedUnit);
             gridController.DisplayPossibleActionsFrom(tile);
+            tile.UpdateClickHint();
         }
 
         private ClickButton ReadClick(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Right)
-                return ClickButton.RightClick;
-            return ClickButton.LeftClick;
+            return eventData.button == PointerEventData.InputButton.Right ? ClickButton.RightClick : ClickButton.LeftClick;
         }
     }
 }
