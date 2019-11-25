@@ -101,7 +101,9 @@ MonoBehaviour:
   unitInfos: {fileID: 11400000, guid: 3d2c99c848c609b4e89fbb195c641ca9, type: 2}
   playerType: 2
   classStats: {fileID: 11400000, guid: 4c7f10602b3245541836a9c82e85be9c, type: 2}
-  gender: 0
+  isImmuneToCrits: 0
+  canCritOnEverybody: 0
+  detectionRadius: 50
 --- !u!114 &6297388866274995531
 MonoBehaviour:
   m_ObjectHideFlags: 0
