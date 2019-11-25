@@ -441,7 +441,11 @@ namespace Game
         {
             foreach (var unit in currentPlayer.OwnedUnits)
             {
-                unit.gameObject.GetComponent<SpriteRenderer>().color = gameSettings.OpaqueAlpha;
+                SpriteRenderer[] spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
+                foreach (var spriteRenderer in spriteRenderers)
+                {
+                    spriteRenderer.color = gameSettings.OpaqueAlpha;
+                }
             }
         }
         

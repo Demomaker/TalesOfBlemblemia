@@ -16,15 +16,11 @@ namespace Game
         [SerializeField] private KeyCode pauseButton = KeyCode.Escape;
 
         private bool isPaused;
-
-        //TODO necessaire?
-        private Navigator navigator;
         private CinematicController cinematicController;
 
         private void Awake()
         {
             isPaused = false;
-            navigator = Finder.Navigator;
         }
 
         private void Start()
