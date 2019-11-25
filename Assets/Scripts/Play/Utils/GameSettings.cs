@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game
 {
@@ -10,6 +11,8 @@ namespace Game
     [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
     {
+        private const float RGB_MAX = 255f;
+        
         #region Serialized Fields
         [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
         [SerializeField] private int enemyMovementRange = 3;
@@ -36,12 +39,12 @@ namespace Game
         [SerializeField] private R.E.Scene startingLevelScene;
         
         [Header("Colors")] 
-        [SerializeField] private Color green;
-        [SerializeField] private Color red;
-        [SerializeField] private Color grey;
-        [SerializeField] private Color darkGreen;
-        [SerializeField] private Color darkYellow;
-        [SerializeField] private Color darkRed;
+        [SerializeField] private Color green = Color.green;
+        [SerializeField] private Color red = Color.red;
+        [SerializeField] private Color gray = Color.gray;
+        [SerializeField] private Color darkGreen = new Color(0, 113f/RGB_MAX, 0);
+        [SerializeField] private Color darkYellow = new Color(226f/RGB_MAX, 218f/RGB_MAX, 0);
+        [SerializeField] private Color darkRed = new Color(159f/RGB_MAX, 0 ,0);
         [SerializeField] private Color paleAlpha = new Color(1,1,1, 0.5f);
         [SerializeField] private Color opaqueAlpha = new Color(1, 1, 1, 1f);
 
@@ -86,7 +89,7 @@ namespace Game
         public Color OpaqueAlpha => opaqueAlpha;
         public Color Green => green;
         public Color Red => red;
-        public Color Grey => grey;
+        public Color Gray => gray;
         public Color DarkGreen => darkGreen;
         public Color DarkYellow => darkYellow;
         public Color DarkRed => darkRed;
