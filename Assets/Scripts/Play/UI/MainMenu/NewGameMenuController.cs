@@ -75,6 +75,10 @@ namespace Game
                     break;
             }
             
+            //TODO:check pour le fix
+            saves[saveSlotSelectedNumber - 1].LevelName = gameSettings.ParabeneForestSceneName;
+            gameController.PreviousLevelName = gameSettings.SnowyPeaksSceneName;
+            
             saveController.UpdateSave(saveSlotSelectedNumber);
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
