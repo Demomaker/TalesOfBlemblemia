@@ -13,11 +13,13 @@ namespace Game
         [SerializeField] private LoadGameMenuController loadGameMenuController;
         [SerializeField] private OptionsMenuController optionsMenuController;
         [SerializeField] private CreditsMenuController creditsMenuController;
+        [SerializeField] private AchievementsMenuController achievementMenuController;
 
         [Header("Buttons")] 
         [SerializeField] private Button newGameButton = null;
         [SerializeField] private Button loadGameButton = null;
         [SerializeField] private Button optionsButton = null;
+        [SerializeField] private Button achievementsButton;
         [SerializeField] private Button creditsButton = null;
         [SerializeField] private Button exitGameButton = null;
 
@@ -59,6 +61,12 @@ namespace Game
         public void Options()
         {
             optionsMenuController.Enter();
+        }
+
+        [UsedImplicitly]
+        public void Achievements()
+        {
+            achievementMenuController.Enter();
         }
 
         [UsedImplicitly]
