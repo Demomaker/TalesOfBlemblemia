@@ -69,15 +69,7 @@ namespace Game
                     yield return null;
                 }
 
-                try
-                {
-                    currentUnit = ownedUnits[dynamicUnitCounter];
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                currentUnit = ownedUnits[dynamicUnitCounter];
                 
                 if (!currentUnit.HasActed)
                 {
