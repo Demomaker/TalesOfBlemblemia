@@ -9,6 +9,7 @@ namespace Game
     public class HumanPlayer : UnitOwner
     {
         #region Fields
+        private const string HUMAN_PLAYER_NAME = "Player";
         private bool hasEverLostAUnit = false;
         private bool hasLostAUnitInCurrentLevel = false;
         private int numberOfRecruitedUnitsFromAlternativePath = 0;
@@ -37,6 +38,7 @@ namespace Game
         #region Constructors
         private HumanPlayer()
         {
+            name = HUMAN_PLAYER_NAME;
         }
         #endregion Constructors
         #region HumanPlayer-related Functions

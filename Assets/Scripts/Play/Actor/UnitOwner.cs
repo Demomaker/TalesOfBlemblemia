@@ -13,7 +13,7 @@ namespace Game
         protected readonly List<Unit> enemyUnits = new List<Unit>();
         #endregion ReadOnly Fields
         #region Other Fields
-        private string name = "";
+        protected string name;
         #endregion Other Fields
         #region Accessors
         public string Name => name;
@@ -35,15 +35,18 @@ namespace Game
 
         public bool HasLost { get; set; }
 
-        public void RemoveDeadUnits()
+        public int RemoveDeadUnits()
         {
+            int unitsRemoved = 0;
             for (int i = 0; i < ownedUnits.Count; i++)
             {
                 if (ownedUnits[i].NoHealthLeft)
                 {
                     RemoveOwnedUnit(ownedUnits[i]);
+                    unitsRemoved++;
                 }
             }
+            return unitsRemoved;
         }
         #endregion Accessors
         #region UnitOwner-related Functions

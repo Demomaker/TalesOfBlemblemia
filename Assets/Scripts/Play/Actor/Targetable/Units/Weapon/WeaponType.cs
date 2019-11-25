@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using UnityEngine;
+
+namespace Game
 {
     /// Author: Jérémie Bertrand, Zacharie Lavigne
     public enum WeaponType

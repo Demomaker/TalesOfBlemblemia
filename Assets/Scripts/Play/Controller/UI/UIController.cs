@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Harmony;
 using JetBrains.Annotations;
 using TMPro;
@@ -13,14 +14,13 @@ namespace Game
     public class UIController : MonoBehaviour
     {
         private const string TURN_FORMAT_TEXT = "00";
-        private const string TURN_DISPLAY_TEXT = " turn";
-        private const string UNREACHABLE_TILE_TEXT = "Unreachable";
+        private const string TURN_DISPLAY_TEXT = "Turn ";
+        private const string UNREACHABLE_TILE_TEXT = "X";//"\u221E";//TODO decider du symbole
         private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
         private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
         
         [Header("Canvas")] [SerializeField] private Canvas canvas;
-        [Header("TileInfo")] 
-        [SerializeField] private TMP_Text tileType;
+        [Header("TileInfo")]
         [SerializeField] private TMP_Text tileDefense;
         [SerializeField] private TMP_Text tileMouvementEffect;
         [SerializeField] private Image tileTexture;
@@ -28,6 +28,7 @@ namespace Game
         [Header("Turn")] 
         [SerializeField] private TMP_Text turnCounter;
         [SerializeField] private TMP_Text turnInfo;
+        [SerializeField] private Animator playerInfoAnimator;
 
         [Header("Victory Condition")] [SerializeField] private TMP_Text victoryCondition;
 
@@ -44,14 +45,10 @@ namespace Game
         [SerializeField] private LayoutGroup enemyHealthBarLayout;
         [SerializeField] private GameObject enemyDeathSymbol;
 
-        [Header("Colors")] 
-        [SerializeField] private Color green;
-        [SerializeField] private Color red;
-        [SerializeField] private Color grey;
-
         private Animator playerAnimator;
         private Animator enemyAnimator;
         private static readonly int IS_ATTACKING = Animator.StringToHash("IsAttacking");
+        private static readonly int IS_ENEMY_TURN = Animator.StringToHash("IsEnemyTurn");
 
         private bool animationIsPlaying;
         private BattleInfos playerBattleInfos;
@@ -60,10 +57,15 @@ namespace Game
         private GameObject[] playerHealthBar;
         private GameObject[] enemyHealthBar;
 
+        private GameSettings gameSettings;
+
 
         public bool IsBattleReportActive => battleReports.activeSelf;
 
-
+        private void Awake()
+        {
+            gameSettings = Harmony.Finder.GameSettings;
+        }
 
         private void Start()
         {
@@ -102,7 +104,7 @@ namespace Game
             for (int i = 0; i < currentHealthPoint; i++)
             {
                 RawImage healthBarImage = healthBar[i].GetComponentInChildren<RawImage>();
-                healthBarImage.color = green;
+                healthBarImage.color = gameSettings.Green;
             }
             
             for (int i = maxHealthPoints; i > currentHealthPoint; i--)
@@ -110,7 +112,7 @@ namespace Game
                 if (i - 1 < 0) continue;
                 RawImage healthBarImage;
                 healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                healthBarImage.color = grey;
+                healthBarImage.color = gameSettings.Gray;
 
             }
 
@@ -120,7 +122,7 @@ namespace Game
                 {
                     if (i <= 0) break;
                     RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
-                    healthBarImage.color = red;
+                    healthBarImage.color = gameSettings.Red;
                 }
             }
         }
@@ -212,29 +214,66 @@ namespace Game
             battleReports.SetActive(false);
         }
 
-        public void ModifyPlayerUi(Tile tile)
-        {
-            tileType.text = tile.TileType.ToString();
-            tileDefense.text = (tile.DefenseRate * 100) + "%";
-            tileMouvementEffect.text = tile.CostToMove.ToString();
-            if (tileMouvementEffect.text == int.MaxValue.ToString()) tileMouvementEffect.text = UNREACHABLE_TILE_TEXT;
-
-            tileTexture.sprite = tile.GetSprite();
-        }
-
         public void ModifyTurnCounter(int turns)
         {
-            turnCounter.text = turns.ToString(TURN_FORMAT_TEXT);
+            turnCounter.text = TURN_DISPLAY_TEXT + turns.ToString(TURN_FORMAT_TEXT);
         }
 
-        public void ModifyTurnInfo(string player)
+        public void ModifyTurnInfo(UnitOwner player)
         {
-            turnInfo.text = player + TURN_DISPLAY_TEXT;
+            turnInfo.text = player.Name;
+            playerInfoAnimator.SetBool(IS_ENEMY_TURN, player is ComputerPlayer);
         }
 
         public void ModifyVictoryCondition(string victoryCondition)
         {
             this.victoryCondition.text = victoryCondition;
+        }
+        
+        public void UpdateTileInfos(Tile tile)
+        {
+            UpdateTileSprite(tile.GetSprite());
+            UpdateTileCostToMoveText(tile.CostToMove);
+            UpdateTileDefenseText(tile.DefenseRate);
+        }
+
+        private void UpdateTileSprite(Sprite tileSprite)
+        {
+            tileTexture.sprite = tileSprite;
+        }
+
+        private void UpdateTileCostToMoveText(int costToMove)
+        {
+            switch (costToMove)
+            {
+                case TileTypeExt.LOW_COST_TO_MOVE:
+                    tileMouvementEffect.color = gameSettings.DarkGreen;
+                    break;
+                case TileTypeExt.MEDIUM_COST_TO_MOVE:
+                    tileMouvementEffect.color = gameSettings.DarkYellow;
+                    break;
+                case TileTypeExt.HIGH_COST_TO_MOVE:
+                    tileMouvementEffect.color = gameSettings.DarkRed;
+                    break;
+            }
+            tileMouvementEffect.text = costToMove == TileTypeExt.HIGH_COST_TO_MOVE ? UNREACHABLE_TILE_TEXT : costToMove.ToString();
+        }
+
+        private void UpdateTileDefenseText(float defenseRate)
+        {
+            switch (defenseRate)
+            {
+                case TileTypeExt.LOW_DEFENSE_RATE:
+                    tileDefense.color = gameSettings.DarkRed;
+                    break;
+                case TileTypeExt.MEDIUM_DEFENSE_RATE:
+                    tileDefense.color = gameSettings.DarkYellow;
+                    break;
+                case TileTypeExt.HIGH_DEFENSE_RATE:
+                    tileDefense.color = gameSettings.DarkGreen;
+                    break;
+            }
+            tileDefense.text = defenseRate * 100 + "%";
         }
     }
 }

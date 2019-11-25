@@ -22,17 +22,24 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>The action the unit should play on its turn</returns>
-        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> TargetsToDestroy)
+        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
         {
+            if (!playableUnit.IsAwake)
+            {
+                if ((playableUnit.IsAwake = CheckRadius(playableUnit, enemyUnits)) == false)
+                {
+                    return null;
+                }
+            }
             //Every potential actions the unit could do
             List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
-            actionsToDo.AddRange(ScanForTargets(playableUnit, TargetsToDestroy));
+            actionsToDo.AddRange(ScanForTargets(playableUnit, targetsToDestroy));
             
             //Setting every action's turn
             ComputeChoiceScores(actionsToDo, playableUnit);
             
             //The best potential actions
-            Action[] bestActions = GetBestActions(actionsToDo);
+            List<Action> bestActions = GetBestActions(actionsToDo);
 
             //Verification of if resting and fleeing is needed
             AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo);
@@ -40,47 +47,70 @@ namespace Game
             //The action is randomly selected from the best possible ones
             return SelectRandomBestAction(bestActions);
         }
-        
+
+        private static bool CheckRadius(Unit playableUnit, List<Unit> enemyUnits)
+        {
+            var playableUnitPosition = playableUnit.CurrentTile.LogicalPosition;
+            int radius = playableUnit.DetectionRadius;
+            foreach (var unit in enemyUnits)
+            {
+                var diffX = playableUnitPosition.x - unit.CurrentTile.LogicalPosition.x;
+                var diffY = playableUnitPosition.y - unit.CurrentTile.LogicalPosition.y;
+                if ((diffX * diffX + diffY * diffY) <= radius * radius)
+                    return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Randomly chooses an action from the best possible actions to do
         /// </summary>
         /// <param name="bestActions">The best possible actions to do</param>
         /// <returns>A randomly chosen an action</returns>
-        private static Action SelectRandomBestAction(Action[] bestActions)
+        private static Action SelectRandomBestAction(List<Action> bestActions)
         {
-            Action bestAction = null;
-            bool allActionsAreNull = true;
-            for (int i = 0; i < bestActions.Length; i++)
+            int totalScore = (int)GetTotalScore(bestActions);
+
+            if (totalScore > 0)
             {
-                if (bestActions[i] != null)
+                float diceRoll = Finder.Random.Next(0, totalScore);
+
+                foreach (var action in bestActions)
                 {
-                    allActionsAreNull = false;
-                    i = bestActions.Length;
-                }
-            }
-            if (!allActionsAreNull)
-            {
-                while (bestAction == null)
-                {
-                    bestAction = bestActions[Finder.Random.Next(0, nbOfChoice)];
+                    if (diceRoll < action.Score)
+                    {
+                        return action;
+                    }
+
+                    diceRoll -= action.Score;
                 }
             }
 
-            return bestAction;
+            return null;
         }
-        
+
+        private static float GetTotalScore(List<Action> bestActions)
+        {
+            float totalScore = 0;
+            foreach (var action in bestActions)
+            {
+                totalScore += action.Score;
+            }
+            return totalScore;
+        }
+
         /// <summary>
         /// Adds resting as a potential action if needed
         /// </summary>
         /// <param name="bestActions">The best possible actions to do</param>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="actionsToDo">The potential actions the unit could do</param>
-        private static void AddRestActionIfNeeded(Action[] bestActions, Unit playableUnit, List<Action> actionsToDo)
+        private static void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
             if(playableUnit.Stats.MaxHealthPoints * AiControllerValues.HEALTH_MOD_FOR_RESTING < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
             {
-                bestActions[nbOfChoice - 1] = new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, null, AiControllerValues.BASE_CHOICE_ACTION_SCORE);
+                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, null, AiControllerValues.BASE_CHOICE_ACTION_SCORE));
             }
         }
         
@@ -110,12 +140,12 @@ namespace Game
         /// </summary>
         /// <param name="actionsToDo">The action to execute on this turn</param>
         /// <returns>An array of all the best possible actions</returns>
-        private static Action[] GetBestActions(List<Action> actionsToDo)
+        private static List<Action> GetBestActions(List<Action> actionsToDo)
         {
             //Copy to not change the original list
             actionsToDo = new List<Action>(actionsToDo);
             
-            Action[] bestAttacks = new Action[nbOfChoice];
+            List<Action> bestAttacks = new List<Action>();
             
             //The index of the highest scored action in the action list
             int actionIndex = 0;
@@ -123,13 +153,13 @@ namespace Game
             for (int i = 0; i < nbOfChoice; i++)
             {
                 actionIndex = FindBestAttack(actionsToDo);
-                if (actionIndex > -1)
+                if (actionIndex > -1 && actionsToDo[actionIndex] != null)
                 {
-                    bestAttacks[i] = actionsToDo[actionIndex];
+                    bestAttacks.Add(actionsToDo[actionIndex]);
                     //The current best action in the list is removed
                     actionsToDo.RemoveAt(actionIndex);
                 }
-                else if(bestAttacks.Length == 0)
+                else if(bestAttacks.Count == 0)
                     i = nbOfChoice;
             }
             
