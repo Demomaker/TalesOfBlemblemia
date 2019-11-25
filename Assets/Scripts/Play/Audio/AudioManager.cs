@@ -6,12 +6,15 @@ using Debug = System.Diagnostics.Debug;
 namespace Game
 {
     /// <summary>
-    /// Manages the sounds and music of the game
+    /// Manages the audio of the game
     /// Author : Mike Bédard
     /// </summary>
     public class AudioManager : MonoBehaviour
     {
+        #region Serialized Fields
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
+        #endregion Serialized Fields
+        #region Other Fields
         private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
@@ -37,6 +40,7 @@ namespace Game
         private OnMainVolumeChange onMainVolumeChange;
         private OnMusicVolumeChange onMusicVolumeChange;
         private OnSFXVolumeChange onSFXVolumeChange;
+        #endregion Other Fields
         #region Unity Event Functions
         private void Awake ()
         {
@@ -50,7 +54,7 @@ namespace Game
 
             InitializeEventChannels();
             audioClips = Finder.AudioClips;
-            if(audioClips == null) audioClips = new NullAudioClips();
+            if(audioClips == null) audioClips = new AudioClips();
         }
 
         private void OnEnable()
@@ -188,7 +192,7 @@ namespace Game
         //Used to play single sound clips.
         private void PlaySFX(AudioClip clip, Vector2 position = new Vector2())
         {
-            if (audioClips is NullAudioClips) return;
+            if (audioClips is null) return;
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
             {
                 if (sfxSources[i].isPlaying == false)
@@ -209,7 +213,7 @@ namespace Game
         //Used to play music clips
         private void PlayMusic(AudioClip clip)
         {
-            if (audioClips is NullAudioClips) return;
+            if (audioClips is null) return;
             StopCurrentMusic();
             
             //Set the clip of our musicSource audio source to the clip passed in as a parameter.
@@ -238,7 +242,7 @@ namespace Game
 
         private void PlayAttackSound(Unit unit)
         {
-            switch (unit.Gender)
+            switch (unit.UnitInfos.Gender)
             {
                 case UnitGender.Male :
                     PlaySFX(audioClips.MaleAttackSound, unit.transform.position);

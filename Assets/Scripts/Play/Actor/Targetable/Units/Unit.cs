@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game
@@ -16,8 +15,9 @@ namespace Game
         [SerializeField] private UnitInfos unitInfos;
         [SerializeField] private PlayerType playerType;
         [SerializeField] private UnitStats classStats;
-        [SerializeField] private UnitGender gender;
-        
+        [SerializeField] private bool isImmuneToCrits;
+        [SerializeField] private bool canCritOnEverybody;
+
         #endregion
         
         #region Fields
@@ -97,7 +97,7 @@ namespace Game
         }
         public bool IsEnemy => playerType == PlayerType.Enemy;
         public bool IsPlayer => playerType == PlayerType.Ally;
-        public bool IsRecruitable => playerType == PlayerType.None;
+        public bool IsRecruitable => playerType == PlayerType.Recruitable;
         public UnitStats Stats => classStats + weapon.WeaponStats;
         public WeaponType WeaponType => weapon.WeaponType;
         public WeaponType WeaponAdvantage => weapon.Advantage;
@@ -125,8 +125,6 @@ namespace Game
             }
         }
         public int AttackRange => 1;
-
-        public UnitGender Gender => gender;
 
         public UnitInfos UnitInfos => unitInfos;
 
@@ -247,7 +245,7 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            return StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
+            return levelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -287,52 +285,70 @@ namespace Game
                 isMoving = false;
             }
 
-            if (action.ActionType != ActionType.Nothing)
+            if (action != null)
             {
-                if (action.ActionType == ActionType.Attack && action.Target != null)
+                if (action.ActionType != ActionType.Nothing)
                 {
-                    onAttack.Publish(this);
-                    if (TargetIsInRange(action.Target))
+                    if (action.ActionType == ActionType.Attack && action.Target != null)
                     {
-                        yield return Attack(action.Target);
-                        if (action.Target.GetType() == typeof(Unit))
-                            if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
-                                yield return uiController.LaunchBattleReport(IsEnemy);
-                            else
-                                yield break;  
+                        onAttack.Publish(this);
+                        if (TargetIsInRange(action.Target))
+                        {
+                            yield return Attack(action.Target);
+                            if (action.Target.GetType() == typeof(Unit))
+                                if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+                                    yield return uiController.LaunchBattleReport(IsEnemy);
+                                else
+                                    yield break;
+                        }
+                        else
+                            Rest();
+                    }
+
+                    if (action.ActionType == ActionType.Recruit && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit) action.Target))
+                            Rest();
+                    }
+
+                    if (action.ActionType == ActionType.Heal && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit) action.Target))
+                            Rest();
                     }
                     else
+                    {
                         Rest();
+                    }
                 }
-                if (action.ActionType == ActionType.Recruit && action.Target != null)
-                {
-                    if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit)action.Target))
-                        Rest();
-                }
-                if (action.ActionType == ActionType.Heal && action.Target != null)
-                {
-                    if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit)action.Target))
-                        Rest();
-                }
-                else
-                {
-                    Rest();
-                }
+            }
+            else
+            {
+                Rest();
             }
         }
+
+        private bool hasDiedOnce = false;
+        
         public override IEnumerator Die()
         {
-            GetComponent<Cinematic>()?.TriggerCinematic();
-            while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+            if (!hasDiedOnce)
             {
-                yield return null;
+                hasDiedOnce = true;
+                GetComponent<Cinematic>()?.TriggerCinematic();
+                while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
+                       Harmony.Finder.UIController.IsBattleReportActive)
+                {
+                    yield return null;
+                }
+
+                isGoingToDie = true;
+                onUnitDeath.Publish(this);
+                if (playerType == PlayerType.Ally)
+                    onPlayerUnitLoss.Publish(this);
+                isGoingToDie = false;
+                yield return base.Die();
             }
-            isGoingToDie = true;
-            onUnitDeath.Publish(this);
-            if(playerType == PlayerType.Ally)
-                onPlayerUnitLoss.Publish(this);
-            isGoingToDie = false;
-            yield return base.Die();
         }
         #endregion
         
@@ -390,12 +406,11 @@ namespace Game
                 if(target is Unit unit)
                     onDodge.Publish(unit);
             }
-            else
+            else if (target is Unit unit)
             {
-                if(target is Unit unit)
-                    onHurt.Publish(unit);
+                onHurt.Publish(unit);
             }
-            if (!isCountering && (target.GetType() == typeof(Unit) || (target.GetType() == typeof(Unit) && ((Unit)target).WeaponType == WeaponAdvantage)))
+            if (!isCountering && !isImmuneToCrits && (target.GetType() == typeof(Unit) && (canCritOnEverybody || ((Unit)target).WeaponType == WeaponAdvantage)))
             {
                 damage *= Random.value <= Stats.CritRate ? 2 : 1;
             }
@@ -436,7 +451,7 @@ namespace Game
             {
                 playerType = PlayerType.Ally;
                 HumanPlayer.Instance.AddOwnedUnit(this);
-                GetComponent<Cinematic>()?.TriggerCinematic();
+                GetComponentInChildren<Cinematic>()?.TriggerCinematic();
                 
             }
             return IsRecruitable;
