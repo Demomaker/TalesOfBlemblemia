@@ -17,13 +17,9 @@ namespace Game
 
         private bool isPaused;
 
-        //TODO necessaire?
-        private Navigator navigator;
-
         private void Awake()
         {
             isPaused = false;
-            navigator = Finder.Navigator;
         }
 
         private void Start()

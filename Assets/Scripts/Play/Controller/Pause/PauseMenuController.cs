@@ -8,13 +8,6 @@ namespace Game
     //Author: Antoine Lessard
     public class PauseMenuController : MonoBehaviour
     {
-        //TODO nécessaire?
-        [Header("Buttons")] 
-        [SerializeField] private Button resumeButton;
-        [SerializeField] private Button optionsButton;
-        [SerializeField] private Button returnToOverWorldButton;
-        [SerializeField] private Button returnToMainMenuButton;
-
         [Header("Controller")] 
         [SerializeField] private OptionsMenuController optionsMenuController;
         
