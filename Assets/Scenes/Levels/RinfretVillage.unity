@@ -36302,7 +36302,7 @@ PrefabInstance:
     - target: {fileID: 4443506807806192216, guid: 0c7ce1a2d56b386408d321e71616cf4d,
         type: 3}
       propertyPath: detectionRadius
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8872116267298990809, guid: 0c7ce1a2d56b386408d321e71616cf4d,
         type: 3}
@@ -64205,6 +64205,11 @@ PrefabInstance:
     - target: {fileID: 5313399482183253931, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2713265489608731543, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
