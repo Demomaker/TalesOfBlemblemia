@@ -422,7 +422,7 @@ namespace Game
         private void GiveTurnToNextPlayer()
         {
             isComputerPlaying = false;
-            currentPlayer.MakeOwnedUnitsUnplayable();
+            //currentPlayer.MakeOwnedUnitsUnplayable();
             var nextPlayerIndex = (players.IndexOf(currentPlayer) + 1) % 2;
         
             if (players.ElementAt(nextPlayerIndex) != null)

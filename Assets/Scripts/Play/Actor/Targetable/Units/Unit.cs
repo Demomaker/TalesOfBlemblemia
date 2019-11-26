@@ -334,14 +334,12 @@ namespace Game
                         else
                             Rest();
                     }
-
-                    if (action.ActionType == ActionType.Recruit && action.Target != null)
+                    else if (action.ActionType == ActionType.Recruit && action.Target != null)
                     {
                         if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit) action.Target))
                             Rest();
                     }
-
-                    if (action.ActionType == ActionType.Heal && action.Target != null)
+                    else if (action.ActionType == ActionType.Heal && action.Target != null)
                     {
                         if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit) action.Target))
                             Rest();
