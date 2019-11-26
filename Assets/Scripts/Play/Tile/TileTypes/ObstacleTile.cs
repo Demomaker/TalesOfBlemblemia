@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Game
+﻿namespace Game
 {
     //Author: Jérémie Bertrand
     public class ObstacleTile : Tile
