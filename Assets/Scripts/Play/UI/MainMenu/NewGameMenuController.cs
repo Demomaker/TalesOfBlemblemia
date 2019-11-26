@@ -55,9 +55,9 @@ namespace Game
                 playerNameInputField.text = "Franklem";
             }
 
-            var saves = saveController.GetSaves();
-            
             saveController.ResetSave();
+            
+            var saves = saveController.GetSaves();
             
             saves[saveSlotSelectedNumber - 1].Username = playerNameInputField.text;
             saves[saveSlotSelectedNumber - 1].DifficultyLevel = difficultyDropdownMenu.options[difficultyDropdownMenu.value].text;
@@ -74,6 +74,9 @@ namespace Game
                     gameController.DifficultyLevel = DifficultyLevel.Medium;
                     break;
             }
+            
+            saves[saveSlotSelectedNumber - 1].LevelName = gameSettings.EmptyLevelString;
+            gameController.PreviousLevelName = gameSettings.EmptyLevelString;
             
             saveController.UpdateSave(saveSlotSelectedNumber);
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
