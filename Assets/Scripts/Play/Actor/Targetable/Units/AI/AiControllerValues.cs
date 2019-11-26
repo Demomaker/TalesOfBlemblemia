@@ -4,29 +4,51 @@
     /// Constant values used by the AiController class
     /// Author: Zacharie Lavigne
     /// </summary>
-    public static class AiControllerValues
+    public class AiControllerValues
     {
-        public const float BASE_TARGET_ACTION_SCORE = BASE_CHOICE_ACTION_SCORE + 3f;
-        public const float ADJACENT_TARGET_CHOICE_MOD = 6f;
-        public const float INACCESSIBLE_TARGET_CHOICE_MOD = -15f;
-        public const float POTENTIAL_DEATH_CHOICE_MOD = -5f;
-        public const float DAMAGE_RECEIVE_CHOICE_MOD = -0.8f;
-        public const float SPEAR_ATTACKING_FORTRESS_CHOICE_MOD = -2f;
-        public const float SPEAR_ATTACKING_FOREST_CHOICE_MOD = -1f;
-        public const float AXE_ATTACKING_FORTRESS_CHOICE_MOD = -4f;
-        public const float AXE_ATTACKING_FOREST_CHOICE_MOD = -3f;
-        public const float SWORD_ATTACKING_FORTRESS_CHOICE_MOD = -3f;
-        public const float SWORD_ATTACKING_FOREST_CHOICE_MOD = -2f;
-        public const float ATTACKING_AXE_WITH_ADVANTAGE_CHOICE_MOD = 4f;
-        public const float ATTACKING_SPEAR_WITH_ADVANTAGE_CHOICE_MOD = 2f;
-        public const float ATTACKING_SWORD_WITH_ADVANTAGE_CHOICE_MOD = 3f;
-        public const float ATTACKING_AXE_WITHOUT_ADVANTAGE_CHOICE_MOD = -2f;
-        public const float ATTACKING_SPEAR_WITHOUT_ADVANTAGE_CHOICE_MOD = -3f;
-        public const float ATTACKING_SWORD_WITHOUT_ADVANTAGE_CHOICE_MOD = -2.5f;
-        public const float TURN_MULTIPLIER_FOR_DISTANCE_CHOICE_MOD = -4f;
-        public const float TURN_ADDER_FOR_DISTANCE_CHOICE_MOD = 4f;
-        public const float KILLING_ENEMY_CHOICE_MOD = 6f;
-        public const float BASE_CHOICE_ACTION_SCORE = 20f;
-        public const float HEALTH_MOD_FOR_RESTING = 1.33f; 
-    }
+        private float baseTargetActionScore = 20f + 3f;
+        private float adjacentTargetChoiceMod = 6f;
+        private float inaccessibleTargetChoiceMod = -15f;
+        private float potentialDeathChoiceMod = -5f;
+        private float damageReceiveChoiceMod = -0.8f;
+        private float spearAttackingFortressChoiceMod = -2f;
+        private float spearAttackingForestChoiceMod = -1f;
+        private float axeAttackingFortressChoiceMod = -4f;
+        private float axeAttackingForestChoiceMod = -3f;
+        private float swordAttackingFortressChoiceMod = -3f;
+        private float swordAttackingForestChoiceMod = -2f;
+        protected float attackingAxeWithAdvantageChoiceMod = 4f;
+        protected float attackingSpearWithAdvantageChoiceMod = 2f;
+        protected float attackingSwordWithAdvantageChoiceMod = 3f;
+        protected float attackingAxeWithoutAdvantageChoiceMod = -2f;
+        protected float attackingSpearWithoutAdvantageChoiceMod = -3f;
+        protected float attackingSwordWithoutAdvantageChoiceMod = -2.5f;
+        private float turnMultiplierForDistanceChoiceMod = -4f;
+        private float turnAdderForDistanceChoiceMod = 4f;
+        private float killingEnemyChoiceMod = 6f;
+        private float baseChoiceActionScore = 20f;
+        private float healthModForResting = 1.33f;
+
+        public float BaseTargetActionScore => baseTargetActionScore;
+        public float AdjacentTargetChoiceMod => adjacentTargetChoiceMod;
+        public float InaccessibleTargetChoiceMod => inaccessibleTargetChoiceMod;
+        public float PotentialDeathChoiceMod => potentialDeathChoiceMod;
+        public float DamageReceiveChoiceMod => damageReceiveChoiceMod;
+        public float SpearAttackingFortressChoiceMod => spearAttackingFortressChoiceMod;
+        public float SpearAttackingForestChoiceMod => spearAttackingForestChoiceMod;
+        public float AxeAttackingFortressChoiceMod => axeAttackingFortressChoiceMod;
+        public float AxeAttackingForestChoiceMod => axeAttackingForestChoiceMod;
+        public float SwordAttackingFortressChoiceMod => swordAttackingFortressChoiceMod;
+        public float SwordAttackingForestChoiceMod => swordAttackingForestChoiceMod;
+        public float AttackingAxeWithAdvantageChoiceMod => attackingAxeWithAdvantageChoiceMod;
+        public float AttackingSpearWithAdvantageChoiceMod => attackingSpearWithAdvantageChoiceMod;
+        public float AttackingSwordWithAdvantageChoiceMod => attackingSwordWithAdvantageChoiceMod;
+        public float AttackingAxeWithoutAdvantageChoiceMod => attackingAxeWithoutAdvantageChoiceMod;
+        public float AttackingSpearWithoutAdvantageChoiceMod => attackingSpearWithoutAdvantageChoiceMod;
+        public float AttackingSwordWithoutAdvantageChoiceMod => attackingSwordWithoutAdvantageChoiceMod;
+        public float TurnMultiplierForDistanceChoiceMod => turnMultiplierForDistanceChoiceMod;
+        public float TurnAdderForDistanceChoiceMod => turnAdderForDistanceChoiceMod;
+        public float KillingEnemyChoiceMod => killingEnemyChoiceMod;
+        public float BaseChoiceActionScore => baseChoiceActionScore;
+        public float HealthModForResting => healthModForResting;}
 }

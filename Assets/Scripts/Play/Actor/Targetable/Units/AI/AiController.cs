@@ -16,6 +16,8 @@ namespace Game
         /// </summary>
         private static int nbOfChoice = 5;
 
+        private static AiControllerValues aiControllerValues = new AiControllerValues();
+        
         /// <summary>
         /// Finds an action to do for an AI controlled unit on its turn
         /// </summary>
@@ -24,6 +26,10 @@ namespace Game
         /// <returns>The action the unit should play on its turn</returns>
         public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
         {
+            if (Harmony.Finder.LevelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert))
+            {
+                aiControllerValues = new AiControllerValuesRevert();
+            }
             if (!playableUnit.IsAwake)
             {
                 if ((playableUnit.IsAwake = CheckRadius(playableUnit, enemyUnits)) == false)
@@ -108,9 +114,9 @@ namespace Game
         private static void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
-            if(playableUnit.Stats.MaxHealthPoints * AiControllerValues.HEALTH_MOD_FOR_RESTING < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
+            if(playableUnit.Stats.MaxHealthPoints * aiControllerValues.HealthModForResting < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
             {
-                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, null, AiControllerValues.BASE_CHOICE_ACTION_SCORE));
+                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
             }
         }
         
@@ -305,7 +311,7 @@ namespace Game
             for (int i = 0; i < enemyUnits.Count; i++)
             {
                 if(enemyUnits[i] != null && enemyUnits[i].IsPlayer)
-                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, enemyUnits[i], AiControllerValues.BASE_CHOICE_ACTION_SCORE));
+                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, enemyUnits[i], aiControllerValues.BaseChoiceActionScore));
             }
             return actions;
         }
@@ -323,7 +329,7 @@ namespace Game
             {
                 if (target != null)
                 {
-                    actions.Add(new Action(FindPathTo(playableUnit, target), ActionType.Attack, target, AiControllerValues.BASE_TARGET_ACTION_SCORE));
+                    actions.Add(new Action(FindPathTo(playableUnit, target), ActionType.Attack, target, aiControllerValues.BaseTargetActionScore));
                 }
             }
             return actions;
@@ -338,7 +344,7 @@ namespace Game
         public static float HpChoiceMod(Unit playableUnit, int targetHp)
         {
             if (targetHp - playableUnit.Stats.AttackStrength <= 0)
-                return AiControllerValues.KILLING_ENEMY_CHOICE_MOD;
+                return aiControllerValues.KillingEnemyChoiceMod;
             return -(targetHp - playableUnit.Stats.AttackStrength);
         }
         
@@ -352,14 +358,14 @@ namespace Game
         {
             float scoreMod = 0f;
             if (playableUnit.TargetIsInRange(target))
-                scoreMod = AiControllerValues.ADJACENT_TARGET_CHOICE_MOD;
+                scoreMod = aiControllerValues.AdjacentTargetChoiceMod;
             else if (targetPath.Count <= 1)
-                scoreMod += AiControllerValues.INACCESSIBLE_TARGET_CHOICE_MOD;
+                scoreMod += aiControllerValues.InaccessibleTargetChoiceMod;
             else
             {
                 double nbToursDouble = PathFinder.CalculatePathCost(targetPath, playableUnit.MovementCosts) / playableUnit.Stats.MoveSpeed;
                 int nbTours = (int)Math.Ceiling(nbToursDouble);
-                scoreMod = AiControllerValues.TURN_MULTIPLIER_FOR_DISTANCE_CHOICE_MOD * nbTours + AiControllerValues.TURN_ADDER_FOR_DISTANCE_CHOICE_MOD;
+                scoreMod = aiControllerValues.TurnMultiplierForDistanceChoiceMod * nbTours + aiControllerValues.TurnAdderForDistanceChoiceMod;
             }
             return scoreMod;
         }
@@ -378,13 +384,13 @@ namespace Game
                 switch (targetWeaponType)
                 {
                     case WeaponType.Axe:
-                        choiceMod = AiControllerValues.ATTACKING_AXE_WITH_ADVANTAGE_CHOICE_MOD;
+                        choiceMod = aiControllerValues.AttackingAxeWithAdvantageChoiceMod;
                         break;
                     case WeaponType.Spear:
-                        choiceMod = AiControllerValues.ATTACKING_SPEAR_WITH_ADVANTAGE_CHOICE_MOD;
+                        choiceMod = aiControllerValues.AttackingSpearWithAdvantageChoiceMod;
                         break;
                     case WeaponType.Sword:
-                        choiceMod = AiControllerValues.ATTACKING_SWORD_WITH_ADVANTAGE_CHOICE_MOD;
+                        choiceMod = aiControllerValues.AttackingSwordWithAdvantageChoiceMod;
                         break;
                 }
             }
@@ -393,13 +399,13 @@ namespace Game
                 switch (targetWeaponType)
                 {
                     case WeaponType.Axe:
-                        choiceMod = AiControllerValues.ATTACKING_AXE_WITHOUT_ADVANTAGE_CHOICE_MOD;
+                        choiceMod = aiControllerValues.AttackingAxeWithoutAdvantageChoiceMod;
                         break;
                     case WeaponType.Spear:
-                        choiceMod = AiControllerValues.ATTACKING_SPEAR_WITHOUT_ADVANTAGE_CHOICE_MOD;
+                        choiceMod = aiControllerValues.AttackingSpearWithoutAdvantageChoiceMod;
                         break;
                     case WeaponType.Sword:
-                        choiceMod = AiControllerValues.ATTACKING_SWORD_WITHOUT_ADVANTAGE_CHOICE_MOD;
+                        choiceMod = aiControllerValues.AttackingSwordWithoutAdvantageChoiceMod;
                         break;
                 }
             }
@@ -420,21 +426,21 @@ namespace Game
             {
                 case WeaponType.Spear:
                     if(enemyTargetTile.TileType == TileType.Fortress)
-                        environmentChoiceMod = AiControllerValues.SPEAR_ATTACKING_FORTRESS_CHOICE_MOD;
+                        environmentChoiceMod = aiControllerValues.SpearAttackingFortressChoiceMod;
                     else if(enemyTargetTile.TileType == TileType.Forest)
-                        environmentChoiceMod = AiControllerValues.SPEAR_ATTACKING_FOREST_CHOICE_MOD;
+                        environmentChoiceMod = aiControllerValues.SpearAttackingForestChoiceMod;
                     break;
                 case WeaponType.Axe:
                     if(enemyTargetTile.TileType == TileType.Fortress)
-                        environmentChoiceMod = AiControllerValues.AXE_ATTACKING_FORTRESS_CHOICE_MOD;
+                        environmentChoiceMod = aiControllerValues.AxeAttackingFortressChoiceMod;
                     else if(enemyTargetTile.TileType == TileType.Forest)
-                        environmentChoiceMod = AiControllerValues.AXE_ATTACKING_FOREST_CHOICE_MOD;
+                        environmentChoiceMod = aiControllerValues.AxeAttackingForestChoiceMod;
                     break;
                 case WeaponType.Sword:
                     if(enemyTargetTile.TileType == TileType.Fortress)
-                        environmentChoiceMod = AiControllerValues.SWORD_ATTACKING_FORTRESS_CHOICE_MOD;
+                        environmentChoiceMod = aiControllerValues.SwordAttackingFortressChoiceMod;
                     else if(enemyTargetTile.TileType == TileType.Forest)
-                        environmentChoiceMod = AiControllerValues.SWORD_ATTACKING_FOREST_CHOICE_MOD;
+                        environmentChoiceMod = aiControllerValues.SwordAttackingForestChoiceMod;
                     break;
             }
             return environmentChoiceMod;
@@ -449,8 +455,8 @@ namespace Game
         public static float HarmChoiceMod(Unit playableUnit, Unit targetUnit)
         {
             if (playableUnit.CurrentHealthPoints - targetUnit.Stats.AttackStrength <= 0)
-                return AiControllerValues.POTENTIAL_DEATH_CHOICE_MOD;
-            return AiControllerValues.DAMAGE_RECEIVE_CHOICE_MOD * targetUnit.Stats.AttackStrength;
+                return aiControllerValues.PotentialDeathChoiceMod;
+            return aiControllerValues.DamageReceiveChoiceMod * targetUnit.Stats.AttackStrength;
         }
     }
 }
