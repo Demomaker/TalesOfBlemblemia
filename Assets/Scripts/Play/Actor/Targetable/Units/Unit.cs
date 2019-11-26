@@ -55,13 +55,15 @@ namespace Game
         private bool isResting;
         private bool isGoingToDie;
         private Animator animator;
+        private OnHealthChange onHealthChange;
+        private OnMovementChange onMovementChange;
 
         #endregion
         
         #region Properties
         
-        public OnHealthChange OnHealthChange => gameObject.AddOrGetComponent<OnHealthChange>();
-        public OnMovementChange OnMovementChange => gameObject.AddOrGetComponent<OnMovementChange>();
+        public OnHealthChange OnHealthChange => onHealthChange == null ? onHealthChange = gameObject.AddOrGetComponent<OnHealthChange>() : onHealthChange;
+        public OnMovementChange OnMovementChange => onMovementChange == null ? onMovementChange = gameObject.AddOrGetComponent<OnMovementChange>() : onMovementChange;
         
         public int HpGainedByResting
         {
