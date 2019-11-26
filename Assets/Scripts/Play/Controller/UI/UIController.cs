@@ -177,12 +177,12 @@ namespace Game
                 }
             }
 
-            if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken <= 0)
+            if (enemyBattleInfos.CurrentHealth <= 0)
             {
                 enemyDeathSymbol.SetActive(true);
             }
 
-            if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken <= 0)
+            if (playerBattleInfos.CurrentHealth <= 0)
             {
                 playerDeathSymbol.SetActive(true);
             }
