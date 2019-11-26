@@ -97,7 +97,7 @@ namespace Game
 
         private void UpdateHealthText()
         {
-            healthText.text = unit.CurrentHealthPoints.ToString();
+            healthText.text = Mathf.Clamp(unit.CurrentHealthPoints, 0, unit.Stats.MaxHealthPoints).ToString();
         }
 
         private void UpdateMovementText()
