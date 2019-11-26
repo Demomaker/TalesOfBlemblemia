@@ -33,6 +33,7 @@ namespace Game
         [SerializeField] private R.E.Scene rinfretVillageScene;
         [SerializeField] private R.E.Scene darkTowerScene;
         [SerializeField] private R.E.Scene tulipValleyScene;
+        [SerializeField] private R.E.Scene endScene;
         [SerializeField] private R.E.Scene morktressScene;
         [SerializeField] private R.E.Scene overworldScene;
         [SerializeField] private R.E.Scene mainmenuScene;
@@ -127,6 +128,7 @@ namespace Game
         public string RinfretVillageSceneName => rinfretVillageScene.ToString();
         public string DarkTowerSceneName => darkTowerScene.ToString();
         public string TulipValleySceneName => tulipValleyScene.ToString();
+        public string EndSceneName => endScene.ToString();
         public string MorktressSceneName => morktressScene.ToString();
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
