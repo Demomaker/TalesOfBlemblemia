@@ -175,7 +175,7 @@ namespace Game
                         rightClickType = leftClickType = ClickType.ConfirmRecruit;
                         break;
                     case ActionType.Heal:
-                        rightClickType = leftClickType = ClickType.ConfirmHeal;
+                        rightClickType = leftClickType = ClickType.ConfirmHeal; //TODO
                         break;
                 }
             }
