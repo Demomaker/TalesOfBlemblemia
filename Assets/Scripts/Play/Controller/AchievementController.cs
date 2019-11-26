@@ -11,13 +11,12 @@ namespace Game
     /// </summary>
     public class AchievementController : MonoBehaviour
     {
-
+        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
         [SerializeField] private Text achievementUnlockedText;
         [SerializeField] private Text descriptionText;
         [SerializeField] private Animator animator;
         [SerializeField] private Button skipButton;
         
-        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
         private List<AchievementInfo> achievements = new List<AchievementInfo>();
         private bool achievementBeingShown;
         private bool skipAchievementShow = false;

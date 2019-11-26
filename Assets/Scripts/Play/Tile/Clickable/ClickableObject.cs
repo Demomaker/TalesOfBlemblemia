@@ -1,29 +1,21 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Game
 {
     /// <summary>
     /// Personalized clickable to detect if a tile has been clicked on
-    /// Author: Zacharie Lavigne
+    /// Author: Zacharie Lavigne, Jérémie Bertrand
     /// </summary>
     public class ClickableObject : MonoBehaviour, IPointerClickHandler
     {
         private Tile tile;
-        private UIController uiController;
         private LevelController levelController;
 
         private void Awake()
         {
             levelController = Harmony.Finder.LevelController;
             tile = GetComponent<Tile>();
-        }
-
-        private void Start()
-        {
-            uiController = Harmony.Finder.UIController;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -71,6 +63,8 @@ namespace Game
                     DeselectUnit(gridController);
                 }
             }
+
+            tile.UpdateClickHint();
         }
 
         private void DeselectUnit(GridController gridController)
@@ -78,6 +72,7 @@ namespace Game
             gridController.DeselectUnit();
             gridController.RemoveActionPath();
             PlayerClickManager.Reset();
+            tile.UpdateClickHint();
         }
 
         private void SelectUnit(GridController gridController)
@@ -86,13 +81,12 @@ namespace Game
             PlayerClickManager.Reset();
             gridController.SelectUnit(tile.LinkedUnit);
             gridController.DisplayPossibleActionsFrom(tile);
+            tile.UpdateClickHint();
         }
 
         private ClickButton ReadClick(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Right)
-                return ClickButton.RightClick;
-            return ClickButton.LeftClick;
+            return eventData.button == PointerEventData.InputButton.Right ? ClickButton.RightClick : ClickButton.LeftClick;
         }
     }
 }

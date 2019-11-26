@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: MyriamInfo
   m_EditorClassIdentifier: 
   characterName: Myriam
-  className: Noble Healer
-  weaponName: No Weapon
+  gender: 1
