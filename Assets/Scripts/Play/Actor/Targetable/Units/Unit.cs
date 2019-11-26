@@ -440,7 +440,9 @@ namespace Game
             }
             if (!isCountering && !isImmuneToCrits && (target.GetType() == typeof(Unit) && (canCritOnEverybody || ((Unit)target).WeaponType == WeaponAdvantage)))
             {
-                damage *= Random.value <= Stats.CritRate ? 2 : 1;
+                //TODO: damage ce fait après le move donc camera shake?
+                var criticalHitModifier = Random.value <= Stats.CritRate ? 2 : 1;
+                damage *= criticalHitModifier;
             }
             
             target.CurrentHealthPoints -= damage;

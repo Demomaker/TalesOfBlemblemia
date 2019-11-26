@@ -3575,6 +3575,7 @@ GameObject:
   - component: {fileID: 73006763}
   - component: {fileID: 73006762}
   - component: {fileID: 73006765}
+  - component: {fileID: 73006766}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -3640,8 +3641,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 73006761}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 7.5, z: -10}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.7336519, y: 28.716274, z: -35.534576}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3666,6 +3667,21 @@ MonoBehaviour:
   maxX: 19
   minY: -4
   maxY: 19
+--- !u!114 &73006766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73006761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78deaa014ba34262bfe502293e33f0c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDuration: 2
+  shakeMagnitude: 3
+  dampingSpeed: 2
 --- !u!1 &76716469
 GameObject:
   m_ObjectHideFlags: 0
@@ -46726,6 +46742,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2713265489608731543, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5313399482242141560, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_Name
@@ -48326,9 +48347,79 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2713265489608731543, guid: 623c911082da5da4db1e7fc3a7896563,
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
-      propertyPath: m_LocalPosition.z
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1705304069458487262, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1705304069458487262, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1905770281300211148, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1905770281300211148, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783273090689857004, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783273090689857004, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -88031,6 +88122,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88043,6 +88135,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 990364626}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88055,6 +88148,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 1795982824}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88067,6 +88161,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 1484567427}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88079,6 +88174,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 1200965031}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88093,6 +88189,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88106,6 +88203,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1316052480}
     duration: 1.5
@@ -88118,6 +88216,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88130,6 +88229,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88143,6 +88243,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88155,6 +88256,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88169,6 +88271,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88181,6 +88284,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88194,6 +88298,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88207,6 +88312,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1380378965}
     duration: 2
@@ -88219,6 +88325,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 1
@@ -88231,6 +88338,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 1939146250}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 1
@@ -88243,6 +88351,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 1486045132}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 1
@@ -88255,6 +88364,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 2018529085}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1316052480}
     duration: 1
@@ -88267,6 +88377,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88280,6 +88391,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88292,6 +88404,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88304,6 +88417,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1249164707}
     duration: 1
@@ -88316,6 +88430,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88328,6 +88443,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 1
@@ -88340,6 +88456,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 848134645}
     cameraFollow: 1
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88352,6 +88469,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1200009458}
     duration: 0.5
@@ -88364,6 +88482,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88377,6 +88496,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88390,6 +88510,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88402,6 +88523,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88415,6 +88537,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -88428,6 +88551,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 0.75
@@ -88440,6 +88564,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 2147117697}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 2
     cameraTarget: {fileID: 0}
     duration: 0.5
@@ -88452,6 +88577,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 731439176}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
 --- !u!4 &2125093312
 Transform:
   m_ObjectHideFlags: 0
