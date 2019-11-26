@@ -25,7 +25,7 @@
         protected float attackingSwordWithoutAdvantageChoiceMod = -2.5f;
         private float turnMultiplierForDistanceChoiceMod = -4f;
         private float turnAdderForDistanceChoiceMod = 4f;
-        private float killingEnemyChoiceMod = 6f;
+        private float killingEnemyChoiceMod = 12f;
         private float baseChoiceActionScore = 20f;
         private float healthModForResting = 1.33f;
 

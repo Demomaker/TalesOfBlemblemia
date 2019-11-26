@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game
 {
@@ -65,9 +66,15 @@ namespace Game
                 {
                     yield return null;
                 }
-                
-                currentUnit = ownedUnits[dynamicUnitCounter];
-                
+
+                if (dynamicUnitCounter > 0)
+                    currentUnit = ownedUnits[dynamicUnitCounter];
+                else
+                {
+                    currentUnit = ownedUnits[0];
+                    Debug.Log("Dynamic counter < 0 (ComputerPlayer.cs line 70)");
+                }
+
                 if (!currentUnit.HasActed)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
