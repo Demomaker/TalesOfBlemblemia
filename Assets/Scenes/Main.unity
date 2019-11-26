@@ -356,7 +356,7 @@ PrefabInstance:
         type: 3}
       propertyPath: mainMenuMusic
       value: 
-      objectReference: {fileID: 8300000, guid: 5887be4105eb52541a4f1c366856289f, type: 3}
+      objectReference: {fileID: 8300000, guid: 1c19d8f4b45516849b15652204e37832, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: overWorldMusic
@@ -430,6 +430,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AchievementController
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680158465727784022, guid: 64ade3371008ec5468534e225a1a75af,
+        type: 3}
+      propertyPath: m_Text
+      value: Achievement unlocked!
       objectReference: {fileID: 0}
     - target: {fileID: 4186548872590960841, guid: 64ade3371008ec5468534e225a1a75af,
         type: 3}
@@ -540,11 +545,6 @@ PrefabInstance:
       propertyPath: achievementUnlockedText
       value: 
       objectReference: {fileID: 111446872}
-    - target: {fileID: 3680158465727784022, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Text
-      value: Achievement unlocked!
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64ade3371008ec5468534e225a1a75af, type: 3}
 --- !u!1 &1777290530 stripped
