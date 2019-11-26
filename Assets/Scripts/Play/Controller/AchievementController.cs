@@ -48,7 +48,7 @@ namespace Game
             !HumanPlayer.Instance.HasLostAUnitInCurrentLevel &&
             gameController.PreviousLevelName == gameController.CurrentLevelName &&
             !string.IsNullOrEmpty(gameController.PreviousLevelName) &&
-            gameController.PreviousLevelName != gameSettings.TutorialSceneName;
+            gameController.PreviousLevelName != gameSettings.SnowyPeaksSceneName;
         private bool SavedAllRecruitablesFromAlternatePath =>
             HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >=
             gameSettings.NumberOfRecruitablesOnAlternatePath;

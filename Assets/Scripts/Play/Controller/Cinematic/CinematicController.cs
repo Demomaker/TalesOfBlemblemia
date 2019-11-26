@@ -70,14 +70,14 @@ namespace Game
                     yield return PlayGameObjectMovement(action.GameObjectToMove, action.GameObjectTarget.position, action.Duration, action.CameraZoom, action.CameraFollow);
                     break;
                 case CinematicActionType.Activate:
-                    yield return ActivateObject(action.GameObjectToActivate);
+                    yield return ActivateObject(action.GameObjectToActivate, action.ActivateGameObject);
                     break;
             }
         }
 
-        private IEnumerator ActivateObject(GameObject actionGameObjectToActivate)
+        private IEnumerator ActivateObject(GameObject actionGameObjectToActivate, bool activateGameObject)
         {
-            actionGameObjectToActivate.SetActive(true);
+            actionGameObjectToActivate.SetActive(activateGameObject);
             yield break;
         }
 

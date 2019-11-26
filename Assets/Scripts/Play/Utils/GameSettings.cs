@@ -26,7 +26,7 @@ namespace Game
 
         [Header("Scene Names")] 
         [SerializeField] private string emptyLevelString = "";
-        [SerializeField] private R.E.Scene tutorialScene;
+        [SerializeField] private R.E.Scene snowyPeaksScene;
         [SerializeField] private R.E.Scene jimsterburgScene;
         [SerializeField] private R.E.Scene parabeneForestScene;
         [SerializeField] private R.E.Scene blemburgCitadelScene;
@@ -120,7 +120,7 @@ namespace Game
         public KeyCode SkipLevelKey => skipLevelKey;
         #endregion Input Settings
         #region Scene Names
-        public string TutorialSceneName => tutorialScene.ToString();
+        public string SnowyPeaksSceneName => snowyPeaksScene.ToString();
         public string JimsterburgSceneName => jimsterburgScene.ToString();
         public string ParabeneForestSceneName => parabeneForestScene.ToString();
         public string BlemburgCitadelSceneName => blemburgCitadelScene.ToString();

@@ -23,6 +23,7 @@ namespace Game
         private const string CAMERA_TARGET_FIELD_NAME = "cameraTarget";
         private const string GAME_OBJECT_TO_MOVE_FIELD_NAME = "gameObjectToMove";
         private const string GAME_OBJECT_TO_ACTIVATE_FIELD_NAME = "gameObjectToActivate";
+        private const string ACTIVATE_GAME_OBJECT_FIELD_NAME = "activateGameObject";
         private const string GAME_OBJECT_TARGET_FIELD_NAME = "gameObjectTarget";
         private const string FOLLOW_GAME_OBJECT_WITH_CAMERA_FIELD_NAME = "cameraFollow";
         private const string DURATION_FIELD_NAME = "duration";
@@ -69,6 +70,7 @@ namespace Game
                     var gameObjectTarget = element.FindPropertyRelative(GAME_OBJECT_TARGET_FIELD_NAME);
                     var followGameObjectWithCamera = element.FindPropertyRelative(FOLLOW_GAME_OBJECT_WITH_CAMERA_FIELD_NAME);
                     var gameObjectToActivate = element.FindPropertyRelative(GAME_OBJECT_TO_ACTIVATE_FIELD_NAME);
+                    var activateGameObject = element.FindPropertyRelative(ACTIVATE_GAME_OBJECT_FIELD_NAME);
                     
                     rect.y += EditorGUIUtility.singleLineHeight;
                     EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), cinematicActionType);
@@ -116,6 +118,10 @@ namespace Game
                             break;
                         case CinematicActionType.Activate:
                             EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), gameObjectToActivate);
+                            rect.y += EditorGUIUtility.singleLineHeight;
+                            activateGameObject.boolValue = EditorGUI.Toggle(
+                                new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), "Activate Game Object",
+                                activateGameObject.boolValue);
                             break;
                     }
 
@@ -135,6 +141,8 @@ namespace Game
                             return EditorGUIUtility.singleLineHeight * 8;
                         case CinematicActionType.Damage:
                             return EditorGUIUtility.singleLineHeight * 5;
+                        case CinematicActionType.Activate:
+                            return EditorGUIUtility.singleLineHeight * 6;
                         default:
                             return EditorGUIUtility.singleLineHeight * 3;
                     }
@@ -160,6 +168,7 @@ namespace Game
                     var gameObjectTarget = element.FindPropertyRelative(GAME_OBJECT_TARGET_FIELD_NAME);
                     var followGameObjectWithCamera = element.FindPropertyRelative(FOLLOW_GAME_OBJECT_WITH_CAMERA_FIELD_NAME);
                     var gameObjectToActivate = element.FindPropertyRelative(GAME_OBJECT_TO_ACTIVATE_FIELD_NAME);
+                    var activateGameObject = element.FindPropertyRelative(ACTIVATE_GAME_OBJECT_FIELD_NAME);
                     
                     cinematicActionType.intValue = (int) CinematicActionType.Quote;
                     dialogueName.stringValue = "";
@@ -173,6 +182,7 @@ namespace Game
                     gameObjectTarget.objectReferenceValue = null;
                     followGameObjectWithCamera.boolValue = false;
                     gameObjectToActivate.objectReferenceValue = null;
+                    activateGameObject.boolValue = false;
                 }
             };
         }

@@ -74,7 +74,6 @@ namespace Game
             onMainVolumeChange.Publish(mainVolumeSlider.value);
             onMusicVolumeChange.Publish(musicVolumeSlider.value);
             onSfxVolumeChange.Publish(sfxVolumeSlider.value);
-            
         }
         
         private void UpdateSettings()

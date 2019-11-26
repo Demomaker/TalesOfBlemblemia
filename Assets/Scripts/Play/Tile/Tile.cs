@@ -81,6 +81,11 @@ namespace Game
             tileImage.sprite = gridController.SelectedSprite;
         }
 
+        public void DisplayEnemyRange()
+        {
+             tilePathSprite.sprite = gridController.EnemyRangeSprite;
+        }
+
         public void DisplayAttackActionPossibility()
         {
             tileImage.sprite = gridController.AttackableTileSprite;
@@ -100,17 +105,25 @@ namespace Game
         {
             tileImage.sprite = gridController.ProtectableTileSprite;
         }
-        
+
         public void HideActionPossibility()
         {
             tileImage.sprite = gridController.NormalSprite;
         }
-        
+
         public void HideActionPath()
         {
-            tilePathSprite.sprite = gridController.NormalSprite;
+            if (tilePathSprite.sprite != gridController.EnemyRangeSprite)
+                tilePathSprite.sprite = gridController.NormalSprite;
+            EnemyRangeController.DisplayEnemyRange();
         }
-        
+
+        public void HideEnemyRange()
+        {
+            if (tilePathSprite.sprite == gridController.EnemyRangeSprite)
+                tilePathSprite.sprite = gridController.NormalSprite;
+        }
+
         /// <summary>
         /// Verifies if a tile is adjacent on a X or Y axis to this tile
         /// Authors: Jérémie Bertrand, Zacharie Lavigne

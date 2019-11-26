@@ -25,6 +25,7 @@ TagManager:
   - GameSettings
   - LevelLoader
   - GameUI
+  - EnemyRangeController
   layers:
   - Default
   - TransparentFX
