@@ -9,10 +9,10 @@ namespace Game
         private static Action unitTurnAction;
         private static Tile tileToConfirm;
         private static Unit playerUnit;
-        
+
         public static bool ActionIsSet => unitTurnAction != null;
         public static Tile TileToConfirm => tileToConfirm;
-
+        public static Action UnitTurnAction => unitTurnAction;
 
         public static void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
         {

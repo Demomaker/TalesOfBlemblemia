@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: SwordDreadlordInfo
   m_EditorClassIdentifier: 
   characterName: DreadLord
-  className: SwordMork
-  weaponName: Sword
+  gender: 2

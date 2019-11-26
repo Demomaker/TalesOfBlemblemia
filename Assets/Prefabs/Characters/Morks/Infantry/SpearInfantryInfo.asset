@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: SpearInfantryInfo
   m_EditorClassIdentifier: 
   characterName: InfantryMork
-  className: SpearMork
-  weaponName: Spear
+  gender: 2
