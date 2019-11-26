@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Game
 {
+    // Author: Jérémie Bertrand
     [Findable("LevelLoader")]
     [RequireComponent(typeof(Animator))]
     public class LevelLoader : MonoBehaviour

@@ -25,6 +25,10 @@ namespace Game
         [SerializeField] private TMP_Text tileMouvementEffect;
         [SerializeField] private Image tileTexture;
 
+        [Header("ControlsInfo")]
+        [SerializeField] private TMP_Text leftClickText;
+        [SerializeField] private TMP_Text rightClickText;
+
         [Header("Turn")] 
         [SerializeField] private TMP_Text turnCounter;
         [SerializeField] private TMP_Text turnInfo;
@@ -58,6 +62,7 @@ namespace Game
         private GameObject[] enemyHealthBar;
 
         private GameSettings gameSettings;
+        private GridController gridController;
 
 
         public bool IsBattleReportActive => battleReports.activeSelf;
@@ -274,6 +279,16 @@ namespace Game
                     break;
             }
             tileDefense.text = defenseRate * 100 + "%";
+        }
+
+        public void UpdateLeftClickHint(ClickType leftClickType)
+        {
+            leftClickText.text = leftClickType.GetString();
+        }
+
+        public void UpdateRightClickHint(ClickType rightClickType)
+        {
+            rightClickText.text = rightClickType.GetString();
         }
     }
 }

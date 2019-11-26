@@ -9,6 +9,12 @@ namespace Game
     [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour {
      
+        private const KeyCode MOVE_UP_KEY = KeyCode.W;
+        private const KeyCode MOVE_DOWN_KEY = KeyCode.S;
+        private const KeyCode MOVE_LEFT_KEY = KeyCode.A;
+        private const KeyCode MOVE_RIGHT_KEY = KeyCode.D;
+        private const KeyCode DRAG_KEY = KeyCode.Mouse2;
+        
         [Range(MIN_CAM_SCROLL_AREA, MAX_CAM_SCROLL_AREA)][SerializeField] private float scrollArea;
         [Range(MIN_CAM_MOVE_SPEED, MAX_CAM_MOVE_SPEED)][SerializeField] private float moveSpeed;
         [Range(MIN_CAM_ZOOM_SPEED, MAX_CAM_ZOOM_SPEED)][SerializeField] private float zoomSpeed;
@@ -18,25 +24,14 @@ namespace Game
         [Range(MIN_CAM_Y, MAX_CAM_Y)][SerializeField] private int maxY;
 
         private Vector2Int lastScreenSize;
-
         private float maxZoom;
-
         private float targetOrthographicSize;
         private Vector3 targetPos;
-
         private bool controlsEnabled = true;
-
         private Camera mainCamera;
-        
-        private float yMovement = 0;
-        private float xMovement = 0;
-        
-        private const KeyCode MOVE_UP_KEY = KeyCode.W;
-        private const KeyCode MOVE_DOWN_KEY = KeyCode.S;
-        private const KeyCode MOVE_LEFT_KEY = KeyCode.A;
-        private const KeyCode MOVE_RIGHT_KEY = KeyCode.D;
-        private const KeyCode DRAG_KEY = KeyCode.Mouse2;
-        
+        private float yMovement;
+        private float xMovement;
+
         private float YMovement
         {
             get => yMovement;

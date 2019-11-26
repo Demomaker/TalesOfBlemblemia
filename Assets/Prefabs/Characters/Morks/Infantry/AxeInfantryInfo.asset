@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: AxeInfantryInfo
   m_EditorClassIdentifier: 
   characterName: InfantryMork
-  className: AxeMork
-  weaponName: Axe
+  gender: 2

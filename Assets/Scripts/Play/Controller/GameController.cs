@@ -86,7 +86,8 @@ namespace Game
                  new Level(gameSettings.BlemburgCitadelSceneName, gameSettings.RinfretVillageSceneName),
                  new Level(gameSettings.RinfretVillageSceneName, gameSettings.TulipValleySceneName),
                  new Level(gameSettings.TulipValleySceneName, gameSettings.MorktressSceneName),
-                 new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName)
+                 new Level(gameSettings.DarkTowerSceneName, gameSettings.MorktressSceneName),
+                 new Level(gameSettings.MorktressSceneName, gameSettings.EndSceneName) 
              };
              PreviousLevelName = Levels.First(level => level.LevelName == gameSettings.StartingLevelSceneName).PreviousLevel;
              choiceRange = choiceRangePerDifficulty[DifficultyLevel];
