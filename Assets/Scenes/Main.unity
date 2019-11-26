@@ -268,6 +268,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
+        type: 3}
+      propertyPath: startingLevelScene
+      value: 78225045
+      objectReference: {fileID: 0}
+    - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
+        type: 3}
+      propertyPath: snowyPeaksScene
+      value: 78225045
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5394f606be27d3448b787dc0ec56a8f6, type: 3}
 --- !u!1001 &740606059
@@ -431,6 +441,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AchievementController
       objectReference: {fileID: 0}
+    - target: {fileID: 3680158465727784022, guid: 64ade3371008ec5468534e225a1a75af,
+        type: 3}
+      propertyPath: m_Text
+      value: Achievement unlocked!
+      objectReference: {fileID: 0}
     - target: {fileID: 4186548872590960841, guid: 64ade3371008ec5468534e225a1a75af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -540,11 +555,6 @@ PrefabInstance:
       propertyPath: achievementUnlockedText
       value: 
       objectReference: {fileID: 111446872}
-    - target: {fileID: 3680158465727784022, guid: 64ade3371008ec5468534e225a1a75af,
-        type: 3}
-      propertyPath: m_Text
-      value: Achievement unlocked!
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64ade3371008ec5468534e225a1a75af, type: 3}
 --- !u!1 &1777290530 stripped
