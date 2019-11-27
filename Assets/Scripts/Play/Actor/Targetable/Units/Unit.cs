@@ -175,11 +175,16 @@ namespace Game
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
             gridController = Finder.GridController;
-            CurrentHealthPoints = Stats.MaxHealthPoints;
-            MovesLeft = Stats.MoveSpeed;
             animator = GetComponent<Animator>();
             gameSettings = Harmony.Finder.GameSettings;
             base.Awake();
+        }
+        
+        protected override void Start()
+        {
+            base.Start();
+            CurrentHealthPoints = Stats.MaxHealthPoints;
+            MovesLeft = Stats.MoveSpeed;
         }
 
         private void InitializeEvents()
@@ -298,13 +303,14 @@ namespace Game
             {
                 isMoving = true;
                 Tile finalTile = null;
-                for (int i = 0; i < path.Count; i++)
+                var pathCount = path.Count;
+                for (int i = 0; i < pathCount; i++)
                 {
                     if (path[i] != null)
                         finalTile = path[i];
                     float counter = 0;
 
-                    if (path.IndexOf(finalTile) != path.Count - 1)
+                    if (path.IndexOf(finalTile) != pathCount - 1)
                         MovesLeft -= finalTile.CostToMove;
                     Vector3 startPos = transform.position;
                     LookAt(finalTile.WorldPosition);
@@ -316,9 +322,9 @@ namespace Game
                         yield return null;
                     }
 
-                    if (MovesLeft < 0 && path.IndexOf(finalTile) != path.Count - 1)
+                    if (MovesLeft <= 0 && path.IndexOf(finalTile) != pathCount - 1)
                     {
-                        i = path.Count;
+                        i = pathCount;
                     }
                 }
                 
