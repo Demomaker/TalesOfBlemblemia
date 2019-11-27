@@ -5,13 +5,12 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    // <summary>
+    /// <summary>
     /// Behaviour of a tile
     /// Author: Jérémie Bertrand
     /// </summary>
     public abstract class Tile : MonoBehaviour
     {
-        private Button tileButton;
         [SerializeField] private TileType tileType;
         public TileType TileType => tileType;
         private TileSprite tileSprite;
@@ -40,6 +39,18 @@ namespace Game
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
         public Door LinkedDoor => linkedDoor;
+        public Targetable LinkedTargetable 
+        {
+            get
+            {
+                Targetable targetable = linkedUnit;
+                if (linkedDoor != null)
+                {
+                    targetable = linkedDoor;
+                }
+                return targetable;
+            }
+        }
         public int CostToMove => IsOccupiedByADoor ? TileTypeExt.HIGH_COST_TO_MOVE : tileType.GetCostToMove();
         public float DefenseRate => tileType.GetDefenseRate();
         
@@ -50,7 +61,6 @@ namespace Game
         
         protected virtual void Awake()
         {
-            tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
             tileSprite = GetComponent<TileSprite>();
             tilePathSprite = GetComponentInChildren<SpriteRenderer>();
@@ -155,12 +165,18 @@ namespace Game
             UpdateClickHint();
         }
 
+        private ClickType leftClickType = ClickType.None;
+        private ClickType rightClickType = ClickType.None;
+
+        public ClickType LeftClickType => leftClickType;
+        public ClickType RightClickType => rightClickType;
+
         public void UpdateClickHint()
         {
-            var leftClickType = ClickType.None;
-            var rightClickType = ClickType.None;
             if (PlayerClickManager.ActionIsSet && this == PlayerClickManager.TileToConfirm)
             {
+                leftClickType = ClickType.None;
+                rightClickType = ClickType.None;
                 switch (PlayerClickManager.UnitTurnAction.ActionType)
                 {
                     case ActionType.Rest:

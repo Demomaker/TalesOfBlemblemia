@@ -268,8 +268,7 @@ namespace Game
             else
             {
                 path = PathFinder.GetPath(
-                    Finder.GridController, 
-                    playableUnit.MovementCosts, 
+                    Finder.GridController,
                     new List<Tile>(), 
                     new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                     new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y), 
@@ -290,8 +289,7 @@ namespace Game
         private static List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
         {
             return PathFinder.GetPath(
-                Finder.GridController, 
-                playableUnit.MovementCosts, 
+                Finder.GridController,
                 new List<Tile>(), 
                 new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                 new Vector2Int(targetPosition.x, targetPosition.y),

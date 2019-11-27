@@ -33,6 +33,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Levels/RinfretVillage.unity
     guid: 5ab43a1befec026418e1fa93ae1ceb15
   - enabled: 1
+    path: Assets/Scenes/Levels/SnowyPeaks.unity
+    guid: 3a7818586c5ca584c8cf06b0f152b3ad
+  - enabled: 1
     path: Assets/Scenes/Levels/TulipValley.unity
     guid: 262c9fff37ce64d40996e24056a8e0c7
   - enabled: 1

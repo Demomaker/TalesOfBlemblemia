@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-//Author: Pierre-Luc Maltais
+//Author: Pierre-Luc Maltais, Antoine Lessard
 namespace Game
 {
     [Findable("UIController")]
@@ -18,7 +18,7 @@ namespace Game
         private const string UNREACHABLE_TILE_TEXT = "X";//"\u221E";//TODO decider du symbole
         private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
         private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
-        
+
         [Header("Canvas")] [SerializeField] private Canvas canvas;
         [Header("TileInfo")]
         [SerializeField] private TMP_Text tileDefense;
@@ -43,11 +43,18 @@ namespace Game
         [FormerlySerializedAs("playerHealthBar")] 
         [SerializeField] private LayoutGroup playerHealthBarLayout;
         [SerializeField] private GameObject playerDeathSymbol;
+        [SerializeField] private TMP_Text playerOutcome;
         
         [SerializeField] private GameObject battleReportEnemy;
         [FormerlySerializedAs("enemyHealthBar")] 
         [SerializeField] private LayoutGroup enemyHealthBarLayout;
         [SerializeField] private GameObject enemyDeathSymbol;
+        [SerializeField] private TMP_Text enemyOutcome;
+
+        [Header("Battle Outcome Text")] 
+        [SerializeField] private string missText;
+        [SerializeField] private string hitText;
+        [SerializeField] private string criticalHitText;
 
         private Animator playerAnimator;
         private Animator enemyAnimator;
@@ -132,15 +139,17 @@ namespace Game
             }
         }
 
-        public void ChangeCharacterDamageTaken(int dmg, bool isEnemy)
+        public void ChangeCharacterDamageTaken(int dmg, bool isEnemy, int critModifier)
         {
             if (isEnemy)
             {
                 enemyBattleInfos.DamageTaken = dmg;
+                enemyBattleInfos.CriticalHit = critModifier - 1 != 0;
             }
             else
             {
                 playerBattleInfos.DamageTaken = dmg;
+                playerBattleInfos.CriticalHit = critModifier - 1 != 0;
             }
         }
 
@@ -150,6 +159,8 @@ namespace Game
 
             playerDeathSymbol.SetActive(false);
             enemyDeathSymbol.SetActive(false);
+            playerOutcome.enabled = false;
+            enemyOutcome.enabled = false;
 
             Coroutine handle = StartCoroutine(BattleReport(isEnemy));
 
@@ -160,29 +171,29 @@ namespace Game
         {
             if (isEnemy)
             {
-                yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar);
+                yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);
                 if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken > 0)
                 {
                     yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-                    yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar);
+                    yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
                 }
             }
             else
             {
-                yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar);
+                yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
                 if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken > 0)
                 {
                     yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-                    yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar);
+                    yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);
                 }
             }
 
-            if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken <= 0)
+            if (enemyBattleInfos.CurrentHealth <= 0)
             {
                 enemyDeathSymbol.SetActive(true);
             }
 
-            if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken <= 0)
+            if (playerBattleInfos.CurrentHealth <= 0)
             {
                 playerDeathSymbol.SetActive(true);
             }
@@ -191,7 +202,7 @@ namespace Game
             battleReports.SetActive(false);
         }
 
-        private IEnumerator AttackAnimation(Animator animator, BattleInfos battleInfos, GameObject[] healthBar)
+        private IEnumerator AttackAnimation(Animator animator, BattleInfos battleInfos, GameObject[] healthBar, bool isEnemy)
         {
             while (animationIsPlaying)
             {
@@ -207,10 +218,54 @@ namespace Game
             animator.SetBool(IS_ATTACKING,true);
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             ModifyHealthBar(battleInfos.MaxHp, battleInfos.CurrentHealth, healthBar, false, battleInfos.DamageTaken);
+            BattleOutcome(battleInfos, isEnemy);
             battleInfos.CurrentHealth -= battleInfos.DamageTaken;
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
             animator.SetBool(IS_ATTACKING,false);
             animationIsPlaying = false;
+        }
+
+        private void BattleOutcome(BattleInfos battleInfos, bool isEnemy)
+        {
+            if (battleInfos.DamageTaken == 0)
+            {
+                if (isEnemy)
+                {
+                    enemyOutcome.text = missText;
+                    enemyOutcome.enabled = true;
+                }
+                else
+                {
+                    playerOutcome.text = missText;
+                    playerOutcome.enabled = true;
+                }
+            }
+            else if (!battleInfos.CriticalHit)
+            {
+                if (isEnemy)
+                {
+                    enemyOutcome.text = hitText;
+                    enemyOutcome.enabled = true;
+                }
+                else
+                {
+                    playerOutcome.text = hitText;
+                    playerOutcome.enabled = true;
+                }
+            }
+            else
+            {
+                if (isEnemy)
+                {
+                    enemyOutcome.text = criticalHitText;
+                    enemyOutcome.enabled = true;
+                }
+                else
+                {
+                    playerOutcome.text = criticalHitText;
+                    playerOutcome.enabled = true;
+                }
+            }
         }
 
         [UsedImplicitly]
