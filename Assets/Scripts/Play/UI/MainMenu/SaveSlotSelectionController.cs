@@ -12,7 +12,8 @@ namespace Game
         [SerializeField] private Button[] saveSlots;
 
         [Header("Canvas")] 
-        [SerializeField] private NewGameMenuController newGameScreen;
+        [SerializeField] private 
+        NewGameMenuController newGameScreen;
 
         private Navigator navigator;
         private SaveController saveController;

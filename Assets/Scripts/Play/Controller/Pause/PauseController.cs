@@ -34,7 +34,7 @@ namespace Game
         {
             if (!isPaused)
             {
-                if (Input.GetKeyDown(pauseButton)) 
+                if (Input.GetKeyDown(pauseButton))
                     Pause();
             }
             else

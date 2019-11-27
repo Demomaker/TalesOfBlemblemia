@@ -5441,6 +5441,11 @@ MonoBehaviour:
   - {fileID: 2800000, guid: e5cc3065497b5d44190ab43b29cd4a74, type: 3}
   - {fileID: 2800000, guid: ea8d92ebb4263ce41b86009e7aeb6eb0, type: 3}
   - {fileID: 2800000, guid: 23c531fd33dde5a4d9919161bc9d7593, type: 3}
+  - {fileID: 2800000, guid: 9a64fae288f06eb47b3f9089188719fd, type: 3}
+  - {fileID: 2800000, guid: ed2a0325ff4843e4b87e874facd923c7, type: 3}
+  - {fileID: 2800000, guid: 40a08f792dad33d49b8628f341e3aafa, type: 3}
+  - {fileID: 2800000, guid: 9e1569cb8877b7644a0a0d87ec0a3d6b, type: 3}
+  - {fileID: 2800000, guid: 0b8211197f3671148b91ca150634b04e, type: 3}
   nameText: {fileID: 7627078250476067537}
   dialogueText: {fileID: 358164863145587516}
   animator: {fileID: 3219058003856424712}
@@ -13187,11 +13192,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8154610716747616194}
     m_Modifications:
-    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
-        type: 3}
-      propertyPath: m_Name
-      value: ResumeButton
-      objectReference: {fileID: 0}
     - target: {fileID: 6269402149212879475, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13353,6 +13353,11 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0.7843138
       objectReference: {fileID: 0}
+    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Name
+      value: ResumeButton
+      objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -13398,16 +13403,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8154610716349936792}
     m_Modifications:
-    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
-        type: 3}
-      propertyPath: m_Name
-      value: ConfirmButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6269402149212879475, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13569,6 +13564,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Name
+      value: ConfirmButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -13638,11 +13643,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8154610716747616194}
     m_Modifications:
-    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
-        type: 3}
-      propertyPath: m_Name
-      value: OptionsButton
-      objectReference: {fileID: 0}
     - target: {fileID: 6269402149212879475, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13804,6 +13804,11 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0.7843138
       objectReference: {fileID: 0}
+    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Name
+      value: OptionsButton
+      objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -13844,11 +13849,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8154610716349936792}
     m_Modifications:
-    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
-        type: 3}
-      propertyPath: m_Name
-      value: ReturnButton
-      objectReference: {fileID: 0}
     - target: {fileID: 6269402149212879475, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14010,6 +14010,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Name
+      value: ReturnButton
+      objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -14087,11 +14092,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8154610716747616194}
     m_Modifications:
-    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
-        type: 3}
-      propertyPath: m_Name
-      value: ReturnToMainMenuButton
-      objectReference: {fileID: 0}
     - target: {fileID: 6269402149212879475, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14253,6 +14253,11 @@ PrefabInstance:
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0.7843138
       objectReference: {fileID: 0}
+    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Name
+      value: ReturnToMainMenuButton
+      objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -14303,11 +14308,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8154610716747616194}
     m_Modifications:
-    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
-        type: 3}
-      propertyPath: m_Name
-      value: ReturnToOverworld
-      objectReference: {fileID: 0}
     - target: {fileID: 6269402149212879475, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14468,6 +14468,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0.7843138
+      objectReference: {fileID: 0}
+    - target: {fileID: 1153133530889477516, guid: f71eadbc065baf14aa4d11249b55841d,
+        type: 3}
+      propertyPath: m_Name
+      value: ReturnToOverworld
       objectReference: {fileID: 0}
     - target: {fileID: 3954857115951025691, guid: f71eadbc065baf14aa4d11249b55841d,
         type: 3}

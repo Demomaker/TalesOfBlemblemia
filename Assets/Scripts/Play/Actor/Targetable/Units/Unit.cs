@@ -109,7 +109,7 @@ namespace Game
             {
                 if (tileUpdateKeeper == Harmony.Finder.LevelController.LevelTileUpdateKeeper) return movementCosts;
                 if (currentTile != null)
-                    MovementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
+                    MovementCosts = PathFinder.ComputeCost(currentTile.LogicalPosition, IsEnemy);
                 return movementCosts;
             }
             set
@@ -175,11 +175,16 @@ namespace Game
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
             gridController = Finder.GridController;
-            CurrentHealthPoints = Stats.MaxHealthPoints;
-            MovesLeft = Stats.MoveSpeed;
             animator = GetComponent<Animator>();
             gameSettings = Harmony.Finder.GameSettings;
             base.Awake();
+        }
+        
+        protected override void Start()
+        {
+            base.Start();
+            CurrentHealthPoints = Stats.MaxHealthPoints;
+            MovesLeft = Stats.MoveSpeed;
         }
 
         private void InitializeEvents()
@@ -279,7 +284,7 @@ namespace Game
                     currentTile.UnlinkUnit();
                     MovesLeft -= currentTile.CostToMove;
                 }
-                List<Tile> path = PathFinder.PrepareFindPath(gridController, MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
+                List<Tile> path = PathFinder.FindPath(gridController, MovementCosts, new List<Tile>(), currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.RemoveAt(0);
                 path.Add(targetTile);
                 return path;
@@ -298,13 +303,14 @@ namespace Game
             {
                 isMoving = true;
                 Tile finalTile = null;
-                for (int i = 0; i < path.Count; i++)
+                var pathCount = path.Count;
+                for (int i = 0; i < pathCount; i++)
                 {
                     if (path[i] != null)
                         finalTile = path[i];
                     float counter = 0;
 
-                    if (path.IndexOf(finalTile) != path.Count - 1)
+                    if (path.IndexOf(finalTile) != pathCount - 1)
                         MovesLeft -= finalTile.CostToMove;
                     Vector3 startPos = transform.position;
                     LookAt(finalTile.WorldPosition);
@@ -312,13 +318,14 @@ namespace Game
                     while (counter < duration)
                     {
                         counter += Time.deltaTime;
+                        
                         transform.position = Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
                         yield return null;
                     }
 
-                    if (MovesLeft < 0 && path.IndexOf(finalTile) != path.Count - 1)
+                    if (MovesLeft <= 0 && path.IndexOf(finalTile) != pathCount - 1)
                     {
-                        i = path.Count;
+                        i = pathCount;
                     }
                 }
                 
@@ -348,14 +355,12 @@ namespace Game
                         else
                             Rest();
                     }
-
-                    if (action.ActionType == ActionType.Recruit && action.Target != null)
+                    else if (action.ActionType == ActionType.Recruit && action.Target != null)
                     {
                         if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit) action.Target))
                             Rest();
                     }
-
-                    if (action.ActionType == ActionType.Heal && action.Target != null)
+                    else if (action.ActionType == ActionType.Heal && action.Target != null)
                     {
                         if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit) action.Target))
                             Rest();
