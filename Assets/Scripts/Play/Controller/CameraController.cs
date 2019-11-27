@@ -139,7 +139,7 @@ namespace Game
 
         private void UpdateDrag()
         {
-            if (Input.GetKeyDown(DRAG_KEY)) StartCoroutine(Drag());
+            if (Input.GetKeyDown(DRAG_KEY)) Harmony.Finder.CoroutineStarter.StartCoroutine(Drag());
         }
 
         private IEnumerator Drag()

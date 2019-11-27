@@ -294,7 +294,7 @@ namespace Game
         public Coroutine MoveByAction(Action action)
         {
             //TODO coroutine starter
-            return Harmony.Finder.LevelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
+            return Harmony.Finder.CoroutineStarter.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -423,7 +423,7 @@ namespace Game
                 );
             }
             //TODO créer un CouroutineStarter qui sera dans le finder qui remplacera le Level Controller de la ligne suivante
-            AttackRoutineHandle = Harmony.Finder.LevelController.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
+            AttackRoutineHandle = Harmony.Finder.CoroutineStarter.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 

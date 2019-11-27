@@ -29,6 +29,7 @@ TagManager:
   - Mon_WeaponCollider
   - PlayerClickManager
   - EnemyRangeCont
+  - CoroutineStarter
   layers:
   - Default
   - TransparentFX

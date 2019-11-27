@@ -108,7 +108,7 @@ namespace Game
             {
                 var camTransform = mainCamera.transform;
                 camTransform.position = new Vector3(startPosition.x, startPosition.y, camTransform.position.z);
-                StartCoroutine(cameraController.MoveCameraTo(targetPos, targetZoom, duration));
+                Harmony.Finder.CoroutineStarter.StartCoroutine(cameraController.MoveCameraTo(targetPos, targetZoom, duration));
             }
             for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
             {
@@ -120,7 +120,7 @@ namespace Game
 
         public void LaunchCinematic(Cinematic cinematic)
         {
-            StartCoroutine(PlayCameraActions(cinematic.Actions));
+            Harmony.Finder.CoroutineStarter.StartCoroutine(PlayCameraActions(cinematic.Actions));
         }
     }
 }

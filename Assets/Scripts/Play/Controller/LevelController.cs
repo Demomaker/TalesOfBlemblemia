@@ -151,7 +151,7 @@ namespace Game
             if (!doNotEnd && LevelEnded)
             {
                 ResetUnitsAlpha();
-                StartCoroutine(EndLevel());
+                Harmony.Finder.CoroutineStarter.StartCoroutine(EndLevel());
             }
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
@@ -362,7 +362,7 @@ namespace Game
             unitOwner.RemoveDeadUnits();
             if (isComputerPlaying || !(unitOwner is ComputerPlayer currentComputerPlayer)) return;
             isComputerPlaying = true;
-            StartCoroutine(currentComputerPlayer.PlayUnits());
+            Harmony.Finder.CoroutineStarter.StartCoroutine(currentComputerPlayer.PlayUnits());
         }
 
         private void CheckForPlayerTurnSkip()

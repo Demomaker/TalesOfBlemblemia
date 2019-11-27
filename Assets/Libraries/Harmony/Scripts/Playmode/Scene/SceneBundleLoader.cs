@@ -59,7 +59,7 @@ namespace Harmony
         /// <param name="sceneBundle">Scene Bundle</param>
         public void Load(SceneBundle sceneBundle)
         {
-            StartCoroutine(LoadRoutine(sceneBundle));
+            Harmony.Finder.CoroutineStarter.StartCoroutine(LoadRoutine(sceneBundle));
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Harmony
         /// <param name="sceneBundle">Scene Bundle</param>
         public void Unload(SceneBundle sceneBundle)
         {
-            StartCoroutine(UnloadRoutine(sceneBundle));
+            Harmony.Finder.CoroutineStarter.StartCoroutine(UnloadRoutine(sceneBundle));
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Harmony
         /// <param name="newSceneBundle">Scene Bundle to load.</param>
         public void Switch(SceneBundle oldSceneBundle, SceneBundle newSceneBundle)
         {
-            StartCoroutine(SwitchRoutine(oldSceneBundle, oldSceneBundle));
+            Harmony.Finder.CoroutineStarter.StartCoroutine(SwitchRoutine(oldSceneBundle, oldSceneBundle));
         }
 
         /// <summary>

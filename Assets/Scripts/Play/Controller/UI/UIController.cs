@@ -151,7 +151,7 @@ namespace Game
             playerDeathSymbol.SetActive(false);
             enemyDeathSymbol.SetActive(false);
 
-            Coroutine handle = StartCoroutine(BattleReport(isEnemy));
+            Coroutine handle = Harmony.Finder.CoroutineStarter.StartCoroutine(BattleReport(isEnemy));
 
             return handle;
         }

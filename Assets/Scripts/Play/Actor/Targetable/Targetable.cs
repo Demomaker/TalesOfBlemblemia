@@ -25,8 +25,7 @@ namespace Game
             {
                 currentHealthPoints = value;
                 if (NoHealthLeft) 
-                    //TODO objet Coroutine Starter
-                    Harmony.Finder.LevelController.StartCoroutine(Die());
+                    Harmony.Finder.CoroutineStarter.StartCoroutine(Die());
                 if(this is Unit) (this as Unit)?.OnHealthChange.Publish();
             }
         }
@@ -58,7 +57,7 @@ namespace Game
         
         protected virtual void Start()
         {
-            StartCoroutine(InitPosition());
+            Harmony.Finder.CoroutineStarter.StartCoroutine(InitPosition());
         }
         
         private IEnumerator InitPosition()
