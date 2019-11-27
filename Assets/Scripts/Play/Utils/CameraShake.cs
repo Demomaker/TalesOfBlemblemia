@@ -37,12 +37,12 @@ namespace Game
             else
             {
                 duration = 0f;
-                transform.localPosition = initialPosition;
             }
         }
 
         public void TriggerShake()
         {
+            initialPosition = transform.localPosition;
             duration = shakeDuration;
         }
     }

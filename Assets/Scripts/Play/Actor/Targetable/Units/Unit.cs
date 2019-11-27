@@ -20,6 +20,7 @@ namespace Game
         [SerializeField] private bool canCritOnEverybody;
         [SerializeField] private int detectionRadius;
         [SerializeField] private Transform appearance;
+        [SerializeField] private Camera camera;
         
         #endregion
         
@@ -462,6 +463,10 @@ namespace Game
             {
                 critModifier = Random.value <= Stats.CritRate ? 2 : 1;
                 damage *= critModifier;
+                if (critModifier > 1)
+                {
+                    camera.GetComponent<CameraShake>().TriggerShake();
+                }
             }
             
             target.CurrentHealthPoints -= damage;
