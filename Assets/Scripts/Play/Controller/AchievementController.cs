@@ -19,19 +19,15 @@ namespace Game
         
         private List<AchievementInfo> achievements = new List<AchievementInfo>();
         private bool achievementBeingShown;
-        private bool skipAchievementShow = false;
+        private bool skipAchievementShow;
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
 
-        private bool CompletedCampaignOnEasy =>
-            gameController.AllLevelsCompleted && (gameController.DifficultyLevel == DifficultyLevel.Easy ||
-                                                  gameController.DifficultyLevel == DifficultyLevel.Medium ||
-                                                  gameController.DifficultyLevel == DifficultyLevel.Hard);
+        private bool CompletedCampaignOnEasy => gameController.AllLevelsCompleted;
         private bool CompletedCampaignOnMedium =>
             gameController.AllLevelsCompleted && (gameController.DifficultyLevel == DifficultyLevel.Medium || gameController.DifficultyLevel == DifficultyLevel.Hard);
-        private bool CompletedCampaignOnHard =>
-            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
+        private bool CompletedCampaignOnHard => gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
         private bool BlackKnightDefeated => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName;
      /*   private bool ReachedFinalLevelWithAllPlayableUnits
         {
