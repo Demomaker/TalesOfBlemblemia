@@ -7,10 +7,10 @@ namespace Game
     /// Author : Mike Bédard
     /// </summary>
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
-    public class OnEndLevelEnter : EventChannel<EndLevelController>
+    public class OnEndLevelEnter : EventChannel<EndSceneController>
     {
-        public event EventHandler<EndLevelController> Notify;
-        public override void Publish(EndLevelController eventParam)
+        public event EventHandler<EndSceneController> Notify;
+        public override void Publish(EndSceneController eventParam)
         {
             Notify?.Invoke(eventParam);
         }
