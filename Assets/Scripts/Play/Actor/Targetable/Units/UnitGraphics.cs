@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,28 +35,6 @@ namespace Game
             DisableUnitGraphics();
             InitUnitInfos();
         }
-
-        private void OnMouseEnter()
-        {
-            UpdateUnitInfos();
-            EnableUnitGraphics();
-        }
-
-        protected void OnMouseExit()
-        {
-            DisableUnitGraphics();
-        }
-
-        private void EnableUnitGraphics()
-        {
-            if (canvas != null) canvas.enabled = true;
-        }
-
-        private void DisableUnitGraphics()
-        {
-            if (canvas != null) canvas.enabled = false;
-        }
-
         private void InitUnitInfos()
         {
             nameText.text = unit.UnitInfos.CharacterName;
@@ -82,11 +61,48 @@ namespace Game
                 image.color = unit.IsEnemy ? gameSettings.Red : gameSettings.Green;
             }
         }
+        
 
-        private void UpdateUnitInfos()
+        private void OnEnable()
+        {
+            unit.OnHealthChange.Notify += UpdateHealthText;
+            unit.OnMovementChange.Notify += UpdateMovementText;
+        }
+
+        private void OnDisable()
+        {
+            unit.OnHealthChange.Notify -= UpdateHealthText;
+            unit.OnMovementChange.Notify -= UpdateMovementText;
+        }
+
+        private void OnMouseEnter()
+        {
+            EnableUnitGraphics();
+        }
+
+        protected void OnMouseExit()
+        {
+            DisableUnitGraphics();
+        }
+
+        private void EnableUnitGraphics()
+        {
+            if (canvas != null) canvas.enabled = true;
+        }
+
+        private void DisableUnitGraphics()
+        {
+            if (canvas != null) canvas.enabled = false;
+        }
+
+        private void UpdateHealthText()
+        {
+            healthText.text = Mathf.Clamp(unit.CurrentHealthPoints, 0, unit.Stats.MaxHealthPoints).ToString();
+        }
+
+        private void UpdateMovementText()
         {
             movementText.text = unit.MovesLeft.ToString();
-            healthText.text = unit.CurrentHealthPoints.ToString();
         }
     }
 }

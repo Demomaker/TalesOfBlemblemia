@@ -60,9 +60,10 @@ namespace Game
 
         protected void Start()
         {
-            int index = transform.GetSiblingIndex();
-            positionInGrid.x = index % Finder.GridController.NbColumns;
-            positionInGrid.y = index / Finder.GridController.NbColumns;
+            var index = transform.GetSiblingIndex();
+            var nbColumns = gridController.NbColumns;
+            positionInGrid.x = index % nbColumns;
+            positionInGrid.y = index / nbColumns;
         }
 
         public void DisplayMoveActionPossibility()
