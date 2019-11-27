@@ -109,7 +109,7 @@ namespace Game
             {
                 if (tileUpdateKeeper == Harmony.Finder.LevelController.LevelTileUpdateKeeper) return movementCosts;
                 if (currentTile != null)
-                    MovementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
+                    MovementCosts = PathFinder.ComputeCost(currentTile.LogicalPosition, IsEnemy);
                 return movementCosts;
             }
             set
@@ -279,7 +279,7 @@ namespace Game
                     currentTile.UnlinkUnit();
                     MovesLeft -= currentTile.CostToMove;
                 }
-                List<Tile> path = PathFinder.PrepareFindPath(gridController, MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
+                List<Tile> path = PathFinder.FindPath(gridController, MovementCosts, new List<Tile>(), currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.RemoveAt(0);
                 path.Add(targetTile);
                 return path;
