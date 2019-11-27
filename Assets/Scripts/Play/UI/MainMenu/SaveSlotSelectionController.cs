@@ -12,7 +12,8 @@ namespace Game
         [SerializeField] private Button[] saveSlots;
 
         [Header("Canvas")] 
-        [SerializeField] private NewGameMenuController newGameScreen;
+        [SerializeField] private 
+        NewGameMenuController newGameScreen;
 
         private Navigator navigator;
         private SaveController saveController;
@@ -54,6 +55,12 @@ namespace Game
         public void SaveSlotSelected(int saveSlotId)
         {
             newGameScreen.Enter(saveSlotId);
+        }
+
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            navigator.Leave();
         }
     }
 }
