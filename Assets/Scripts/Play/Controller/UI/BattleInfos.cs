@@ -12,7 +12,7 @@ namespace Game
         public bool CriticalHit { get; set; }
         
         
-        public void ChangeInfos(int maxHp, int healthBeforeCombat, int critModifier, int damageTaken = 0)
+        public void ChangeInfos(int maxHp, int healthBeforeCombat, int critModifier = 1, int damageTaken = 0)
         {
             MaxHp = maxHp;
             CurrentHealth = healthBeforeCombat;

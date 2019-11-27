@@ -96,13 +96,13 @@ namespace Game
         {
             if (isEnemy)
             {
-                enemyBattleInfos.ChangeInfos(maxHealthPoints, currentHealthPoint, 1);
-                playerBattleInfos.ChangeInfos(targetMaxHealthPoint, targetCurrentHealthPoint, 1);
+                enemyBattleInfos.ChangeInfos(maxHealthPoints, currentHealthPoint);
+                playerBattleInfos.ChangeInfos(targetMaxHealthPoint, targetCurrentHealthPoint);
             }
             else
             {
-                playerBattleInfos.ChangeInfos(maxHealthPoints, currentHealthPoint, 1);
-                enemyBattleInfos.ChangeInfos(targetMaxHealthPoint, targetCurrentHealthPoint, 1);
+                playerBattleInfos.ChangeInfos(maxHealthPoints, currentHealthPoint);
+                enemyBattleInfos.ChangeInfos(targetMaxHealthPoint, targetCurrentHealthPoint);
             }
         }
         
