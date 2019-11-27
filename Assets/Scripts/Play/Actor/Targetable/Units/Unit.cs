@@ -312,6 +312,7 @@ namespace Game
                     while (counter < duration)
                     {
                         counter += Time.deltaTime;
+                        
                         transform.position = Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
                         yield return null;
                     }
