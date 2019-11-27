@@ -40,6 +40,7 @@ namespace Game
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         #endregion ReadOnly Fields
         #region Other Fields
+        private CoroutineStarter coroutineStarter;
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
@@ -119,6 +120,7 @@ namespace Game
             endGameCredits = GetComponentInChildren<EndGameCreditsController>();
             if (endGameCredits != null)
                 endGameCredits.gameObject.SetActive(false);
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
         
         private void Start()
@@ -151,7 +153,7 @@ namespace Game
             if (!doNotEnd && LevelEnded)
             {
                 ResetUnitsAlpha();
-                Harmony.Finder.CoroutineStarter.StartCoroutine(EndLevel());
+                coroutineStarter.StartCoroutine(EndLevel());
             }
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
@@ -362,7 +364,7 @@ namespace Game
             unitOwner.RemoveDeadUnits();
             if (isComputerPlaying || !(unitOwner is ComputerPlayer currentComputerPlayer)) return;
             isComputerPlaying = true;
-            Harmony.Finder.CoroutineStarter.StartCoroutine(currentComputerPlayer.PlayUnits());
+            coroutineStarter.StartCoroutine(currentComputerPlayer.PlayUnits());
         }
 
         private void CheckForPlayerTurnSkip()
