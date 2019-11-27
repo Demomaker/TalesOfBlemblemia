@@ -163,7 +163,7 @@ namespace Game
             return newPath;
         }
 
-              public static List<Tile> FindPath(
+        private static List<Tile> FindPath(
             GridController grid, 
             int[,] movementCosts, 
             List<Tile> path, 

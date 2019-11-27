@@ -285,8 +285,7 @@ namespace Game
                     currentTile.UnlinkUnit();
                     MovesLeft -= currentTile.CostToMove;
                 }
-                List<Tile> path = PathFinder.FindPath(gridController, MovementCosts, new List<Tile>(), currentTile.LogicalPosition, targetTile.LogicalPosition, this);
-                path.RemoveAt(0);
+                List<Tile> path = PathFinder.FindPath(MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.Add(targetTile);
                 return path;
             }

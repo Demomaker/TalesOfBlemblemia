@@ -23,7 +23,7 @@ namespace Game
             path.Add(selectedPlayerUnit.CurrentTile);
             if (clickButton == ClickButton.LeftClick)
             {
-                switch (target.RightClickType)
+                switch (target.LeftClickType)
                 {
                     case ClickType.MoveTo:
                         unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(target, false));
