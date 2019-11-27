@@ -82,7 +82,7 @@ namespace Game
                     break;
                 }
             }
-            StartCoroutine(TypeSentence(quote.Sentence));
+            Harmony.Finder.CoroutineStarter.StartCoroutine(TypeSentence(quote.Sentence));
         }
 
         IEnumerator TypeSentence(string sentence)

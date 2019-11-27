@@ -11,6 +11,7 @@ namespace Game
         private DialogueManager dialogueManager;
         private CameraController cameraController;
         private GameObject uiController;
+        private CoroutineStarter coroutineStarter;
         
         private bool isPlayingACinematic;
 
@@ -34,6 +35,7 @@ namespace Game
         }
         private void Awake()
         {
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController.gameObject;
             dialogueManager = Harmony.Finder.DialogueManager;
             mainCamera = Camera.main;
@@ -108,7 +110,7 @@ namespace Game
             {
                 var camTransform = mainCamera.transform;
                 camTransform.position = new Vector3(startPosition.x, startPosition.y, camTransform.position.z);
-                StartCoroutine(cameraController.MoveCameraTo(targetPos, targetZoom, duration));
+                coroutineStarter.StartCoroutine(cameraController.MoveCameraTo(targetPos, targetZoom, duration));
             }
             for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
             {
@@ -120,7 +122,7 @@ namespace Game
 
         public void LaunchCinematic(Cinematic cinematic)
         {
-            StartCoroutine(PlayCameraActions(cinematic.Actions));
+            coroutineStarter.StartCoroutine(PlayCameraActions(cinematic.Actions));
         }
     }
 }
