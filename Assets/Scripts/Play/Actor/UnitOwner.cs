@@ -40,17 +40,18 @@ namespace Game
         #region UnitOwner-related Functions
         public void Lose()
         {
-            MakeOwnedUnitsUnplayable();
+            //MakeOwnedUnitsUnplayable();
             HasLost = true;
         }
 
+        /*
         public void MakeOwnedUnitsUnplayable()
         {
             foreach (var unit in ownedUnits)
             {
                 unit.HasActed = true;
             }
-        }
+        }*/
 
         private void MakeOwnedUnitsPlayable()
         {
