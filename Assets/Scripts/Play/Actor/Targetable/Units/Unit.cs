@@ -109,7 +109,7 @@ namespace Game
             {
                 if (tileUpdateKeeper == Harmony.Finder.LevelController.LevelTileUpdateKeeper) return movementCosts;
                 if (currentTile != null)
-                    MovementCosts = PathFinder.PrepareComputeCost(currentTile.LogicalPosition, IsEnemy);
+                    MovementCosts = PathFinder.ComputeCost(currentTile.LogicalPosition, IsEnemy);
                 return movementCosts;
             }
             set
@@ -284,7 +284,7 @@ namespace Game
                     currentTile.UnlinkUnit();
                     MovesLeft -= currentTile.CostToMove;
                 }
-                List<Tile> path = PathFinder.PrepareFindPath(gridController, MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
+                List<Tile> path = PathFinder.FindPath(gridController, MovementCosts, new List<Tile>(), currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.RemoveAt(0);
                 path.Add(targetTile);
                 return path;
@@ -318,6 +318,7 @@ namespace Game
                     while (counter < duration)
                     {
                         counter += Time.deltaTime;
+                        
                         transform.position = Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
                         yield return null;
                     }
@@ -354,14 +355,12 @@ namespace Game
                         else
                             Rest();
                     }
-
-                    if (action.ActionType == ActionType.Recruit && action.Target != null)
+                    else if (action.ActionType == ActionType.Recruit && action.Target != null)
                     {
                         if (action.Target.GetType() == typeof(Unit) && !RecruitUnit((Unit) action.Target))
                             Rest();
                     }
-
-                    if (action.ActionType == ActionType.Heal && action.Target != null)
+                    else if (action.ActionType == ActionType.Heal && action.Target != null)
                     {
                         if (action.Target.GetType() == typeof(Unit) && !HealUnit((Unit) action.Target))
                             Rest();
