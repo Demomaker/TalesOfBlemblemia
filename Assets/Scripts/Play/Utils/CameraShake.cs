@@ -5,6 +5,8 @@ using Random = UnityEngine.Random;
 namespace Game
 {
     //Author : Antoine Lessard
+    //Code taken here : https://medium.com/@mattThousand/basic-2d-screen-shake-in-unity-9c27b56b516
+    //and adapted to current usage by Antoine Lessard
     public class CameraShake : MonoBehaviour
     {
         [Header("Shake Values")] 

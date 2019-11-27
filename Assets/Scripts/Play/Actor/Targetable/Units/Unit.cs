@@ -324,7 +324,7 @@ namespace Game
                         yield return null;
                     }
 
-                    if (MovesLeft <= 0 && path.IndexOf(finalTile) != pathCount - 1)
+                    if (MovesLeft < 0 && path.IndexOf(finalTile) != pathCount - 1)
                     {
                         i = pathCount;
                     }
@@ -463,7 +463,7 @@ namespace Game
             {
                 critModifier = Random.value <= Stats.CritRate ? 2 : 1;
                 damage *= critModifier;
-                if (critModifier > 1)
+                if (critModifier > 1 && camera != null)
                 {
                     camera.GetComponent<CameraShake>().TriggerShake();
                 }
