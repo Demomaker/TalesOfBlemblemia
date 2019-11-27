@@ -100,6 +100,9 @@ namespace Game
                 return playerUnitIsMovingOrAttacking;
             }
         }
+
+        public List<Unit> EnemyUnits => players[1].OwnedUnits;
+
         #endregion Accessors
         #region Unity Event Functions
         private void Awake()

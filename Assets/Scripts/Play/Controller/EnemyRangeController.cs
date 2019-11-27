@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Harmony;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -18,6 +19,19 @@ namespace Game
                 isEnabled = true;
                 SetEnemyRange(enemyUnits);
             }
+            DisplayEnemyRange();
+        }
+
+        public void OnToggleChange(Toggle enemyRangeToggle)
+        {
+            if (enemyRangeToggle.isOn)
+            {
+                EnableEnemyRange(Harmony.Finder.LevelController.EnemyUnits);
+            }
+            else
+            {
+                DisableEnemyRange();
+            }
         }
 
         private void SetEnemyRange(List<Unit> enemyUnits)
@@ -26,7 +40,6 @@ namespace Game
             {
                 FindInRangeTiles(enemyUnits);
             }
-            DisplayEnemyRange();
         }
 
         public void DisplayEnemyRange()
