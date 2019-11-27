@@ -1,88 +1,55 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Game
 {
     /// <summary>
     /// The computer player that controls its units
-    /// Authors: Zacharie Lavigne, Pierre-Luc Maltais
+    /// Authors: Zacharie Lavigne, Pierre-Luc Maltais, Jérémie Bertrand
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
-        #region Fields
+        private const string COMPUTER_PLAYER_NAME = "Enemy";
+        
         private int dynamicUnitCounter;
         private int dynamicUnitCount;
-        private Unit currentUnit = null;
-        private static ComputerPlayer instance = null;
-        private const string COMPUTER_PLAYER_NAME = "Enemy";
-        private List<Targetable> targetsToDestroy;
-        private OnUnitDeath onUnitDeath;
-        #endregion Fields
-        #region Accessors
-        public static ComputerPlayer Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ComputerPlayer();
-                }
-                return instance;
-            }
-        }
-        #endregion Accessors
-        #region Constructors
-        private ComputerPlayer()
-        {
-            targetsToDestroy = new List<Targetable>(); 
-            name = COMPUTER_PLAYER_NAME;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
-            onUnitDeath.Notify += OnUnitDeath;
-        }
-        #endregion Constructors
-        #region ComputerPlayer-related Functions
+        private Unit currentUnit ;
         
+        private readonly List<Targetable> targetsToDestroy;
+
+        public ComputerPlayer() : base(COMPUTER_PLAYER_NAME)
+        {
+            targetsToDestroy = new List<Targetable>();
+            Harmony.Finder.OnUnitDeath.Notify += OnUnitDeath;
+        }
+
+        private void OnUnitDeath(Unit unit)
+        {
+            if (unit!= currentUnit) return;
+            dynamicUnitCount--;
+            dynamicUnitCounter--;
+        }
+
         public void AddTarget(Targetable target)
         {
             targetsToDestroy.Add(target);
         }
         
-        private void OnUnitDeath(Unit unit)
-        {
-            if (unit != currentUnit) return;
-            dynamicUnitCount--;
-            dynamicUnitCounter--;
-        }
-
         public IEnumerator PlayUnits()
         {
             dynamicUnitCount = ownedUnits.Count;
+            var uiController = Harmony.Finder.UIController;
             for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
-                var uiController = Harmony.Finder.UIController;
-                while (uiController.IsBattleReportActive)
-                {
-                    yield return null;
-                }
-
-                if (dynamicUnitCounter > 0)
-                    currentUnit = ownedUnits[dynamicUnitCounter];
-                else
-                {
-                    currentUnit = ownedUnits[0];
-                    Debug.Log("Dynamic counter < 0 (ComputerPlayer.cs line 70)");
-                }
+                while (uiController.IsBattleReportActive) yield return null;
+                currentUnit = dynamicUnitCount > 0 ? ownedUnits[dynamicUnitCounter] : currentUnit = ownedUnits[0];
 
                 if (!currentUnit.HasActed)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
-                    
                     yield return currentUnit.MoveByAction(action);
                 }
             }
         }
-        #endregion ComputerPlayer-related Functions
     }
 }

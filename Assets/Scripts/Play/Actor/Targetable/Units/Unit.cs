@@ -36,6 +36,7 @@ namespace Game
         private bool hasActed;
         private GameSettings gameSettings;
         private UIController uiController;
+        private LevelController levelController;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -169,7 +170,13 @@ namespace Game
 
         public override void Awake()
         {
-            InitializeEvents();
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
+            levelController = Harmony.Finder.LevelController;
             uiController = Harmony.Finder.UIController;
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
@@ -182,33 +189,13 @@ namespace Game
             base.Awake();
         }
 
-        private void InitializeEvents()
-        {
-            onHurt = Harmony.Finder.OnHurt;
-            onAttack = Harmony.Finder.OnAttack;
-            onDodge = Harmony.Finder.OnDodge;
-            onUnitMove = Harmony.Finder.OnUnitMove;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
-            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
-        }
-
         private void OnEnable()
-        {
-            EnableEvents();
-        }
-
-        private void EnableEvents()
         {
             onHurt.Notify += Hurt;
             onDodge.Notify += MakeDodge;
         }
 
         private void OnDisable()
-        {
-            DisableEvents();
-        }
-
-        private void DisableEvents()
         {
             onHurt.Notify -= Hurt;
             onDodge.Notify -= MakeDodge;
@@ -491,7 +478,7 @@ namespace Game
             if (IsRecruitable)
             {
                 playerType = PlayerType.Ally;
-                HumanPlayer.Instance.AddOwnedUnit(this);
+                levelController.HumanPlayer.AddOwnedUnit(this);
                 GetComponentInChildren<Cinematic>()?.TriggerCinematic();
                 
             }
@@ -519,6 +506,15 @@ namespace Game
         private void Heal()
         {
             CurrentHealthPoints += HpGainedByHealing;
+        }
+
+        public void ResetAlpha()
+        {
+            var spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var spriteRenderer in spriteRenderers)
+            {
+                spriteRenderer.color = gameSettings.OpaqueAlpha;
+            }
         }
 
         public bool TargetIsInMovementRange(Targetable target)

@@ -15,16 +15,11 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
-        #region Constants
         private const string PROTAGONIST_NAME = "Franklem";
-        private const string REACH_TARGET_VICTORY_CONDITION_TEXT = "Reach the target!";
-        private const string DEFEAT_ALL_ENEMIES_VICTORY_CONDITION_TEXT = "Defeat all the enemies!";
         private const int CREDITS_DURATION = 20;
-        #endregion Constants
-        #region Serialized Fields
+
         [SerializeField] private AudioClip backgroundMusic;
-        [SerializeField] private bool doNotEnd;
-        [SerializeField] private string customObjectiveMessage = null;
+        [SerializeField] private string customObjectiveMessage = "";
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
         [SerializeField] private bool completeIfCertainTargetsDefeated = false;
@@ -35,145 +30,106 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
-        #endregion Serialized Fields
-        #region ReadOnly Fields
-        private readonly List<UnitOwner> players = new List<UnitOwner>();
-        #endregion ReadOnly Fields
-        #region Other Fields
+
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
         private bool levelIsEnding;
         private bool isComputerPlaying;
-        private bool skipLevel = false;
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
-        private GameObject dialogueUi;
         private OnLevelChange onLevelChange;
         private OnCampaignFailed onCampaignFailed;
         private UIController uiController;
         private LevelLoader levelLoader;
         private Unit[] units;
         private UnitOwner currentPlayer;
-        private int numberOfPlayerTurns = 0;
+        private int numberOfPlayerTurns;
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
-        #endregion Other Fields
-        #region Accessors
-        private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
-        private bool PointAchieved => completeIfPointAchieved &&
-                                      (GameObject.Find(PROTAGONIST_NAME) != null) &&
-                                      (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>() != null) &&
-                                      (GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile != null) &&
-                                      GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().CurrentTile.LogicalPosition == pointToAchieve;
+        
+        private readonly HumanPlayer humanPlayer = new HumanPlayer();
+        private readonly ComputerPlayer computerPlayer = new ComputerPlayer();
+
+        private bool AllEnemiesDied => computerPlayer.HaveAllUnitsDied;
+        private bool PointAchieved => completeIfPointAchieved && GameObject.Find(PROTAGONIST_NAME)?.GetComponent<Unit>()?.CurrentTile.LogicalPosition == pointToAchieve;
         private bool AllTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
         private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
-        private bool ProtagonistDied => (GameObject.Find(PROTAGONIST_NAME) == null ||
-                                         GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft);
-        private bool LevelCompleted => 
-            skipLevel || 
-            AllEnemiesDied ||
-            PointAchieved || 
-            AllTargetsDefeated || 
-            Survived;
+        private bool ProtagonistDied => GameObject.Find(PROTAGONIST_NAME) == null || GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft;
+        private bool LevelCompleted => AllEnemiesDied || PointAchieved || AllTargetsDefeated || Survived;
+        public bool PlayerUnitIsMovingOrAttacking => humanPlayer.OwnedUnits.All(unit => unit.IsMoving || unit.IsAttacking);
         private bool LevelFailed => ProtagonistDied;
         private bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
-        
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
-
         public AudioClip BackgroundMusic => backgroundMusic;
         public CinematicController CinematicController => cinematicController;
         public UnitOwner CurrentPlayer => currentPlayer;
+        public HumanPlayer HumanPlayer => humanPlayer;
+        public ComputerPlayer ComputerPlayer => computerPlayer;
 
-        public bool PlayerUnitIsMovingOrAttacking
-        {
-            get
-            {
-                var playerUnitIsMovingOrAttacking = false;
-                foreach (var unit in players[0].OwnedUnits.Where(unit => unit.IsMoving || unit.IsAttacking))
-                {
-                    playerUnitIsMovingOrAttacking = true;
-                }
-                return playerUnitIsMovingOrAttacking;
-            }
-        }
-        #endregion Accessors
-        #region Unity Event Functions
         private void Awake()
-        {
-            InitializeEvents();
-            levelLoader = Harmony.Finder.LevelLoader;
-            ResetVariables();
-            saveController = Finder.SaveController;
-            gameController = Finder.GameController;
-            gameSettings = Harmony.Finder.GameSettings;
-            dialogueUi = GameObject.FindWithTag("DialogueUi");
-            cinematicController = GetComponent<CinematicController>();
-            levelName = gameObject.scene.name;
-            endGameCredits = GetComponentInChildren<EndGameCreditsController>();
-            if (endGameCredits != null)
-                endGameCredits.gameObject.SetActive(false);
-        }
-        
-        private void Start()
-        {
-            uiController = Harmony.Finder.UIController;
-            onLevelChange.Publish(this);
-            InitializePlayersAndUnits();
-            currentPlayer = players[0];
-            OnTurnGiven();
-            if (dialogueUi != null)
-            {
-                dialogueUi.SetActive(true);
-            }
-            
-            ActivatePlayerUnits();
-
-            CheckForDarkKnight();
-            
-            PrepareVictoryConditionForUI();
-        }
-        
-        protected void Update()
-        {
-            //TODO enlever ca
-            if(Input.GetKeyDown(gameSettings.SkipLevelKey))
-            {
-                skipLevel = true;
-            }
-            //TODO enlever doNotEnd du projet en entier, right?
-            if (!doNotEnd && LevelEnded)
-            {
-                ResetUnitsAlpha();
-                StartCoroutine(EndLevel());
-            }
-
-            if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
-            
-            //TODO enlever ca avant la release
-            if (!cinematicController.IsPlayingACinematic)
-            {
-                CheckForComputerTurnSkip();
-                CheckForPlayerTurnSkip();
-            }
-            
-            CheckForCurrentPlayerLoss();
-            CheckForCurrentPlayerEndOfTurn();
-            Play(currentPlayer);
-        }
-        #endregion
-        #region Event Channel Handling
-        private void InitializeEvents()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelFailed = Harmony.Finder.OnLevelFailed;
             onLevelChange = Harmony.Finder.OnLevelChange;
             onCampaignFailed = Harmony.Finder.OnCampaignFailed;
+            levelLoader = Harmony.Finder.LevelLoader;
+            saveController = Finder.SaveController;
+            gameController = Finder.GameController;
+            gameSettings = Harmony.Finder.GameSettings;
+            cinematicController = GetComponent<CinematicController>();
+            levelName = gameObject.scene.name;
+            endGameCredits = GetComponentInChildren<EndGameCreditsController>();
+            uiController = Harmony.Finder.UIController;
+            if (endGameCredits != null) endGameCredits.gameObject.SetActive(false);
         }
         
+        private void Start()
+        {
+            onLevelChange.Publish(this);
+            units = FindObjectsOfType<Unit>();
+            GiveUnits(units);
+            currentPlayer = humanPlayer;
+            OnTurnGiven();
+            ActivatePlayerUnits();
+            CheckForDarkKnight();
+            uiController.ModifyVictoryCondition(customObjectiveMessage);
+            if (completeIfPointAchieved)
+            {
+                CreatePointToAchievePointingArrow();
+            }
+        }
+        
+        protected void Update()
+        {
+            if (LevelEnded) StartCoroutine(EndLevel());
+            CheckForCurrentPlayerLoss();
+            CheckForCurrentPlayerEndOfTurn();
+            Play();
+        }
+        
+        private IEnumerator EndLevel()
+        {
+            if (levelIsEnding) yield break;
+            levelIsEnding = true;
+            if(LevelCompleted) onLevelVictory.Publish(this);
+            if(LevelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
+            while (cinematicController.IsPlayingACinematic) yield return null;
+            if (endGameCredits != null)
+            {
+                endGameCredits.RollCredits();
+                yield return new WaitForSeconds(CREDITS_DURATION);
+            }
+            CheckForPermadeath();
+            CheckIfUnitWasRecruited();
+            CheckIfUpperPathWasTaken();
+            UpdatePlayerSave();
+            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+        }
+
         private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)
         {
             if (difficultyLevel == DifficultyLevel.Easy)
@@ -185,95 +141,13 @@ namespace Game
                 onCampaignFailed.Publish(this);
             }
         }
-        #endregion
-        #region UI-related Functions
-        private void PrepareVictoryConditionForUI()
-        {
-            if (!string.IsNullOrEmpty(customObjectiveMessage))
-            {
-                uiController.ModifyVictoryCondition(customObjectiveMessage);
-                return;
-            }
-            if (completeIfPointAchieved)
-            {
-                uiController.ModifyVictoryCondition(REACH_TARGET_VICTORY_CONDITION_TEXT);
-                CreatePointToAchievePointingArrow();
-            }
-            else if (completeIfCertainTargetsDefeated)
-            {
-                uiController.ModifyVictoryCondition("Defeat " + GetStringOfTargetsToDefeat());
-            }
-            else if (completeIfSurvivedCertainNumberOfTurns)
-            {
-                uiController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
-            }
-        }
 
         private void CreatePointToAchievePointingArrow()
         {
             var pointingArrowTransformOffset = new Vector2(0.5f, 0.5f);
-            GameObject pointingArrow = (GameObject)GameObject.Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity, transform);
+            var pointingArrow = (GameObject)Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity, transform);
             pointingArrow.transform.SetParent(null);
             pointingArrow.GetComponent<PointingArrow>().SetTransformToPointPosition(new Vector3(pointToAchieve.x + pointingArrowTransformOffset.x, pointToAchieve.y + pointingArrowTransformOffset.y, 0));
-        }
-
-        private string GetStringOfTargetsToDefeat()
-        {
-            var additionalWord = allTargetsNeedToBeDefeated ? "and" : "or";
-            var stringBetweenTargets = ", ";
-            var result = "";
-            for (var targetIndex = 0; targetIndex < targetsToDefeat.Length; targetIndex++)
-            {
-                var target = targetsToDefeat[targetIndex];
-                if (targetIndex == targetsToDefeat.Length - 1) stringBetweenTargets = "";
-                if (targetIndex == targetsToDefeat.Length - 2) stringBetweenTargets = " " + additionalWord + " ";
-                result += (target.name + stringBetweenTargets);
-            }
-            return result;
-        }
-        #endregion
-        #region Level Controlling Functions
-        private void InitializePlayersAndUnits()
-        {
-            var player1 = HumanPlayer.Instance;
-            var player2 = ComputerPlayer.Instance;
-
-            player1.OwnedUnits.Clear();
-            player1.DefeatedUnits.Clear();
-            player2.OwnedUnits.Clear();
-            
-            units = FindObjectsOfType<Unit>();
-
-            GiveUnits(units, player1, player2);
-
-            player1.OnNewLevel();
-            
-            players.Add(player1);
-            players.Add(player2);
-        }
-        private IEnumerator EndLevel()
-        {
-            if (levelIsEnding) yield break;
-            levelIsEnding = true;
-            if(LevelCompleted) onLevelVictory.Publish(this);
-            if(LevelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
-            while (cinematicController.IsPlayingACinematic)
-                yield return null;
-            if (endGameCredits != null)
-            {
-                endGameCredits.RollCredits();
-                yield return new WaitForSeconds(CREDITS_DURATION);
-            }
-            
-            CheckForPermadeath();
-
-            CheckIfUnitWasRecruited();
-
-            CheckIfUpperPathWasTaken();
-            
-            UpdatePlayerSave();
-
-            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
 
         private void CheckIfUpperPathWasTaken()
@@ -293,10 +167,9 @@ namespace Game
         {
             foreach (var unit in units)
             {
-                if (unit.IsRecruitable)
+                if (unit != null && unit.IsRecruitable)
                 {
                     var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-
                     characterInfos.Find(info => info.CharacterName == unit.name).CharacterStatus = false;
                     break;
                 }
@@ -309,7 +182,7 @@ namespace Game
         /// </summary>
         private void CheckForPermadeath()
         {
-            var defeatedPlayerUnits = HumanPlayer.Instance.DefeatedUnits;
+            var defeatedPlayerUnits = humanPlayer.DefeatedUnits;
 
             if (!defeatedPlayerUnits.Any()) return;
             var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
@@ -331,22 +204,6 @@ namespace Game
             }
         }
 
-        private void OnTurnGiven()
-        {
-            if (currentPlayer is HumanPlayer)
-            {
-                numberOfPlayerTurns++;
-                EnemyRangeController.OnPlayerTurn(players[1].OwnedUnits);
-            }
-            else
-            {
-                EnemyRangeController.OnComputerTurn();
-            }
-            uiController.ModifyTurnInfo(currentPlayer);
-            uiController.ModifyTurnCounter(numberOfPlayerTurns);
-            currentPlayer.OnTurnGiven();
-        }
-
         private bool AllTargetsToDefeatHaveBeenDefeated()
         {
             return allTargetsNeedToBeDefeated
@@ -354,79 +211,71 @@ namespace Game
                 : targetsToDefeat.Count(target => target == null || target.NoHealthLeft) > 0;
         }
 
-        private void Play(UnitOwner unitOwner)
+        private void Play()
         {
-            unitOwner.RemoveDeadUnits();
-            if (isComputerPlaying || !(unitOwner is ComputerPlayer currentComputerPlayer)) return;
+            currentPlayer.RemoveDeadUnits();
+            if (isComputerPlaying || currentPlayer != computerPlayer) return;
             isComputerPlaying = true;
-            StartCoroutine(currentComputerPlayer.PlayUnits());
+            StartCoroutine(computerPlayer.PlayUnits());
         }
 
-        private void CheckForPlayerTurnSkip()
-        {
-            if (!Input.GetKeyDown(gameSettings.SkipComputerTurnKey) || !(currentPlayer is HumanPlayer)) return;
-            isComputerPlaying = false;
-            currentPlayer = players.Find(player => player is ComputerPlayer);
-            OnTurnGiven();
-        }
-
-        private void CheckForComputerTurnSkip()
-        {
-            if (!Input.GetKeyDown(gameSettings.SkipComputerTurnKey) || !(currentPlayer is ComputerPlayer)) return;
-            isComputerPlaying = false;
-            currentPlayer = players.Find(player => player is HumanPlayer);
-            OnTurnGiven();
-        }
-        
-        private void GiveUnits(   
-            IEnumerable<Unit> units,
-            HumanPlayer player, 
-            ComputerPlayer aiPlayer)
+        private void GiveUnits(IEnumerable<Unit> units)
         {
             foreach (var unit in units)
             {
                 if (unit.IsPlayer)
                 {
-                    player.AddOwnedUnit(unit);
-                    aiPlayer.AddEnemyUnit(unit);
+                    humanPlayer.AddOwnedUnit(unit);
+                    computerPlayer.AddEnemyUnit(unit);
                 }
                 else if (unit.IsEnemy)
                 {
-                    aiPlayer.AddOwnedUnit(unit);
-                    player.AddEnemyUnit(unit);
+                    computerPlayer.AddOwnedUnit(unit);
+                    humanPlayer.AddEnemyUnit(unit);
                 }
             }
 
             foreach (var target in targetsToProtect)
             {
-                aiPlayer.AddTarget(target);
+                computerPlayer.AddTarget(target);
             }
         }
 
         private void CheckForCurrentPlayerEndOfTurn()
         {
             if (!currentPlayer.HasNoMorePlayableUnits) return;
-            ResetUnitsAlpha();
+            currentPlayer.ResetOwnedUnitsAlpha();
             GiveTurnToNextPlayer();
             OnTurnGiven();
+        }
+        
+        private void OnTurnGiven()
+        {
+            if (currentPlayer == humanPlayer)
+            {
+                numberOfPlayerTurns++;
+                uiController.ModifyTurnCounter(numberOfPlayerTurns);
+                EnemyRangeController.OnPlayerTurn(computerPlayer.OwnedUnits);
+            }
+            else
+            {
+                EnemyRangeController.OnComputerTurn();
+            }
+            uiController.ModifyTurnInfo(currentPlayer);
+            currentPlayer.OnTurnGiven();
         }
 
 
         private void CheckForCurrentPlayerLoss()
         {
-            if (currentPlayer != null && !currentPlayer.HaveAllUnitsDied()) return;
-            currentPlayer.Lose();
+            if (currentPlayer != null && !currentPlayer.HaveAllUnitsDied) return;
             GiveTurnToNextPlayer();
         }
 
         private void GiveTurnToNextPlayer()
         {
             isComputerPlaying = false;
-            //currentPlayer.MakeOwnedUnitsUnplayable();
-            var nextPlayerIndex = (players.IndexOf(currentPlayer) + 1) % 2;
-        
-            if (players.ElementAt(nextPlayerIndex) != null)
-                currentPlayer = players.ElementAt(nextPlayerIndex);
+            currentPlayer = (currentPlayer != humanPlayer) ? (UnitOwner) humanPlayer : computerPlayer;
         }
         
         /// <summary>
@@ -445,22 +294,8 @@ namespace Game
             {
                 unit.gameObject.SetActive(false);
                 currentPlayer.OwnedUnits.Remove(unit);
-                players.Find(owner => owner != currentPlayer).RemoveEnemyUnit(unit);
+                computerPlayer.RemoveEnemyUnit(unit);
             }
-        }
-        #endregion
-        #region Other Functions
-        private void ResetVariables()
-        {
-            levelIsEnding = false;
-            units = null;
-            levelTileUpdateKeeper = 0;
-            levelName = "";
-            numberOfPlayerTurns = 0;
-            players.Clear();
-            HumanPlayer.Instance.OwnedUnits.Clear();
-            HumanPlayer.Instance.DefeatedUnits.Clear();
-            ComputerPlayer.Instance.OwnedUnits.Clear();
         }
         /// <summary>
         /// Saves if the level was successfully completed
@@ -470,24 +305,10 @@ namespace Game
             //If the level was successfully completed, mark it as completed
             if (!LevelCompleted) return;
             gameController.OnLevelCompleted(levelName);
-
             saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;
-
             saveController.UpdateSave(saveController.SaveSelected);
         }
-        
-        private void ResetUnitsAlpha()
-        {
-            foreach (var unit in currentPlayer.OwnedUnits)
-            {
-                SpriteRenderer[] spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
-                foreach (var spriteRenderer in spriteRenderers)
-                {
-                    spriteRenderer.color = gameSettings.OpaqueAlpha;
-                }
-            }
-        }
-        
+
         public void IncrementTileUpdate()
         {
             levelTileUpdateKeeper++;
@@ -497,10 +318,9 @@ namespace Game
         {
             if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
             {
-                if (ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
-                    ComputerPlayer.Instance.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
+                if (computerPlayer.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
+                    computerPlayer.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
             }
         }
-        #endregion
     }
 }

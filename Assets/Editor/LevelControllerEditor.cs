@@ -142,8 +142,7 @@ namespace Game
 
         private void ShowAndEditPointingArrowProperty()
         {
-            pointingArrowPrefab.objectReferenceValue =
-                EditorGUILayout.ObjectField(POINTING_ARROW_PREFAB_FIELD_NAME, pointingArrowPrefab.objectReferenceValue, typeof(UnityEngine.Object),true );
+            pointingArrowPrefab.objectReferenceValue = EditorGUILayout.ObjectField(POINTING_ARROW_PREFAB_FIELD_NAME, pointingArrowPrefab.objectReferenceValue, typeof(UnityEngine.Object),true );
         }
 
         private void ShowAndEditBasicLevelProperties()
