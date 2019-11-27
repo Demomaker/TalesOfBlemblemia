@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
 using Harmony;
 using UnityEngine;
@@ -15,10 +13,10 @@ namespace Game
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
     {
-        private const string PROTAGONIST_NAME = "Franklem";
         private const int CREDITS_DURATION = 20;
 
-        [SerializeField] private AudioClip backgroundMusic;
+        [SerializeField] private GameObject protagonistGameObject = null;
+        [SerializeField] private AudioClip backgroundMusic = null;
         [SerializeField] private string customObjectiveMessage = "";
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
@@ -29,7 +27,7 @@ namespace Game
         [SerializeField] private Targetable[] targetsToProtect = null;
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
-        [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
+        [SerializeField] private GameObject pointingArrowPrefab = null;
 
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
@@ -54,10 +52,10 @@ namespace Game
         private readonly ComputerPlayer computerPlayer = new ComputerPlayer();
 
         private bool AllEnemiesDied => computerPlayer.HaveAllUnitsDied;
-        private bool PointAchieved => completeIfPointAchieved && GameObject.Find(PROTAGONIST_NAME)?.GetComponent<Unit>()?.CurrentTile.LogicalPosition == pointToAchieve;
+        private bool PointAchieved => completeIfPointAchieved && protagonistGameObject.GetComponent<Unit>()?.CurrentTile.LogicalPosition == pointToAchieve;
         private bool AllTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
         private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
-        private bool ProtagonistDied => GameObject.Find(PROTAGONIST_NAME) == null || GameObject.Find(PROTAGONIST_NAME).GetComponent<Unit>().NoHealthLeft;
+        private bool ProtagonistDied => protagonistGameObject == null || protagonistGameObject.GetComponent<Unit>().NoHealthLeft;
         private bool LevelCompleted => AllEnemiesDied || PointAchieved || AllTargetsDefeated || Survived;
         public bool PlayerUnitIsMovingOrAttacking => humanPlayer.OwnedUnits.All(unit => unit.IsMoving || unit.IsAttacking);
         private bool LevelFailed => ProtagonistDied;
@@ -84,6 +82,7 @@ namespace Game
             levelName = gameObject.scene.name;
             endGameCredits = GetComponentInChildren<EndGameCreditsController>();
             uiController = Harmony.Finder.UIController;
+            if (protagonistGameObject == null) Debug.LogError("Missing ProtagonistGameObject in LevelController!");
             if (endGameCredits != null) endGameCredits.gameObject.SetActive(false);
         }
         
@@ -91,7 +90,7 @@ namespace Game
         {
             onLevelChange.Publish(this);
             units = FindObjectsOfType<Unit>();
-            GiveUnits(units);
+            GiveUnits();
             currentPlayer = humanPlayer;
             OnTurnGiven();
             ActivatePlayerUnits();
@@ -133,19 +132,15 @@ namespace Game
         private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)
         {
             if (difficultyLevel == DifficultyLevel.Easy)
-            {
                 onLevelFailed.Publish(this);
-            }
             else
-            {
                 onCampaignFailed.Publish(this);
-            }
         }
 
         private void CreatePointToAchievePointingArrow()
         {
             var pointingArrowTransformOffset = new Vector2(0.5f, 0.5f);
-            var pointingArrow = (GameObject)Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity, transform);
+            var pointingArrow = Instantiate(pointingArrowPrefab, Vector3.zero, Quaternion.identity, transform);
             pointingArrow.transform.SetParent(null);
             pointingArrow.GetComponent<PointingArrow>().SetTransformToPointPosition(new Vector3(pointToAchieve.x + pointingArrowTransformOffset.x, pointToAchieve.y + pointingArrowTransformOffset.y, 0));
         }
@@ -167,12 +162,9 @@ namespace Game
         {
             foreach (var unit in units)
             {
-                if (unit != null && unit.IsRecruitable)
-                {
-                    var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-                    characterInfos.Find(info => info.CharacterName == unit.name).CharacterStatus = false;
-                    break;
-                }
+                if (!unit.IsRecruitable) continue;
+                var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
+                characterInfos.Find(info => info.CharacterName == unit.name).CharacterStatus = false;
             }
         }
 
@@ -183,32 +175,26 @@ namespace Game
         private void CheckForPermadeath()
         {
             var defeatedPlayerUnits = humanPlayer.DefeatedUnits;
-
             if (!defeatedPlayerUnits.Any()) return;
             var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-
-            foreach (var unit in defeatedPlayerUnits)
+            foreach (var unit in defeatedPlayerUnits.Where(unit => gameController.PermaDeath))
             {
-                if (gameController.PermaDeath)
+                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
                 {
-                    foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                    if (character.CharacterName == gameSettings.FranklemName)
                     {
-                        if (character.CharacterName == gameSettings.FranklemName)
-                        {
-                            saveController.ResetSave();
-                            break;
-                        }
-                        character.CharacterStatus = false;
+                        saveController.ResetSave();
+                        break;
                     }
+                    character.CharacterStatus = false;
                 }
             }
         }
 
         private bool AllTargetsToDefeatHaveBeenDefeated()
         {
-            return allTargetsNeedToBeDefeated
-                ? targetsToDefeat.Count(target => target == null || target.NoHealthLeft) == targetsToDefeat.Length
-                : targetsToDefeat.Count(target => target == null || target.NoHealthLeft) > 0;
+            var defeatedUnitsCount = targetsToDefeat.Count(target => target == null || target.NoHealthLeft);
+            return allTargetsNeedToBeDefeated ? defeatedUnitsCount == targetsToDefeat.Length : defeatedUnitsCount > 0;
         }
 
         private void Play()
@@ -219,7 +205,7 @@ namespace Game
             StartCoroutine(computerPlayer.PlayUnits());
         }
 
-        private void GiveUnits(IEnumerable<Unit> units)
+        private void GiveUnits()
         {
             foreach (var unit in units)
             {
@@ -236,9 +222,7 @@ namespace Game
             }
 
             foreach (var target in targetsToProtect)
-            {
                 computerPlayer.AddTarget(target);
-            }
         }
 
         private void CheckForCurrentPlayerEndOfTurn()
@@ -318,8 +302,8 @@ namespace Game
         {
             if (levelName == gameSettings.MorktressSceneName && gameController.PreviousLevelName == gameSettings.DarkTowerSceneName)
             {
-                if (computerPlayer.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName) != null)
-                    computerPlayer.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName).gameObject.SetActive(false);
+                var unit = computerPlayer.OwnedUnits.Find(info => info.name == gameSettings.DarkKnightName);
+                if (unit != null) unit.gameObject.SetActive(false);
             }
         }
     }

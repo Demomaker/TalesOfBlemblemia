@@ -29,6 +29,9 @@ namespace Game
          public string PreviousLevelName { get; set; }
          public string CurrentLevelName => levelLoader.LoadedLevel;
          public bool PermaDeath => permaDeath;
+
+         public int ChoiceRange => choiceRange;
+
          public bool AllLevelsCompleted => PreviousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel
