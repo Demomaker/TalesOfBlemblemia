@@ -442,6 +442,7 @@ namespace Game
             
             float hitRate = Stats.HitRate - target.CurrentTile.DefenseRate;
             int damage = 0;
+            var critModifier = 1;
             if (Random.value <= hitRate)
             {
                 damage = Stats.AttackStrength;
@@ -454,14 +455,15 @@ namespace Game
             }
             if (!isCountering && !isImmuneToCrits && (target.GetType() == typeof(Unit) && (canCritOnEverybody || ((Unit)target).WeaponType == WeaponAdvantage)))
             {
-                damage *= Random.value <= Stats.CritRate ? 2 : 1;
+                critModifier = Random.value <= Stats.CritRate ? 2 : 1;
+                damage *= critModifier;
             }
             
             target.CurrentHealthPoints -= damage;
             
             //todo Will have to check for Doors in the future.
             if (target is Unit)
-                uiController.ChangeCharacterDamageTaken(damage, !IsEnemy);
+                uiController.ChangeCharacterDamageTaken(damage, !IsEnemy, critModifier);
             counter = 0;
             
             while (counter < duration)

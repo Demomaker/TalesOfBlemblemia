@@ -55,5 +55,11 @@ namespace Game
         {
             newGameScreen.Enter(saveSlotId);
         }
+
+        [UsedImplicitly]
+        public void ReturnToMainMenu()
+        {
+            navigator.Leave();
+        }
     }
 }
