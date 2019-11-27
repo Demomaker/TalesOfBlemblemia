@@ -22,8 +22,8 @@ namespace Game
         private Door linkedDoor;
         private GridController gridController;
         private UIController uiController;
-        public GridController GridController => gridController;
 
+        public GridController GridController => gridController;
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedDoorCanBeAttackedByPlayer => IsOccupiedByADoor && IsPossibleAction && !linkedDoor.IsEnemyTarget;
@@ -42,8 +42,7 @@ namespace Game
         public Door LinkedDoor => linkedDoor;
         public int CostToMove => IsOccupiedByADoor ? TileTypeExt.HIGH_COST_TO_MOVE : tileType.GetCostToMove();
         public float DefenseRate => tileType.GetDefenseRate();
-
-
+        
         protected Tile(TileType tileType)
         {
             this.tileType = tileType;
@@ -61,9 +60,10 @@ namespace Game
 
         protected void Start()
         {
-            int index = transform.GetSiblingIndex();
-            positionInGrid.x = index % Finder.GridController.NbColumns;
-            positionInGrid.y = index / Finder.GridController.NbColumns;
+            var index = transform.GetSiblingIndex();
+            var nbColumns = gridController.NbColumns;
+            positionInGrid.x = index % nbColumns;
+            positionInGrid.y = index / nbColumns;
         }
 
         public void DisplayMoveActionPossibility()
@@ -152,6 +152,54 @@ namespace Game
         public void OnCursorEnter()
         {
             uiController.UpdateTileInfos(this);
+            UpdateClickHint();
+        }
+
+        public void UpdateClickHint()
+        {
+            var leftClickType = ClickType.None;
+            var rightClickType = ClickType.None;
+            if (PlayerClickManager.ActionIsSet && this == PlayerClickManager.TileToConfirm)
+            {
+                switch (PlayerClickManager.UnitTurnAction.ActionType)
+                {
+                    case ActionType.Rest:
+                        rightClickType = leftClickType = ClickType.ConfirmRest;
+                        break;
+                    case ActionType.Attack:
+                        rightClickType = leftClickType = ClickType.ConfirmAttack;
+                        break;
+                    case ActionType.Nothing:
+                        rightClickType = leftClickType = ClickType.ConfirmMoveTo;
+                        break;
+                    case ActionType.Recruit:
+                        rightClickType = leftClickType = ClickType.ConfirmRecruit;
+                        break;
+                    case ActionType.Heal:
+                        rightClickType = leftClickType = ClickType.ConfirmHeal; //TODO
+                        break;
+                }
+            }
+            else
+            {
+                if (LinkedUnitCanBeSelectedByPlayer && gridController.SelectedUnit == linkedUnit)
+                {
+                    leftClickType = ClickType.Deselect;
+                    rightClickType = ClickType.Rest;
+                }
+                else if (LinkedUnitCanBeSelectedByPlayer) leftClickType = rightClickType = ClickType.Select;
+                else if (LinkedDoorCanBeAttackedByPlayer || LinkedUnitCanBeAttackedByPlayer) rightClickType = ClickType.Attack;
+                else if (IsPossibleAction) {
+                    leftClickType = ClickType.MoveTo;
+                    rightClickType = ClickType.Rest;
+                } 
+                else if (gridController.AUnitIsCurrentlySelected) leftClickType = rightClickType = ClickType.Deselect;
+                if (LinkedUnitCanBeRecruitedByPlayer) rightClickType = ClickType.Attack;
+                if (LinkedUnitCanBeHealedByPlayer && gridController.SelectedUnit != linkedUnit) rightClickType = ClickType.Heal;
+                if (LinkedUnitCanBeRecruitedByPlayer) rightClickType = ClickType.Recruit;
+            }
+            uiController.UpdateLeftClickHint(leftClickType);
+            uiController.UpdateRightClickHint(rightClickType);
         }
 
         public void LinkTargetable(Targetable targetable)
@@ -160,9 +208,10 @@ namespace Game
                 LinkUnit((Unit) targetable);
             else if (targetable.GetType() == typeof(Door))
                 LinkDoor((Door) targetable);
+            UpdateClickHint();
         }
 
-        public bool LinkUnit(Unit unit)
+        private bool LinkUnit(Unit unit)
         {
             if (!IsWalkable) 
                 return false;
@@ -173,20 +222,22 @@ namespace Game
         {
             if (!IsOccupiedByAUnitOrDoor) return false;
             linkedUnit = null;
+            UpdateClickHint();
             return true;
         }
         
-        public bool LinkDoor(Door door)
+        private bool LinkDoor(Door door)
         {
             if (!IsWalkable) 
                 return false;
-            this.linkedDoor = door;
+            linkedDoor = door;
             return IsOccupiedByAUnitOrDoor;
         }
         public bool UnlinkDoor()
         {
             if (!IsOccupiedByAUnitOrDoor) return false;
-            linkedUnit = null;
+            linkedDoor = null;
+            UpdateClickHint();
             return true;
         }
 

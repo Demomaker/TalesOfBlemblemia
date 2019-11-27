@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: LanceDreadlordInfo
   m_EditorClassIdentifier: 
   characterName: DreadLord
-  className: LanceMork
-  weaponName: Spear
+  gender: 2
