@@ -336,11 +336,11 @@ namespace Game
             if (currentPlayer is HumanPlayer)
             {
                 numberOfPlayerTurns++;
-                EnemyRangeController.OnPlayerTurn(players[1].OwnedUnits);
+                Harmony.Finder.EnemyRangeController.OnPlayerTurn(players[1].OwnedUnits);
             }
             else
             {
-                EnemyRangeController.OnComputerTurn();
+                Harmony.Finder.EnemyRangeController.OnComputerTurn();
             }
             uiController.ModifyTurnInfo(currentPlayer);
             uiController.ModifyTurnCounter(numberOfPlayerTurns);

@@ -26,6 +26,9 @@ TagManager:
   - LevelLoader
   - GameUI
   - EnemyRangeController
+  - Mon_WeaponCollider
+  - PlayerClickManager
+  - EnemyRangeCont
   layers:
   - Default
   - TransparentFX
