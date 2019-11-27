@@ -110,7 +110,7 @@ namespace Game
             saveController = Finder.SaveController;
             gameController = Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
-            dialogueUi = GameObject.FindWithTag("DialogueUi");
+            dialogueUi = GameObject.FindWithTag(Tags.DIALOGUE_UI_TAG);
             cinematicController = GetComponent<CinematicController>();
             levelName = gameObject.scene.name;
             endGameCredits = GetComponentInChildren<EndGameCreditsController>();
@@ -422,7 +422,7 @@ namespace Game
         private void GiveTurnToNextPlayer()
         {
             isComputerPlaying = false;
-            currentPlayer.MakeOwnedUnitsUnplayable();
+            //currentPlayer.MakeOwnedUnitsUnplayable();
             var nextPlayerIndex = (players.IndexOf(currentPlayer) + 1) % 2;
         
             if (players.ElementAt(nextPlayerIndex) != null)

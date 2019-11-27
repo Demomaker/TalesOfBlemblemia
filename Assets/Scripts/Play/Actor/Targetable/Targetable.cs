@@ -27,6 +27,7 @@ namespace Game
                 if (NoHealthLeft) 
                     //TODO objet Coroutine Starter
                     Harmony.Finder.LevelController.StartCoroutine(Die());
+                if(this is Unit) (this as Unit)?.OnHealthChange.Publish();
             }
         }
         
