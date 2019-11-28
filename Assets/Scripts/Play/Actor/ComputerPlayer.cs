@@ -9,7 +9,6 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
-        #region Fields
         private AiController aiController = new AiController();
         private const string COMPUTER_PLAYER_NAME = "Enemy";
         

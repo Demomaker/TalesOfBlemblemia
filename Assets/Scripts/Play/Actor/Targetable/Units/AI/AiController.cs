@@ -19,10 +19,6 @@ namespace Game
         
         private AiControllerValues aiControllerValues = new AiControllerValues();
 
-        public AiController()
-        {
-            grid = Harmony.Finder.GridController;
-        }
 
         /// <summary>
         /// Finds an action to do for an AI controlled unit on its turn
@@ -32,10 +28,10 @@ namespace Game
         /// <returns>The action the unit should play on its turn</returns>
         public Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
         {
-            if (Harmony.Finder.LevelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert))
-            {
-                aiControllerValues = new AiControllerValuesRevert();
-            }
+            if (grid == null) grid = Harmony.Finder.GridController;
+
+            if (Harmony.Finder.LevelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert)) aiControllerValues = new AiControllerValuesRevert();
+            
             if (!playableUnit.IsAwake)
             {
                 if ((playableUnit.IsAwake = CheckRadius(playableUnit, enemyUnits)) == false)
