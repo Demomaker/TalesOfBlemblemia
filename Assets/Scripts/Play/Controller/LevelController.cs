@@ -62,6 +62,7 @@ namespace Game
         private EndGameCreditsController endGameCredits;
         #endregion Other Fields
         #region Accessors
+
         private bool AllEnemiesDied => ComputerPlayer.Instance.HaveAllUnitsDied();
         private bool PointAchieved => completeIfPointAchieved &&
                                       (GameObject.Find(PROTAGONIST_NAME) != null) &&
@@ -120,11 +121,11 @@ namespace Game
         
         private void Start()
         {
-            uiController = Harmony.Finder.UIController;
             onLevelChange.Publish(this);
             InitializePlayersAndUnits();
             currentPlayer = players[0];
             OnTurnGiven();
+            uiController = Harmony.Finder.UIController;
             if (dialogueUi != null)
             {
                 dialogueUi.SetActive(true);
@@ -151,7 +152,7 @@ namespace Game
                 StartCoroutine(EndLevel());
             }
 
-            if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
+            if (currentPlayer == null) return;//throw new NullReferenceException("Current player is null!");
             
             //TODO enlever ca avant la release
             if (!cinematicController.IsPlayingACinematic)
@@ -255,7 +256,11 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-            if(LevelCompleted) onLevelVictory.Publish(this);
+            if (LevelCompleted)
+            {
+                onLevelVictory.Publish(this);
+                Debug.Log("Win conditions : \n COMPLETE IF POINT ACHIEVED : " + PointAchieved + "\n COMPLETE IF TARGET KILLED : " + AllTargetsDefeated + "\n COMPLETE IF SURVIVED CERTAIN NUMBER OF TURNS : " + Survived + "\n ALL ENEMIES DEFEATED : " + AllEnemiesDied );
+            }
             if(LevelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
             while (cinematicController.IsPlayingACinematic)
                 yield return null;
@@ -478,6 +483,7 @@ namespace Game
         
         private void ResetUnitsAlpha()
         {
+            if(currentPlayer != null)
             foreach (var unit in currentPlayer.OwnedUnits)
             {
                 SpriteRenderer[] spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();

@@ -82,11 +82,21 @@ namespace Game
                     break;
             }
         }
+
+        private void TriggerCinematic(LevelController eventparam)
+        {
+            TriggerCinematic(eventparam, null);
+        }
+
         #endregion
         #region Cinematic Methods
-        public void TriggerCinematic(LevelController levelController = null)
+        public void TriggerCinematic(LevelController levelController = null, CinematicController cinematicController = null)
         {
-            Harmony.Finder.LevelController.CinematicController.LaunchCinematic(this);
+            if(cinematicController != null) cinematicController.LaunchCinematic(this);
+            else
+            {
+                Harmony.Finder.LevelController.CinematicController.LaunchCinematic(this);
+            }
         }
         #endregion
     }

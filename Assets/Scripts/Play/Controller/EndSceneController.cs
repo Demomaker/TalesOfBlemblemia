@@ -27,6 +27,8 @@ public class EndSceneController : MonoBehaviour
     private GameSettings gameSettings;
     private Vector3 cameraStartPosition;
     private bool sceneQuit = false;
+    private Cinematic cinematic;
+    private CinematicController cinematicController;
 
     public AudioClip EndMusic => endMusic;
 
@@ -37,6 +39,8 @@ public class EndSceneController : MonoBehaviour
         gameSettings = Harmony.Finder.GameSettings;
         onEndLevelEnter.Publish(this);
         cameraStartPosition = camera.transform.position;
+        cinematic = gameObject.GetComponent<Cinematic>();
+        cinematicController = gameObject.GetComponent<CinematicController>();
         StartCoroutine(ChangeTilemaps());
     }
     
@@ -44,6 +48,7 @@ public class EndSceneController : MonoBehaviour
     {
         while (!sceneQuit)
         {
+            cinematic.TriggerCinematic(null,cinematicController);
             yield return new WaitForSeconds(tilemapChangeTimeInSeconds);
             yield return StartCoroutine(ChangeToNextTilemap());
         }
@@ -51,15 +56,15 @@ public class EndSceneController : MonoBehaviour
 
     private IEnumerator ChangeToNextTilemap()
     {
-        if (camera.transform.position.x < cameraEndPosition.x)
+        if (camera.transform.position.x > cameraEndPosition.x)
             camera.transform.position = cameraStartPosition;
         else
         {
             var cameraPositionXBeforeChange = camera.transform.position.x;
-            while (camera.transform.position.x > cameraPositionXBeforeChange - numberOfTilesOnScreen)
+            while (camera.transform.position.x < cameraPositionXBeforeChange + numberOfTilesOnScreen)
             {
                 yield return null;
-                camera.transform.position = new Vector3(camera.transform.position.x - 0.1f, camera.transform.position.y, camera.transform.position.z);
+                camera.transform.position = new Vector3(camera.transform.position.x + 0.1f, camera.transform.position.y, camera.transform.position.z);
             }
         }
     }
