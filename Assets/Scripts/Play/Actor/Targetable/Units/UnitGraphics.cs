@@ -102,7 +102,7 @@ namespace Game
 
         private void UpdateMovementText()
         {
-            movementText.text = unit.MovesLeft.ToString();
+            movementText.text = Mathf.Clamp(unit.MovesLeft, 0, unit.Stats.MoveSpeed).ToString();
         }
     }
 }

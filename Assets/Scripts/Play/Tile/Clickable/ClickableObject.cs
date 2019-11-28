@@ -36,7 +36,6 @@ namespace Game
                     return;
                 }
             }
-
             if (selectedPlayerUnit != null)
             {
                 if (!tile.IsPossibleAction)
@@ -49,13 +48,13 @@ namespace Game
                         selectedPlayerUnit.Rest();
                     DeselectUnit(gridController);
                 }
-                else if (!PlayerClickManager.ActionIsSet || PlayerClickManager.TileToConfirm != tile)
+                else if (!Harmony.Finder.PlayerClickManager.ActionIsSet || Harmony.Finder.PlayerClickManager.TileToConfirm != tile)
                 {
-                    PlayerClickManager.SetAction(selectedPlayerUnit, tile, clickButton);
+                    Harmony.Finder.PlayerClickManager.SetAction(selectedPlayerUnit, tile, clickButton);
                 }
-                else if (PlayerClickManager.TileToConfirm == tile)
+                else if (Harmony.Finder.PlayerClickManager.TileToConfirm == tile)
                 {
-                    PlayerClickManager.ExecuteAction();
+                    Harmony.Finder.PlayerClickManager.ExecuteAction();
                     DeselectUnit(gridController);
                 }
                 else
@@ -71,14 +70,14 @@ namespace Game
         {
             gridController.DeselectUnit();
             gridController.RemoveActionPath();
-            PlayerClickManager.Reset();
+            Harmony.Finder.PlayerClickManager.Reset();
             tile.UpdateClickHint();
         }
 
         private void SelectUnit(GridController gridController)
         {
             DeselectUnit(gridController);
-            PlayerClickManager.Reset();
+            Harmony.Finder.PlayerClickManager.Reset();
             gridController.SelectUnit(tile.LinkedUnit);
             gridController.DisplayPossibleActionsFrom(tile);
             tile.UpdateClickHint();

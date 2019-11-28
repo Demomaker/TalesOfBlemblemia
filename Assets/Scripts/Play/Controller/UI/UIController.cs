@@ -162,7 +162,7 @@ namespace Game
             playerOutcome.enabled = false;
             enemyOutcome.enabled = false;
 
-            Coroutine handle = StartCoroutine(BattleReport(isEnemy));
+            Coroutine handle = Harmony.Finder.CoroutineStarter.StartCoroutine(BattleReport(isEnemy));
 
             return handle;
         }

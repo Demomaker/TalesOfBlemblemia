@@ -36,6 +36,9 @@ namespace Game
         private bool hasActed;
         private GameSettings gameSettings;
         private UIController uiController;
+        private LevelController levelController;
+        private CameraShake cameraShake;
+        private bool hasDiedOnce = false;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -57,7 +60,7 @@ namespace Game
         private Animator animator;
         private OnHealthChange onHealthChange;
         private OnMovementChange onMovementChange;
-
+        private CoroutineStarter coroutineStarter;
         #endregion
         
         #region Properties
@@ -130,7 +133,7 @@ namespace Game
             get => movesLeft;
             set
             {
-                movesLeft = Mathf.Clamp(value, 0, Stats.MoveSpeed);
+                movesLeft = value;
                 OnMovementChange.Publish();
             }
         }
@@ -169,8 +172,16 @@ namespace Game
 
         public override void Awake()
         {
-            InitializeEvents();
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
+            levelController = Harmony.Finder.LevelController;
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController;
+            if (Camera.main != null) cameraShake = Camera.main.GetComponent<CameraShake>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -187,33 +198,13 @@ namespace Game
             MovesLeft = Stats.MoveSpeed;
         }
 
-        private void InitializeEvents()
-        {
-            onHurt = Harmony.Finder.OnHurt;
-            onAttack = Harmony.Finder.OnAttack;
-            onDodge = Harmony.Finder.OnDodge;
-            onUnitMove = Harmony.Finder.OnUnitMove;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
-            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
-        }
-
         private void OnEnable()
-        {
-            EnableEvents();
-        }
-
-        private void EnableEvents()
         {
             onHurt.Notify += Hurt;
             onDodge.Notify += MakeDodge;
         }
 
         private void OnDisable()
-        {
-            DisableEvents();
-        }
-
-        private void DisableEvents()
         {
             onHurt.Notify -= Hurt;
             onDodge.Notify -= MakeDodge;
@@ -284,8 +275,7 @@ namespace Game
                     currentTile.UnlinkUnit();
                     MovesLeft -= currentTile.CostToMove;
                 }
-                List<Tile> path = PathFinder.FindPath(gridController, MovementCosts, new List<Tile>(), currentTile.LogicalPosition, targetTile.LogicalPosition, this);
-                path.RemoveAt(0);
+                List<Tile> path = PathFinder.FindPath(MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.Add(targetTile);
                 return path;
             }
@@ -293,8 +283,7 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            //TODO coroutine starter
-            return Harmony.Finder.LevelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
+            return coroutineStarter.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -323,7 +312,7 @@ namespace Game
                         yield return null;
                     }
 
-                    if (MovesLeft <= 0 && path.IndexOf(finalTile) != pathCount - 1)
+                    if (MovesLeft < 0 && path.IndexOf(finalTile) != pathCount - 1)
                     {
                         i = pathCount;
                     }
@@ -376,8 +365,6 @@ namespace Game
                 Rest();
             }
         }
-
-        private bool hasDiedOnce = false;
         
         public override IEnumerator Die()
         {
@@ -422,8 +409,7 @@ namespace Game
                     IsEnemy
                 );
             }
-            //TODO créer un CouroutineStarter qui sera dans le finder qui remplacera le Level Controller de la ligne suivante
-            AttackRoutineHandle = Harmony.Finder.LevelController.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
+            AttackRoutineHandle = coroutineStarter.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 
@@ -462,6 +448,10 @@ namespace Game
             {
                 critModifier = Random.value <= Stats.CritRate ? 2 : 1;
                 damage *= critModifier;
+                if (critModifier > 1 && cameraShake != null)
+                {
+                    cameraShake.TriggerShake();
+                }
             }
             
             target.CurrentHealthPoints -= damage;
@@ -499,7 +489,7 @@ namespace Game
             if (IsRecruitable)
             {
                 playerType = PlayerType.Ally;
-                HumanPlayer.Instance.AddOwnedUnit(this);
+                levelController.HumanPlayer.AddOwnedUnit(this);
                 GetComponentInChildren<Cinematic>()?.TriggerCinematic();
                 
             }
@@ -527,6 +517,15 @@ namespace Game
         private void Heal()
         {
             CurrentHealthPoints += HpGainedByHealing;
+        }
+
+        public void ResetAlpha()
+        {
+            var spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var spriteRenderer in spriteRenderers)
+            {
+                spriteRenderer.color = gameSettings.OpaqueAlpha;
+            }
         }
 
         public bool TargetIsInMovementRange(Targetable target)

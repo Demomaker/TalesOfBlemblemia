@@ -68,9 +68,9 @@ namespace Game
 
         private static bool CheckIfTargetIsWithinBoardLimit(Vector2Int from, GridController grid, int xModifier, int yModifier)
         {
-            return from.x + xModifier < grid.NbColumns - 1 
+            return from.x + xModifier < grid.NbColumns
                     && from.x + xModifier >= 0 
-                    && from.y + yModifier < grid.NbLines - 1 
+                    && from.y + yModifier < grid.NbLines
                     && from.y + yModifier >= 0;
         }
 
@@ -163,7 +163,7 @@ namespace Game
             return newPath;
         }
 
-              public static List<Tile> FindPath(
+        private static List<Tile> FindPath(
             GridController grid, 
             int[,] movementCosts, 
             List<Tile> path, 

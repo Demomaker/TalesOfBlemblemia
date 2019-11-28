@@ -2295,6 +2295,7 @@ GameObject:
   - component: {fileID: 73006763}
   - component: {fileID: 73006762}
   - component: {fileID: 73006765}
+  - component: {fileID: 73006766}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -2386,6 +2387,21 @@ MonoBehaviour:
   maxX: 21
   minY: -6
   maxY: 21
+--- !u!114 &73006766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73006761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78deaa014ba34262bfe502293e33f0c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDuration: 1
+  shakeMagnitude: 0.2
+  dampingSpeed: 3
 --- !u!1 &77008599
 GameObject:
   m_ObjectHideFlags: 0
@@ -7094,6 +7110,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParabeneCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
+        type: 3}
+      propertyPath: interactiveTilemap
+      value: 
+      objectReference: {fileID: 1324797967}
+    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
+        type: 3}
+      propertyPath: backgroundTilemap
+      value: 
+      objectReference: {fileID: 518641929}
+    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
+        type: 3}
+      propertyPath: tilemapOfTileToIncludeIfEmptyTile
+      value: 
+      objectReference: {fileID: 963611497}
+    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
+        type: 3}
+      propertyPath: fortressTile
+      value: 
+      objectReference: {fileID: 11400000, guid: 9bf6760c17cc79d4ca4d59e61b4c4fd7,
+        type: 2}
+    - target: {fileID: 2791343338801605274, guid: 6263535259e31204fb9daa0d514d30be,
+        type: 3}
+      propertyPath: enemyRangeSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 194c5781ab7c25743ba0ce438cf3b367,
+        type: 3}
     - target: {fileID: 2791343339734774941, guid: 6263535259e31204fb9daa0d514d30be,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7199,27 +7242,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
-        type: 3}
-      propertyPath: interactiveTilemap
-      value: 
-      objectReference: {fileID: 1324797967}
-    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
-        type: 3}
-      propertyPath: backgroundTilemap
-      value: 
-      objectReference: {fileID: 518641929}
-    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
-        type: 3}
-      propertyPath: tilemapOfTileToIncludeIfEmptyTile
-      value: 
-      objectReference: {fileID: 963611497}
-    - target: {fileID: 2791343338801605273, guid: 6263535259e31204fb9daa0d514d30be,
-        type: 3}
-      propertyPath: fortressTile
-      value: 
-      objectReference: {fileID: 11400000, guid: 9bf6760c17cc79d4ca4d59e61b4c4fd7,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6263535259e31204fb9daa0d514d30be, type: 3}
 --- !u!224 &192766944 stripped
@@ -10154,6 +10176,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10167,6 +10190,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10180,6 +10204,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10193,6 +10218,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1719622734}
     duration: 1.5
@@ -10205,6 +10231,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10218,6 +10245,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10231,6 +10259,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10244,6 +10273,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10256,6 +10286,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1673750223}
     duration: 1
@@ -10268,6 +10299,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10281,6 +10313,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 954432403}
     duration: 1.5
@@ -10293,6 +10326,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -10305,6 +10339,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1719622734}
     duration: 1
@@ -10317,6 +10352,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
 --- !u!4 &301445052
 Transform:
   m_ObjectHideFlags: 0
@@ -52856,6 +52892,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 896080597}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &896080599 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9184210282831072270, guid: 386cff33803d9e742ab386963032c720,
+    type: 3}
+  m_PrefabInstance: {fileID: 896080597}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &896634676
 GameObject:
   m_ObjectHideFlags: 0
@@ -72368,7 +72410,7 @@ PrefabInstance:
         type: 3}
       propertyPath: backgroundMusic
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 10095b5e1bbafc5449259a6594aad68c, type: 3}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: backgroundMusicOption
@@ -72383,6 +72425,16 @@ PrefabInstance:
         type: 3}
       propertyPath: defeatIfProtectedIsKilled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: protagonistGameObject
+      value: 
+      objectReference: {fileID: 896080599}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: customObjectiveMessage
+      value: Reach the red flag!
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
@@ -79909,6 +79961,81 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1705304069458487262, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1705304069458487262, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1905770281300211148, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1905770281300211148, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783273090689857004, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783273090689857004, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8154610716174455734, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -83245,6 +83372,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -83257,6 +83385,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -83269,6 +83398,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
 --- !u!4 &1685644010
 Transform:
   m_ObjectHideFlags: 0
@@ -94380,6 +94510,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -94392,6 +94523,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -94404,6 +94536,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 896080598}
     duration: 0.5
@@ -94416,6 +94549,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -94428,6 +94562,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1639890201655499795}
     duration: 0.5
@@ -94440,6 +94575,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -94452,6 +94588,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 1
     cameraTarget: {fileID: 1719622734}
     duration: 0.5
@@ -94464,6 +94601,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
   - cinematicActionType: 0
     cameraTarget: {fileID: 0}
     duration: 0
@@ -94476,6 +94614,7 @@ MonoBehaviour:
     gameObjectTarget: {fileID: 0}
     cameraFollow: 0
     gameObjectToActivate: {fileID: 0}
+    activateGameObject: 0
 --- !u!1 &2110104425
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,6 @@ using UnityEngine.UI;
     //Authors: Jérémie Bertrand, Mike Bédard, Zacharie Lavigne
     public class GridController : MonoBehaviour
     {
-        #region Serialized Fields
         [SerializeField] private Sprite movementTileSprite;
         [SerializeField] private Sprite normalTileSprite;
         [SerializeField] private Sprite selectedTileSprite;
@@ -30,16 +29,10 @@ using UnityEngine.UI;
         [SerializeField] private Sprite rightStartPathTileSprite;
         [SerializeField] private Sprite downStartPathTileSprite;
         [SerializeField] private Sprite upStartPathTileSprite;
-        #endregion Serialized Fields
-        #region Other Fields
+
         private GridLayoutGroup gridLayoutGroup;
-        #endregion Other Fields
-        #region Accessors
-        public Unit SelectedUnit
-        {
-            get; 
-            private set;
-        }
+
+        public Unit SelectedUnit { get; private set; }
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
@@ -67,16 +60,14 @@ using UnityEngine.UI;
 
         public int NbColumns { get; private set; }
         public int NbLines { get; private set; }
-        #endregion Accessors
-        #region Unity Event Functions
+
         private void Awake()
         {
             gridLayoutGroup = GetComponent<GridLayoutGroup>();
             NbColumns = (int)(GetComponent<RectTransform>().rect.width / gridLayoutGroup.cellSize.x);
             NbLines = (int)(GetComponent<RectTransform>().rect.height / gridLayoutGroup.cellSize.y);
         }
-        #endregion Unity Event Functions
-        #region Grid-controlling Functions
+
         public void SelectUnit(Unit unit)
         {
             if(SelectedUnit != null) DeselectUnit();
@@ -210,6 +201,5 @@ using UnityEngine.UI;
                     target.CurrentTile.DisplayAttackActionPossibility();
             }
         }
-        #endregion Grid-controlling Functions
     }
  }
