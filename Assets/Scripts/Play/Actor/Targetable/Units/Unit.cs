@@ -95,6 +95,7 @@ namespace Game
             get => isAwake;
             set
             {
+                //Once awake, the unit cannot go back to sleep
                 if (isAwake != true)
                 {
                     isAwake = value;
