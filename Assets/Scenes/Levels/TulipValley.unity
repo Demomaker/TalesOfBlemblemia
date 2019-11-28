@@ -55106,6 +55106,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 386cff33803d9e742ab386963032c720, type: 3}
+--- !u!1 &896080598 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9184210282831072270, guid: 386cff33803d9e742ab386963032c720,
+    type: 3}
+  m_PrefabInstance: {fileID: 896080597}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &899839806
 GameObject:
   m_ObjectHideFlags: 0
@@ -84098,7 +84104,7 @@ PrefabInstance:
         type: 3}
       propertyPath: backgroundMusic
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 10095b5e1bbafc5449259a6594aad68c, type: 3}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: backgroundMusicOption
@@ -84124,6 +84130,16 @@ PrefabInstance:
       propertyPath: targetsToDefeat.Array.data[0]
       value: 
       objectReference: {fileID: 233782789}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: protagonistGameObject
+      value: 
+      objectReference: {fileID: 896080598}
+    - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
+        type: 3}
+      propertyPath: customObjectiveMessage
+      value: Defeat all the enemies!
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68d4561e12f7e2f4790af4b236bd15c0, type: 3}
 --- !u!1 &1386213897
@@ -103657,6 +103673,81 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071395369635268550, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1705304069458487262, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1705304069458487262, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474529438633242311, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 76471016109789896, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1905770281300211148, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1905770281300211148, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783273090689857004, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783273090689857004, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5313399482242141560, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_Name
@@ -113335,6 +113426,12 @@ PrefabInstance:
       propertyPath: tilemapOfTileToIncludeIfEmptyTile
       value: 
       objectReference: {fileID: 963611497}
+    - target: {fileID: 7510129239277316020, guid: faef5b998414cca4d8dcb461d20a53f4,
+        type: 3}
+      propertyPath: enemyRangeSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 194c5781ab7c25743ba0ce438cf3b367,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faef5b998414cca4d8dcb461d20a53f4, type: 3}
 --- !u!224 &7510129239778417957 stripped

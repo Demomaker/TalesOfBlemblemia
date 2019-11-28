@@ -26,7 +26,7 @@ namespace Game
         {
             if (enemyRangeToggle.isOn)
             {
-                EnableEnemyRange(Harmony.Finder.LevelController.EnemyUnits);
+                EnableEnemyRange(Harmony.Finder.LevelController.ComputerPlayer.OwnedUnits);
             }
             else
             {
