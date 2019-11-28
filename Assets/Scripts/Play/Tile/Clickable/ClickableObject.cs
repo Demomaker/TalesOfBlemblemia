@@ -56,8 +56,11 @@ namespace Game
                 }
                 else if (Harmony.Finder.PlayerClickManager.TileToConfirm == tile)
                 {
-                    Harmony.Finder.PlayerClickManager.ExecuteAction();
-                    DeselectUnit(gridController);
+                    if (Harmony.Finder.PlayerClickManager.ExecuteAction() != ActionType.Nothing) DeselectUnit(gridController);
+                    else
+                    {
+                        SelectUnit(gridController, selectedPlayerUnit, Harmony.Finder.PlayerClickManager.TileToConfirm);
+                    }
                 }
                 else
                 {
@@ -78,10 +81,15 @@ namespace Game
 
         private void SelectUnit(GridController gridController)
         {
+            SelectUnit(gridController, tile.LinkedUnit, tile);
+        }
+
+        private void SelectUnit(GridController gridController, Unit playerUnit, Tile tileFrom)
+        {
             DeselectUnit(gridController);
             Harmony.Finder.PlayerClickManager.Reset();
-            gridController.SelectUnit(tile.LinkedUnit);
-            gridController.DisplayPossibleActionsFrom(tile);
+            gridController.SelectUnit(playerUnit);
+            gridController.DisplayPossibleActionsFrom(tileFrom);
             tile.UpdateClickHint();
         }
 

@@ -97,11 +97,13 @@ namespace Game
                 grid.DisplayAction(unitTurnAction, selectedPlayerUnit);
         }
 
-        public void ExecuteAction()
+        public ActionType ExecuteAction()
         {
+            ActionType actionType = unitTurnAction.ActionType;
             playerUnit.RemoveInitialMovement();
             playerUnit.MoveByAction(unitTurnAction);
             Reset();
+            return actionType;
         }
 
         public void Reset()
