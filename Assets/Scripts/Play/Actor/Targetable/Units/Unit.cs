@@ -20,7 +20,7 @@ namespace Game
         [SerializeField] private bool canCritOnEverybody;
         [SerializeField] private int detectionRadius;
         [SerializeField] private Transform appearance;
-
+        
         #endregion
         
         #region Fields
@@ -36,7 +36,9 @@ namespace Game
         private bool hasActed;
         private GameSettings gameSettings;
         private UIController uiController;
+        private LevelController levelController;
         private CameraShake cameraShake;
+        private bool hasDiedOnce = false;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -170,7 +172,13 @@ namespace Game
 
         public override void Awake()
         {
-            InitializeEvents();
+            onHurt = Harmony.Finder.OnHurt;
+            onAttack = Harmony.Finder.OnAttack;
+            onDodge = Harmony.Finder.OnDodge;
+            onUnitMove = Harmony.Finder.OnUnitMove;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
+            levelController = Harmony.Finder.LevelController;
             coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController;
             if (Camera.main != null) cameraShake = Camera.main.GetComponent<CameraShake>();
@@ -190,33 +198,13 @@ namespace Game
             MovesLeft = Stats.MoveSpeed;
         }
 
-        private void InitializeEvents()
-        {
-            onHurt = Harmony.Finder.OnHurt;
-            onAttack = Harmony.Finder.OnAttack;
-            onDodge = Harmony.Finder.OnDodge;
-            onUnitMove = Harmony.Finder.OnUnitMove;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
-            onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
-        }
-
         private void OnEnable()
-        {
-            EnableEvents();
-        }
-
-        private void EnableEvents()
         {
             onHurt.Notify += Hurt;
             onDodge.Notify += MakeDodge;
         }
 
         private void OnDisable()
-        {
-            DisableEvents();
-        }
-
-        private void DisableEvents()
         {
             onHurt.Notify -= Hurt;
             onDodge.Notify -= MakeDodge;
@@ -295,7 +283,6 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            //TODO coroutine starter
             return coroutineStarter.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
@@ -378,8 +365,6 @@ namespace Game
                 Rest();
             }
         }
-
-        private bool hasDiedOnce = false;
         
         public override IEnumerator Die()
         {
@@ -424,7 +409,6 @@ namespace Game
                     IsEnemy
                 );
             }
-            //TODO créer un CouroutineStarter qui sera dans le finder qui remplacera le Level Controller de la ligne suivante
             AttackRoutineHandle = coroutineStarter.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
@@ -505,7 +489,7 @@ namespace Game
             if (IsRecruitable)
             {
                 playerType = PlayerType.Ally;
-                HumanPlayer.Instance.AddOwnedUnit(this);
+                levelController.HumanPlayer.AddOwnedUnit(this);
                 GetComponentInChildren<Cinematic>()?.TriggerCinematic();
                 
             }
@@ -533,6 +517,15 @@ namespace Game
         private void Heal()
         {
             CurrentHealthPoints += HpGainedByHealing;
+        }
+
+        public void ResetAlpha()
+        {
+            var spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var spriteRenderer in spriteRenderers)
+            {
+                spriteRenderer.color = gameSettings.OpaqueAlpha;
+            }
         }
 
         public bool TargetIsInMovementRange(Targetable target)

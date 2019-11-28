@@ -19,21 +19,17 @@ namespace Game
         
         private List<AchievementInfo> achievements = new List<AchievementInfo>();
         private bool achievementBeingShown;
-        private bool skipAchievementShow = false;
+        private bool skipAchievementShow;
         private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
 
-        private bool CompletedCampaignOnEasy =>
-            gameController.AllLevelsCompleted && (gameController.DifficultyLevel == DifficultyLevel.Easy ||
-                                                  gameController.DifficultyLevel == DifficultyLevel.Medium ||
-                                                  gameController.DifficultyLevel == DifficultyLevel.Hard);
+        private bool CompletedCampaignOnEasy => gameController.AllLevelsCompleted;
         private bool CompletedCampaignOnMedium =>
             gameController.AllLevelsCompleted && (gameController.DifficultyLevel == DifficultyLevel.Medium || gameController.DifficultyLevel == DifficultyLevel.Hard);
-        private bool CompletedCampaignOnHard =>
-            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
+        private bool CompletedCampaignOnHard => gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
         private bool BlackKnightDefeated => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName;
-        private bool ReachedFinalLevelWithAllPlayableUnits
+     /*   private bool ReachedFinalLevelWithAllPlayableUnits
         {
             get
             {
@@ -53,7 +49,7 @@ namespace Game
             gameSettings.NumberOfRecruitablesOnAlternatePath;
         private bool FinishedCampaignWithoutUnitLoss =>
             !HumanPlayer.Instance.HasEverLostAUnit && gameController.AllLevelsCompleted;
-
+*/
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
@@ -114,7 +110,7 @@ namespace Game
                 achievement = achievements.Find(info => info.AchievementName == gameSettings.DefeatBlackKnight);
                 CheckIfAlreadyCompleted(achievement);
             }
-
+/*
             if (ReachedFinalLevelWithAllPlayableUnits)
             {
                 achievement = achievements.Find(info => info.AchievementName == gameSettings.ReachFinalLevelWith8Players);
@@ -137,7 +133,7 @@ namespace Game
             {
                 achievement = achievements.Find(info => info.AchievementName == gameSettings.SaveAllRecruitablesFromAlternatePath);
                 CheckIfAlreadyCompleted(achievement);
-            }
+            }*/
         }
 
         private void CheckIfAlreadyCompleted(AchievementInfo achievement)

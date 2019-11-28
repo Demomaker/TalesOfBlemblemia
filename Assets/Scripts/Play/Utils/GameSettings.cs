@@ -118,7 +118,6 @@ namespace Game
         #endregion Unit Settings
         #region Input Settings
         public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
-        public KeyCode SkipLevelKey => skipLevelKey;
         #endregion Input Settings
         #region Scene Names
         public string SnowyPeaksSceneName => snowyPeaksScene.ToString();
