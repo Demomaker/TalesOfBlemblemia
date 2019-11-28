@@ -9,8 +9,6 @@ namespace Game
     [Findable("PlayerClickManager")]
     public class PlayerClickManager : MonoBehaviour
     {
-        private GridController grid;
-        
         private Action unitTurnAction;
         private Tile tileToConfirm;
         private Unit playerUnit;
@@ -19,13 +17,9 @@ namespace Game
         public Tile TileToConfirm => tileToConfirm;
         public Action UnitTurnAction => unitTurnAction;
 
-        private void Awake()
-        {
-            grid = Harmony.Finder.GridController;
-        }
-
         public void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
         {
+            var grid = Harmony.Finder.GridController;
             playerUnit = selectedPlayerUnit;
             tileToConfirm = target;
 
