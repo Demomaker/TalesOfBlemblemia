@@ -21,7 +21,11 @@ namespace Game
         private Door linkedDoor;
         private GridController gridController;
         private UIController uiController;
+        private ClickType leftClickType = ClickType.None;
+        private ClickType rightClickType = ClickType.None;
 
+        public ClickType LeftClickType => leftClickType;
+        public ClickType RightClickType => rightClickType;
         public GridController GridController => gridController;
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
@@ -165,18 +169,12 @@ namespace Game
             UpdateClickHint();
         }
 
-        private ClickType leftClickType = ClickType.None;
-        private ClickType rightClickType = ClickType.None;
-
-        public ClickType LeftClickType => leftClickType;
-        public ClickType RightClickType => rightClickType;
-
         public void UpdateClickHint()
         {
+            leftClickType = ClickType.None;
+            rightClickType = ClickType.None;
             if (Harmony.Finder.PlayerClickManager.ActionIsSet && this == Harmony.Finder.PlayerClickManager.TileToConfirm)
             {
-                leftClickType = ClickType.None;
-                rightClickType = ClickType.None;
                 switch (Harmony.Finder.PlayerClickManager.UnitTurnAction.ActionType)
                 {
                     case ActionType.Rest:

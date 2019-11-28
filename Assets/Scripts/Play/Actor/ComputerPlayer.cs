@@ -14,16 +14,15 @@ namespace Game
         private int dynamicUnitCounter;
         private int dynamicUnitCount;
         private Unit currentUnit ;
-        
+
         private readonly List<Targetable> targetsToDestroy;
 
         public ComputerPlayer() : base(COMPUTER_PLAYER_NAME)
         {
             targetsToDestroy = new List<Targetable>();
-            Harmony.Finder.OnUnitDeath.Notify += OnUnitDeath;
         }
 
-        private void OnUnitDeath(Unit unit)
+        public void OnUnitDeath(Unit unit)
         {
             if (unit!= currentUnit) return;
             dynamicUnitCount--;

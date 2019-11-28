@@ -14,9 +14,9 @@ namespace Game
     public class LevelController : MonoBehaviour
     {
         private const int CREDITS_DURATION = 20;
-
-        [SerializeField] private GameObject protagonistGameObject = null;
+        
         [SerializeField] private AudioClip backgroundMusic = null;
+        [SerializeField] private GameObject protagonistGameObject = null;
         [SerializeField] private string customObjectiveMessage = "";
         [SerializeField] private bool completeIfPointAchieved = false;
         [SerializeField] private bool completeIfSurvivedCertainNumberOfTurns = false;
@@ -48,6 +48,8 @@ namespace Game
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
+        private OnUnitDeath onUnitDeath;
+        private EnemyRangeController enemyRangeController;
         
         private readonly HumanPlayer humanPlayer = new HumanPlayer();
         private readonly ComputerPlayer computerPlayer = new ComputerPlayer();
@@ -86,8 +88,10 @@ namespace Game
             if (protagonistGameObject == null) Debug.LogError("Missing ProtagonistGameObject in LevelController!");
             if (endGameCredits != null) endGameCredits.gameObject.SetActive(false);
             coroutineStarter = Harmony.Finder.CoroutineStarter;
+            onUnitDeath = Harmony.Finder.OnUnitDeath;
+            enemyRangeController = Harmony.Finder.EnemyRangeController;
         }
-        
+
         private void Start()
         {
             onLevelChange.Publish(this);
@@ -98,10 +102,17 @@ namespace Game
             ActivatePlayerUnits();
             CheckForDarkKnight();
             uiController.ModifyVictoryCondition(customObjectiveMessage);
-            if (completeIfPointAchieved)
-            {
-                CreatePointToAchievePointingArrow();
-            }
+            if (completeIfPointAchieved) CreatePointToAchievePointingArrow();
+        }
+        
+        private void OnEnable()
+        {
+            onUnitDeath.Notify += computerPlayer.OnUnitDeath;
+        }
+        
+        private void OnDisable()
+        {
+            onUnitDeath.Notify -= computerPlayer.OnUnitDeath;
         }
         
         protected void Update()
@@ -152,8 +163,7 @@ namespace Game
             if (levelName == gameSettings.DarkTowerSceneName)
             {
                 var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-                foreach (var character in characterInfos.Where(character =>
-                    character.CharacterName == gameSettings.AbrahamName || character.CharacterName == gameSettings.ThomasName))
+                foreach (var character in characterInfos.Where(character => character.CharacterName == gameSettings.AbrahamName || character.CharacterName == gameSettings.ThomasName))
                 {
                     character.CharacterStatus = false;
                 }
@@ -204,7 +214,7 @@ namespace Game
             currentPlayer.RemoveDeadUnits();
             if (isComputerPlaying || currentPlayer != computerPlayer) return;
             isComputerPlaying = true;
-            couritineStarter.StartCoroutine(computerPlayer.PlayUnits());
+            coroutineStarter.StartCoroutine(computerPlayer.PlayUnits());
         }
 
         private void GiveUnits()
@@ -241,17 +251,16 @@ namespace Game
             {
                 numberOfPlayerTurns++;
                 uiController.ModifyTurnCounter(numberOfPlayerTurns);
-                EnemyRangeController.OnPlayerTurn(computerPlayer.OwnedUnits);
+                enemyRangeController.OnPlayerTurn(computerPlayer.OwnedUnits);
             }
             else
             {
-                EnemyRangeController.OnComputerTurn();
+                enemyRangeController.OnComputerTurn();
             }
             uiController.ModifyTurnInfo(currentPlayer);
             currentPlayer.OnTurnGiven();
         }
-
-
+        
         private void CheckForCurrentPlayerLoss()
         {
             if (currentPlayer != null && !currentPlayer.HaveAllUnitsDied) return;
@@ -270,7 +279,6 @@ namespace Game
         private void ActivatePlayerUnits()
         {
             var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
-
             var unitsToRemove = (from gameUnit in currentPlayer.OwnedUnits
                 from saveUnit in characterInfos
                 where gameUnit.name == saveUnit.CharacterName && !saveUnit.CharacterStatus
@@ -283,12 +291,12 @@ namespace Game
                 computerPlayer.RemoveEnemyUnit(unit);
             }
         }
+        
         /// <summary>
         /// Saves if the level was successfully completed
         /// </summary>
         private void UpdatePlayerSave()
         {
-            //If the level was successfully completed, mark it as completed
             if (!LevelCompleted) return;
             gameController.OnLevelCompleted(levelName);
             saveController.GetCurrentSaveSelectedInfos().LevelName = gameController.PreviousLevelName;

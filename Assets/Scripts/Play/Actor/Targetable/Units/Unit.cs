@@ -38,6 +38,7 @@ namespace Game
         private UIController uiController;
         private LevelController levelController;
         private CameraShake cameraShake;
+        private bool hasDiedOnce = false;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -364,8 +365,6 @@ namespace Game
                 Rest();
             }
         }
-
-        private bool hasDiedOnce = false;
         
         public override IEnumerator Die()
         {
