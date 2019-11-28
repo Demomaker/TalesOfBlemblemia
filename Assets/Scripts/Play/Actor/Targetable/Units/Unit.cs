@@ -274,7 +274,6 @@ namespace Game
                 if (forArrow)
                 {
                     currentTile.UnlinkUnit();
-                    MovesLeft -= currentTile.CostToMove;
                 }
                 List<Tile> path = PathFinder.FindPath(MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.Add(targetTile);
@@ -335,12 +334,12 @@ namespace Game
                         onAttack.Publish(this);
                         if (TargetIsInRange(action.Target))
                         {
+                            levelController.BattleOngoing = true;
                             yield return Attack(action.Target);
                             if (action.Target.GetType() == typeof(Unit))
                                 if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
                                     yield return uiController.LaunchBattleReport(IsEnemy);
-                                else
-                                    yield break;
+                            levelController.BattleOngoing = false;
                         }
                         else
                             Rest();
@@ -457,7 +456,6 @@ namespace Game
             
             target.CurrentHealthPoints -= damage;
             
-            //todo Will have to check for Doors in the future.
             if (target is Unit)
                 uiController.ChangeCharacterDamageTaken(damage, !IsEnemy, critModifier);
             counter = 0;
@@ -471,9 +469,7 @@ namespace Game
             
             transform.position = startPos;
             isAttacking = false;
-            //TODO verifier si cast est valide ((Unit)target).SetIsBeingHurt(false);
-            //TODO verifier si cast est valide ((Unit)target).SetIsDodging(false);
-            
+
             //A unit cannot make a critical hit on a counter
             //A unit cannot counter on a counter
             if (!target.NoHealthLeft && !isCountering && target is Unit targetUnit)
@@ -544,10 +540,5 @@ namespace Game
             return false;
         }
         #endregion
-
-        public void RemoveInitialMovement()
-        {
-            MovesLeft -= currentTile.CostToMove;
-        }
     } 
 }

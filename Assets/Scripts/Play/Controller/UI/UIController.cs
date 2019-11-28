@@ -208,20 +208,23 @@ namespace Game
             {
                 yield return null;
             }
-            
+
             #region BeforeCombat
-                ModifyHealthBar(playerBattleInfos.MaxHp, playerBattleInfos.CurrentHealth, playerHealthBar);
-                ModifyHealthBar(enemyBattleInfos.MaxHp, enemyBattleInfos.CurrentHealth, enemyHealthBar);
+
+            ModifyHealthBar(playerBattleInfos.MaxHp, playerBattleInfos.CurrentHealth, playerHealthBar);
+            ModifyHealthBar(enemyBattleInfos.MaxHp, enemyBattleInfos.CurrentHealth, enemyHealthBar);
+
             #endregion
-            
+
             animationIsPlaying = true;
-            animator.SetBool(IS_ATTACKING,true);
+            animator.SetBool(IS_ATTACKING, true);
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            ModifyHealthBar(battleInfos.MaxHp, battleInfos.CurrentHealth, healthBar, false, battleInfos.DamageTaken);
+            ModifyHealthBar(battleInfos.MaxHp, battleInfos.CurrentHealth, healthBar, false,
+                battleInfos.DamageTaken);
             BattleOutcome(battleInfos, isEnemy);
             battleInfos.CurrentHealth -= battleInfos.DamageTaken;
             yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
-            animator.SetBool(IS_ATTACKING,false);
+            animator.SetBool(IS_ATTACKING, false);
             animationIsPlaying = false;
         }
 
