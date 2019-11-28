@@ -178,7 +178,7 @@ namespace Game
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
-            gridController = Finder.GridController;
+            gridController = Harmony.Finder.GridController;
             animator = GetComponent<Animator>();
             gameSettings = Harmony.Finder.GameSettings;
             base.Awake();

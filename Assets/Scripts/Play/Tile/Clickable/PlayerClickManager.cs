@@ -9,6 +9,8 @@ namespace Game
     [Findable("PlayerClickManager")]
     public class PlayerClickManager : MonoBehaviour
     {
+        private GridController grid;
+        
         private Action unitTurnAction;
         private Tile tileToConfirm;
         private Unit playerUnit;
@@ -16,6 +18,11 @@ namespace Game
         public bool ActionIsSet => unitTurnAction != null;
         public Tile TileToConfirm => tileToConfirm;
         public Action UnitTurnAction => unitTurnAction;
+
+        private void Awake()
+        {
+            grid = Harmony.Finder.GridController;
+        }
 
         public void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
         {
@@ -53,7 +60,7 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
                                 unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
                                     ActionType.Attack, target.LinkedTargetable);
@@ -67,7 +74,7 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
                                 unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
                                     ActionType.Heal, target.LinkedUnit);
@@ -81,7 +88,7 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
                                 unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
                                     ActionType.Recruit, target.LinkedUnit);
@@ -91,9 +98,9 @@ namespace Game
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
                 }
             }
-            Finder.GridController.RemoveActionPath();
+            grid.RemoveActionPath();
             if (unitTurnAction != null)
-                Finder.GridController.DisplayAction(unitTurnAction, selectedPlayerUnit);
+                grid.DisplayAction(unitTurnAction, selectedPlayerUnit);
         }
 
         public void ExecuteAction()

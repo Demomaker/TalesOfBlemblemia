@@ -11,19 +11,21 @@ namespace Game
     {
         private Tile tile;
         private LevelController levelController;
-
+        private GridController grid;
+        
         private void Awake()
         {
             levelController = Harmony.Finder.LevelController;
             tile = GetComponent<Tile>();
+            grid = Harmony.Finder.GridController;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             //Player cannot play while a cinematic is playing or if another of its units is moving
-            if (tile == null || levelController.PlayerUnitIsMovingOrAttacking || levelController.CinematicController.IsPlayingACinematic || levelController.CurrentPlayer is ComputerPlayer) return;
+            if (tile == null || levelController.PlayerCanPlay) return;
             
-            var gridController = Finder.GridController;
+            var gridController = Harmony.Finder.GridController;
             ClickButton clickButton = ReadClick(eventData);
             EventSystem.current.SetSelectedGameObject(null);
             var selectedPlayerUnit = tile.GridController.SelectedUnit;

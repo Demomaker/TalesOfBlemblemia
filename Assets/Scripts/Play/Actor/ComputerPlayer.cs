@@ -12,6 +12,7 @@ namespace Game
     public class ComputerPlayer : UnitOwner
     {
         #region Fields
+        private AiController aiController = new AiController();
         private int dynamicUnitCounter;
         private int dynamicUnitCount;
         private Unit currentUnit = null;
@@ -77,7 +78,7 @@ namespace Game
 
                 if (!currentUnit.HasActed)
                 {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+                    var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     
                     yield return currentUnit.MoveByAction(action);
                 }

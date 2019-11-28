@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
  {
     //Authors: Jérémie Bertrand, Mike Bédard, Zacharie Lavigne
+    [Findable("GridController")]
     public class GridController : MonoBehaviour
     {
         #region Serialized Fields
@@ -149,21 +151,23 @@ using UnityEngine.UI;
             
             var unitMovesLeft = unit.MovesLeft;
             var movementCosts = unit.MovementCosts;
+
+            var grid = Harmony.Finder.GridController;
             
             //Check left
-            Tile tileToCheck = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
+            Tile tileToCheck = grid.GetTile(tilePosX - 1, tilePosY);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
                 return tileToCheck;
             //Check up
-            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
+            tileToCheck = grid.GetTile(tilePosX, tilePosY - 1);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
                 return tileToCheck;
             //Check right
-            tileToCheck = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
+            tileToCheck = grid.GetTile(tilePosX + 1, tilePosY);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
                 return tileToCheck;
             //Check down
-            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
+            tileToCheck = grid.GetTile(tilePosX, tilePosY + 1);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
                 return tileToCheck;
             return null;

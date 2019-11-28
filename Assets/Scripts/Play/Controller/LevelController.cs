@@ -103,7 +103,7 @@ namespace Game
         }
 
         public List<Unit> EnemyUnits => players[1].OwnedUnits;
-
+        public bool PlayerCanPlay => PlayerUnitIsMovingOrAttacking || CinematicController.IsPlayingACinematic || CurrentPlayer is ComputerPlayer;
         #endregion Accessors
         #region Unity Event Functions
         private void Awake()
@@ -112,7 +112,7 @@ namespace Game
             levelLoader = Harmony.Finder.LevelLoader;
             ResetVariables();
             saveController = Finder.SaveController;
-            gameController = Finder.GameController;
+            gameController = Harmony.Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
             dialogueUi = GameObject.FindWithTag(Tags.DIALOGUE_UI_TAG);
             cinematicController = GetComponent<CinematicController>();

@@ -24,7 +24,7 @@ namespace Game
         {
             navigator = Finder.Navigator;
             saveController = Finder.SaveController;
-            gameController = Finder.GameController;
+            gameController = Harmony.Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
             achievementsScreen = GetComponent<Canvas>();
         }
