@@ -9,29 +9,6 @@ namespace Game
         private static GameController gameController;
         private static GridController gridController;
         private static Random random;
-        
-        public static GameController GameController
-        {
-            get
-            {
-                if (gameController == null)
-                    gameController = GameObject.FindWithTag(Tags.GAME_CONTROLLER_TAG)
-                        .GetComponent<GameController>();
-                return gameController;
-            }
-            set => gameController = value;
-        }
-
-        public static GridController GridController
-        {
-            get
-            {
-                if (gridController == null)
-                    gridController = GameObject.FindWithTag(Tags.GRID_CONTROLLER_TAG)
-                        .GetComponent<GridController>();
-                return gridController;
-            }
-        }
 
         //Author: Zacharie Lavigne
         public static Random Random

@@ -9,27 +9,29 @@ namespace Game
     /// The artificial intelligence controller for the enemy units
     /// Author: Zacharie Lavigne
     /// </summary>
-    public static class AiController
+    public class AiController
     {
+        private GridController grid;
         /// <summary>
         /// The number of actions from which the enemy may choose randomly from based on the difficulty level 
         /// </summary>
-        private static int nbOfChoice = 5;
-
-        private static AiControllerValues aiControllerValues = new AiControllerValues();
+        private int nbOfChoice = 5;
         
+        private AiControllerValues aiControllerValues = new AiControllerValues();
+
+
         /// <summary>
         /// Finds an action to do for an AI controlled unit on its turn
         /// </summary>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>The action the unit should play on its turn</returns>
-        public static Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
+        public Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
         {
-            if (Harmony.Finder.LevelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert))
-            {
-                aiControllerValues = new AiControllerValuesRevert();
-            }
+            if (grid == null) grid = Harmony.Finder.GridController;
+
+            if (Harmony.Finder.LevelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert)) aiControllerValues = new AiControllerValuesRevert();
+            
             if (!playableUnit.IsAwake)
             {
                 if ((playableUnit.IsAwake = CheckRadius(playableUnit, enemyUnits)) == false)
@@ -54,7 +56,7 @@ namespace Game
             return SelectRandomBestAction(bestActions);
         }
 
-        private static bool CheckRadius(Unit playableUnit, List<Unit> enemyUnits)
+        private bool CheckRadius(Unit playableUnit, List<Unit> enemyUnits)
         {
             var playableUnitPosition = playableUnit.CurrentTile.LogicalPosition;
             int radius = playableUnit.DetectionRadius;
@@ -73,7 +75,7 @@ namespace Game
         /// </summary>
         /// <param name="bestActions">The best possible actions to do</param>
         /// <returns>A randomly chosen an action</returns>
-        private static Action SelectRandomBestAction(List<Action> bestActions)
+        private Action SelectRandomBestAction(List<Action> bestActions)
         {
             int totalScore = (int)GetTotalScore(bestActions);
 
@@ -95,7 +97,7 @@ namespace Game
             return null;
         }
 
-        private static float GetTotalScore(List<Action> bestActions)
+        private float GetTotalScore(List<Action> bestActions)
         {
             float totalScore = 0;
             foreach (var action in bestActions)
@@ -111,7 +113,7 @@ namespace Game
         /// <param name="bestActions">The best possible actions to do</param>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="actionsToDo">The potential actions the unit could do</param>
-        private static void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo)
+        private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
             if(playableUnit.Stats.MaxHealthPoints * aiControllerValues.HealthModForResting < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
@@ -125,7 +127,7 @@ namespace Game
         /// </summary>
         /// <param name="actionsToDo">The potential actions the unit could do</param>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
-        private static void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
+        private void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
             foreach (var action in actionsToDo)
             {
@@ -146,7 +148,7 @@ namespace Game
         /// </summary>
         /// <param name="actionsToDo">The action to execute on this turn</param>
         /// <returns>An array of all the best possible actions</returns>
-        private static List<Action> GetBestActions(List<Action> actionsToDo)
+        private List<Action> GetBestActions(List<Action> actionsToDo)
         {
             //Copy to not change the original list
             actionsToDo = new List<Action>(actionsToDo);
@@ -177,7 +179,7 @@ namespace Game
         /// </summary>
         /// <param name="actionsToDo">The potential actions the unit could do</param>
         /// <returns>The index of the highest scored action</returns>
-        private static int FindBestAttack(List<Action> actionsToDo)
+        private int FindBestAttack(List<Action> actionsToDo)
         {
             int bestActionIndex = -1;
             
@@ -205,9 +207,10 @@ namespace Game
         /// <param name="potentialActions">The potential actions of this unit</param>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <returns>The path to the safest tile to go</returns>
-        private static List<Tile> FindFleePath(List<Action> potentialActions, Unit playableUnit)
+        private List<Tile> FindFleePath(List<Action> potentialActions, Unit playableUnit)
         {
-            int[,] optionMap = new int[Finder.GridController.NbColumns, Finder.GridController.NbLines]; 
+            var grid = Harmony.Finder.GridController;
+            int[,] optionMap = new int[grid.NbColumns, grid.NbLines]; 
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
                 for (int j = 0; j < optionMap.GetLength(1); j++)
@@ -257,7 +260,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="potentialTarget">The target unit</param>
         /// <returns>The path to a target unit</returns>
-        private static List<Tile> FindPathTo(Unit playableUnit, Targetable potentialTarget)
+        private List<Tile> FindPathTo(Unit playableUnit, Targetable potentialTarget)
         {
             List<Tile> path;
             if (playableUnit.TargetIsInRange(potentialTarget))
@@ -268,7 +271,7 @@ namespace Game
             else
             {
                 path = PathFinder.GetPath(
-                    Finder.GridController,
+                    Harmony.Finder.GridController,
                     new List<Tile>(), 
                     new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                     new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y), 
@@ -286,10 +289,10 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetPosition">The target position</param>
         /// <returns>The shortest path to a target position</returns>
-        private static List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
+        private List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
         {
             return PathFinder.GetPath(
-                Finder.GridController,
+                Harmony.Finder.GridController,
                 new List<Tile>(), 
                 new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                 new Vector2Int(targetPosition.x, targetPosition.y),
@@ -303,7 +306,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>A list of potential actions, on per enemy</returns>
-        private static List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits)
+        private List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits)
         {
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
@@ -320,7 +323,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyTargets">The AI's targets</param>
         /// <returns>A list of potential actions, on per target</returns>
-        private static List<Action> ScanForTargets(Unit playableUnit, List<Targetable> enemyTargets)
+        private List<Action> ScanForTargets(Unit playableUnit, List<Targetable> enemyTargets)
         {
             List<Action> actions = new List<Action>();
             foreach (var target in enemyTargets)
@@ -339,7 +342,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetHp">The target unit's health</param>
         /// <returns>The score modifier caused by the target's health</returns>
-        public static float HpChoiceMod(Unit playableUnit, int targetHp)
+        public float HpChoiceMod(Unit playableUnit, int targetHp)
         {
             if (targetHp - playableUnit.Stats.AttackStrength <= 0)
                 return aiControllerValues.KillingEnemyChoiceMod;
@@ -352,7 +355,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetPath">The path to a target unit</param>
         /// <returns>The score modifier caused by the target's distance</returns>
-        public static float DistanceChoiceMod(Unit playableUnit, Targetable target, List<Tile> targetPath)
+        public float DistanceChoiceMod(Unit playableUnit, Targetable target, List<Tile> targetPath)
         {
             float scoreMod = 0f;
             if (playableUnit.TargetIsInRange(target))
@@ -374,7 +377,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetWeaponType">The target of an attack's weapon type</param>
         /// <returns>The score modifier caused by the weapon types involved in an attack</returns>
-        public static float WeaponTypeChoiceMod(Unit playableUnit, WeaponType targetWeaponType)
+        public float WeaponTypeChoiceMod(Unit playableUnit, WeaponType targetWeaponType)
         {
             float choiceMod = 0f;
             if (playableUnit.WeaponAdvantage == targetWeaponType)
@@ -417,7 +420,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyTargetTile">The target enemy's tile location</param>
         /// <returns>The score modifier caused by the target unit's tile</returns>
-        public static float EnvironmentChoiceMod( Unit playableUnit, Tile enemyTargetTile)
+        public float EnvironmentChoiceMod( Unit playableUnit, Tile enemyTargetTile)
         {
             float environmentChoiceMod = 0.0f;
             switch (playableUnit.WeaponType)
@@ -450,7 +453,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetUnit">The target unit</param>
         /// <returns>The score modifier caused by the potential damage a unit would receive by attacking a target unit</returns>
-        public static float HarmChoiceMod(Unit playableUnit, Unit targetUnit)
+        public float HarmChoiceMod(Unit playableUnit, Unit targetUnit)
         {
             if (playableUnit.CurrentHealthPoints - targetUnit.Stats.AttackStrength <= 0)
                 return aiControllerValues.PotentialDeathChoiceMod;

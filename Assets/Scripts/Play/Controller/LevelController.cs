@@ -70,6 +70,7 @@ namespace Game
         public UnitOwner CurrentPlayer => currentPlayer;
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
+        public bool PlayerCanPlay => PlayerUnitIsMovingOrAttacking || CinematicController.IsPlayingACinematic || CurrentPlayer is ComputerPlayer;
 
         private void Awake()
         {
@@ -79,7 +80,7 @@ namespace Game
             onCampaignFailed = Harmony.Finder.OnCampaignFailed;
             levelLoader = Harmony.Finder.LevelLoader;
             saveController = Finder.SaveController;
-            gameController = Finder.GameController;
+            gameController = Harmony.Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
             cinematicController = GetComponent<CinematicController>();
             levelName = gameObject.scene.name;

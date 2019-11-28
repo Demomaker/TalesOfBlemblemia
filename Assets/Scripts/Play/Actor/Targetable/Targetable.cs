@@ -66,7 +66,7 @@ namespace Game
             yield return new WaitForEndOfFrame();
             while (levelController.CinematicController.IsPlayingACinematic)
                 yield return null;
-            var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
+            var tile = Harmony.Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
             transform.position = tile.WorldPosition;
             CurrentTile = tile;
         }

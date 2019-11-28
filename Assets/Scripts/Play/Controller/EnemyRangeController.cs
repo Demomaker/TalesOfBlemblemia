@@ -56,7 +56,7 @@ namespace Game
         private void FindInRangeTiles(List<Unit> enemyUnits)
         {
             tileUpdateKeeper = Harmony.Finder.LevelController.LevelTileUpdateKeeper;
-            var grid = Finder.GridController;
+            var grid = Harmony.Finder.GridController;
             for (int i = 0; i < grid.NbColumns ; i++)
             {
                 for (int j = 0; j < grid.NbLines; j++)

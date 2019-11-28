@@ -9,6 +9,7 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
+        private AiController aiController = new AiController();
         private const string COMPUTER_PLAYER_NAME = "Enemy";
         
         private int dynamicUnitCounter;
@@ -45,7 +46,8 @@ namespace Game
 
                 if (!currentUnit.HasActed)
                 {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+                    var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+                    
                     yield return currentUnit.MoveByAction(action);
                 }
             }
