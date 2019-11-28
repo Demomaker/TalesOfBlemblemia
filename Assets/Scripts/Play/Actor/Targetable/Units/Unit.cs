@@ -37,6 +37,7 @@ namespace Game
         private GameSettings gameSettings;
         private UIController uiController;
         private CameraShake cameraShake;
+        private LevelController levelController;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -180,6 +181,7 @@ namespace Game
             gridController = Finder.GridController;
             animator = GetComponent<Animator>();
             gameSettings = Harmony.Finder.GameSettings;
+            levelController = Harmony.Finder.LevelController;
             base.Awake();
         }
         
@@ -285,7 +287,6 @@ namespace Game
                 if (forArrow)
                 {
                     currentTile.UnlinkUnit();
-                    MovesLeft -= currentTile.CostToMove;
                 }
                 List<Tile> path = PathFinder.FindPath(MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.Add(targetTile);
@@ -347,12 +348,12 @@ namespace Game
                         onAttack.Publish(this);
                         if (TargetIsInRange(action.Target))
                         {
+                            levelController.BattleOngoing = true;
                             yield return Attack(action.Target);
                             if (action.Target.GetType() == typeof(Unit))
                                 if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
                                     yield return uiController.LaunchBattleReport(IsEnemy);
-                                else
-                                    yield break;
+                            levelController.BattleOngoing = false;
                         }
                         else
                             Rest();
@@ -550,10 +551,5 @@ namespace Game
             return false;
         }
         #endregion
-
-        public void RemoveInitialMovement()
-        {
-            MovesLeft -= currentTile.CostToMove;
-        }
     } 
 }

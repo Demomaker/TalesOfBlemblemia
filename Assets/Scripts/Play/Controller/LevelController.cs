@@ -35,6 +35,9 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private UnityEngine.Object pointingArrowPrefab = null;
+        [SerializeField] private string defeatString = "Defeat ";
+        [SerializeField] private string surviveString = "Survive ";
+        [SerializeField] private string turnString = " turns";
         #endregion Serialized Fields
         #region ReadOnly Fields
         private readonly List<UnitOwner> players = new List<UnitOwner>();
@@ -80,7 +83,7 @@ namespace Game
             AllTargetsDefeated || 
             Survived;
         private bool LevelFailed => ProtagonistDied;
-        private bool LevelEnded => LevelCompleted || LevelFailed;
+        public bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
@@ -104,6 +107,8 @@ namespace Game
 
         public List<Unit> EnemyUnits => players[1].OwnedUnits;
 
+        public bool BattleOngoing { get; set; }
+    
         #endregion Accessors
         #region Unity Event Functions
         private void Awake()
@@ -141,30 +146,20 @@ namespace Game
             
             PrepareVictoryConditionForUI();
         }
-        
+
         protected void Update()
         {
-            //TODO enlever ca
-            if(Input.GetKeyDown(gameSettings.SkipLevelKey))
+            if (!BattleOngoing)
             {
-                skipLevel = true;
+                if (LevelEnded)
+                {
+                    ResetUnitsAlpha();
+                    coroutineStarter.StartCoroutine(EndLevel());
+                }
             }
-            //TODO enlever doNotEnd du projet en entier, right?
-            if (!doNotEnd && LevelEnded)
-            {
-                ResetUnitsAlpha();
-                coroutineStarter.StartCoroutine(EndLevel());
-            }
-
+            
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
-            
-            //TODO enlever ca avant la release
-            if (!cinematicController.IsPlayingACinematic)
-            {
-                CheckForComputerTurnSkip();
-                CheckForPlayerTurnSkip();
-            }
-            
+
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play(currentPlayer);
@@ -188,6 +183,8 @@ namespace Game
             else
             {
                 onCampaignFailed.Publish(this);
+                saveController.ResetSave();
+                levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
             }
         }
         #endregion
@@ -206,11 +203,11 @@ namespace Game
             }
             else if (completeIfCertainTargetsDefeated)
             {
-                uiController.ModifyVictoryCondition("Defeat " + GetStringOfTargetsToDefeat());
+                uiController.ModifyVictoryCondition(defeatString + GetStringOfTargetsToDefeat());
             }
             else if (completeIfSurvivedCertainNumberOfTurns)
             {
-                uiController.ModifyVictoryCondition("Survive " + numberOfTurnsBeforeCompletion + " turns");
+                uiController.ModifyVictoryCondition(surviveString + numberOfTurnsBeforeCompletion + turnString);
             }
         }
 
@@ -325,11 +322,6 @@ namespace Game
                 {
                     foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
                     {
-                        if (character.CharacterName == gameSettings.FranklemName)
-                        {
-                            saveController.ResetSave();
-                            break;
-                        }
                         character.CharacterStatus = false;
                     }
                 }

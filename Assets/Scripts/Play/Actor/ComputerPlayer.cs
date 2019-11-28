@@ -59,9 +59,11 @@ namespace Game
         public IEnumerator PlayUnits()
         {
             dynamicUnitCount = ownedUnits.Count;
+            var uiController = Harmony.Finder.UIController;
+            var levelController = Harmony.Finder.LevelController;
             for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
-                var uiController = Harmony.Finder.UIController;
+                
                 while (uiController.IsBattleReportActive)
                 {
                     yield return null;
@@ -75,7 +77,7 @@ namespace Game
                     Debug.Log("Dynamic counter < 0 (ComputerPlayer.cs line 70)");
                 }
 
-                if (!currentUnit.HasActed)
+                if (!currentUnit.HasActed && !levelController.LevelEnded)
                 {
                     var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     

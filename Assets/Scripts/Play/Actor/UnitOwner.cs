@@ -93,7 +93,7 @@ namespace Game
         public void RemoveEnemyUnit(Unit enemy)
         {
             if(enemyUnits.Contains(enemy))
-            enemyUnits.Remove(enemy);
+                enemyUnits.Remove(enemy);
         }
         
         
