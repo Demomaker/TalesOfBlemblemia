@@ -28,7 +28,9 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private GameObject pointingArrowPrefab = null;
-
+        [SerializeField] private string defeatString = "Defeat ";
+        [SerializeField] private string surviveString = "Survive ";
+        [SerializeField] private string turnString = " turns";
         private CoroutineStarter coroutineStarter;
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
@@ -62,7 +64,7 @@ namespace Game
         private bool LevelCompleted => AllEnemiesDied || PointAchieved || AllTargetsDefeated || Survived;
         public bool PlayerUnitIsMovingOrAttacking => humanPlayer.OwnedUnits.All(unit => unit.IsMoving || unit.IsAttacking);
         private bool LevelFailed => ProtagonistDied;
-        private bool LevelEnded => LevelCompleted || LevelFailed;
+        public bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
         public AudioClip BackgroundMusic => backgroundMusic;
@@ -71,7 +73,7 @@ namespace Game
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
         public bool PlayerCanPlay => PlayerUnitIsMovingOrAttacking || CinematicController.IsPlayingACinematic || CurrentPlayer is ComputerPlayer;
-
+        public bool BattleOngoing { get; set; }
         private void Awake()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
@@ -115,10 +117,10 @@ namespace Game
         {
             onUnitDeath.Notify -= computerPlayer.OnUnitDeath;
         }
-        
+
         protected void Update()
         {
-            if (LevelEnded) StartCoroutine(EndLevel());
+            if (!BattleOngoing && LevelEnded) StartCoroutine(EndLevel());
             CheckForCurrentPlayerLoss();
             CheckForCurrentPlayerEndOfTurn();
             Play();
@@ -148,7 +150,11 @@ namespace Game
             if (difficultyLevel == DifficultyLevel.Easy)
                 onLevelFailed.Publish(this);
             else
+            {
                 onCampaignFailed.Publish(this);
+                saveController.ResetSave();
+                levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
+            }
         }
 
         private void CreatePointToAchievePointingArrow()
@@ -192,14 +198,12 @@ namespace Game
             var characterInfos = saveController.GetCurrentSaveSelectedInfos().CharacterInfos;
             foreach (var unit in defeatedPlayerUnits.Where(unit => gameController.PermaDeath))
             {
-                foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
+                if (gameController.PermaDeath)
                 {
-                    if (character.CharacterName == gameSettings.FranklemName)
+                    foreach (var character in characterInfos.Where(character => character.CharacterName == unit.name))
                     {
-                        saveController.ResetSave();
-                        break;
+                        character.CharacterStatus = false;
                     }
-                    character.CharacterStatus = false;
                 }
             }
         }

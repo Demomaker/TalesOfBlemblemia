@@ -52,7 +52,7 @@ namespace Game
             //if the player did not enter a name, player name will be Franklem
             if (playerNameInputField.text == "")
             {
-                playerNameInputField.text = "Franklem";
+                playerNameInputField.text = gameSettings.FranklemName;
             }
 
             saveController.ResetSave();

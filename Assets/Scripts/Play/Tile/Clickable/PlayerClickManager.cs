@@ -100,7 +100,6 @@ namespace Game
         public ActionType ExecuteAction()
         {
             ActionType actionType = unitTurnAction.ActionType;
-            playerUnit.RemoveInitialMovement();
             playerUnit.MoveByAction(unitTurnAction);
             Reset();
             return actionType;
