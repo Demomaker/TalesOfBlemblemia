@@ -20,8 +20,7 @@ namespace Game
         [SerializeField] private bool canCritOnEverybody;
         [SerializeField] private int detectionRadius;
         [SerializeField] private Transform appearance;
-        [SerializeField] private Camera camera;
-        
+
         #endregion
         
         #region Fields
@@ -37,6 +36,7 @@ namespace Game
         private bool hasActed;
         private GameSettings gameSettings;
         private UIController uiController;
+        private CameraShake cameraShake;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -131,7 +131,7 @@ namespace Game
             get => movesLeft;
             set
             {
-                movesLeft = Mathf.Clamp(value, 0, Stats.MoveSpeed);
+                movesLeft = value;
                 OnMovementChange.Publish();
             }
         }
@@ -172,6 +172,7 @@ namespace Game
         {
             InitializeEvents();
             uiController = Harmony.Finder.UIController;
+            if (Camera.main != null) cameraShake = Camera.main.GetComponent<CameraShake>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -462,9 +463,9 @@ namespace Game
             {
                 critModifier = Random.value <= Stats.CritRate ? 2 : 1;
                 damage *= critModifier;
-                if (critModifier > 1 && camera != null)
+                if (critModifier > 1 && cameraShake != null)
                 {
-                    camera.GetComponent<CameraShake>().TriggerShake();
+                    cameraShake.TriggerShake();
                 }
             }
             
