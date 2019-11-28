@@ -58,7 +58,7 @@ namespace Game
             EventSystem.current.SetSelectedGameObject(null);
             if (CanBeClicked && overWorldController.CanLoadANewLevel && !overWorldController.CharacterIsMoving)
             {
-                StartCoroutine(overWorldController.LoadLevel(RepresentedLevelName, transform.position));
+                Harmony.Finder.CoroutineStarter.StartCoroutine(overWorldController.LoadLevel(RepresentedLevelName, transform.position));
             }
         }
         

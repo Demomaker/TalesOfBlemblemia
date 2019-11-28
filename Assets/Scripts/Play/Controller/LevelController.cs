@@ -29,6 +29,7 @@ namespace Game
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private GameObject pointingArrowPrefab = null;
 
+        private CoroutineStarter coroutineStarter;
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
@@ -84,6 +85,7 @@ namespace Game
             uiController = Harmony.Finder.UIController;
             if (protagonistGameObject == null) Debug.LogError("Missing ProtagonistGameObject in LevelController!");
             if (endGameCredits != null) endGameCredits.gameObject.SetActive(false);
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
         
         private void Start()
@@ -202,7 +204,7 @@ namespace Game
             currentPlayer.RemoveDeadUnits();
             if (isComputerPlaying || currentPlayer != computerPlayer) return;
             isComputerPlaying = true;
-            StartCoroutine(computerPlayer.PlayUnits());
+            couritineStarter.StartCoroutine(computerPlayer.PlayUnits());
         }
 
         private void GiveUnits()

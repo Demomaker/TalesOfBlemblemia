@@ -125,7 +125,7 @@ namespace Game
         {
             if (tilePathSprite.sprite != gridController.EnemyRangeSprite)
                 tilePathSprite.sprite = gridController.NormalSprite;
-            EnemyRangeController.DisplayEnemyRange();
+            Harmony.Finder.EnemyRangeController.DisplayEnemyRange();
         }
 
         public void HideEnemyRange()
@@ -173,11 +173,11 @@ namespace Game
 
         public void UpdateClickHint()
         {
-            if (PlayerClickManager.ActionIsSet && this == PlayerClickManager.TileToConfirm)
+            if (Harmony.Finder.PlayerClickManager.ActionIsSet && this == Harmony.Finder.PlayerClickManager.TileToConfirm)
             {
                 leftClickType = ClickType.None;
                 rightClickType = ClickType.None;
-                switch (PlayerClickManager.UnitTurnAction.ActionType)
+                switch (Harmony.Finder.PlayerClickManager.UnitTurnAction.ActionType)
                 {
                     case ActionType.Rest:
                         rightClickType = leftClickType = ClickType.ConfirmRest;

@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using Harmony;
+using UnityEngine;
 
 namespace Game
 {
     //Author: Zacharie Lavigne
-    public static class PlayerClickManager
+    [Findable("PlayerClickManager")]
+    public class PlayerClickManager : MonoBehaviour
     {
-        private static Action unitTurnAction;
-        private static Tile tileToConfirm;
-        private static Unit playerUnit;
+        private Action unitTurnAction;
+        private Tile tileToConfirm;
+        private Unit playerUnit;
 
-        public static bool ActionIsSet => unitTurnAction != null;
-        public static Tile TileToConfirm => tileToConfirm;
-        public static Action UnitTurnAction => unitTurnAction;
+        public bool ActionIsSet => unitTurnAction != null;
+        public Tile TileToConfirm => tileToConfirm;
+        public Action UnitTurnAction => unitTurnAction;
 
-        public static void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
+        public void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
         {
             playerUnit = selectedPlayerUnit;
             tileToConfirm = target;
@@ -23,7 +26,7 @@ namespace Game
             path.Add(selectedPlayerUnit.CurrentTile);
             if (clickButton == ClickButton.LeftClick)
             {
-                switch (target.RightClickType)
+                switch (target.LeftClickType)
                 {
                     case ClickType.MoveTo:
                         unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(target, false));
@@ -93,14 +96,14 @@ namespace Game
                 Finder.GridController.DisplayAction(unitTurnAction, selectedPlayerUnit);
         }
 
-        public static void ExecuteAction()
+        public void ExecuteAction()
         {
             playerUnit.RemoveInitialMovement();
             playerUnit.MoveByAction(unitTurnAction);
             Reset();
         }
 
-        public static void Reset()
+        public void Reset()
         {
             playerUnit = null;
             tileToConfirm = null;

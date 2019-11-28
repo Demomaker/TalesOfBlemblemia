@@ -37,6 +37,7 @@ namespace Game
         private GameSettings gameSettings;
         private UIController uiController;
         private LevelController levelController;
+        private CameraShake cameraShake;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -58,7 +59,7 @@ namespace Game
         private Animator animator;
         private OnHealthChange onHealthChange;
         private OnMovementChange onMovementChange;
-
+        private CoroutineStarter coroutineStarter;
         #endregion
         
         #region Properties
@@ -131,7 +132,7 @@ namespace Game
             get => movesLeft;
             set
             {
-                movesLeft = Mathf.Clamp(value, 0, Stats.MoveSpeed);
+                movesLeft = value;
                 OnMovementChange.Publish();
             }
         }
@@ -177,7 +178,9 @@ namespace Game
             onUnitDeath = Harmony.Finder.OnUnitDeath;
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             levelController = Harmony.Finder.LevelController;
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController;
+            if (Camera.main != null) cameraShake = Camera.main.GetComponent<CameraShake>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -271,8 +274,7 @@ namespace Game
                     currentTile.UnlinkUnit();
                     MovesLeft -= currentTile.CostToMove;
                 }
-                List<Tile> path = PathFinder.FindPath(gridController, MovementCosts, new List<Tile>(), currentTile.LogicalPosition, targetTile.LogicalPosition, this);
-                path.RemoveAt(0);
+                List<Tile> path = PathFinder.FindPath(MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.Add(targetTile);
                 return path;
             }
@@ -280,8 +282,7 @@ namespace Game
         }
         public Coroutine MoveByAction(Action action)
         {
-            //TODO coroutine starter
-            return Harmony.Finder.LevelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
+            return coroutineStarter.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -310,7 +311,7 @@ namespace Game
                         yield return null;
                     }
 
-                    if (MovesLeft <= 0 && path.IndexOf(finalTile) != pathCount - 1)
+                    if (MovesLeft < 0 && path.IndexOf(finalTile) != pathCount - 1)
                     {
                         i = pathCount;
                     }
@@ -409,8 +410,7 @@ namespace Game
                     IsEnemy
                 );
             }
-            //TODO créer un CouroutineStarter qui sera dans le finder qui remplacera le Level Controller de la ligne suivante
-            AttackRoutineHandle = Harmony.Finder.LevelController.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
+            AttackRoutineHandle = coroutineStarter.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 
@@ -449,6 +449,10 @@ namespace Game
             {
                 critModifier = Random.value <= Stats.CritRate ? 2 : 1;
                 damage *= critModifier;
+                if (critModifier > 1 && cameraShake != null)
+                {
+                    cameraShake.TriggerShake();
+                }
             }
             
             target.CurrentHealthPoints -= damage;
