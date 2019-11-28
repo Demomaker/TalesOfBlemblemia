@@ -34,7 +34,7 @@ namespace Game
         {
             if (SceneManager.GetSceneByName(levelName).isLoaded || !canLoadNewLevel) return;
             
-            StartCoroutine(FadeToLevelAsync(levelName, loadSceneMode));
+            Harmony.Finder.CoroutineStarter.StartCoroutine(FadeToLevelAsync(levelName, loadSceneMode));
             
             if (SceneManager.GetSceneByName(loadedLevel).name != gameSettings.OverworldSceneName)
             {

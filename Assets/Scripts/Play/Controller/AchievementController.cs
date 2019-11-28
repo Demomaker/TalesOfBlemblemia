@@ -152,7 +152,7 @@ namespace Game
         {
             animator.SetBool(IS_OPEN,true);
             achievementBeingShown = true;
-            StartCoroutine(TypeAchievementText(achievement.AchievementName));
+            Harmony.Finder.CoroutineStarter.StartCoroutine(TypeAchievementText(achievement.AchievementName));
         }
 
         private IEnumerator TypeAchievementText(string text)

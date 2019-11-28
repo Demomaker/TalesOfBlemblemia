@@ -12,7 +12,7 @@ namespace Game
         protected Tile currentTile;
         private int currentHealthPoints;
         private OnUnitDeath onUnitDeath;
-
+        private CoroutineStarter coroutineStarter;
         private LevelController levelController;
 
         public bool IsEnemyTarget => isEnemyTarget;
@@ -25,8 +25,7 @@ namespace Game
             {
                 currentHealthPoints = value;
                 if (NoHealthLeft) 
-                    //TODO objet Coroutine Starter
-                    Harmony.Finder.LevelController.StartCoroutine(Die());
+                    coroutineStarter.StartCoroutine(Die());
                 if(this is Unit) (this as Unit)?.OnHealthChange.Publish();
             }
         }
@@ -52,13 +51,14 @@ namespace Game
 
         public virtual void Awake()
         {
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
             levelController = Harmony.Finder.LevelController;
             onUnitDeath = Harmony.Finder.OnUnitDeath;
         }
         
         protected virtual void Start()
         {
-            StartCoroutine(InitPosition());
+            coroutineStarter.StartCoroutine(InitPosition());
         }
         
         private IEnumerator InitPosition()

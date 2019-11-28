@@ -58,7 +58,7 @@ namespace Game
         private Animator animator;
         private OnHealthChange onHealthChange;
         private OnMovementChange onMovementChange;
-
+        private CoroutineStarter coroutineStarter;
         #endregion
         
         #region Properties
@@ -171,6 +171,7 @@ namespace Game
         public override void Awake()
         {
             InitializeEvents();
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController;
             if (Camera.main != null) cameraShake = Camera.main.GetComponent<CameraShake>();
             weapon = GetComponentInParent<Weapon>();
@@ -295,7 +296,7 @@ namespace Game
         public Coroutine MoveByAction(Action action)
         {
             //TODO coroutine starter
-            return Harmony.Finder.LevelController.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
+            return coroutineStarter.StartCoroutine(MoveByAction(action, gameSettings.MovementDuration));
         }
         private IEnumerator MoveByAction(Action action, float duration)
         {
@@ -424,7 +425,7 @@ namespace Game
                 );
             }
             //TODO créer un CouroutineStarter qui sera dans le finder qui remplacera le Level Controller de la ligne suivante
-            AttackRoutineHandle = Harmony.Finder.LevelController.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
+            AttackRoutineHandle = coroutineStarter.StartCoroutine(Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 

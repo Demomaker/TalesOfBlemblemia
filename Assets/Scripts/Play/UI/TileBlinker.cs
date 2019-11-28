@@ -21,7 +21,7 @@ public class TileBlinker : MonoBehaviour
     private void Start()
     {
         if(tileToBlink != null)
-        blinkCoroutine = StartCoroutine(tileToBlink.Blink(blinkSprite));
+        blinkCoroutine = Harmony.Finder.CoroutineStarter.StartCoroutine(tileToBlink.Blink(blinkSprite));
     }
 
     private void OnDisable()

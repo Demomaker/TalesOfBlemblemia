@@ -40,6 +40,7 @@ namespace Game
         private readonly List<UnitOwner> players = new List<UnitOwner>();
         #endregion ReadOnly Fields
         #region Other Fields
+        private CoroutineStarter coroutineStarter;
         private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
@@ -100,6 +101,9 @@ namespace Game
                 return playerUnitIsMovingOrAttacking;
             }
         }
+
+        public List<Unit> EnemyUnits => players[1].OwnedUnits;
+
         #endregion Accessors
         #region Unity Event Functions
         private void Awake()
@@ -116,6 +120,7 @@ namespace Game
             endGameCredits = GetComponentInChildren<EndGameCreditsController>();
             if (endGameCredits != null)
                 endGameCredits.gameObject.SetActive(false);
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
         
         private void Start()
@@ -148,7 +153,7 @@ namespace Game
             if (!doNotEnd && LevelEnded)
             {
                 ResetUnitsAlpha();
-                StartCoroutine(EndLevel());
+                coroutineStarter.StartCoroutine(EndLevel());
             }
 
             if (currentPlayer == null) throw new NullReferenceException("Current player is null!");
@@ -336,11 +341,11 @@ namespace Game
             if (currentPlayer is HumanPlayer)
             {
                 numberOfPlayerTurns++;
-                EnemyRangeController.OnPlayerTurn(players[1].OwnedUnits);
+                Harmony.Finder.EnemyRangeController.OnPlayerTurn(players[1].OwnedUnits);
             }
             else
             {
-                EnemyRangeController.OnComputerTurn();
+                Harmony.Finder.EnemyRangeController.OnComputerTurn();
             }
             uiController.ModifyTurnInfo(currentPlayer);
             uiController.ModifyTurnCounter(numberOfPlayerTurns);
@@ -359,7 +364,7 @@ namespace Game
             unitOwner.RemoveDeadUnits();
             if (isComputerPlaying || !(unitOwner is ComputerPlayer currentComputerPlayer)) return;
             isComputerPlaying = true;
-            StartCoroutine(currentComputerPlayer.PlayUnits());
+            coroutineStarter.StartCoroutine(currentComputerPlayer.PlayUnits());
         }
 
         private void CheckForPlayerTurnSkip()
