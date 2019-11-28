@@ -20,7 +20,7 @@ namespace Game
         [SerializeField] private bool canCritOnEverybody;
         [SerializeField] private int detectionRadius;
         [SerializeField] private Transform appearance;
-        
+
         #endregion
         
         #region Fields
@@ -36,6 +36,7 @@ namespace Game
         private bool hasActed;
         private GameSettings gameSettings;
         private UIController uiController;
+        private CameraShake cameraShake;
 
         /// <summary>
         /// Determines if an ai unit has been triggered by a player unit entering it's radius
@@ -130,7 +131,7 @@ namespace Game
             get => movesLeft;
             set
             {
-                movesLeft = Mathf.Clamp(value, 0, Stats.MoveSpeed);
+                movesLeft = value;
                 OnMovementChange.Publish();
             }
         }
@@ -172,6 +173,7 @@ namespace Game
             InitializeEvents();
             coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController;
+            if (Camera.main != null) cameraShake = Camera.main.GetComponent<CameraShake>();
             weapon = GetComponentInParent<Weapon>();
             if (weapon == null)
                 throw new Exception("A unit gameObject should have a weapon script");
@@ -285,8 +287,7 @@ namespace Game
                     currentTile.UnlinkUnit();
                     MovesLeft -= currentTile.CostToMove;
                 }
-                List<Tile> path = PathFinder.FindPath(gridController, MovementCosts, new List<Tile>(), currentTile.LogicalPosition, targetTile.LogicalPosition, this);
-                path.RemoveAt(0);
+                List<Tile> path = PathFinder.FindPath(MovementCosts, currentTile.LogicalPosition, targetTile.LogicalPosition, this);
                 path.Add(targetTile);
                 return path;
             }
@@ -324,7 +325,7 @@ namespace Game
                         yield return null;
                     }
 
-                    if (MovesLeft <= 0 && path.IndexOf(finalTile) != pathCount - 1)
+                    if (MovesLeft < 0 && path.IndexOf(finalTile) != pathCount - 1)
                     {
                         i = pathCount;
                     }
@@ -463,6 +464,10 @@ namespace Game
             {
                 critModifier = Random.value <= Stats.CritRate ? 2 : 1;
                 damage *= critModifier;
+                if (critModifier > 1 && cameraShake != null)
+                {
+                    cameraShake.TriggerShake();
+                }
             }
             
             target.CurrentHealthPoints -= damage;

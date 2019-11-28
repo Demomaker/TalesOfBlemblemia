@@ -50,7 +50,7 @@ namespace Game
         public static SaveController SaveController => FindWithTag<SaveController>(Tags.SAVE_CONTROLLER);
         public static PauseController PauseController => FindWithTag<PauseController>(Tags.PAUSE_CONTROLLER);
         public static Navigator Navigator => FindWithTag<Navigator>(Tags.NAVIGATOR);
-
+        
         private static T FindWithTag<T>(string tag)
         {
             return GameObject.FindWithTag(tag).GetComponent<T>();

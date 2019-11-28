@@ -2295,6 +2295,7 @@ GameObject:
   - component: {fileID: 73006763}
   - component: {fileID: 73006762}
   - component: {fileID: 73006765}
+  - component: {fileID: 73006766}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -2386,6 +2387,21 @@ MonoBehaviour:
   maxX: 21
   minY: -6
   maxY: 21
+--- !u!114 &73006766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73006761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78deaa014ba34262bfe502293e33f0c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDuration: 1
+  shakeMagnitude: 0.2
+  dampingSpeed: 3
 --- !u!1 &77008599
 GameObject:
   m_ObjectHideFlags: 0
