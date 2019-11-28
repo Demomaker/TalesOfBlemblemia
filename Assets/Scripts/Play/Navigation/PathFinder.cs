@@ -11,7 +11,7 @@ namespace Game
     {
         public static int[,] ComputeCost(Vector2Int from, bool unitIsEnemy)
         {
-            GridController grid = Finder.GridController;
+            GridController grid = Harmony.Finder.GridController;
             //Initialize movementCosts array
             int[,] movementCosts = new int[grid.NbColumns,grid.NbLines];
 
@@ -106,7 +106,7 @@ namespace Game
             Unit unit
         )
         {
-            GridController grid = Finder.GridController;
+            GridController grid = Harmony.Finder.GridController;
             //If there is a unit on the target the unit must find the closest available tile.
             if (grid.GetTile(to.x, to.y).LinkedUnit != null)
             {

@@ -35,7 +35,7 @@ namespace Game
             saveController = Finder.SaveController;
             newGameScreen = GetComponent<Canvas>();
             saveSlotSelectedNumber = 0;
-            gameController = Finder.GameController;
+            gameController = Harmony.Finder.GameController;
         }
 
         public void Enter(int saveSlotNumber)

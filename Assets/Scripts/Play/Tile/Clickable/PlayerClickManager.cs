@@ -19,6 +19,7 @@ namespace Game
 
         public void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
         {
+            var grid = Harmony.Finder.GridController;
             playerUnit = selectedPlayerUnit;
             tileToConfirm = target;
 
@@ -53,7 +54,7 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
                                 unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
                                     ActionType.Attack, target.LinkedTargetable);
@@ -67,7 +68,7 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
                                 unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
                                     ActionType.Heal, target.LinkedUnit);
@@ -81,7 +82,7 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
                                 unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
                                     ActionType.Recruit, target.LinkedUnit);
@@ -91,9 +92,9 @@ namespace Game
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
                 }
             }
-            Finder.GridController.RemoveActionPath();
+            grid.RemoveActionPath();
             if (unitTurnAction != null)
-                Finder.GridController.DisplayAction(unitTurnAction, selectedPlayerUnit);
+                grid.DisplayAction(unitTurnAction, selectedPlayerUnit);
         }
 
         public void ExecuteAction()

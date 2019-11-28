@@ -12,42 +12,26 @@ namespace Game
     [CustomEditor(typeof(LevelController))]
     public class LevelControllerEditor : Editor
     {
-        #region Constants
-        #region Property Indexes in Property Names List
         private const int FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST = 10;
-        private const int BACKGROUND_MUSIC_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST;
-        private const int DO_NOT_END_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 1;
-        private const int CUSTOM_OBJECTIVE_MESSAGE_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 2;
-        private const int COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 3;
-        private const int COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX =
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 4;
-        private const int COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 5;
-        private const int POINT_TO_ACHIEVE_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 6;
-        private const int TARGETS_TO_DEFEAT_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 7;
-        private const int ALL_TARGETS_NEED_TO_BE_DEFEATED_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 8;
-        private const int TARGETS_TO_PROTECT_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 9;
-        private const int NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
-        private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = 
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
-        private const int POINTING_ARROW_PREFAB_PROPERTY_INDEX =
-            FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
-        #endregion Property Indexes in Property Names List
-        #region Header and Field Names
+        private const int BACKGROUND_MUSIC_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST;
+        private const int PROTAGONIST_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 1;
+        private const int CUSTOM_OBJECTIVE_MESSAGE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 2;
+        private const int COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 3;
+        private const int COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 4;
+        private const int COMPLETE_IF_CERTAIN_ENEMY_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 5;
+        private const int POINT_TO_ACHIEVE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 6;
+        private const int TARGETS_TO_DEFEAT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 7;
+        private const int ALL_TARGETS_NEED_TO_BE_DEFEATED_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 8;
+        private const int TARGETS_TO_PROTECT_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 9;
+        private const int NUMBER_OF_TURNS_BEFORE_COMPLETION_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 10;
+        private const int REVERT_WEAPON_TRIANGLE_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 11;
+        private const int POINTING_ARROW_PREFAB_PROPERTY_INDEX = FIRST_SERIALIZED_PROPERTY_INDEX_IN_NAME_LIST + 12;
+        
         private const string LEVEL_HEADER = "Level";
         private const string WEAPON_TRANSFORMATION_HEADER = "Weapon Transformation";
         private const string LEVEL_COMPLETION_HEADER = "Conditions For Level Completion";
         private const string BACKGROUND_MUSIC_FIELD_NAME = "Background Music";
-        private const string DO_NOT_END_FIELD_NAME = "Do Not End Level";
+        private const string PROTAGONIST_FIELD_NAME = "Protagonist GameObject";
         private const string CUSTOM_OBJECTIVE_MESSAGE_FIELD_NAME = "Custom Objective Message";
         private const string COMPLETE_IF_POINT_ACHIEVED_FIELD_NAME = "Complete If Point Achieved";
         private const string COMPLETE_IF_CERTAIN_ENEMIES_DEFEATED_FIELD_NAME = "Complete If Certain Targets Defeated";
@@ -57,13 +41,11 @@ namespace Game
         private const string NUMBER_OF_TURNS_BEFORE_COMPLETION_FIELD_NAME = "Number Of Turns Before Level Completion";
         private const string REVERT_WEAPON_TRIANGLE_FIELD_NAME = "Revert Weapon Triangle";
         private const string POINTING_ARROW_PREFAB_FIELD_NAME = "Pointing Arrow Prefab";
-        #endregion Header and Field Names
-        #endregion Constants
-        #region Fields
+
         private List<string> serializedPropertyNames;
-        #region Serialized Properties
+
+        private SerializedProperty protagonistGameObject;
         private SerializedProperty backgroundMusic;
-        private SerializedProperty doNotEnd;
         private SerializedProperty customObjectiveMessage;
         private SerializedProperty completeIfPointAchieved;
         private SerializedProperty completeIfSurvivedCertainNumberOfTurns;
@@ -75,9 +57,7 @@ namespace Game
         private SerializedProperty numberOfTurnsBeforeCompletion;
         private SerializedProperty revertWeaponTriangle;
         private SerializedProperty pointingArrowPrefab;
-        #endregion Serialized Properties
-        #endregion Fields
-        #region Unity Event Functions
+        
         private void OnEnable()
         {
             InitializeSerializedPropertyNamesList();
@@ -90,8 +70,7 @@ namespace Game
             ShowAndEditProperties();
             serializedObject.ApplyModifiedProperties();
         }
-        #endregion Unity Event Functions
-        #region Level Controller Editing Methods
+
         private void InitializeSerializedPropertyNamesList()
         {
             serializedPropertyNames = new List<string>();
@@ -107,7 +86,7 @@ namespace Game
         private void InitializeSerializedProperties()
         {
             backgroundMusic = GetPropertyAtIndex(BACKGROUND_MUSIC_PROPERTY_INDEX);
-            doNotEnd = GetPropertyAtIndex(DO_NOT_END_PROPERTY_INDEX);
+            protagonistGameObject = GetPropertyAtIndex(PROTAGONIST_PROPERTY_INDEX);
             customObjectiveMessage = GetPropertyAtIndex(CUSTOM_OBJECTIVE_MESSAGE_PROPERTY_INDEX);
             completeIfPointAchieved = GetPropertyAtIndex(COMPLETE_IF_POINT_ACHIEVED_PROPERTY_INDEX);
             completeIfSurvivedCertainNumberOfTurns = GetPropertyAtIndex(COMPLETE_IF_SURVIVED_CERTAIN_NUMBER_OF_TURNS_PROPERTY_INDEX);
@@ -126,31 +105,24 @@ namespace Game
             return serializedObject.FindProperty(serializedPropertyNames[serializedPropertyNamesIndex]);
         }
 
-        private bool DoNotEndLevel()
-        {
-            return doNotEnd.boolValue;
-        }
-
         private void ShowAndEditProperties()
         {
             ShowAndEditPointingArrowProperty();
             ShowAndEditBasicLevelProperties();
             ShowAndEditWeaponProperties();
-            if (DoNotEndLevel()) return;
             ShowAndEditLevelCompletionProperties();
         }
 
         private void ShowAndEditPointingArrowProperty()
         {
-            pointingArrowPrefab.objectReferenceValue =
-                EditorGUILayout.ObjectField(POINTING_ARROW_PREFAB_FIELD_NAME, pointingArrowPrefab.objectReferenceValue, typeof(UnityEngine.Object),true );
+            pointingArrowPrefab.objectReferenceValue = EditorGUILayout.ObjectField(POINTING_ARROW_PREFAB_FIELD_NAME, pointingArrowPrefab.objectReferenceValue, typeof(UnityEngine.Object),true );
         }
 
         private void ShowAndEditBasicLevelProperties()
         {
             EditorGUILayout.LabelField(LEVEL_HEADER, EditorStyles.boldLabel);
             ShowAndEditBackgroundMusic();
-            ShowAndEditDoNotEnd();
+            ShowAndEditProtagonistGameObject();
             ShowAndEditCustomObjectiveMessage();
         }
 
@@ -170,19 +142,17 @@ namespace Game
 
         private void ShowAndEditBackgroundMusic()
         {
-            backgroundMusic.objectReferenceValue =
-                EditorGUILayout.ObjectField(BACKGROUND_MUSIC_FIELD_NAME, backgroundMusic.objectReferenceValue, typeof(AudioClip),true );
+            backgroundMusic.objectReferenceValue = EditorGUILayout.ObjectField(BACKGROUND_MUSIC_FIELD_NAME, backgroundMusic.objectReferenceValue, typeof(AudioClip),true );
         }
 
-        private void ShowAndEditDoNotEnd()
+        private void ShowAndEditProtagonistGameObject()
         {
-            doNotEnd.boolValue = EditorGUILayout.Toggle(DO_NOT_END_FIELD_NAME, doNotEnd.boolValue);
+            protagonistGameObject.objectReferenceValue = EditorGUILayout.ObjectField(PROTAGONIST_FIELD_NAME, protagonistGameObject.objectReferenceValue, typeof(GameObject),true );
         }
 
         private void ShowAndEditCustomObjectiveMessage()
         {
-            customObjectiveMessage.stringValue = EditorGUILayout.TextField(CUSTOM_OBJECTIVE_MESSAGE_FIELD_NAME,
-                customObjectiveMessage.stringValue);
+            customObjectiveMessage.stringValue = EditorGUILayout.TextField(CUSTOM_OBJECTIVE_MESSAGE_FIELD_NAME, customObjectiveMessage.stringValue);
         }
 
         private void ShowAndEditRevertWeaponTriangle()
@@ -213,6 +183,5 @@ namespace Game
             EditorGUILayout.PropertyField(targetsToDefeat,true);
             allTargetsNeedToBeDefeated.boolValue = EditorGUILayout.Toggle(ALL_TARGETS_NEED_TO_BE_DEFEATED_FIELD_NAME,allTargetsNeedToBeDefeated.boolValue);
         }
-        #endregion Level Controller Editing Methods
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
  {
     //Authors: Jérémie Bertrand, Mike Bédard, Zacharie Lavigne
+    [Findable("GridController")]
     public class GridController : MonoBehaviour
     {
-        #region Serialized Fields
         [SerializeField] private Sprite movementTileSprite;
         [SerializeField] private Sprite normalTileSprite;
         [SerializeField] private Sprite selectedTileSprite;
@@ -30,16 +31,10 @@ using UnityEngine.UI;
         [SerializeField] private Sprite rightStartPathTileSprite;
         [SerializeField] private Sprite downStartPathTileSprite;
         [SerializeField] private Sprite upStartPathTileSprite;
-        #endregion Serialized Fields
-        #region Other Fields
+
         private GridLayoutGroup gridLayoutGroup;
-        #endregion Other Fields
-        #region Accessors
-        public Unit SelectedUnit
-        {
-            get; 
-            private set;
-        }
+
+        public Unit SelectedUnit { get; private set; }
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
@@ -67,16 +62,14 @@ using UnityEngine.UI;
 
         public int NbColumns { get; private set; }
         public int NbLines { get; private set; }
-        #endregion Accessors
-        #region Unity Event Functions
+
         private void Awake()
         {
             gridLayoutGroup = GetComponent<GridLayoutGroup>();
             NbColumns = (int)(GetComponent<RectTransform>().rect.width / gridLayoutGroup.cellSize.x);
             NbLines = (int)(GetComponent<RectTransform>().rect.height / gridLayoutGroup.cellSize.y);
         }
-        #endregion Unity Event Functions
-        #region Grid-controlling Functions
+
         public void SelectUnit(Unit unit)
         {
             if(SelectedUnit != null) DeselectUnit();
@@ -149,21 +142,23 @@ using UnityEngine.UI;
             
             var unitMovesLeft = unit.MovesLeft;
             var movementCosts = unit.MovementCosts;
+
+            var grid = Harmony.Finder.GridController;
             
             //Check left
-            Tile tileToCheck = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
+            Tile tileToCheck = grid.GetTile(tilePosX - 1, tilePosY);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
                 return tileToCheck;
             //Check up
-            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
+            tileToCheck = grid.GetTile(tilePosX, tilePosY - 1);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
                 return tileToCheck;
             //Check right
-            tileToCheck = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
+            tileToCheck = grid.GetTile(tilePosX + 1, tilePosY);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
                 return tileToCheck;
             //Check down
-            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
+            tileToCheck = grid.GetTile(tilePosX, tilePosY + 1);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
                 return tileToCheck;
             return null;
@@ -210,6 +205,5 @@ using UnityEngine.UI;
                     target.CurrentTile.DisplayAttackActionPossibility();
             }
         }
-        #endregion Grid-controlling Functions
     }
  }

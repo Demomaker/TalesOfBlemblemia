@@ -13,26 +13,25 @@ namespace Game
      [Findable("GameController")]
      public class GameController : MonoBehaviour
      {
-         #region Serialized Fields
          [SerializeField] private int choiceForEasy = 10;
          [SerializeField] private int choiceForMedium = 5;
          [SerializeField] private int choiceForHard = 3;
-         #endregion Serialized Fields
-         #region ReadOnly Fields
+
          private readonly Dictionary<DifficultyLevel, int> choiceRangePerDifficulty = new Dictionary<DifficultyLevel, int>();
-         #endregion ReadOnly Fields
-         #region Other Fields
+
          private LevelLoader levelLoader;
          private DifficultyLevel difficultyLevel;
          private GameSettings gameSettings;
          private int choiceRange;
          private bool permaDeath;
-         #endregion Other Fields
-         #region Accessors
+
          public Level[] Levels { get; private set; }
          public string PreviousLevelName { get; set; }
          public string CurrentLevelName => levelLoader.LoadedLevel;
          public bool PermaDeath => permaDeath;
+
+         public int ChoiceRange => choiceRange;
+
          public bool AllLevelsCompleted => PreviousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel
@@ -60,8 +59,7 @@ namespace Game
                  }
              }
          }
-         #endregion Accessors
-         #region Constructors
+
          public GameController() : this(DifficultyLevel.Easy) { }
          public GameController(DifficultyLevel difficultyLevel)
          {
@@ -70,8 +68,7 @@ namespace Game
              choiceRangePerDifficulty.Add(DifficultyLevel.Medium, choiceForMedium);
              choiceRangePerDifficulty.Add(DifficultyLevel.Hard, choiceForHard);
          }
-         #endregion Constructors
-         #region Unity Event Functions
+
          private void Awake()
          {
              levelLoader = Harmony.Finder.LevelLoader;
@@ -98,13 +95,10 @@ namespace Game
          {
              levelLoader.LoadLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
          }
-         #endregion Unity Event Functions
-         #region Game-controlling Functions
 
          public void OnLevelCompleted(string levelName)
          {
              PreviousLevelName = levelName;
          }
-         #endregion
      }
  }

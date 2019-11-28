@@ -30,6 +30,8 @@ TagManager:
   - PlayerClickManager
   - EnemyRangeCont
   - CoroutineStarter
+  - Monster
+  - AiController
   layers:
   - Default
   - TransparentFX

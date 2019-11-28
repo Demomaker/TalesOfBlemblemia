@@ -27,7 +27,7 @@ namespace Game
             saveController = Finder.SaveController;
             loadGameScreen = GetComponent<Canvas>();
             levelLoader = Harmony.Finder.LevelLoader;
-            gameController = Finder.GameController;
+            gameController = Harmony.Finder.GameController;
         }
         
         private void Start()
