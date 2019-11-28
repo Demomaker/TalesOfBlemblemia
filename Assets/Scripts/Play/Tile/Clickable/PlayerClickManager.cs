@@ -89,6 +89,7 @@ namespace Game
                         }
                         break;
                     default:
+                        //break;
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
                 }
             }
