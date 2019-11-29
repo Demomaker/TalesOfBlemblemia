@@ -1,6 +1,6 @@
 ﻿namespace Game
 {
-    // Author: Jérémie Bertrand
+    //Author: Jérémie Bertrand
     public enum TileType 
     {
         Empty = 0,

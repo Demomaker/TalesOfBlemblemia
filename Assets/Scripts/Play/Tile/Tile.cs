@@ -7,12 +7,11 @@ namespace Game
 {
     /// <summary>
     /// Behaviour of a tile
-    /// Author: Jérémie Bertrand
+    /// Author: Jérémie Bertrand, Zacharie Lavigne
     /// </summary>
     public abstract class Tile : MonoBehaviour
     {
         [SerializeField] private TileType tileType;
-        public TileType TileType => tileType;
         private TileSprite tileSprite;
 
         private Image tileImage;
@@ -23,7 +22,10 @@ namespace Game
         private UIController uiController;
         private ClickType leftClickType = ClickType.None;
         private ClickType rightClickType = ClickType.None;
+        private Vector2Int positionInGrid;
+        private EnemyRangeController enemyRangeController;
 
+        public TileType TileType => tileType;
         public ClickType LeftClickType => leftClickType;
         public ClickType RightClickType => rightClickType;
         public GridController GridController => gridController;
@@ -38,23 +40,11 @@ namespace Game
         public bool IsOccupiedByAUnitOrDoor => IsOccupiedByAUnit || IsOccupiedByADoor;
         public bool IsOccupiedByAUnit => linkedUnit != null && linkedUnit.isActiveAndEnabled;
         public bool IsOccupiedByADoor => linkedDoor != null && linkedDoor.isActiveAndEnabled;
-        private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
         public Door LinkedDoor => linkedDoor;
-        public Targetable LinkedTargetable 
-        {
-            get
-            {
-                Targetable targetable = linkedUnit;
-                if (linkedDoor != null)
-                {
-                    targetable = linkedDoor;
-                }
-                return targetable;
-            }
-        }
+        public Targetable LinkedTargetable => linkedDoor != null ? (Targetable)linkedDoor : linkedUnit;
         public int CostToMove => IsOccupiedByADoor ? TileTypeExt.HIGH_COST_TO_MOVE : tileType.GetCostToMove();
         public float DefenseRate => tileType.GetDefenseRate();
         
@@ -70,6 +60,7 @@ namespace Game
             tilePathSprite = GetComponentInChildren<SpriteRenderer>();
             gridController = transform.parent.GetComponent<GridController>();
             uiController = Harmony.Finder.UIController;
+            enemyRangeController = Harmony.Finder.EnemyRangeController;
         }
 
         protected void Start()
@@ -129,7 +120,7 @@ namespace Game
         {
             if (tilePathSprite.sprite != gridController.EnemyRangeSprite)
                 tilePathSprite.sprite = gridController.NormalSprite;
-            Harmony.Finder.EnemyRangeController.DisplayEnemyRange();
+            enemyRangeController.DisplayEnemyRange();
         }
 
         public void HideEnemyRange()
@@ -225,34 +216,24 @@ namespace Game
             UpdateClickHint();
         }
 
-        private bool LinkUnit(Unit unit)
+        private void LinkUnit(Unit unit)
         {
-            if (!IsWalkable) 
-                return false;
-            this.linkedUnit = unit;
-            return IsOccupiedByAUnitOrDoor;
+            if (IsWalkable) linkedUnit = unit;
         }
-        public bool UnlinkUnit()
+        public void UnlinkUnit()
         {
-            if (!IsOccupiedByAUnitOrDoor) return false;
             linkedUnit = null;
             UpdateClickHint();
-            return true;
         }
         
-        private bool LinkDoor(Door door)
+        private void LinkDoor(Door door)
         {
-            if (!IsWalkable) 
-                return false;
-            linkedDoor = door;
-            return IsOccupiedByAUnitOrDoor;
+            if (IsWalkable) linkedDoor = door;
         }
-        public bool UnlinkDoor()
+        public void UnlinkDoor()
         {
-            if (!IsOccupiedByAUnitOrDoor) return false;
             linkedDoor = null;
             UpdateClickHint();
-            return true;
         }
 
         public void DisplayPathPossibility(Tile prevTile, Tile nextTile)
@@ -367,19 +348,14 @@ namespace Game
 
         public IEnumerator Blink(Sprite blinkSprite)
         {
-            var isBlinking = true;
             var fadeIn = false;
             var fadeValue = 1f;
             tileImage.sprite = blinkSprite;
             var faded = tileImage.color;
-            while (isBlinking)
+            while (true)
             {
                 if (tileImage.sprite != blinkSprite) tileImage.sprite = blinkSprite;
-                if (fadeIn) fadeValue+=0.01f;
-                else
-                {
-                    fadeValue-=0.01f;
-                }
+                fadeValue += fadeIn ? 0.01f : -0.01f;
 
                 faded.a = fadeValue;
                 tileImage.color = faded;
@@ -393,7 +369,9 @@ namespace Game
         public void ResetTileImage()
         {
             tileImage.sprite = gridController.NormalSprite;
-            tileImage.color = new Color(tileImage.color.r, tileImage.color.g, tileImage.color.b, 1f);
+            var color = tileImage.color;
+            color = new Color(color.r, color.g, color.b);
+            tileImage.color = color;
         }
     }
 }

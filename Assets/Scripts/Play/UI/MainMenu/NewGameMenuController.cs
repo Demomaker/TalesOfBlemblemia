@@ -31,8 +31,8 @@ namespace Game
         {
             levelLoader = Harmony.Finder.LevelLoader;
             gameSettings = Harmony.Finder.GameSettings;
-            navigator = Finder.Navigator;
-            saveController = Finder.SaveController;
+            navigator = Harmony.Finder.Navigator;
+            saveController = Harmony.Finder.SaveController;
             newGameScreen = GetComponent<Canvas>();
             saveSlotSelectedNumber = 0;
             gameController = Harmony.Finder.GameController;

@@ -29,7 +29,7 @@ namespace Game
 
         private void Awake()
         {
-            navigator = Finder.Navigator;
+            navigator = Harmony.Finder.Navigator;
             mainMenuCanvas = GetComponent<Canvas>();
             onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
         }
@@ -38,11 +38,6 @@ namespace Game
         {
             onMainMenuEnter.Publish(this);
             navigator.Enter(mainMenuCanvas);
-        }
-
-        public void Leave()
-        {
-            navigator.Leave();
         }
 
         [UsedImplicitly]

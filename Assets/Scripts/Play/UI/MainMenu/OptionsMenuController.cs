@@ -28,8 +28,8 @@ namespace Game
 
         private void Awake()
         {
-            navigator = Finder.Navigator;
-            saveController = Finder.SaveController;
+            navigator = Harmony.Finder.Navigator;
+            saveController = Harmony.Finder.SaveController;
             optionsScreen = GetComponent<Canvas>();
             onSfxToggle = Harmony.Finder.OnSFXToggle;
             onMusicToggle = Harmony.Finder.OnMusicToggle;
@@ -60,8 +60,7 @@ namespace Game
         {
             navigator.Leave();
         }
-
-        #region ValuesSetup
+        
         private void InitializeSettingsValues()
         {
             musicToggle.isOn = saveController.PlayerSettings.MusicToggle;
@@ -78,7 +77,7 @@ namespace Game
         
         private void UpdateSettings()
         {
-            PlayerSettings playerSettings = saveController.PlayerSettings;
+            var playerSettings = saveController.PlayerSettings;
             
             if(playerSettings.MusicToggle != musicToggle.isOn) onMusicToggle.Publish(musicToggle.isOn);
             if(playerSettings.SfxToggle != sfxToggle.isOn) onSfxToggle.Publish(sfxToggle.isOn);
@@ -94,7 +93,5 @@ namespace Game
             
             saveController.UpdateSettings(playerSettings);
         }
-        #endregion
-        
     }
 }
