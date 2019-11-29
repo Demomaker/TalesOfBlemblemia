@@ -132,5 +132,14 @@ namespace Game
                                      new Vector3(0, GetComponent<SpriteRenderer>().size.y, 0) +
                                      transform.up * yPositionDifference;
         }
+        
+        /// <summary>
+        /// Enum to determine if something is going up or down
+        /// </summary>
+        private enum YDirection
+        {
+            Up,
+            Down
+        }
     }
 }
