@@ -24,9 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Levels/ParabeneForest.unity
     guid: 8a2366d1db21489409e5c5e7a8f5f560
   - enabled: 1
-    path: Assets/Scenes/Levels/ParabeneForest 1.unity
-    guid: c2da587a9e12ecd4e970d7b165e90b39
-  - enabled: 1
     path: Assets/Scenes/Levels/BlemburgCitadel.unity
     guid: 836a255d2ae3d884285c915c0faf4e55
   - enabled: 1
@@ -35,9 +32,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/RinfretVillage.unity
     guid: 5ab43a1befec026418e1fa93ae1ceb15
-  - enabled: 1
-    path: Assets/Scenes/Levels/SnowyPeaks.unity
-    guid: 3a7818586c5ca584c8cf06b0f152b3ad
   - enabled: 1
     path: Assets/Scenes/Levels/TulipValley.unity
     guid: 262c9fff37ce64d40996e24056a8e0c7
