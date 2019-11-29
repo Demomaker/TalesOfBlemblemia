@@ -158,7 +158,7 @@ namespace Game
             List<Tile> newPath = new List<Tile>();
             if (grid.GetTile(to.x + toXModifier, to.y + toYModifier).LinkedUnit == null)
             {
-                    newPath = FindPath(grid, movementCosts, new List<Tile>(), from, new Vector2Int(to.x + toXModifier,to.y + toYModifier), unit);
+                newPath = FindPath(grid, movementCosts, new List<Tile>(), from, new Vector2Int(to.x + toXModifier,to.y + toYModifier), unit);
             }
             return newPath;
         }
@@ -212,7 +212,7 @@ namespace Game
                             unit);
                     }
                 }
-
+                
                 return path;
             }
 

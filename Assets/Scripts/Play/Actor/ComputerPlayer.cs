@@ -39,12 +39,13 @@ namespace Game
         {
             dynamicUnitCount = ownedUnits.Count;
             var uiController = Harmony.Finder.UIController;
+            var levelController = Harmony.Finder.LevelController;
             for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
                 while (uiController.IsBattleReportActive) yield return null;
                 currentUnit = dynamicUnitCount > 0 ? ownedUnits[dynamicUnitCounter] : currentUnit = ownedUnits[0];
 
-                if (!currentUnit.HasActed)
+                if (!currentUnit.HasActed && !levelController.LevelEnded)
                 {
                     var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
                     
