@@ -89,6 +89,7 @@ namespace Game
                         }
                         break;
                     default:
+                        //break;
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
                 }
             }
@@ -97,10 +98,12 @@ namespace Game
                 grid.DisplayAction(unitTurnAction, selectedPlayerUnit);
         }
 
-        public void ExecuteAction()
+        public ActionType ExecuteAction()
         {
+            ActionType actionType = unitTurnAction.ActionType;
             playerUnit.MoveByAction(unitTurnAction);
             Reset();
+            return actionType;
         }
 
         public void Reset()
