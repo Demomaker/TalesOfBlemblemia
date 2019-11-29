@@ -29,7 +29,7 @@ namespace Game
         {
             tile.UpdateClickHint();
             //Player cannot play while a cinematic is playing or if another of its units is moving
-            if (tile == null || levelController.PlayerCanPlay) return;
+            if (tile == null || !levelController.PlayerCanPlay) return;
             
             ClickButton clickButton = ReadClick(eventData);
             EventSystem.current.SetSelectedGameObject(null);

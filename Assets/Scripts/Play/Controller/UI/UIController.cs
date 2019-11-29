@@ -108,9 +108,10 @@ namespace Game
         
         private void ModifyHealthBar(int maxHealthPoints, int currentHealthPoint, GameObject[] healthBar, bool beforeBattle = true, int damage = 0)
         {
-            for (int i = healthBar.Length; i > maxHealthPoints; i--)
+            for (int i = 0; i < healthBar.Length; i++)
             {
-                healthBar[i - 1].SetActive(false);
+                if (i < maxHealthPoints) healthBar[i].SetActive(true);
+                else healthBar[i].SetActive(false);
             }
         
             for (int i = 0; i < currentHealthPoint; i++)
