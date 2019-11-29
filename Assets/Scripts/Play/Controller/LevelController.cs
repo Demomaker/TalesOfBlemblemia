@@ -52,6 +52,7 @@ namespace Game
         private EndGameCreditsController endGameCredits;
         private OnUnitDeath onUnitDeath;
         private EnemyRangeController enemyRangeController;
+        private AchievementController achievementController;
         
         private readonly HumanPlayer humanPlayer = new HumanPlayer();
         private readonly ComputerPlayer computerPlayer = new ComputerPlayer();
@@ -93,6 +94,7 @@ namespace Game
             coroutineStarter = Harmony.Finder.CoroutineStarter;
             onUnitDeath = Harmony.Finder.OnUnitDeath;
             enemyRangeController = Harmony.Finder.EnemyRangeController;
+            achievementController = Harmony.Finder.AchievementController;
         }
 
         private void Start()
@@ -106,6 +108,8 @@ namespace Game
             CheckForDarkKnight();
             uiController.ModifyVictoryCondition(customObjectiveMessage);
             if (completeIfPointAchieved) CreatePointToAchievePointingArrow();
+            if((levelName == gameSettings.DarkTowerSceneName || levelName == gameSettings.TulipValleySceneName) && humanPlayer.NumberOfUnits == gameSettings.NumberOfMaximumUnitsForThePlayer) 
+                achievementController.UnlockAchievement(gameSettings.ReachFinalLevelWith8Players);
         }
         
         private void OnEnable()
@@ -142,7 +146,24 @@ namespace Game
             CheckIfUnitWasRecruited();
             CheckIfUpperPathWasTaken();
             UpdatePlayerSave();
+            UnlockEndLevelAchievements();
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+        }
+
+        private void UnlockEndLevelAchievements()
+        {
+            if (!humanPlayer.HasLostAUnitInCurrentLevel && levelName != gameSettings.SnowyPeaksSceneName) achievementController.UnlockAchievement(gameSettings.FinishALevelWithoutUnitLoss);
+            if (levelName == gameSettings.DarkTowerSceneName) achievementController.UnlockAchievement(gameSettings.DefeatBlackKnight);
+            if (levelName == gameSettings.MorktressSceneName)
+            {
+                achievementController.UnlockAchievement(gameSettings.CompleteCampaignOnEasy);
+                if (gameController.DifficultyLevel == DifficultyLevel.Medium)
+                {
+                    achievementController.UnlockAchievement(gameSettings.CompleteCampaignOnMedium);
+                    if(gameController.DifficultyLevel == DifficultyLevel.Hard) achievementController.UnlockAchievement(gameSettings.CompleteCampaignOnHard);
+                    if(humanPlayer.NumberOfUnits == gameSettings.NumberOfMaximumUnitsForThePlayer) achievementController.UnlockAchievement(gameSettings.FinishCampaignWithoutUnitLoss);
+                }
+            }
         }
 
         private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)

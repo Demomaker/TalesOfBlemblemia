@@ -6,8 +6,6 @@ namespace Game
     //Authors: Jérémie Bertrand & Mike Bédard
     public static class Finder
     {
-        private static GameController gameController;
-        private static GridController gridController;
         private static Random random;
 
         //Author: Zacharie Lavigne

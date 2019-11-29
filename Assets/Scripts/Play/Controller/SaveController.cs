@@ -141,7 +141,6 @@ namespace Game
                 new AchievementInfo(gameSettings.ReachFinalLevelWith8Players, gameSettings.ReachFinalLevelWith8PlayersDescription,  false),
                 new AchievementInfo(gameSettings.FinishALevelWithoutUnitLoss, gameSettings.FinishALevelWithoutUnitLossDescription, false),
                 new AchievementInfo(gameSettings.FinishCampaignWithoutUnitLoss, gameSettings.FinishCampaignWithoutUnitLossDescription, false),
-                new AchievementInfo(gameSettings.SaveAllRecruitablesFromAlternatePath, gameSettings.SaveAllRecruitablesFromAlternatePathDescription,  false)
             };
         }
         #endregion
