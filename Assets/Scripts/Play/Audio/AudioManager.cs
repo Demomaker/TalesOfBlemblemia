@@ -11,10 +11,8 @@ namespace Game
     /// </summary>
     public class AudioManager : MonoBehaviour
     {
-        #region Serialized Fields
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
-        #endregion Serialized Fields
-        #region Other Fields
+        
         private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
@@ -41,8 +39,7 @@ namespace Game
         private OnMainVolumeChange onMainVolumeChange;
         private OnMusicVolumeChange onMusicVolumeChange;
         private OnSFXVolumeChange onSFXVolumeChange;
-        #endregion Other Fields
-        #region Unity Event Functions
+        
         private void Awake ()
         {
             gameSettings = Harmony.Finder.GameSettings;
@@ -67,8 +64,8 @@ namespace Game
         {
             DisableEventChannels();
         }
-        #endregion
-        #region Event Channel Handling
+        
+        
         private void InitializeEventChannels()
         {
             onHurt = Harmony.Finder.OnHurt;
@@ -131,9 +128,8 @@ namespace Game
             onMusicVolumeChange.Notify -= ChangeMusicVolume;
             onSFXVolumeChange.Notify -= ChangeSFXVolume;
         }
-
-        #endregion
-        #region Audio Management
+        
+        
         private void UpdateMusicVolume()
         {
             musicSource.volume = mainVolume * musicVolume / (gameSettings.Percent * gameSettings.Percent);
@@ -314,6 +310,6 @@ namespace Game
             StopCurrentMusic();
             PlayMusic(audioClips.MainMenuMusic);
         }
-        #endregion
+        
     }
 }

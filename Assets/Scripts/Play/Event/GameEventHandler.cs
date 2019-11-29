@@ -6,13 +6,11 @@ namespace Game
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class GameEventHandler : MonoBehaviour
     {
-        #region Unity Event Functions
         private void Awake()
         {
             AddEventComponents();
         }
-        #endregion Unity Event Functions
-        #region Event Handling Functions
+        
         private void AddEventComponents()
         {
             gameObject.AddComponent<OnAttack>();
@@ -37,7 +35,6 @@ namespace Game
             gameObject.AddComponent<OnHealthChange>();
             gameObject.AddComponent<OnMovementChange>();
         }
-        #endregion Event Handling Functions
     }
 }
 

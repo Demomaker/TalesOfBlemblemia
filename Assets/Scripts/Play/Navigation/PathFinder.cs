@@ -253,7 +253,7 @@ namespace Game
             return tileIsInaccessible;
         }
         
-        #region CheckMovements
+        
         private static Vector2Int CheckDownMovement(GridController grid, int[,] movementCosts, List<Tile> path, Vector2Int to, Vector2Int newPosition, bool unitIsEnemy)
         {
             if (to.y + 1 < grid.NbLines && to.y + 1 >= 0 && movementCosts[to.x, to.y + 1] < movementCosts[to.x, to.y])
@@ -329,7 +329,6 @@ namespace Game
             }
             return newPosition;
         }
-        #endregion
         
         public static List<Tile> GetPath(
             GridController grid,

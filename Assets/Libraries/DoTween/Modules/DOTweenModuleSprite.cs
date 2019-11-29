@@ -12,9 +12,6 @@ namespace DG.Tweening
 {
 	public static class DOTweenModuleSprite
     {
-        #region Shortcuts
-
-        #region SpriteRenderer
 
         /// <summary>Tweens a SpriteRenderer's color to the given value.
         /// Also stores the spriteRenderer as the tween's target so it can be used for filtered operations</summary>
@@ -59,12 +56,6 @@ namespace DG.Tweening
             return s;
         }
 
-        #endregion
-
-        #region Blendables
-
-        #region SpriteRenderer
-
         /// <summary>Tweens a SpriteRenderer's color to the given value,
         /// in a way that allows other DOBlendableColor tweens to work together on the same target,
         /// instead than fight each other as multiple DOColor would do.
@@ -81,12 +72,6 @@ namespace DG.Tweening
                 }, endValue, duration)
                 .Blendable().SetTarget(target);
         }
-
-        #endregion
-
-        #endregion
-
-        #endregion
 	}
 }
 #endif

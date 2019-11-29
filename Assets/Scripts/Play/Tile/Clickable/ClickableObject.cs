@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -37,10 +38,18 @@ namespace Game
 
             if (tile.LinkedUnitCanBeSelectedByPlayer && tile.LinkedUnit != selectedPlayerUnit)
             {
-                if ( clickButton == ClickButton.LeftClick || (clickButton == ClickButton.RightClick && selectedPlayerUnit.WeaponType != WeaponType.HealingStaff))
+                try
                 {
-                    SelectUnit(grid);
-                    return;
+                    if ( clickButton == ClickButton.LeftClick || (clickButton == ClickButton.RightClick && selectedPlayerUnit?.WeaponType != WeaponType.HealingStaff))
+                    {
+                        SelectUnit(grid);
+                        return;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
             if (selectedPlayerUnit != null)
