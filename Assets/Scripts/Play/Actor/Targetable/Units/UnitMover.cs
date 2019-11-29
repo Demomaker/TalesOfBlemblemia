@@ -8,10 +8,10 @@ namespace Game
 {
     public class UnitMover
     {
-        private UIController uiController;
-        private LevelController levelController;
-        private GameSettings gameSettings;
-        private Unit associatedUnit;
+        private readonly UIController uiController;
+        private readonly LevelController levelController;
+        private readonly GameSettings gameSettings;
+        private readonly Unit associatedUnit;
 
         public UnitMover(Unit associatedUnit, LevelController levelController, UIController uiController, GameSettings gameSettings)
         {
@@ -20,7 +20,6 @@ namespace Game
             this.levelController = levelController;
             this.associatedUnit = associatedUnit;
         }
-
 
         private void LookAt(Vector3 target)
         {

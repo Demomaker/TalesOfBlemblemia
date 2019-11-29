@@ -59,10 +59,19 @@ namespace Game
         private int movesLeft;
         private int tileUpdateKeeper;
         
+        
+        public OnUnitMove OnUnitMove => onUnitMove;
+        public OnAttack OnAttack => onAttack;
+        public OnDodge OnDodge => onDodge;
+        public OnHurt OnHurt => onHurt;
         public OnHealthChange OnHealthChange => onHealthChange == null ? onHealthChange = gameObject.AddOrGetComponent<OnHealthChange>() : onHealthChange;
         public OnMovementChange OnMovementChange => onMovementChange == null ? onMovementChange = gameObject.AddOrGetComponent<OnMovementChange>() : onMovementChange;
         public UnitStats Stats => classStats + weapon.WeaponStats;
         public UnitInfos UnitInfos => unitInfos;
+        public Transform Transform => transform;
+        public CameraShake CameraShake => cameraShake;
+        public UnitMover UnitMover => unitMover;
+        public Transform Appearance => appearance;
         public WeaponType WeaponType => weapon.WeaponType;
         public WeaponType WeaponAdvantage => weapon.Advantage;
         
@@ -122,6 +131,8 @@ namespace Game
                     hasActed = value;
             }
         }
+        public bool IsImmuneToCrits => isImmuneToCrits;
+        public bool CanCritOnEverybody => canCritOnEverybody;
         
         public int[,] MovementCosts
         {
@@ -169,18 +180,6 @@ namespace Game
             }
         }
         private int AttackRange => 1;
-        
-        public Transform Transform => transform;
-        
-        public OnUnitMove OnUnitMove => onUnitMove;
-        public OnAttack OnAttack => onAttack;
-        public OnDodge OnDodge => onDodge;
-        public OnHurt OnHurt => onHurt;
-        public bool IsImmuneToCrits => isImmuneToCrits;
-        public bool CanCritOnEverybody => canCritOnEverybody;
-        public CameraShake CameraShake => cameraShake;
-        public UnitMover UnitMover => unitMover;
-        public Transform Appearance => appearance;
 
         public override void Awake()
         {
