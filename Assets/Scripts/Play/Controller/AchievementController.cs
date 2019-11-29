@@ -48,6 +48,15 @@ namespace Game
         {
             skipButton.onClick.RemoveListener(SkipAchievementShow);
         }
+        
+        public void UnlockAchievement(string achievementName)
+        {
+            var achievement = achievements.Find(info => info.AchievementName == achievementName);
+            if (achievement == null || achievement.Achieved) return;
+            achievement.Achieved = true;
+            saveController.UpdateAchievements(achievements);
+            ShowAchievement(achievement);
+        }
 
         private void SkipAchievementShow()
         {
@@ -86,15 +95,6 @@ namespace Game
             animator.SetBool(IS_OPEN,false);
             achievementBeingShown = false;
             skipAchievementShow = false;
-        }
-
-        public void UnlockAchievement(string achievementName)
-        {
-            var achievement = achievements.Find(info => info.AchievementName == achievementName);
-            if (achievement == null || achievement.Achieved) return;
-            achievement.Achieved = true;
-            saveController.UpdateAchievements(achievements);
-            ShowAchievement(achievement);
         }
     }
 }
