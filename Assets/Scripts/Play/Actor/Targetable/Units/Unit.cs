@@ -22,6 +22,7 @@ namespace Game
         private OnHurt onHurt;
         private OnAttack onAttack;
         private OnDodge onDodge;
+        private OnUnitDeath onUnitDeath;
         private OnUnitMove onUnitMove;
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
