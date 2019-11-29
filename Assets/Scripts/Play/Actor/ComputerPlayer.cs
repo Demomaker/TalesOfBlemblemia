@@ -9,7 +9,7 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
-        private AiController aiController = new AiController();
+        private AiController aiController;
         private const string COMPUTER_PLAYER_NAME = "Enemy";
         
         private int dynamicUnitCounter;
@@ -18,8 +18,9 @@ namespace Game
 
         private readonly List<Targetable> targetsToDestroy;
 
-        public ComputerPlayer() : base(COMPUTER_PLAYER_NAME)
+        public ComputerPlayer(int nbOfChoice) : base(COMPUTER_PLAYER_NAME)
         {
+            aiController = new AiController(nbOfChoice);
             targetsToDestroy = new List<Targetable>();
         }
 
@@ -35,11 +36,10 @@ namespace Game
             targetsToDestroy.Add(target);
         }
         
-        public IEnumerator PlayUnits()
+        public IEnumerator PlayUnits(GridController grid, LevelController levelController)
         {
             dynamicUnitCount = ownedUnits.Count;
             var uiController = Harmony.Finder.UIController;
-            var levelController = Harmony.Finder.LevelController;
             for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
                 while (uiController.IsBattleReportActive) yield return null;
@@ -47,7 +47,7 @@ namespace Game
 
                 if (!currentUnit.HasActed && !levelController.LevelEnded)
                 {
-                    var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+                    var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy, grid, levelController);
                     
                     yield return currentUnit.MoveByAction(action);
                 }
