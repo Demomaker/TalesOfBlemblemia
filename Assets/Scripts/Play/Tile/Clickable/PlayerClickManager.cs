@@ -30,7 +30,9 @@ namespace Game
                 switch (target.LeftClickType)
                 {
                     case ClickType.MoveTo:
-                        unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(target, false));
+                        if (target.IsAvailable) unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(target, false));
+                        break;
+                    case ClickType.None:
                         break;
                     default:
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
@@ -87,6 +89,8 @@ namespace Game
                                 unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(adjacentTile, false),
                                     ActionType.Recruit, target.LinkedUnit);
                         }
+                        break;
+                    case ClickType.None:
                         break;
                     default:
                         //break;

@@ -9,7 +9,7 @@ namespace Game
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
-        private AiController aiController = new AiController();
+        private AiController aiController;
         private const string COMPUTER_PLAYER_NAME = "Enemy";
         
         private int dynamicUnitCounter;
@@ -18,8 +18,9 @@ namespace Game
 
         private readonly List<Targetable> targetsToDestroy;
 
-        public ComputerPlayer() : base(COMPUTER_PLAYER_NAME)
+        public ComputerPlayer(int nbOfChoice) : base(COMPUTER_PLAYER_NAME)
         {
+            aiController = new AiController(nbOfChoice);
             targetsToDestroy = new List<Targetable>();
         }
 

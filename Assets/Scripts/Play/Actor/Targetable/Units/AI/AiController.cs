@@ -12,20 +12,15 @@ namespace Game
     public class AiController
     {
         private GridController grid;
-        /// <summary>
-        /// The number of actions from which the enemy may choose randomly from based on the difficulty level 
-        /// </summary>
-        private int nbOfChoice = 5;
+        private int nbOfChoice;
         
         private AiControllerValues aiControllerValues = new AiControllerValues();
 
+        public AiController(int nbOfChoice)
+        {
+            this.nbOfChoice = nbOfChoice;
+        }
 
-        /// <summary>
-        /// Finds an action to do for an AI controlled unit on its turn
-        /// </summary>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
-        /// <param name="enemyUnits">The player's units</param>
-        /// <returns>The action the unit should play on its turn</returns>
         public Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
         {
             if (grid == null) grid = Harmony.Finder.GridController;
@@ -70,11 +65,6 @@ namespace Game
             return false;
         }
 
-        /// <summary>
-        /// Randomly chooses an action from the best possible actions to do
-        /// </summary>
-        /// <param name="bestActions">The best possible actions to do</param>
-        /// <returns>A randomly chosen an action</returns>
         private Action SelectRandomBestAction(List<Action> bestActions)
         {
             int totalScore = (int)GetTotalScore(bestActions);
@@ -107,12 +97,6 @@ namespace Game
             return totalScore;
         }
 
-        /// <summary>
-        /// Adds resting as a potential action if needed
-        /// </summary>
-        /// <param name="bestActions">The best possible actions to do</param>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
-        /// <param name="actionsToDo">The potential actions the unit could do</param>
         private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
@@ -122,11 +106,6 @@ namespace Game
             }
         }
         
-        /// <summary>
-        /// Computes the score of every action the unit could do
-        /// </summary>
-        /// <param name="actionsToDo">The potential actions the unit could do</param>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
         private void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
             foreach (var action in actionsToDo)
@@ -142,12 +121,6 @@ namespace Game
             }
         }
         
-        /// <summary>
-        /// Gets the best possible actions (with the highest scores) in descending order
-        /// The number of best actions depends on the difficulty level
-        /// </summary>
-        /// <param name="actionsToDo">The action to execute on this turn</param>
-        /// <returns>An array of all the best possible actions</returns>
         private List<Action> GetBestActions(List<Action> actionsToDo)
         {
             //Copy to not change the original list
