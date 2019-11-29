@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Harmony;
 using JetBrains.Annotations;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game
 {
@@ -120,7 +118,7 @@ namespace Game
         {
             get
             {
-                if (tileUpdateKeeper == Harmony.Finder.LevelController.LevelTileUpdateKeeper) return movementCosts;
+                if (tileUpdateKeeper == levelController.LevelTileUpdateKeeper) return movementCosts;
                 if (currentTile != null)
                     MovementCosts = PathFinder.ComputeCost(currentTile.LogicalPosition, IsEnemy);
                 return movementCosts;
@@ -128,7 +126,7 @@ namespace Game
             set
             {
                 movementCosts = value;
-                tileUpdateKeeper = Harmony.Finder.LevelController.LevelTileUpdateKeeper;
+                tileUpdateKeeper = levelController.LevelTileUpdateKeeper;
             }
         }
         public int HpGainedByResting
@@ -262,9 +260,9 @@ namespace Game
         {
             if (hasDiedOnce) yield break;
             hasDiedOnce = true;
-            GetComponent<Cinematic>()?.TriggerCinematic(Harmony.Finder.LevelController);
-            while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
-                   Harmony.Finder.UIController.IsBattleReportActive)
+            GetComponent<Cinematic>()?.TriggerCinematic(levelController);
+            while (levelController.CinematicController.IsPlayingACinematic ||
+                   uiController.IsBattleReportActive)
             {
                 yield return null;
             }
@@ -293,7 +291,7 @@ namespace Game
             {
                 playerType = PlayerType.Ally;
                 levelController.HumanPlayer.AddOwnedUnit(this);
-                GetComponentInChildren<Cinematic>()?.TriggerCinematic(Harmony.Finder.LevelController);
+                GetComponentInChildren<Cinematic>()?.TriggerCinematic(levelController);
                 
             }
             return IsRecruitable;
