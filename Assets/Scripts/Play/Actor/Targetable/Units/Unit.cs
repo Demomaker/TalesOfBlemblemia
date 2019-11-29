@@ -27,7 +27,6 @@ namespace Game
         private GridController gridController;
         private OnHealthChange onHealthChange;
         private OnMovementChange onMovementChange;
-        
         private GameSettings gameSettings;
         private UIController uiController;
         private LevelController levelController;
@@ -36,12 +35,8 @@ namespace Game
         private CameraShake cameraShake;
         private Animator animator;
         private UnitMover unitMover;
-        
         private bool hasActed;
         private bool hasDiedOnce;
-        /// <summary>
-        /// Determines if an ai unit has been triggered by a player unit entering it's radius
-        /// </summary>
         private bool isAwake;
         private bool isMoving;
         private bool isAttacking;
@@ -49,16 +44,10 @@ namespace Game
         private bool isBeingHurt;
         private bool isResting;
         private bool isGoingToDie;
-
-        /// <summary>
-        /// Array representing the movement cost needed to move to every tile on the grid
-        /// </summary>
         private int[,] movementCosts;
-        
         private int movesLeft;
         private int tileUpdateKeeper;
-        
-        
+
         public OnUnitMove OnUnitMove => onUnitMove;
         public OnAttack OnAttack => onAttack;
         public OnDodge OnDodge => onDodge;
@@ -73,10 +62,6 @@ namespace Game
         public Transform Appearance => appearance;
         public WeaponType WeaponType => weapon.WeaponType;
         public WeaponType WeaponAdvantage => weapon.Advantage;
-        
-        /// <summary>
-        /// Once a unit is awake, it cannot go back to sleep
-        /// </summary>
         public bool IsAwake
         {
             get => isAwake;
@@ -94,13 +79,11 @@ namespace Game
             get => isMoving;
             set => isMoving = value;
         }
-
         public bool IsAttacking
         {
             get => isAttacking;
             set => isAttacking = value;
         }
-
         public bool IsEnemy => playerType == PlayerType.Enemy;
         public bool IsPlayer => playerType == PlayerType.Ally;
         public bool IsRecruitable => playerType == PlayerType.Recruitable;
@@ -132,7 +115,6 @@ namespace Game
         }
         public bool IsImmuneToCrits => isImmuneToCrits;
         public bool CanCritOnEverybody => canCritOnEverybody;
-        
         public int[,] MovementCosts
         {
             get
@@ -179,7 +161,6 @@ namespace Game
             }
         }
         private int AttackRange => 1;
-
         public override void Awake()
         {
             onHurt = Harmony.Finder.OnHurt;
@@ -251,10 +232,12 @@ namespace Game
             this.isDodging = isDodging;
         }
 
+        
         public Coroutine MoveByAction(Action action)
         {
             return coroutineStarter.StartCoroutine(unitMover.MoveByAction(action, gameSettings.MovementDuration));
         }
+        
         public Coroutine Attack(Targetable target, bool isCountering = false)
         {
             Coroutine AttackRoutineHandle;
@@ -272,8 +255,9 @@ namespace Game
             AttackRoutineHandle = coroutineStarter.StartCoroutine(unitMover.Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
-        
-        public override IEnumerator Die()
+
+
+        protected override IEnumerator Die()
         {
             if (hasDiedOnce) yield break;
             hasDiedOnce = true;
@@ -291,7 +275,8 @@ namespace Game
             isGoingToDie = false;
             yield return base.Die();
         }
-        
+
+
         public bool RecruitUnit(Unit unitToRecruit)
         {
             if (TargetIsInRange(unitToRecruit))
@@ -300,6 +285,7 @@ namespace Game
             }
             return false;
         }
+        
         private bool RecruitAdjacentUnit()
         {
             if (IsRecruitable)
@@ -312,6 +298,7 @@ namespace Game
             return IsRecruitable;
         }
 
+        
         public bool HealUnit(Unit target)
         {
             if (TargetIsInRange(target))
@@ -323,6 +310,7 @@ namespace Game
             return false;
         }
         
+        
         public bool TargetIsInMovementRange(Targetable target)
         {
             if (currentTile == null || target == null || target.CurrentTile == null)
@@ -331,6 +319,7 @@ namespace Game
                 return true;
             return gridController.FindAvailableAdjacentTile(target.CurrentTile, this) != null;
         }
+        
         public bool TargetIsInRange(Targetable target)
         {
             if (target != null && currentTile != null)
@@ -342,6 +331,7 @@ namespace Game
         {
             CurrentHealthPoints += HpGainedByHealing;
         }
+        
         public void Rest()
         {
             CurrentHealthPoints += HpGainedByResting;
@@ -349,6 +339,7 @@ namespace Game
             
             HasActed = true;
         }
+        
         
         public void ResetAlpha()
         {
@@ -358,6 +349,7 @@ namespace Game
                 spriteRenderer.color = gameSettings.OpaqueAlpha;
             }
         }
+        
         public void ResetTurnStats()
         {
             HasActed = false;

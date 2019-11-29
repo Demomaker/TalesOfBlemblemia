@@ -49,14 +49,14 @@ namespace Game
         private OnUnitDeath onUnitDeath;
         private EnemyRangeController enemyRangeController;
         private AchievementController achievementController;
+        private GridController grid;
+        private HumanPlayer humanPlayer;
+        private ComputerPlayer computerPlayer;
         
         protected CinematicController cinematicController;
         protected OnLevelChange onLevelChange;
         protected LevelLoader levelLoader;
         protected GameSettings gameSettings;
-        
-        private readonly HumanPlayer humanPlayer = new HumanPlayer();
-        private readonly ComputerPlayer computerPlayer = new ComputerPlayer();
 
         private bool AllEnemiesDied => computerPlayer.HaveAllUnitsDied;
         private bool PointAchieved => completeIfPointAchieved && protagonistGameObject.GetComponent<Unit>()?.CurrentTile.LogicalPosition == pointToAchieve;
@@ -64,7 +64,7 @@ namespace Game
         private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
         private bool ProtagonistDied => protagonistGameObject == null || protagonistGameObject.GetComponent<Unit>().NoHealthLeft;
         private bool LevelCompleted => AllEnemiesDied || PointAchieved || AllTargetsDefeated || Survived;
-        public bool PlayerUnitIsMovingOrAttacking => humanPlayer.OwnedUnits.All(unit => unit.IsMoving || unit.IsAttacking);
+        public bool PlayerUnitIsMovingOrAttacking => humanPlayer.OwnedUnits.Any(unit => unit.IsMoving || unit.IsAttacking);
         private bool LevelFailed => ProtagonistDied;
         public bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
@@ -74,7 +74,7 @@ namespace Game
         public UnitOwner CurrentPlayer => currentPlayer;
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
-        public bool PlayerCanPlay => PlayerUnitIsMovingOrAttacking || CinematicController.IsPlayingACinematic || CurrentPlayer is ComputerPlayer;
+        public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && CurrentPlayer == humanPlayer;
         public bool BattleOngoing { get; set; }
         protected virtual void Awake()
         {
@@ -86,7 +86,10 @@ namespace Game
             saveController = Finder.SaveController;
             gameController = Harmony.Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
+            grid = Harmony.Finder.GridController;
             cinematicController = GetComponent<CinematicController>();
+            computerPlayer = new ComputerPlayer(Harmony.Finder.GameController.ChoiceRange);
+            humanPlayer = new HumanPlayer();
             levelName = gameObject.scene.name;
             endGameCredits = GetComponentInChildren<EndGameCreditsController>();
             uiController = Harmony.Finder.UIController;
@@ -125,10 +128,13 @@ namespace Game
         
         protected virtual void Update()
         {
-            if (!BattleOngoing && LevelEnded) StartCoroutine(EndLevel());
-            CheckForCurrentPlayerLoss();
-            CheckForCurrentPlayerEndOfTurn();
-            Play();
+            if (!cinematicController.IsPlayingACinematic)
+            {
+                if (!BattleOngoing && LevelEnded) StartCoroutine(EndLevel());
+                CheckForCurrentPlayerLoss();
+                CheckForCurrentPlayerEndOfTurn();
+                Play();
+            }
         }
         
         private IEnumerator EndLevel()
@@ -251,7 +257,7 @@ namespace Game
             currentPlayer.RemoveDeadUnits();
             if (isComputerPlaying || currentPlayer != computerPlayer) return;
             isComputerPlaying = true;
-            coroutineStarter.StartCoroutine(computerPlayer.PlayUnits());
+            coroutineStarter.StartCoroutine(computerPlayer.PlayUnits(grid, this));
         }
 
         private void GiveUnits()

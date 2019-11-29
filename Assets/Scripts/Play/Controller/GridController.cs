@@ -110,7 +110,7 @@ using UnityEngine.UI;
                         }
                         else if (tile.LinkedUnit != null && playerUnit.TargetIsInMovementRange(tile.LinkedUnit))
                         {
-                            if (playerUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy))
+                            if (playerUnit.WeaponType != WeaponType.HealingStaff && tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
