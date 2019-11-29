@@ -36,11 +36,10 @@ namespace Game
             targetsToDestroy.Add(target);
         }
         
-        public IEnumerator PlayUnits()
+        public IEnumerator PlayUnits(GridController grid, LevelController levelController)
         {
             dynamicUnitCount = ownedUnits.Count;
             var uiController = Harmony.Finder.UIController;
-            var levelController = Harmony.Finder.LevelController;
             for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
                 while (uiController.IsBattleReportActive) yield return null;
@@ -48,7 +47,7 @@ namespace Game
 
                 if (!currentUnit.HasActed && !levelController.LevelEnded)
                 {
-                    var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
+                    var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy, grid, levelController);
                     
                     yield return currentUnit.MoveByAction(action);
                 }

@@ -4,15 +4,13 @@ using UnityEngine;
 
 namespace Game
 {
-    //Author: Zacharie Lavigne
     /// <summary>
     /// The artificial intelligence controller for the enemy units
     /// Author: Zacharie Lavigne
     /// </summary>
     public class AiController
     {
-        private GridController grid;
-        private int nbOfChoice;
+        private readonly int nbOfChoice;
         
         private AiControllerValues aiControllerValues = new AiControllerValues();
 
@@ -21,11 +19,9 @@ namespace Game
             this.nbOfChoice = nbOfChoice;
         }
 
-        public Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
+        public Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy, GridController grid, LevelController levelController)
         {
-            if (grid == null) grid = Harmony.Finder.GridController;
-
-            if (Harmony.Finder.LevelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert)) aiControllerValues = new AiControllerValuesRevert();
+            if (levelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert)) aiControllerValues = new AiControllerValuesRevert();
             
             if (!playableUnit.IsAwake)
             {
@@ -35,8 +31,8 @@ namespace Game
                 }
             }
             //Every potential actions the unit could do
-            List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
-            actionsToDo.AddRange(ScanForTargets(playableUnit, targetsToDestroy));
+            List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits, grid);
+            actionsToDo.AddRange(ScanForTargets(playableUnit, targetsToDestroy, grid));
             
             //Setting every action's turn
             ComputeChoiceScores(actionsToDo, playableUnit);
@@ -45,7 +41,7 @@ namespace Game
             List<Action> bestActions = GetBestActions(actionsToDo);
 
             //Verification of if resting and fleeing is needed
-            AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo);
+            AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo, grid);
 
             //The action is randomly selected from the best possible ones
             return SelectRandomBestAction(bestActions);
@@ -97,12 +93,12 @@ namespace Game
             return totalScore;
         }
 
-        private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo)
+        private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo, GridController grid)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
             if(playableUnit.Stats.MaxHealthPoints * aiControllerValues.HealthModForResting < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
             {
-                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
+                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
             }
         }
         
@@ -180,9 +176,8 @@ namespace Game
         /// <param name="potentialActions">The potential actions of this unit</param>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <returns>The path to the safest tile to go</returns>
-        private List<Tile> FindFleePath(List<Action> potentialActions, Unit playableUnit)
+        private List<Tile> FindFleePath(List<Action> potentialActions, Unit playableUnit, GridController grid)
         {
-            var grid = Harmony.Finder.GridController;
             int[,] optionMap = new int[grid.NbColumns, grid.NbLines]; 
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
@@ -224,7 +219,7 @@ namespace Game
                 }
             }
 
-            return FindPathTo(playableUnit, position);
+            return FindPathTo(playableUnit, position, grid);
         }
         
         /// <summary>
@@ -233,7 +228,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="potentialTarget">The target unit</param>
         /// <returns>The path to a target unit</returns>
-        private List<Tile> FindPathTo(Unit playableUnit, Targetable potentialTarget)
+        private List<Tile> FindPathTo(Unit playableUnit, Targetable potentialTarget, GridController grid)
         {
             List<Tile> path;
             if (playableUnit.TargetIsInRange(potentialTarget))
@@ -244,7 +239,7 @@ namespace Game
             else
             {
                 path = PathFinder.GetPath(
-                    Harmony.Finder.GridController,
+                    grid,
                     new List<Tile>(), 
                     new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                     new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y), 
@@ -262,10 +257,10 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetPosition">The target position</param>
         /// <returns>The shortest path to a target position</returns>
-        private List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
+        private List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition, GridController grid)
         {
             return PathFinder.GetPath(
-                Harmony.Finder.GridController,
+                grid,
                 new List<Tile>(), 
                 new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                 new Vector2Int(targetPosition.x, targetPosition.y),
@@ -279,13 +274,13 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>A list of potential actions, on per enemy</returns>
-        private List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits)
+        private List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits, GridController grid)
         {
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
             {
                 if(enemyUnits[i] != null && enemyUnits[i].IsPlayer)
-                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, enemyUnits[i], aiControllerValues.BaseChoiceActionScore));
+                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i], grid), ActionType.Attack, enemyUnits[i], aiControllerValues.BaseChoiceActionScore));
             }
             return actions;
         }
@@ -296,14 +291,14 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyTargets">The AI's targets</param>
         /// <returns>A list of potential actions, on per target</returns>
-        private List<Action> ScanForTargets(Unit playableUnit, List<Targetable> enemyTargets)
+        private List<Action> ScanForTargets(Unit playableUnit, List<Targetable> enemyTargets, GridController grid)
         {
             List<Action> actions = new List<Action>();
             foreach (var target in enemyTargets)
             {
                 if (target != null)
                 {
-                    actions.Add(new Action(FindPathTo(playableUnit, target), ActionType.Attack, target, aiControllerValues.BaseTargetActionScore));
+                    actions.Add(new Action(FindPathTo(playableUnit, target, grid), ActionType.Attack, target, aiControllerValues.BaseTargetActionScore));
                 }
             }
             return actions;

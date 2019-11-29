@@ -52,6 +52,7 @@ namespace Game
         private EndGameCreditsController endGameCredits;
         private OnUnitDeath onUnitDeath;
         private EnemyRangeController enemyRangeController;
+        private GridController grid;
 
         private HumanPlayer humanPlayer;
         private ComputerPlayer computerPlayer;
@@ -84,6 +85,7 @@ namespace Game
             saveController = Finder.SaveController;
             gameController = Harmony.Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
+            grid = Harmony.Finder.GridController;
             cinematicController = GetComponent<CinematicController>();
             computerPlayer = new ComputerPlayer(Harmony.Finder.GameController.ChoiceRange);
             humanPlayer = new HumanPlayer();
@@ -224,7 +226,7 @@ namespace Game
             currentPlayer.RemoveDeadUnits();
             if (isComputerPlaying || currentPlayer != computerPlayer) return;
             isComputerPlaying = true;
-            coroutineStarter.StartCoroutine(computerPlayer.PlayUnits());
+            coroutineStarter.StartCoroutine(computerPlayer.PlayUnits(grid, this));
         }
 
         private void GiveUnits()

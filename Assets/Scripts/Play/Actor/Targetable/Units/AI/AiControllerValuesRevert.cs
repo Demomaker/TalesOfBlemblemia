@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    /// Author: Zacharie Lavigne
     public class AiControllerValuesRevert : AiControllerValues
     {
         public AiControllerValuesRevert()

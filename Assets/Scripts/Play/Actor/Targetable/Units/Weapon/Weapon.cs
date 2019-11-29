@@ -8,21 +8,14 @@ namespace Game
     /// </summary>
     public abstract class Weapon : MonoBehaviour
     {
-
         [SerializeField] UnitStats weaponStats;
+
+        protected WeaponType weaponType;
+        protected WeaponType advantage;
         
         public UnitStats WeaponStats => weaponStats;
-
-        /// <summary>
-        /// Le type de l'arme
-        /// </summary>
-        protected WeaponType weaponType;
         public WeaponType WeaponType => weaponType;
-        
-        /// <summary>
-        /// Le type d'arme contre lequelle l'arme a un avantage
-        /// </summary>
-        protected WeaponType advantage;
         public WeaponType Advantage => Harmony.Finder.LevelController.RevertWeaponTriangle ? advantage.GetAdvantageByWeaponType() : advantage;
+
     }
 }

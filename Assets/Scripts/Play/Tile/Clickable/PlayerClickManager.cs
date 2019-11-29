@@ -12,14 +12,16 @@ namespace Game
         private Action unitTurnAction;
         private Tile tileToConfirm;
         private Unit playerUnit;
-
+        private GridController grid;
+        
         public bool ActionIsSet => unitTurnAction != null;
         public Tile TileToConfirm => tileToConfirm;
         public Action UnitTurnAction => unitTurnAction;
 
         public void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
         {
-            var grid = Harmony.Finder.GridController;
+            if (grid == null) grid = Harmony.Finder.GridController;
+            
             playerUnit = selectedPlayerUnit;
             tileToConfirm = target;
 
