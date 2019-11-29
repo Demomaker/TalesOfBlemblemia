@@ -301,7 +301,6 @@ namespace Game
         private void PlayEndLevelMusic(EndSceneController endSceneController)
         {
             StopCurrentMusic();
-            PlayMusic(endSceneController.EndMusic);
         }
 
         private void PlayOverWorldBackgroundMusic(OverWorldController overWorld)

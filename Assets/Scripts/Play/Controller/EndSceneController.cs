@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Game;
 using Harmony;
 using JetBrains.Annotations;
@@ -14,41 +15,53 @@ using UnityEngine.Tilemaps;
 /// Controls the end scene of the game
 /// Author : Mike Bédard
 /// </summary>
-public class EndSceneController : MonoBehaviour
+public class EndSceneController : LevelController
 {
-    [SerializeField] private AudioClip endMusic;
     [SerializeField] private Vector3 cameraEndPosition;
     [SerializeField] private float tilemapChangeTimeInSeconds;
     [SerializeField] private int numberOfTilesOnScreen;
     [SerializeField] private Camera camera;
-    
-    private LevelLoader levelLoader;
-    private OnEndLevelEnter onEndLevelEnter;
-    private GameSettings gameSettings;
     private Vector3 cameraStartPosition;
-    private bool sceneQuit = false;
+    private bool sceneQuit;
     private Cinematic cinematic;
-    private CinematicController cinematicController;
 
-    public AudioClip EndMusic => endMusic;
-
-    private void Awake()
+    protected override void Awake()
     {
         levelLoader = Harmony.Finder.LevelLoader;
-        onEndLevelEnter = Harmony.Finder.OnEndLevelEnter;
+        onLevelChange = Harmony.Finder.OnLevelChange;
         gameSettings = Harmony.Finder.GameSettings;
-        onEndLevelEnter.Publish(this);
         cameraStartPosition = camera.transform.position;
-        cinematic = gameObject.GetComponent<Cinematic>();
-        cinematicController = gameObject.GetComponent<CinematicController>();
+        cinematic = GetComponent<Cinematic>();
+        cinematicController = GetComponent<CinematicController>();
+        onLevelChange.Publish(this);
+    }
+
+    protected override void Start()
+    {
+        cinematic.TriggerCinematic(this);
         StartCoroutine(ChangeTilemaps());
+    }
+
+    protected override void Update()
+    {
+        //Do Nothing On Purpose 
+    }
+
+    protected override void OnEnable()
+    {
+        //Do Nothing On Purpose 
+    }
+
+    protected override void OnDisable()
+    {
+        //Do Nothing On Purpose   
     }
     
     private IEnumerator ChangeTilemaps()
     {
+        while (CinematicController.IsPlayingACinematic) yield return null;
         while (!sceneQuit)
         {
-            cinematic.TriggerCinematic(null,cinematicController);
             yield return new WaitForSeconds(tilemapChangeTimeInSeconds);
             yield return StartCoroutine(ChangeToNextTilemap());
         }

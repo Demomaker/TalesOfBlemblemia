@@ -48,7 +48,7 @@ public class PointingArrow : MonoBehaviour
     private void OnEnable()
     {
         if(cinematicToTriggerOnStart != null)
-            cinematicToTriggerOnStart.TriggerCinematic();
+            cinematicToTriggerOnStart.TriggerCinematic(Harmony.Finder.LevelController);
         onHurt.Notify += UnitToAttackWasAttacked;
         onDodge.Notify += UnitToAttackWasAttacked;
         onUnitDeath.Notify += UnitToAttackWasAttacked;
@@ -108,7 +108,7 @@ public class PointingArrow : MonoBehaviour
         if(nextArrowToActivate != null)
         nextArrowToActivate.gameObject.SetActive(true);
         if(cinematicToTriggerOnStop != null)
-            cinematicToTriggerOnStop.TriggerCinematic();
+            cinematicToTriggerOnStop.TriggerCinematic(Harmony.Finder.LevelController);
         gameObject.SetActive(false);
     }
 

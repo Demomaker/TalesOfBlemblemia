@@ -30,26 +30,27 @@ namespace Game
         [SerializeField] private GameObject pointingArrowPrefab = null;
 
         private CoroutineStarter coroutineStarter;
-        private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
         private bool levelIsEnding;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
-        private OnLevelChange onLevelChange;
         private OnCampaignFailed onCampaignFailed;
         private UIController uiController;
-        private LevelLoader levelLoader;
         private Unit[] units;
         private UnitOwner currentPlayer;
         private int numberOfPlayerTurns;
-        private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
         private OnUnitDeath onUnitDeath;
         private EnemyRangeController enemyRangeController;
+        
+        protected CinematicController cinematicController;
+        protected OnLevelChange onLevelChange;
+        protected LevelLoader levelLoader;
+        protected GameSettings gameSettings;
         
         private readonly HumanPlayer humanPlayer = new HumanPlayer();
         private readonly ComputerPlayer computerPlayer = new ComputerPlayer();
@@ -65,13 +66,13 @@ namespace Game
         private bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
-        public AudioClip BackgroundMusic => backgroundMusic;
-        public CinematicController CinematicController => cinematicController;
+        public virtual AudioClip BackgroundMusic => backgroundMusic;
+        public virtual CinematicController CinematicController => cinematicController;
         public UnitOwner CurrentPlayer => currentPlayer;
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelFailed = Harmony.Finder.OnLevelFailed;
@@ -92,7 +93,7 @@ namespace Game
             enemyRangeController = Harmony.Finder.EnemyRangeController;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             onLevelChange.Publish(this);
             units = FindObjectsOfType<Unit>();
@@ -104,18 +105,18 @@ namespace Game
             uiController.ModifyVictoryCondition(customObjectiveMessage);
             if (completeIfPointAchieved) CreatePointToAchievePointingArrow();
         }
-        
-        private void OnEnable()
+
+        protected virtual void OnEnable()
         {
             onUnitDeath.Notify += computerPlayer.OnUnitDeath;
         }
-        
-        private void OnDisable()
+
+        protected virtual void OnDisable()
         {
             onUnitDeath.Notify -= computerPlayer.OnUnitDeath;
         }
         
-        protected void Update()
+        protected virtual void Update()
         {
             if (LevelEnded) StartCoroutine(EndLevel());
             CheckForCurrentPlayerLoss();
@@ -130,15 +131,21 @@ namespace Game
             if (LevelCompleted)
             {
                 onLevelVictory.Publish(this);
-                Debug.Log("Win conditions : \n COMPLETE IF POINT ACHIEVED : " + PointAchieved + "\n COMPLETE IF TARGET KILLED : " + AllTargetsDefeated + "\n COMPLETE IF SURVIVED CERTAIN NUMBER OF TURNS : " + Survived + "\n ALL ENEMIES DEFEATED : " + AllEnemiesDied );
+                if (endGameCredits != null)
+                {
+                    endGameCredits.RollCredits();
+                    yield return new WaitForSeconds(CREDITS_DURATION);
+                    CheckForPermadeath();
+                    CheckIfUnitWasRecruited();
+                    CheckIfUpperPathWasTaken();
+                    UpdatePlayerSave();
+                    levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+                    yield break;
+                }
             }
+            
             if(LevelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
             while (cinematicController.IsPlayingACinematic) yield return null;
-            if (endGameCredits != null)
-            {
-                endGameCredits.RollCredits();
-                yield return new WaitForSeconds(CREDITS_DURATION);
-            }
             CheckForPermadeath();
             CheckIfUnitWasRecruited();
             CheckIfUpperPathWasTaken();

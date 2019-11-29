@@ -29,7 +29,7 @@ namespace Game
         
         private void Start()
         {
-            if(trigger == CinematicTriggerType.OnStart) TriggerCinematic();
+            if(trigger == CinematicTriggerType.OnStart) TriggerCinematic(Harmony.Finder.LevelController);
         }
 
         private void OnEnable()
@@ -83,20 +83,11 @@ namespace Game
             }
         }
 
-        private void TriggerCinematic(LevelController eventparam)
-        {
-            TriggerCinematic(eventparam, null);
-        }
-
         #endregion
         #region Cinematic Methods
-        public void TriggerCinematic(LevelController levelController = null, CinematicController cinematicController = null)
+        public void TriggerCinematic(LevelController levelController)
         {
-            if(cinematicController != null) cinematicController.LaunchCinematic(this);
-            else
-            {
-                Harmony.Finder.LevelController.CinematicController.LaunchCinematic(this);
-            }
+            levelController.CinematicController.LaunchCinematic(this);
         }
         #endregion
     }

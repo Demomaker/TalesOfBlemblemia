@@ -29,14 +29,12 @@ namespace Game
         private OnAttack onAttack;
         private OnDodge onDodge;
         private OnUnitMove onUnitMove;
-        private OnUnitDeath onUnitDeath;
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private Weapon weapon;
         private bool hasActed;
         private GameSettings gameSettings;
         private UIController uiController;
-        private LevelController levelController;
         private CameraShake cameraShake;
         private bool hasDiedOnce = false;
 
@@ -60,7 +58,6 @@ namespace Game
         private Animator animator;
         private OnHealthChange onHealthChange;
         private OnMovementChange onMovementChange;
-        private CoroutineStarter coroutineStarter;
         #endregion
         
         #region Properties
@@ -370,7 +367,7 @@ namespace Game
         {
             if (hasDiedOnce) yield break;
             hasDiedOnce = true;
-            GetComponent<Cinematic>()?.TriggerCinematic();
+            GetComponent<Cinematic>()?.TriggerCinematic(Harmony.Finder.LevelController);
             while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
                    Harmony.Finder.UIController.IsBattleReportActive)
             {
@@ -490,7 +487,7 @@ namespace Game
             {
                 playerType = PlayerType.Ally;
                 levelController.HumanPlayer.AddOwnedUnit(this);
-                GetComponentInChildren<Cinematic>()?.TriggerCinematic();
+                GetComponentInChildren<Cinematic>()?.TriggerCinematic(Harmony.Finder.LevelController);
                 
             }
             return IsRecruitable;
