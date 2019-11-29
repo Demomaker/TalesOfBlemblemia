@@ -38,7 +38,7 @@ public class EndSceneController : LevelController
 
     protected override void Start()
     {
-        cinematic.TriggerCinematic(this);
+        cinematic.TriggerCinematic();
         StartCoroutine(ChangeTilemaps());
     }
 

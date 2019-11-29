@@ -143,7 +143,7 @@ namespace Game
             levelIsEnding = true;
             if (LevelCompleted)
             {
-                onLevelVictory.Publish(this);
+                onLevelVictory.Publish();
                 if (endGameCredits != null)
                 {
                     endGameCredits.RollCredits();
@@ -186,10 +186,10 @@ namespace Game
         private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)
         {
             if (difficultyLevel == DifficultyLevel.Easy)
-                onLevelFailed.Publish(this);
+                onLevelFailed.Publish();
             else
             {
-                onCampaignFailed.Publish(this);
+                onCampaignFailed.Publish();
                 saveController.ResetSave();
                 levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
             }

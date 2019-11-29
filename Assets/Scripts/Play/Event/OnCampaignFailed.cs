@@ -6,12 +6,12 @@ namespace Game
     /// Author : Mike Bédard
     /// </summary>
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
-    public class OnCampaignFailed : EventChannel<LevelController>
+    public class OnCampaignFailed : EventChannel
     {
-        public event EventHandler<LevelController> Notify; 
-        public override void Publish(LevelController eventParam)
+        public event EventHandler Notify; 
+        public override void Publish()
         {
-            Notify?.Invoke(eventParam);
+            Notify?.Invoke();
         }
     }
 }

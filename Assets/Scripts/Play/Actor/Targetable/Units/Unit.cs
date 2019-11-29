@@ -260,7 +260,7 @@ namespace Game
         {
             if (hasDiedOnce) yield break;
             hasDiedOnce = true;
-            GetComponent<Cinematic>()?.TriggerCinematic(levelController);
+            GetComponent<Cinematic>()?.TriggerCinematic();
             while (levelController.CinematicController.IsPlayingACinematic ||
                    uiController.IsBattleReportActive)
             {
@@ -291,7 +291,7 @@ namespace Game
             {
                 playerType = PlayerType.Ally;
                 levelController.HumanPlayer.AddOwnedUnit(this);
-                GetComponentInChildren<Cinematic>()?.TriggerCinematic(levelController);
+                GetComponentInChildren<Cinematic>()?.TriggerCinematic();
                 
             }
             return IsRecruitable;

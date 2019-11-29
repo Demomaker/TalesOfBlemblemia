@@ -286,7 +286,7 @@ namespace Game
                 PlayMusic(audioClips.SadMusic);
         }
 
-        private void PlayLevelVictoryMusic(LevelController levelController)
+        private void PlayLevelVictoryMusic()
         {
             if(musicSource.clip != audioClips.LevelVictoryMusic)
                 PlayMusic(audioClips.LevelVictoryMusic);
