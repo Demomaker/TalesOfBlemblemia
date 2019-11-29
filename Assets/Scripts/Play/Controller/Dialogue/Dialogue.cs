@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 //Author: Pierre-Luc Maltais, Jérémie Bertrand
 [System.Serializable]
 public class Dialogue
 {
     [SerializeField] private Quote[] sentences;
-    public Quote[] Sentences => sentences;
+    public IEnumerable<Quote> Sentences => sentences;
 
     public Dialogue(Quote[] sentences)
     {
@@ -13,7 +14,7 @@ public class Dialogue
     }
     public Dialogue(Quote sentence)
     {
-        this.sentences = new []{sentence};
+        sentences = new []{sentence};
     }
 
 }

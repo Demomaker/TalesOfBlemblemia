@@ -9,7 +9,7 @@ namespace Game
 {
     /// <summary>
     /// Controls the achievements and sends messages if achievements are completed
-    /// Author : Mike Bédard, Antoine Lessard
+    /// Author : Mike Bédard
     /// </summary>
     [Findable("AchievementController")]
     public class AchievementController : MonoBehaviour
@@ -26,12 +26,14 @@ namespace Game
         private bool skipAchievementShow;
         private GameSettings gameSettings;
         private SaveController saveController;
+        private CoroutineStarter coroutineStarter;
 
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
             saveController = Harmony.Finder.SaveController;
             achievementUnlockedText.text = gameSettings.AchievementUnlockedString;
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
 
         private void Start()
@@ -49,6 +51,7 @@ namespace Game
             skipButton.onClick.RemoveListener(SkipAchievementShow);
         }
         
+        //Author : Jérémie Bertrand
         public void UnlockAchievement(string achievementName)
         {
             var achievement = achievements.Find(info => info.AchievementName == achievementName);
@@ -62,9 +65,10 @@ namespace Game
         {
             skipAchievementShow = true;
         }
+        
         private void ShowAchievement(AchievementInfo achievement)
         {
-            Harmony.Finder.CoroutineStarter.StartCoroutine(TypeAchievementText(achievement.AchievementName));
+            coroutineStarter.StartCoroutine(TypeAchievementText(achievement.AchievementName));
         }
 
         private IEnumerator TypeAchievementText(string text)
@@ -78,17 +82,15 @@ namespace Game
             achievementUnlockedText.text = "";
             descriptionText.text = "";
             yield return new WaitForSeconds(gameSettings.SecondsBeforeTypingStart);
-            foreach (var character in gameSettings.AchievementUnlockedString)
+            foreach (var character in gameSettings.AchievementUnlockedString.TakeWhile(character => !skipAchievementShow))
             {
-                if (skipAchievementShow) break;
                 achievementUnlockedText.text += character;
                 yield return new WaitForSeconds(gameSettings.SecondsBeforeTitleCharacterPrint);
             }
 
             achievementUnlockedText.text = gameSettings.AchievementUnlockedString;
-            foreach (var character in text)
+            foreach (var character in text.TakeWhile(character => !skipAchievementShow))
             {
-                if (skipAchievementShow) break;
                 descriptionText.text += character;
                 yield return new WaitForSeconds(gameSettings.SecondsBeforeTextCharacterPrint);
             }

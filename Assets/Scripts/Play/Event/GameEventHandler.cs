@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author : Mike Bédard
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class GameEventHandler : MonoBehaviour
     {

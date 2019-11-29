@@ -5,6 +5,7 @@
     {
         public FortressTile() : base(TileType.Fortress)
         {
+            //Empty on purpose
         }
     }
 }

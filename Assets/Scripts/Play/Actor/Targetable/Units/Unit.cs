@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game
 {
-    //Authors: Jérémie Bertrand, Zacharie Lavigne, Pierre-Luc Maltais (Ce qui touche au ui)
+    //Authors: Jérémie Bertrand, Zacharie Lavigne, Pierre-Luc Maltais (UI), Mike Bédard (Events)
     public class Unit : Targetable
     {
         [SerializeField] private UnitInfos unitInfos;
@@ -28,8 +28,6 @@ namespace Game
         private OnMovementChange onMovementChange;
         private GameSettings gameSettings;
         private UIController uiController;
-        private LevelController levelController;
-        private CoroutineStarter coroutineStarter;
         private Weapon weapon;
         private CameraShake cameraShake;
         private Animator animator;
@@ -46,6 +44,7 @@ namespace Game
         private int[,] movementCosts;
         private int movesLeft;
         private int tileUpdateKeeper;
+        private SpriteRenderer[] spriteRenderers;
 
         public OnUnitMove OnUnitMove => onUnitMove;
         public OnAttack OnAttack => onAttack;
@@ -159,7 +158,7 @@ namespace Game
                 OnMovementChange.Publish();
             }
         }
-        private int AttackRange => 1;
+        
         protected override void Awake()
         {
             onHurt = Harmony.Finder.OnHurt;
@@ -168,8 +167,6 @@ namespace Game
             onUnitMove = Harmony.Finder.OnUnitMove;
             onUnitDeath = Harmony.Finder.OnUnitDeath;
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
-            levelController = Harmony.Finder.LevelController;
-            coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController;
 
             if (Camera.main != null) cameraShake = Camera.main.GetComponent<CameraShake>();
@@ -180,6 +177,7 @@ namespace Game
             animator = GetComponent<Animator>();
             gameSettings = Harmony.Finder.GameSettings;
             unitMover = new UnitMover(this, levelController, uiController, gameSettings);
+            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
             base.Awake();
         }
         protected override void Start()
@@ -261,16 +259,14 @@ namespace Game
             if (hasDiedOnce) yield break;
             hasDiedOnce = true;
             GetComponent<Cinematic>()?.TriggerCinematic();
-            while (levelController.CinematicController.IsPlayingACinematic ||
-                   uiController.IsBattleReportActive)
+            while (levelController.CinematicController.IsPlayingACinematic || uiController.IsBattleReportActive)
             {
                 yield return null;
             }
 
             isGoingToDie = true;
             onUnitDeath.Publish(this);
-            if (playerType == PlayerType.Ally)
-                onPlayerUnitLoss.Publish(this);
+            if (playerType == PlayerType.Ally) onPlayerUnitLoss.Publish(this);
             isGoingToDie = false;
             yield return base.Die();
         }
@@ -278,11 +274,7 @@ namespace Game
 
         public bool RecruitUnit(Unit unitToRecruit)
         {
-            if (TargetIsInRange(unitToRecruit))
-            {
-                return unitToRecruit.RecruitAdjacentUnit();
-            }
-            return false;
+            return TargetIsInRange(unitToRecruit) && unitToRecruit.RecruitAdjacentUnit();
         }
         
         private bool RecruitAdjacentUnit()
@@ -292,7 +284,6 @@ namespace Game
                 playerType = PlayerType.Ally;
                 levelController.HumanPlayer.AddOwnedUnit(this);
                 GetComponentInChildren<Cinematic>()?.TriggerCinematic();
-                
             }
             return IsRecruitable;
         }
@@ -314,7 +305,7 @@ namespace Game
         {
             if (currentTile == null || target == null || target.CurrentTile == null)
                 return false;
-            if (currentTile.IsWithinRange(target.CurrentTile, 1))
+            if (currentTile.IsWithinRange(target.CurrentTile))
                 return true;
             return gridController.FindAvailableAdjacentTile(target.CurrentTile, this) != null;
         }
@@ -322,7 +313,7 @@ namespace Game
         public bool TargetIsInRange(Targetable target)
         {
             if (target != null && currentTile != null)
-                return currentTile.IsWithinRange(target.CurrentTile, AttackRange);
+                return currentTile.IsWithinRange(target.CurrentTile);
             return false;
         }
         
@@ -335,14 +326,12 @@ namespace Game
         {
             CurrentHealthPoints += HpGainedByResting;
             isResting = true;
-            
             HasActed = true;
         }
         
         
         public void ResetAlpha()
         {
-            var spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
             foreach (var spriteRenderer in spriteRenderers)
             {
                 spriteRenderer.color = gameSettings.OpaqueAlpha;

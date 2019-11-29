@@ -6,9 +6,9 @@ using System.Data.Common;
 namespace Game
 {
     //Author : Antoine Lessard
-    public class AchievementsRepo : Repository<AchievementInfo>
+    public class AchievementsRepo : IRepository<AchievementInfo>
     {
-        private DbConnection connection;
+        private readonly DbConnection connection;
 
         public AchievementsRepo(DbConnection connection)
         {
@@ -52,7 +52,7 @@ namespace Game
                 {
                     while (reader.Read())
                     {
-                        bool achieved = Convert.ToBoolean(reader["achieved"]);
+                        var achieved = Convert.ToBoolean(reader["achieved"]);
                         result.Add(new AchievementInfo(
                             reader["achievement_name"].ToString(),
                             reader["achievement_description"].ToString(),

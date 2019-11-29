@@ -11,9 +11,9 @@ namespace Game
     {
         public static int[,] ComputeCost(Vector2Int from, bool unitIsEnemy)
         {
-            GridController grid = Harmony.Finder.GridController;
+            var grid = Harmony.Finder.GridController;
             //Initialize movementCosts array
-            int[,] movementCosts = new int[grid.NbColumns,grid.NbLines];
+            var movementCosts = new int[grid.NbColumns,grid.NbLines];
 
             for (int i = 0; i < grid.NbColumns; i++)
             {
@@ -27,7 +27,7 @@ namespace Game
         }
         private static int[,] ComputeCosts(GridController grid, int[,] movementCosts, Vector2Int from, bool unitIsEnemy)
         {
-            int costToMove = grid.GetTile(from.x, from.y).CostToMove;
+            var costToMove = grid.GetTile(from.x, from.y).CostToMove;
 
             //We check if the cost to move is smaller then the cost of the current tile. We do so for each direction
             //Checking right movement first.
@@ -155,7 +155,7 @@ namespace Game
             Unit unit
             )
         {
-            List<Tile> newPath = new List<Tile>();
+            var newPath = new List<Tile>();
             if (grid.GetTile(to.x + toXModifier, to.y + toYModifier).LinkedUnit == null)
             {
                 newPath = FindPath(grid, movementCosts, new List<Tile>(), from, new Vector2Int(to.x + toXModifier,to.y + toYModifier), unit);
@@ -238,7 +238,7 @@ namespace Game
 
         private static bool CheckIfTileInaccessible(Vector2Int to, int[,] movementCosts)
         {
-            bool tileIsInaccessible = true;
+            var tileIsInaccessible = true;
             if (to.x >= 0 && to.y >= 0)
             {
                 if (tileIsInaccessible && to.x > 0)
@@ -338,10 +338,10 @@ namespace Game
             Unit unit
         )
         {
-            int[,] moveCosts = ComputeCost(from, unit.IsEnemy);
-            List<Tile> currentPath = new List<Tile>();
+            var moveCosts = ComputeCost(from, unit.IsEnemy);
+            var currentPath = new List<Tile>();
             
-            List <Tile> pathInOrder = FindPath(grid, moveCosts , currentPath, from, to, unit);
+            var pathInOrder = FindPath(grid, moveCosts , currentPath, from, to, unit);
             if (path != null)
                 pathInOrder.Reverse();
             return pathInOrder;

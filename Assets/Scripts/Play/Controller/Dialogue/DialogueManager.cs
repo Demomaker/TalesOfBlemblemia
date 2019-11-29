@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Harmony;
 using JetBrains.Annotations;
@@ -7,13 +8,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //Authors: Pierre-Luc Maltais, Jérémie Bertrand
-//Parts of this code is taken from Brackeys youtube channel tutorial on how to make Dialogue System for Unity.
-//https://www.youtube.com/watch?v=_nRzoTzeyxU
 namespace Game
 {
     [Findable("DialogueManager")]
     public class DialogueManager : MonoBehaviour
     {
+        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
+        
         [SerializeField] private Texture[] textures;
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text dialogueText;
@@ -24,9 +25,14 @@ namespace Game
         private bool isDisplayingDialogue;
         private bool isTyping;
         private Queue<Quote> sentences;
-        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
-
+        private CoroutineStarter coroutineStarter;
+        
         public bool IsDisplayingDialogue => isDisplayingDialogue;
+
+        private void Awake()
+        {
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
+        }
 
         public void StartDialogue(Dialogue dialogue)
         {
@@ -36,7 +42,7 @@ namespace Game
             
             sentences.Clear();
 
-            foreach (Quote sentence in dialogue.Sentences)
+            foreach (var sentence in dialogue.Sentences)
             {
                 sentences.Enqueue(sentence);
             }
@@ -56,9 +62,7 @@ namespace Game
             {
                 if (isTyping) skipTypingCoroutine = true;
                 else
-                {
                     DisplayNextSentence();
-                }
             }
         }
 
@@ -71,7 +75,7 @@ namespace Game
                 EndDialogue();
                 return;
             }
-            Quote quote = sentences.Dequeue();
+            var quote = sentences.Dequeue();
 
             nameText.text = quote.Name;
             foreach (var texture in textures)
@@ -82,14 +86,14 @@ namespace Game
                     break;
                 }
             }
-            Harmony.Finder.CoroutineStarter.StartCoroutine(TypeSentence(quote.Sentence));
+            coroutineStarter.StartCoroutine(TypeSentence(quote.Sentence));
         }
 
-        IEnumerator TypeSentence(string sentence)
+        private IEnumerator TypeSentence(string sentence)
         {
             isTyping = true;
             dialogueText.text = "";
-            foreach (char letter in sentence)
+            foreach (var letter in sentence)
             {
                 if (skipTypingCoroutine)
                 {

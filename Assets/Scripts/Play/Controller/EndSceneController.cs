@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using System.Collections;
 using Game;
-using Harmony;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
 
 /// <summary>
 /// Controls the end scene of the game
@@ -21,6 +14,7 @@ public class EndSceneController : LevelController
     [SerializeField] private float tilemapChangeTimeInSeconds;
     [SerializeField] private int numberOfTilesOnScreen;
     [SerializeField] private Camera camera;
+    
     private Vector3 cameraStartPosition;
     private bool sceneQuit;
     private Cinematic cinematic;

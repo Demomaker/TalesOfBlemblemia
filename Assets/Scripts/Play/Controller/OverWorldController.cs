@@ -18,8 +18,7 @@ namespace Game
         [SerializeField] private GameObject overWorldPath;
         
         [SerializeField] private bool isDebugging;
-        [SerializeField] private Button returnToMainMenu;
-        
+
         private OnOverWorldEnter onOverWorldEnter;
         private LevelLoader levelLoader;
         private GameSettings gameSettings;
@@ -44,9 +43,7 @@ namespace Game
         {
             onOverWorldEnter.Publish(this);
             if (gameController.PreviousLevelName == gameSettings.MorktressSceneName)
-            {
                 levelLoader.FadeToLevel(gameSettings.EndSceneName, LoadSceneMode.Additive);
-            }
         }
 
         private IEnumerator MoveCharacterToLevelEntry(Vector3 to)

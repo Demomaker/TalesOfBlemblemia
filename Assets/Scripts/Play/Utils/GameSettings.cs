@@ -6,7 +6,7 @@ namespace Game
 {
     /// <summary>
     /// Game settings (Variables with constant values that are customizable for the game)
-    /// Author : Mike Bédard, Antoine Lessard
+    /// Author : Mike Bédard
     /// </summary>
     [Findable(Game.Tags.GAME_SETTINGS_TAG)]
     public class GameSettings : MonoBehaviour
@@ -28,10 +28,7 @@ namespace Game
         [SerializeField] private string deselectText = "Deselect";
         [SerializeField] private string noneText = "";
 
-        [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
-        [SerializeField] private int enemyMovementRange = 3;
-        [SerializeField] private int playerAttackRange = 1;
-        [SerializeField] private int enemyAttackRange = 1;
+        [Header("Unit settings")]
         [SerializeField] private float attackDuration = 0.3f;
         [SerializeField] private float movementDuration = 0.3f;
         [SerializeField] private int numberOfMaximumUnitsForThePlayer = 8;
@@ -60,10 +57,7 @@ namespace Game
         [SerializeField] private Color darkRed = new Color(159f/RGB_MAX, 0 ,0);
         [SerializeField] private Color paleAlpha = new Color(1,1,1, 0.5f);
         [SerializeField] private Color opaqueAlpha = new Color(1, 1, 1, 1f);
-
-        [SerializeField] [Header("Saves")] private int saveSlotOne = 1;
-        [SerializeField] private int saveSlotTwo = 2;
-        [SerializeField] private int saveSlotThree = 3;
+        
         [SerializeField] [Header("Playable characters")] private string franklemName = "Franklem";
         [SerializeField] private string myriamName = "Myriam";
         [SerializeField] private string bramName = "Bram";
@@ -84,7 +78,6 @@ namespace Game
         [SerializeField] private string reachFinalLevelWith8Players = "The Octet";
         [SerializeField] private string finishALevelWithoutUnitLoss = "No one left behind...";
         [SerializeField] private string finishCampaignWithoutUnitLoss = "Great leader";
-        [SerializeField] private string saveAllRecruitablesFromAlternatePath = "Champion of the people!";
         [Header("Achievement Descriptions")]
         [SerializeField] private string completeCampaignOnEasyDescription = "Complete the campaign on easy.";
         [SerializeField] private string completeCampaignOnMediumDescription = "Complete the campaign on medium.";
@@ -93,7 +86,6 @@ namespace Game
         [SerializeField] private string reachFinalLevelWith8PlayersDescription = "Reached the final level with a full party.";
         [SerializeField] private string finishALevelWithoutUnitLossDescription = "Complete a level without losing a unit";
         [SerializeField] private string finishCampaignWithoutUnitLossDescription = "Complete the campaign without losing a unit";
-        [SerializeField] private string saveAllRecruitablesFromAlternatePathDescription = "Recruited all recruitable units.";
         [SerializeField] [Header("Animation and actions")] private string isMoving = "IsMoving";
         [SerializeField] private string isAttacking = "IsAttacking";
         [SerializeField] private string isGoingToDie = "IsGoingToDie";
@@ -110,7 +102,6 @@ namespace Game
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
         [SerializeField] private string darkKnightName = "Dark Knight";
-
         
         public string ConfirmMoveToText => confirmMoveToText;
         public string ConfirmRecruitText => confirmRecruitText;
@@ -125,7 +116,6 @@ namespace Game
         public string SelectText => selectText;
         public string DeselectText => deselectText;
         public string NoneText => noneText;
-
         public Color PaleAlpha => paleAlpha;
         public Color OpaqueAlpha => opaqueAlpha;
         public Color Green => green;
@@ -134,11 +124,6 @@ namespace Game
         public Color DarkGreen => darkGreen;
         public Color DarkYellow => darkYellow;
         public Color DarkRed => darkRed;
-
-        public int PlayerMovementRange => playerMovementRange;
-        public int EnemyMovementRange => enemyMovementRange;
-        public int PlayerAttackRange => playerAttackRange;
-        public int EnemyAttackRange => enemyAttackRange;
         public float AttackDuration => attackDuration;
         public float MovementDuration => movementDuration;
         public int NumberOfMaximumUnitsForThePlayer => numberOfMaximumUnitsForThePlayer;
@@ -155,11 +140,6 @@ namespace Game
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
         public string StartingLevelSceneName => startingLevelScene.ToString();
-  
-        public int SaveSlotOne => saveSlotOne;
-        public int SaveSlotTwo => saveSlotTwo;
-        public int SaveSlotThree => saveSlotThree;
-
         public string FranklemName => franklemName;
         public string MyriamName => myriamName;
         public string BramName => bramName;

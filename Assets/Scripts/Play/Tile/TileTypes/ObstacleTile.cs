@@ -5,6 +5,7 @@
     {
         public ObstacleTile() : base(TileType.Obstacle)
         {
+            //Empty on purpose
         }
     }
 }

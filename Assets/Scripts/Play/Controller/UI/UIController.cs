@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Harmony;
 using JetBrains.Annotations;
 using TMPro;
@@ -7,19 +6,20 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-//Author: Pierre-Luc Maltais, Antoine Lessard
+//Author: Pierre-Luc Maltais (mainly), Antoine Lessard
 namespace Game
 {
     [Findable("UIController")]
     public class UIController : MonoBehaviour
     {
-        private const string TURN_FORMAT_TEXT = "00";
-        private const string TURN_DISPLAY_TEXT = "Turn ";
-        private const string UNREACHABLE_TILE_TEXT = "X";
-        private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
-        private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
+        [SerializeField] private string turnFormatText = "00";
+        [SerializeField] private string turnDisplayText = "Turn ";
+        [SerializeField] private string unreachableTileText = "X";
+        [SerializeField] private float timeToWaitBetweenAnimations = 0.5f;
+        [SerializeField] private float timeBeforeHidingBattleReportAuto = 2f;
 
-        [Header("Canvas")] [SerializeField] private Canvas canvas;
+        [Header("Canvas")] 
+        [SerializeField] private Canvas canvas;
         [Header("TileInfo")]
         [SerializeField] private TMP_Text tileDefense;
         [SerializeField] private TMP_Text tileMouvementEffect;
@@ -34,7 +34,8 @@ namespace Game
         [SerializeField] private TMP_Text turnInfo;
         [SerializeField] private Animator playerInfoAnimator;
 
-        [Header("Victory Condition")] [SerializeField] private TMP_Text victoryCondition;
+        [Header("Victory Condition")] 
+        [SerializeField] private TMP_Text victoryCondition;
 
         [Header("Battle Report")] 
         [SerializeField] private GameObject battleReports;
@@ -70,13 +71,14 @@ namespace Game
 
         private GameSettings gameSettings;
         private GridController gridController;
-
+        private CoroutineStarter coroutineStarter;
 
         public bool IsBattleReportActive => battleReports.activeSelf;
 
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
 
         private void Start()
@@ -91,8 +93,7 @@ namespace Game
             DeactivateBattleReport();
         }
 
-        public void SetupCharactersBattleInfo(int maxHealthPoints, 
-        int currentHealthPoint, int targetMaxHealthPoint, int targetCurrentHealthPoint, bool isEnemy)
+        public void SetupCharactersBattleInfo(int maxHealthPoints, int currentHealthPoint, int targetMaxHealthPoint, int targetCurrentHealthPoint, bool isEnemy)
         {
             if (isEnemy)
             {
@@ -110,23 +111,20 @@ namespace Game
         {
             for (int i = 0; i < healthBar.Length; i++)
             {
-                if (i < maxHealthPoints) healthBar[i].SetActive(true);
-                else healthBar[i].SetActive(false);
+                healthBar[i].SetActive(i < maxHealthPoints);
             }
         
             for (int i = 0; i < currentHealthPoint; i++)
             {
-                RawImage healthBarImage = healthBar[i].GetComponentInChildren<RawImage>();
+                var healthBarImage = healthBar[i].GetComponentInChildren<RawImage>();
                 healthBarImage.color = gameSettings.Green;
             }
             
             for (int i = maxHealthPoints; i > currentHealthPoint; i--)
             {
                 if (i - 1 < 0) continue;
-                RawImage healthBarImage;
-                healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
+                var healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
                 healthBarImage.color = gameSettings.Gray;
-
             }
 
             if (beforeBattle == false)
@@ -134,7 +132,7 @@ namespace Game
                 for (int i = currentHealthPoint; i > currentHealthPoint - damage; i--)
                 {
                     if (i <= 0) break;
-                    RawImage healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
+                    var healthBarImage = healthBar[i - 1].GetComponentInChildren<RawImage>();
                     healthBarImage.color = gameSettings.Red;
                 }
             }
@@ -163,7 +161,7 @@ namespace Game
             playerOutcome.enabled = false;
             enemyOutcome.enabled = false;
 
-            Coroutine handle = Harmony.Finder.CoroutineStarter.StartCoroutine(BattleReport(isEnemy));
+            var handle = coroutineStarter.StartCoroutine(BattleReport(isEnemy));
 
             return handle;
         }
@@ -175,7 +173,7 @@ namespace Game
                 yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);
                 if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken > 0)
                 {
-                    yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
+                    yield return new WaitForSeconds(timeToWaitBetweenAnimations);
                     yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
                 }
             }
@@ -184,7 +182,7 @@ namespace Game
                 yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
                 if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken > 0)
                 {
-                    yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
+                    yield return new WaitForSeconds(timeToWaitBetweenAnimations);
                     yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);
                 }
             }
@@ -199,7 +197,7 @@ namespace Game
                 playerDeathSymbol.SetActive(true);
             }
 
-            yield return new WaitForSeconds(TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO);
+            yield return new WaitForSeconds(timeBeforeHidingBattleReportAuto);
             battleReports.SetActive(false);
         }
 
@@ -209,22 +207,18 @@ namespace Game
             {
                 yield return null;
             }
-
-            #region BeforeCombat
-
+            
             ModifyHealthBar(playerBattleInfos.MaxHp, playerBattleInfos.CurrentHealth, playerHealthBar);
             ModifyHealthBar(enemyBattleInfos.MaxHp, enemyBattleInfos.CurrentHealth, enemyHealthBar);
 
-            #endregion
-
             animationIsPlaying = true;
             animator.SetBool(IS_ATTACKING, true);
-            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
+            yield return new WaitForSeconds(timeToWaitBetweenAnimations);
             ModifyHealthBar(battleInfos.MaxHp, battleInfos.CurrentHealth, healthBar, false,
                 battleInfos.DamageTaken);
             BattleOutcome(battleInfos, isEnemy);
             battleInfos.CurrentHealth -= battleInfos.DamageTaken;
-            yield return new WaitForSeconds(TIME_TO_WAIT_BETWEEN_ANIMATIONS);
+            yield return new WaitForSeconds(timeToWaitBetweenAnimations);
             animator.SetBool(IS_ATTACKING, false);
             animationIsPlaying = false;
         }
@@ -278,9 +272,10 @@ namespace Game
             battleReports.SetActive(false);
         }
 
+        //Author : Jérémie Bertrand from here on out
         public void ModifyTurnCounter(int turns)
         {
-            turnCounter.text = TURN_DISPLAY_TEXT + turns.ToString(TURN_FORMAT_TEXT);
+            turnCounter.text = turnDisplayText + turns.ToString(turnFormatText);
         }
 
         public void ModifyTurnInfo(UnitOwner player)
@@ -320,7 +315,7 @@ namespace Game
                     tileMouvementEffect.color = gameSettings.DarkRed;
                     break;
             }
-            tileMouvementEffect.text = costToMove == TileTypeExt.HIGH_COST_TO_MOVE ? UNREACHABLE_TILE_TEXT : costToMove.ToString();
+            tileMouvementEffect.text = costToMove == TileTypeExt.HIGH_COST_TO_MOVE ? unreachableTileText : costToMove.ToString();
         }
 
         private void UpdateTileDefenseText(float defenseRate)

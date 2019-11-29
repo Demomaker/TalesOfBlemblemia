@@ -75,5 +75,18 @@ namespace Game
         {
             levelController.CinematicController.LaunchCinematic(this);
         }
+        
+        /// <summary>
+        /// Cinematic trigger types
+        /// Authors : Jérémie Bertrand, Mike Bédard
+        /// </summary>
+        private enum CinematicTriggerType
+        {
+            Manual,
+            OnStart,
+            OnLevelVictory,
+            OnLevelFailed,
+            OnCampaignFailed
+        }
     }
 }

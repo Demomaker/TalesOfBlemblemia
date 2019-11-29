@@ -261,7 +261,6 @@ namespace Game
                     {
                         characterStatusRepo.Update(character);
                     }
-
                     break;
                 case 2:
                     saveGameRepo.Update(saveSlot2);
@@ -269,7 +268,6 @@ namespace Game
                     {
                         characterStatusRepo.Update(character);
                     }
-
                     break;
                 case 3:
                     saveGameRepo.Update(saveSlot3);
@@ -277,7 +275,6 @@ namespace Game
                     {
                         characterStatusRepo.Update(character);
                     }
-
                     break;
             }
         }
@@ -286,10 +283,10 @@ namespace Game
 
         #region FindAll
 
-        public List<SaveInfos> FindAll()
+        private List<SaveInfos> FindAll()
         {
-            List<SaveInfos> result = saveGameRepo.FindAll();
-            List<CharacterInfo> characterInfos = characterStatusRepo.FindAll();
+            var result = saveGameRepo.FindAll();
+            var characterInfos = characterStatusRepo.FindAll();
 
             foreach (var characterInfo in characterInfos)
             {
@@ -311,7 +308,7 @@ namespace Game
 
         public SaveInfos[] GetSaves()
         {
-            return new SaveInfos[]{saveSlot1, saveSlot2, saveSlot3};
+            return new[] {saveSlot1, saveSlot2, saveSlot3};
         }
         #endregion
 

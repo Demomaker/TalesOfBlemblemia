@@ -8,7 +8,7 @@ namespace Game
 {
     /// <summary>
     /// Controller for each individual level. Manages the turn functionalities as well as the players' turns
-    /// Authors: Mike Bédard, Jérémie Bertrand, Zacharie Lavigne, Antoine Lessard
+    /// Authors: Everyone
     /// </summary>
     [Findable("LevelController")]
     public class LevelController : MonoBehaviour
@@ -28,9 +28,6 @@ namespace Game
         [SerializeField] private int numberOfTurnsBeforeCompletion;
         [SerializeField] private bool revertWeaponTriangle = false;
         [SerializeField] private GameObject pointingArrowPrefab = null;
-        [SerializeField] private string defeatString = "Defeat ";
-        [SerializeField] private string surviveString = "Survive ";
-        [SerializeField] private string turnString = " turns";
         private CoroutineStarter coroutineStarter;
         private int levelTileUpdateKeeper;
         private string levelName;
@@ -64,18 +61,18 @@ namespace Game
         private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
         private bool ProtagonistDied => protagonistGameObject == null || protagonistGameObject.GetComponent<Unit>().NoHealthLeft;
         private bool LevelCompleted => AllEnemiesDied || PointAchieved || AllTargetsDefeated || Survived;
-        public bool PlayerUnitIsMovingOrAttacking => humanPlayer.OwnedUnits.Any(unit => unit.IsMoving || unit.IsAttacking);
+        private bool PlayerUnitIsMovingOrAttacking => humanPlayer.OwnedUnits.Any(unit => unit.IsMoving || unit.IsAttacking);
         private bool LevelFailed => ProtagonistDied;
         public bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
-        public virtual AudioClip BackgroundMusic => backgroundMusic;
-        public virtual CinematicController CinematicController => cinematicController;
-        public UnitOwner CurrentPlayer => currentPlayer;
+        public AudioClip BackgroundMusic => backgroundMusic;
+        public CinematicController CinematicController => cinematicController;
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
-        public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && CurrentPlayer == humanPlayer;
+        public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && currentPlayer == humanPlayer;
         public bool BattleOngoing { get; set; }
+        
         protected virtual void Awake()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
@@ -148,12 +145,7 @@ namespace Game
                 {
                     endGameCredits.RollCredits();
                     yield return new WaitForSeconds(CREDITS_DURATION);
-                    CheckForPermadeath();
-                    CheckIfUnitWasRecruited();
-                    CheckIfUpperPathWasTaken();
-                    UpdatePlayerSave();
-                    levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
-                    yield break;
+                    endGameCredits.StopCredits();
                 }
             }
             
@@ -257,7 +249,7 @@ namespace Game
             currentPlayer.RemoveDeadUnits();
             if (isComputerPlaying || currentPlayer != computerPlayer) return;
             isComputerPlaying = true;
-            coroutineStarter.StartCoroutine(computerPlayer.PlayUnits(grid, this));
+            coroutineStarter.StartCoroutine(computerPlayer.PlayUnits(grid, this, uiController));
         }
 
         private void GiveUnits()
@@ -297,9 +289,8 @@ namespace Game
                 enemyRangeController.OnPlayerTurn(computerPlayer.OwnedUnits);
             }
             else
-            {
                 enemyRangeController.OnComputerTurn();
-            }
+            
             uiController.ModifyTurnInfo(currentPlayer);
             currentPlayer.OnTurnGiven();
         }

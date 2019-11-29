@@ -24,6 +24,7 @@ namespace Game
         private ClickType rightClickType = ClickType.None;
         private Vector2Int positionInGrid;
         private EnemyRangeController enemyRangeController;
+        private PlayerClickManager playerClickManager;
 
         public TileType TileType => tileType;
         public ClickType LeftClickType => leftClickType;
@@ -61,6 +62,7 @@ namespace Game
             gridController = transform.parent.GetComponent<GridController>();
             uiController = Harmony.Finder.UIController;
             enemyRangeController = Harmony.Finder.EnemyRangeController;
+            playerClickManager = Harmony.Finder.PlayerClickManager;
         }
 
         protected void Start()
@@ -134,14 +136,10 @@ namespace Game
         /// Authors: Jérémie Bertrand, Zacharie Lavigne
         /// </summary>
         /// <param name="otherTile">The other tile to verify adjacency</param>
-        /// <param name="range">The threshold of adjacency</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException">The range must be greater than 0</exception>
-        public bool IsWithinRange(Tile otherTile, int range)
+        /// <returns>Return if target is within melee range</returns>
+        public bool IsWithinRange(Tile otherTile)
         {
-            if (range <= 0)
-                throw  new ArgumentException("Range should be higher than zero");
-            return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
+            return Math.Abs(LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(LogicalPosition.y - otherTile.LogicalPosition.y) <= 1;
         }
 
         public void MakeObstacle()
@@ -164,9 +162,9 @@ namespace Game
         {
             leftClickType = ClickType.None;
             rightClickType = ClickType.None;
-            if (Harmony.Finder.PlayerClickManager.ActionIsSet && this == Harmony.Finder.PlayerClickManager.TileToConfirm)
+            if (playerClickManager.ActionIsSet && this == playerClickManager.TileToConfirm)
             {
-                switch (Harmony.Finder.PlayerClickManager.UnitTurnAction.ActionType)
+                switch (playerClickManager.UnitTurnAction.ActionType)
                 {
                     case ActionType.Rest:
                         rightClickType = leftClickType = ClickType.ConfirmRest;

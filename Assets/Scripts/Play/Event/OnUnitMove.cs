@@ -4,6 +4,7 @@ namespace Game
 {
     /// <summary>
     /// OnUnitMove event channel
+    /// Author : Mike Bédard
     /// </summary>
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class OnUnitMove : EventChannel<Unit>

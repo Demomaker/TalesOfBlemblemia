@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Game
 {
+    //Author : Zacharie Lavigne, Pierre-Luc Maltais (UI)
     public class UnitMover
     {
         private readonly UIController uiController;
@@ -23,13 +24,13 @@ namespace Game
 
         private void LookAt(Vector3 target)
         {
-            int xModifier = 1;
+            var xModifier = 1;
             if (target.x < associatedUnit.Appearance.transform.position.x)
             {
                 xModifier = -1;
             }
             var localScale = associatedUnit.Appearance.localScale;
-            Vector2 scale = new Vector2(Math.Abs(localScale.x), localScale.y);
+            var scale = new Vector2(Math.Abs(localScale.x), localScale.y);
             scale.x *= xModifier;
             associatedUnit.Appearance.localScale = scale;
         }
@@ -42,7 +43,7 @@ namespace Game
                 {
                     associatedUnit.CurrentTile.UnlinkUnit();
                 }
-                List<Tile> path = PathFinder.FindPath(associatedUnit.MovementCosts, associatedUnit.CurrentTile.LogicalPosition, targetTile.LogicalPosition, associatedUnit);
+                var path = PathFinder.FindPath(associatedUnit.MovementCosts, associatedUnit.CurrentTile.LogicalPosition, targetTile.LogicalPosition, associatedUnit);
                 path.Add(targetTile);
                 return path;
             }
@@ -63,22 +64,26 @@ namespace Game
                         finalTile = path[i];
                     float counter = 0;
 
-                    if (path.IndexOf(finalTile) != pathCount - 1)
-                        associatedUnit.MovesLeft -= finalTile.CostToMove;
-                    Vector3 startPos = associatedUnit.Transform.position;
-                    LookAt(finalTile.WorldPosition);
-
-                    while (counter < duration)
+                    if (finalTile != null)
                     {
-                        counter += Time.deltaTime;
+                        if (path.IndexOf(finalTile) != pathCount - 1)
+                            associatedUnit.MovesLeft -= finalTile.CostToMove;
+                        var startPos = associatedUnit.Transform.position;
+                        LookAt(finalTile.WorldPosition);
                         
-                        associatedUnit.Transform.position = Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
-                        yield return null;
-                    }
+                        while (counter < duration)
+                        {
+                            counter += Time.deltaTime;
 
-                    if (associatedUnit.MovesLeft < 0 && path.IndexOf(finalTile) != pathCount - 1)
-                    {
-                        i = pathCount;
+                            associatedUnit.Transform.position =
+                                Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
+                            yield return null;
+                        }
+
+                        if (associatedUnit.MovesLeft < 0 && path.IndexOf(finalTile) != pathCount - 1)
+                        {
+                            i = pathCount;
+                        }
                     }
                 }
                 
@@ -101,7 +106,7 @@ namespace Game
                             levelController.BattleOngoing = true;
                             yield return associatedUnit.Attack(action.Target);
                             if (action.Target.GetType() == typeof(Unit))
-                                if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+                                if (!levelController.CinematicController.IsPlayingACinematic)
                                     yield return uiController.LaunchBattleReport(associatedUnit.IsEnemy);
                             levelController.BattleOngoing = false;
                         }
@@ -135,10 +140,10 @@ namespace Game
             if (associatedUnit.IsAttacking) yield break;
             associatedUnit.IsAttacking = true;
             
-            float counter = 0;
-            Vector3 startPos = associatedUnit.Transform.position;
-            Vector3 targetPos = (target.CurrentTile.WorldPosition + startPos) / 2f;
-            LookAt(targetPos);
+            var counter = 0f;
+            var startPos = associatedUnit.Transform.position;
+            //2f to go only halfway
+            var targetPos = (target.CurrentTile.WorldPosition + startPos) / 2f;
             LookAt(targetPos);
             duration /= 2;
 
@@ -149,8 +154,8 @@ namespace Game
                 yield return null;
             }
             
-            float hitRate = associatedUnit.Stats.HitRate - target.CurrentTile.DefenseRate;
-            int damage = 0;
+            var hitRate = associatedUnit.Stats.HitRate - target.CurrentTile.DefenseRate;
+            var damage = 0;
             var critModifier = 1;
             if (Random.value <= hitRate)
             {
@@ -188,15 +193,12 @@ namespace Game
             associatedUnit.Transform.position = startPos;
             associatedUnit.IsAttacking = false;
 
-            //A unit cannot make a critical hit on a counter
-            //A unit cannot counter on a counter
+            //A unit cannot make a critical hit on a counter && cannot counter on a counter
             if (!target.NoHealthLeft && !isCountering && target is Unit targetUnit)
                 yield return targetUnit.UnitMover.Attack(associatedUnit, true, gameSettings.AttackDuration);
             
             if (!isCountering)
-            {
                 associatedUnit.HasActed = true;
-            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace Game
 {
     //Authors : Pierre-Luc Maltais & Antoine Lessard
-    public class SaveGameRepo : Repository<SaveInfos>
+    public class SaveGameRepo : IRepository<SaveInfos>
     {
         private readonly DbConnection connection;
 

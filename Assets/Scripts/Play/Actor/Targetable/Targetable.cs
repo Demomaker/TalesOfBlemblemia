@@ -13,6 +13,7 @@ namespace Game
         private int currentHealthPoints;
         protected CoroutineStarter coroutineStarter;
         protected LevelController levelController;
+        private GridController gridController;
 
         public bool IsEnemyTarget => isEnemyTarget;
         public bool NoHealthLeft => CurrentHealthPoints <= 0;
@@ -23,9 +24,8 @@ namespace Game
             protected internal set
             {
                 currentHealthPoints = value;
-                if (NoHealthLeft) 
-                    coroutineStarter.StartCoroutine(Die());
-                if(this is Unit) (this as Unit)?.OnHealthChange.Publish();
+                if (NoHealthLeft) coroutineStarter.StartCoroutine(Die());
+                if (this is Unit unit) unit.OnHealthChange.Publish();
             }
         }
         
@@ -40,12 +40,12 @@ namespace Game
                 levelController.IncrementTileUpdate();
             }
         }
-
         
         protected virtual void Awake()
         {
             coroutineStarter = Harmony.Finder.CoroutineStarter;
             levelController = Harmony.Finder.LevelController;
+            gridController = Harmony.Finder.GridController;
         }
         
         protected virtual void Start()
@@ -65,7 +65,7 @@ namespace Game
             yield return new WaitForEndOfFrame();
             while (levelController.CinematicController.IsPlayingACinematic)
                 yield return null;
-            var tile = Harmony.Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
+            var tile = gridController.GetTile(initialPosition.x, initialPosition.y);
             transform.position = tile.WorldPosition;
             CurrentTile = tile;
         }

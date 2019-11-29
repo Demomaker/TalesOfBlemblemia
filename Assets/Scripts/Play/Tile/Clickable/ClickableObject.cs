@@ -32,7 +32,7 @@ namespace Game
             //Player cannot play while a cinematic is playing or if another of its units is moving
             if (tile == null || !levelController.PlayerCanPlay) return;
             
-            ClickButton clickButton = ReadClick(eventData);
+            var clickButton = ReadClick(eventData);
             EventSystem.current.SetSelectedGameObject(null);
             var selectedPlayerUnit = tile.GridController.SelectedUnit;
 

@@ -1,18 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game
 {
+    //Author : Zacharie Lavigne
     [Findable("EnemyRangeCont")]
     public class EnemyRangeController : MonoBehaviour
     {
         private List<Tile> InRangeTiles = new List<Tile>();
         private bool isEnabled;
         private int tileUpdateKeeper = -1;
+        private LevelController levelController;
+        private GridController gridController;
 
-        public void EnableEnemyRange(List<Unit> enemyUnits)
+        private void Awake()
+        {
+            levelController = Harmony.Finder.LevelController;
+            gridController = Harmony.Finder.GridController;
+        }
+
+        private void EnableEnemyRange(List<Unit> enemyUnits)
         {
             if (!isEnabled)
             {
@@ -25,21 +36,15 @@ namespace Game
         public void OnToggleChange(Toggle enemyRangeToggle)
         {
             if (enemyRangeToggle.isOn)
-            {
-                EnableEnemyRange(Harmony.Finder.LevelController.ComputerPlayer.OwnedUnits);
-            }
+                EnableEnemyRange(levelController.ComputerPlayer.OwnedUnits);
             else
-            {
                 DisableEnemyRange();
-            }
         }
 
         private void SetEnemyRange(List<Unit> enemyUnits)
         {
-            if (tileUpdateKeeper != Harmony.Finder.LevelController.LevelTileUpdateKeeper)
-            {
+            if (tileUpdateKeeper != levelController.LevelTileUpdateKeeper)
                 FindInRangeTiles(enemyUnits);
-            }
         }
 
         public void DisplayEnemyRange()
@@ -55,13 +60,12 @@ namespace Game
 
         private void FindInRangeTiles(List<Unit> enemyUnits)
         {
-            tileUpdateKeeper = Harmony.Finder.LevelController.LevelTileUpdateKeeper;
-            var grid = Harmony.Finder.GridController;
-            for (int i = 0; i < grid.NbColumns ; i++)
+            tileUpdateKeeper = levelController.LevelTileUpdateKeeper;
+            for (int i = 0; i < gridController.NbColumns ; i++)
             {
-                for (int j = 0; j < grid.NbLines; j++)
+                for (int j = 0; j < gridController.NbLines; j++)
                 {
-                    var tile = grid.GetTile(i, j);
+                    var tile = gridController.GetTile(i, j);
                     if (TileIsReachableByEnemy(tile.LogicalPosition, enemyUnits))
                     {
                         InRangeTiles.Add(tile);
@@ -70,19 +74,12 @@ namespace Game
             }
         }
 
-        private bool TileIsReachableByEnemy(Vector2Int tilePos, List<Unit> enemyUnits)
+        private static bool TileIsReachableByEnemy(Vector2Int tilePos, IEnumerable<Unit> enemyUnits)
         {
-            foreach (var enemy in enemyUnits)
-            {
-                if (enemy.MovementCosts[tilePos.x, tilePos.y] <= enemy.Stats.MoveSpeed)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return enemyUnits.Any(enemy => enemy.MovementCosts[tilePos.x, tilePos.y] <= enemy.Stats.MoveSpeed);
         }
 
-        public void DisableEnemyRange()
+        private void DisableEnemyRange()
         {
             isEnabled = false;
             HideEnemyRange();
@@ -98,8 +95,7 @@ namespace Game
                 InRangeTiles.Remove(tile);
             }
         }
-
-
+        
         public void OnComputerTurn()
         {
             HideEnemyRange();
@@ -108,12 +104,7 @@ namespace Game
         public void OnPlayerTurn(List<Unit> ownedUnits)
         {
             if (isEnabled)
-            {
                 SetEnemyRange(ownedUnits);
-            }
         }
-        
-        
-        
     }
 }

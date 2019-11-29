@@ -6,9 +6,9 @@ using System.Data.Common;
 namespace Game
 {
     //Authors : Pierre-Luc Maltais & Antoine Lessard
-    public class CharacterStatusRepo : Repository<CharacterInfo>
+    public class CharacterStatusRepo : IRepository<CharacterInfo>
     {
-        private DbConnection connection;
+        private readonly DbConnection connection;
 
         public CharacterStatusRepo(DbConnection connection)
         {

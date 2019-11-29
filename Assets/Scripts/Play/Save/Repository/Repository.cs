@@ -3,7 +3,7 @@
 namespace Game
 {
     //Author : Pierre-Luc Maltais
-    public interface Repository<T>
+    public interface IRepository<T>
     {
         void Insert(T myObject);
 

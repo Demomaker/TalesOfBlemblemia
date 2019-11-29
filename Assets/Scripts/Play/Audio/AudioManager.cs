@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ namespace Game
         private AudioSource[] sfxSources;
         private AudioSource musicSource;
         private bool playSFX;
-        private bool playMusic;
+        private bool canPlayMusic;
         private float mainVolume = 100;
         private float musicVolume = 100;
         private float sfxVolume = 100;
@@ -52,7 +53,7 @@ namespace Game
 
             InitializeEventChannels();
             audioClips = Finder.AudioClips;
-            if(audioClips == null) audioClips = new AudioClips();
+            if(audioClips == null) audioClips = gameObject.AddComponent<AudioClips>();
         }
 
         private void OnEnable()
@@ -65,7 +66,7 @@ namespace Game
             DisableEventChannels();
         }
         
-        
+       
         private void InitializeEventChannels()
         {
             onHurt = Harmony.Finder.OnHurt;
@@ -129,7 +130,6 @@ namespace Game
             onSFXVolumeChange.Notify -= ChangeSFXVolume;
         }
         
-        
         private void UpdateMusicVolume()
         {
             musicSource.volume = mainVolume * musicVolume / (gameSettings.Percent * gameSettings.Percent);
@@ -137,7 +137,7 @@ namespace Game
 
         private void UpdateSoundVolume()
         {
-            float totalSFXVolume = mainVolume * sfxVolume / (gameSettings.Percent * gameSettings.Percent);
+            var totalSFXVolume = mainVolume * sfxVolume / (gameSettings.Percent * gameSettings.Percent);
             foreach (var sfxSource in sfxSources)
             {
                 sfxSource.volume = totalSFXVolume;
@@ -158,16 +158,11 @@ namespace Game
 
         private void ToggleMusic(bool toggle)
         {
-
-            playMusic = toggle;
-            if (!playMusic)
-            {
+            canPlayMusic = toggle;
+            if (!canPlayMusic)
                 musicSource.Pause();
-            }
             else
-            {
                 musicSource.Play();
-            }
         }
 
         private void ChangeMainVolume(float volume)
@@ -216,14 +211,10 @@ namespace Game
             if (audioClips is null) return;
             StopCurrentMusic();
             
-            //Set the clip of our musicSource audio source to the clip passed in as a parameter.
             musicSource.clip = clip;
-            
-            //Set the musicSource as a loop, so that the music restarts on end.
             musicSource.loop = true;
             
-            //Play the clip.
-            if (playMusic)
+            if (canPlayMusic)
                 musicSource.Play();
         }
 
@@ -253,6 +244,8 @@ namespace Game
                 case UnitGender.Mork :
                     PlaySFX(audioClips.MorkAttackSound, unit.transform.position);
                     break;
+                default:
+                    throw new Exception("Unit has no gender");
             }
         }
 
@@ -290,7 +283,6 @@ namespace Game
 
         private void PlayBackgroundMusicOfLevel(LevelController level)
         {
-            StopCurrentMusic();
             PlayMusic(level.BackgroundMusic);
         }
         
@@ -301,13 +293,11 @@ namespace Game
 
         private void PlayOverWorldBackgroundMusic(OverWorldController overWorld)
         {
-            StopCurrentMusic();
             PlayMusic(audioClips.OverWorldMusic);
         }
 
         private void PlayMainMenuBackgroundMusic(MainMenuController mainMenu)
         {
-            StopCurrentMusic();
             PlayMusic(audioClips.MainMenuMusic);
         }
         

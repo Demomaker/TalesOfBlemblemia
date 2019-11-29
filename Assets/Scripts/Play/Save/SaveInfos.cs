@@ -6,13 +6,9 @@ namespace Game
     public class SaveInfos
     {
         public int Id { get; set; }
-
         public string Username { get; set; }
-
         public string DifficultyLevel { get; set; }
-
         public string LevelName { get; set; }
-
         public List<CharacterInfo> CharacterInfos { get; set; }
 
         public SaveInfos(int id, string username, string difficultyLevel, string levelName,

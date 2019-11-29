@@ -5,6 +5,7 @@
     {
         public ForestTile() : base(TileType.Forest)
         {
+            //Empty on purpose
         }
     }
 }

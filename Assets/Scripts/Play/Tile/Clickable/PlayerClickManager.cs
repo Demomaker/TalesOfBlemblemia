@@ -25,8 +25,7 @@ namespace Game
             playerUnit = selectedPlayerUnit;
             tileToConfirm = target;
 
-            var path = new List<Tile>();
-            path.Add(selectedPlayerUnit.CurrentTile);
+            var path = new List<Tile> {selectedPlayerUnit.CurrentTile};
             if (clickButton == ClickButton.LeftClick)
             {
                 switch (target.LeftClickType)
@@ -95,7 +94,6 @@ namespace Game
                     case ClickType.None:
                         break;
                     default:
-                        //break;
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
                 }
             }
@@ -106,7 +104,7 @@ namespace Game
 
         public ActionType ExecuteAction()
         {
-            ActionType actionType = unitTurnAction.ActionType;
+            var actionType = unitTurnAction.ActionType;
             playerUnit.MoveByAction(unitTurnAction);
             Reset();
             return actionType;

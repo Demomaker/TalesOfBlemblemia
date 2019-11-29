@@ -20,9 +20,10 @@ namespace Game
         private GameSettings gameSettings;
         private bool fadeOutCompleted;
         private bool canLoadNewLevel = true;
+        private static readonly int FadeOut = Animator.StringToHash(FADE_OUT_TRIGGER);
+        private static readonly int FadeIn = Animator.StringToHash(FADE_IN_TRIGGER);
 
         public bool CanLoadNewLevel => canLoadNewLevel;
-        public string LoadedLevel => loadedLevel;
 
         private void Awake()
         {
@@ -38,7 +39,7 @@ namespace Game
             
             if (SceneManager.GetSceneByName(loadedLevel).name != gameSettings.OverworldSceneName)
             {
-                animator.SetTrigger(FADE_OUT_TRIGGER);
+                animator.SetTrigger(FadeOut);
             }
         }
 
@@ -47,7 +48,7 @@ namespace Game
             if (SceneManager.GetSceneByName(levelName).isLoaded || !canLoadNewLevel) return;
             SceneManager.LoadScene(levelName, loadSceneMode);
             loadedLevel = levelName;
-            this.sceneMode = loadSceneMode;
+            sceneMode = loadSceneMode;
         }
 
         [UsedImplicitly]
@@ -66,7 +67,7 @@ namespace Game
                 yield return null;
             }
 
-            if (this.sceneMode == LoadSceneMode.Additive)
+            if (sceneMode == LoadSceneMode.Additive)
             {
                 if (SceneManager.GetSceneByName(loadedLevel).name == gameSettings.OverworldSceneName)
                 {
@@ -75,7 +76,7 @@ namespace Game
                     {
                         yield return null;
                     }
-                    animator.SetTrigger(FADE_OUT_TRIGGER);
+                    animator.SetTrigger(FadeOut);
                 }
                 SceneManager.UnloadSceneAsync(loadedLevel);
                 while (SceneManager.GetSceneByName(loadedLevel).isLoaded)
@@ -84,8 +85,8 @@ namespace Game
                 }
             }
 
-            this.loadedLevel = levelName;
-            this.sceneMode = loadSceneMode;
+            loadedLevel = levelName;
+            sceneMode = loadSceneMode;
             
             while (!fadeOutCompleted)
             {
@@ -94,7 +95,7 @@ namespace Game
             
             scene.allowSceneActivation = true;
 
-            animator.SetTrigger(FADE_IN_TRIGGER);
+            animator.SetTrigger(FadeIn);
             
             fadeOutCompleted = false;
             canLoadNewLevel = true;

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Game
 {
     //Author : Antoine Lessard
-    public class SaveSettingsRepo : Repository<PlayerSettings>
+    public class SaveSettingsRepo : IRepository<PlayerSettings>
     {
         private readonly DbConnection connection;
 

@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using Harmony;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -13,16 +11,20 @@ namespace Game
     public class GridGenerator : MonoBehaviour
     {
         [SerializeField] private Vector2Int size;
-        [Header("Prefabs")] [SerializeField] private GameObject emptyCellPrefab = null;
+        
+        [Header("Prefabs")] 
+        [SerializeField] private GameObject emptyCellPrefab = null;
         [SerializeField] private GameObject forestCellPrefab = null;
         [SerializeField] private GameObject obstacleCellPrefab = null;
         [SerializeField] private GameObject fortressCellPrefab = null;
 
-        [Header("Tiles")] [SerializeField] private TileBase forestTile = null;
+        [Header("Tiles")] 
+        [SerializeField] private TileBase forestTile = null;
         [SerializeField] private TileBase[] obstacleTiles = null;
         [SerializeField] private TileBase fortressTile = null;
 
-        [Header("TileMap")] [SerializeField] private Tilemap interactiveTilemap = null;
+        [Header("TileMap")] 
+        [SerializeField] private Tilemap interactiveTilemap = null;
         [SerializeField] private Tilemap backgroundTilemap = null;
         [SerializeField] private Tilemap tilemapOfTileToIncludeIfEmptyTile;
         
@@ -40,7 +42,6 @@ namespace Game
             {
                 for (var i = 0; i < size.x; i++)
                 {
-                
                     var currentTile = allTiles[i + j * size.x];
                     var createdGameObject = InstantiateCellPrefabFrom(currentTile);
                     if (currentTile == null)
@@ -57,18 +58,12 @@ namespace Game
             var spawningPrefab = emptyCellPrefab;
             
             if (tile == forestTile)
-            {
                 spawningPrefab = forestCellPrefab;
-            }
             else if (obstacleTiles.Contains(tile))
-            {
                 spawningPrefab = obstacleCellPrefab;
-            }
             else if (tile == fortressTile)
-            {
                 spawningPrefab = fortressCellPrefab;
-            }
-
+            
             return Instantiate(spawningPrefab, transform);
         }
 

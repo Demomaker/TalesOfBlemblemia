@@ -3,12 +3,11 @@ using Random = System.Random;
 
 namespace Game
 {
-    //Authors: Jérémie Bertrand & Mike Bédard
+    //Authors: Zacharie Lavigne
     public static class Finder
     {
         private static Random random;
-
-        //Author: Zacharie Lavigne
+        
         public static Random Random
         {
             get
@@ -20,12 +19,7 @@ namespace Game
         }
         public static AudioClips AudioClips => FindWithTag<AudioClips>(Tags.SOUND_MANAGER);
         
-        //Author : Antoine Lessard
-        public static MenusController MenusController => FindWithTag<MenusController>(Tags.MAIN_CONTROLLER);
-        public static SaveController SaveController => FindWithTag<SaveController>(Tags.SAVE_CONTROLLER);
-        public static PauseController PauseController => FindWithTag<PauseController>(Tags.PAUSE_CONTROLLER);
-        public static Navigator Navigator => FindWithTag<Navigator>(Tags.NAVIGATOR);
-        
+        //Author : Benjamin Lemelin
         private static T FindWithTag<T>(string tag)
         {
             return GameObject.FindWithTag(tag).GetComponent<T>();

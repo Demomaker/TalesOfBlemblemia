@@ -57,9 +57,7 @@ using UnityEngine.UI;
         public Sprite RightStartPathTileSprite => rightStartPathTileSprite;
         public Sprite DownStartPathTileSprite => downStartPathTileSprite;
         public Sprite UpStartPathTileSprite => upStartPathTileSprite;
-
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
-
         public int NbColumns { get; private set; }
         public int NbLines { get; private set; }
 
@@ -184,8 +182,8 @@ using UnityEngine.UI;
             var completePath = new List<Tile>();
             completePath.Add(playerUnit.CurrentTile);
             completePath.AddRange(unitTurnAction.Path);
-            int prevIndex = -1;
-            int nextIndex = -1;
+            var prevIndex = -1;
+            var nextIndex = -1;
             var pathCount = completePath.Count;
             for (int i = 0; i < pathCount; i++)
             {

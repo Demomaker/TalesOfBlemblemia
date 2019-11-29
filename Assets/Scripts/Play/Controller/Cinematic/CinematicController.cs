@@ -77,6 +77,7 @@ namespace Game
             }
         }
 
+        //Author : Mike Bédard
         private IEnumerator ActivateObject(GameObject actionGameObjectToActivate, bool activateGameObject)
         {
             actionGameObjectToActivate.SetActive(activateGameObject);

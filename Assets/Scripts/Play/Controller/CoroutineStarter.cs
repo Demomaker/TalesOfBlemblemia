@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Game
 {
+    //Author : Zacharie Lavigne
     [Findable("CoroutineStarter")]
     public class CoroutineStarter : MonoBehaviour
     {

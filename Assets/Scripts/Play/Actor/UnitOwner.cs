@@ -5,7 +5,7 @@ namespace Game
 {
     /// <summary>
     /// A virtual player, be it human or artificial
-    /// Authors: Zacharie Lavigne, Jérémie Bertrand
+    /// Authors: Zacharie Lavigne, Jérémie Bertrand, Mike Bédard
     /// </summary>
     public class UnitOwner
     {
@@ -15,11 +15,9 @@ namespace Game
         public int NumberOfUnits => ownedUnits.Count;
         public List<Unit> DefeatedUnits { get; } = new List<Unit>();
         public string Name { get; }
-
         public bool HaveAllUnitsDied => ownedUnits.Count <= 0;
         public List<Unit> OwnedUnits => ownedUnits;
         public bool HasNoMorePlayableUnits => ownedUnits.All(t => t.HasActed);
-
         public bool HasLostAUnitInCurrentLevel { get; private set; }
 
         protected UnitOwner(string name)

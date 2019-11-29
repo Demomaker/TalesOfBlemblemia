@@ -27,12 +27,8 @@ namespace Game
 
          public Level[] Levels { get; private set; }
          public string PreviousLevelName { get; set; }
-         public string CurrentLevelName => levelLoader.LoadedLevel;
          public bool PermaDeath => permaDeath;
-
          public int ChoiceRange => choiceRange;
-
-         public bool AllLevelsCompleted => PreviousLevelName == Levels[Levels.Length - 1].LevelName;
 
          public DifficultyLevel DifficultyLevel
          {
@@ -73,7 +69,7 @@ namespace Game
          {
              levelLoader = Harmony.Finder.LevelLoader;
              gameSettings = Harmony.Finder.GameSettings;
-             Levels = new Level[]
+             Levels = new[]
              {
                  new Level(gameSettings.EmptyLevelString, gameSettings.SnowyPeaksSceneName),
                  new Level(gameSettings.SnowyPeaksSceneName, gameSettings.JimsterburgSceneName),
