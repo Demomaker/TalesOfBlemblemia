@@ -43,15 +43,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82d6ca751fd64d9b9061ab4f4aac6c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMovementRange: 3
-  enemyMovementRange: 3
-  playerAttackRange: 1
-  enemyAttackRange: 1
+  confirmMoveToText: Confirm Move To
+  confirmRecruitText: Confirm Recruit
+  confirmRestText: Confirm Rest
+  confirmAttackText: Confirm Attack
+  confirmHealText: Confirm Heal
+  moveToText: Move To
+  recruitText: Recruit
+  restText: Rest
+  attackText: Attack
+  healText: Heal
+  selectText: Select
+  deselectText: Deselect
+  noneText: 
   attackDuration: 0.3
   movementDuration: 0.3
   numberOfMaximumUnitsForThePlayer: 8
-  skipComputerTurnKey: 32
-  skipLevelKey: 111
   emptyLevelString: 
   snowyPeaksScene: 78225045
   jimsterburgScene: 21787095
@@ -73,9 +80,6 @@ MonoBehaviour:
   darkRed: {r: 0.62352943, g: 0, b: 0, a: 1}
   paleAlpha: {r: 1, g: 1, b: 1, a: 0.5}
   opaqueAlpha: {r: 1, g: 1, b: 1, a: 1}
-  saveSlotOne: 1
-  saveSlotTwo: 2
-  saveSlotThree: 3
   franklemName: Franklem
   myriamName: Myriam
   bramName: Bram
@@ -85,6 +89,10 @@ MonoBehaviour:
   thomasName: Thomas
   abrahamName: Abraham
   achievementUnlockedString: Achievement unlocked!
+  secondsBeforeTypingStart: 1
+  secondsBeforeTitleCharacterPrint: 0.1
+  secondsBeforeTextCharacterPrint: 0.05
+  secondsBeforeNewAchievementShow: 1
   completeCampaignOnEasy: Baby Steps
   completeCampaignOnMedium: Now you're getting it!
   completeCampaignOnHard: You mad man!
@@ -92,7 +100,6 @@ MonoBehaviour:
   reachFinalLevelWith8Players: The Octet
   finishALevelWithoutUnitLoss: No one left behind...
   finishCampaignWithoutUnitLoss: Great leader
-  saveAllRecruitablesFromAlternatePath: Champion of the people!
   completeCampaignOnEasyDescription: Complete the campaign on easy.
   completeCampaignOnMediumDescription: Complete the campaign on medium.
   completeCampaignOnHardDescription: Complete the campaign on hard.
@@ -101,7 +108,6 @@ MonoBehaviour:
   finishALevelWithoutUnitLossDescription: Complete a level without losing a unit
   finishCampaignWithoutUnitLossDescription: Complete the campaign without losing a
     unit
-  saveAllRecruitablesFromAlternatePathDescription: Recruited all recruitable units.
   isMoving: IsMoving
   isAttacking: IsAttacking
   isGoingToDie: IsGoingToDie
