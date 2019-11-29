@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Game;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
@@ -9,22 +6,20 @@ namespace Game
     //Author: Jérémie Bertrand, Mike Bédard
     public class Cinematic : MonoBehaviour
     {
-        #region Serialized Fields
         [SerializeField] private CinematicTriggerType trigger = CinematicTriggerType.Manual;
         [SerializeField] private List<CinematicAction> actions;
-        #endregion Serialized Fields
-        #region Other Fields
+
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
         private OnCampaignFailed onCampaignFailed;
-        #endregion Other Fields
-        #region Accessors
+
         public IEnumerable<CinematicAction> Actions => actions;
-        #endregion Accessors
-        #region Unity Event Functions
+
         private void Awake()
         {
-            InitializeEvents();
+            onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelFailed = Harmony.Finder.OnLevelFailed;
+            onCampaignFailed = Harmony.Finder.OnCampaignFailed;
         }
         
         private void Start()
@@ -40,15 +35,6 @@ namespace Game
         private void OnDisable()
         {
             DisableEvents();
-        }
-        #endregion
-        #region Event Channel Handling
-        
-        private void InitializeEvents()
-        {
-            onLevelVictory = Harmony.Finder.OnLevelVictory;
-            onLevelFailed = Harmony.Finder.OnLevelFailed;
-            onCampaignFailed = Harmony.Finder.OnCampaignFailed;
         }
 
         private void EnableEvents()
@@ -82,12 +68,15 @@ namespace Game
                     break;
             }
         }
-        #endregion
-        #region Cinematic Methods
-        public void TriggerCinematic(LevelController levelController = null)
+
+        public void TriggerCinematic(LevelController levelController)
         {
-            Harmony.Finder.LevelController.CinematicController.LaunchCinematic(this);
+            levelController.CinematicController.LaunchCinematic(this);
         }
-        #endregion
+        
+        public void TriggerCinematic()
+        {
+            TriggerCinematic(Harmony.Finder.LevelController);
+        }
     }
 }

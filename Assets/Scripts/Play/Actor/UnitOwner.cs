@@ -12,7 +12,6 @@ namespace Game
     {
         protected readonly List<Unit> ownedUnits = new List<Unit>();
         protected readonly List<Unit> enemyUnits = new List<Unit>();
-        private bool hasLostAUnitInCurrentLevel;
 
         public int NumberOfUnits => ownedUnits.Count;
         public List<Unit> DefeatedUnits { get; } = new List<Unit>();
@@ -21,6 +20,8 @@ namespace Game
         public bool HaveAllUnitsDied => ownedUnits.Count <= 0;
         public List<Unit> OwnedUnits => ownedUnits;
         public bool HasNoMorePlayableUnits => ownedUnits.All(t => t.HasActed);
+
+        public bool HasLostAUnitInCurrentLevel { get; private set; }
 
         protected UnitOwner(string name)
         {
@@ -47,7 +48,7 @@ namespace Game
             if (ownedUnits.Contains(unit))
             {
                 unit.HasActed = true;
-                hasLostAUnitInCurrentLevel = true;
+                HasLostAUnitInCurrentLevel = true;
                 ownedUnits.Remove(unit);
             }
         }

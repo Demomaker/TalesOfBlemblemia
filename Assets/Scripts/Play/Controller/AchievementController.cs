@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +11,11 @@ namespace Game
     /// Controls the achievements and sends messages if achievements are completed
     /// Author : Mike Bédard, Antoine Lessard
     /// </summary>
+    [Findable("AchievementController")]
     public class AchievementController : MonoBehaviour
     {
         private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
+        
         [SerializeField] private Text achievementUnlockedText;
         [SerializeField] private Text descriptionText;
         [SerializeField] private Animator animator;
@@ -21,39 +25,11 @@ namespace Game
         private bool achievementBeingShown;
         private bool skipAchievementShow;
         private GameSettings gameSettings;
-        private GameController gameController;
         private SaveController saveController;
 
-        private bool CompletedCampaignOnEasy => gameController.AllLevelsCompleted;
-        private bool CompletedCampaignOnMedium =>
-            gameController.AllLevelsCompleted && (gameController.DifficultyLevel == DifficultyLevel.Medium || gameController.DifficultyLevel == DifficultyLevel.Hard);
-        private bool CompletedCampaignOnHard => gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
-        private bool BlackKnightDefeated => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName;
-     /*   private bool ReachedFinalLevelWithAllPlayableUnits
-        {
-            get
-            {
-                const int numberOfUnitsNeededForAchievement = 8;
-                return HumanPlayer.Instance.NumberOfUnits > numberOfUnitsNeededForAchievement &&
-                       gameController.CurrentLevelName == gameSettings.MorktressSceneName;
-            }
-        }
-
-        private bool FinishedALevelWithoutUnitLoss =>
-            !HumanPlayer.Instance.HasLostAUnitInCurrentLevel &&
-            gameController.PreviousLevelName == gameController.CurrentLevelName &&
-            !string.IsNullOrEmpty(gameController.PreviousLevelName) &&
-            gameController.PreviousLevelName != gameSettings.SnowyPeaksSceneName;
-        private bool SavedAllRecruitablesFromAlternatePath =>
-            HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >=
-            gameSettings.NumberOfRecruitablesOnAlternatePath;
-        private bool FinishedCampaignWithoutUnitLoss =>
-            !HumanPlayer.Instance.HasEverLostAUnit && gameController.AllLevelsCompleted;
-*/
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
-            gameController = Harmony.Finder.GameController;
             saveController = Finder.SaveController;
             achievementUnlockedText.text = gameSettings.AchievementUnlockedString;
         }
@@ -77,74 +53,7 @@ namespace Game
         {
             skipAchievementShow = true;
         }
-
-        private void Update()
-        {
-            CheckIfAchievementsCompleted();
-        }
-
-        private void CheckIfAchievementsCompleted()
-        {
-            AchievementInfo achievement;
-            
-            if (CompletedCampaignOnEasy)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.CompleteCampaignOnEasy);
-                CheckIfAlreadyCompleted(achievement);
-            }
-
-            if (CompletedCampaignOnMedium)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.CompleteCampaignOnMedium);
-                CheckIfAlreadyCompleted(achievement);
-            }
-
-            if (CompletedCampaignOnHard)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.CompleteCampaignOnHard);
-                CheckIfAlreadyCompleted(achievement);
-            }
-
-            if (BlackKnightDefeated)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.DefeatBlackKnight);
-                CheckIfAlreadyCompleted(achievement);
-            }
-/*
-            if (ReachedFinalLevelWithAllPlayableUnits)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.ReachFinalLevelWith8Players);
-                CheckIfAlreadyCompleted(achievement);
-            }
-
-            if (FinishedALevelWithoutUnitLoss)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.FinishALevelWithoutUnitLoss);
-                CheckIfAlreadyCompleted(achievement);
-            }
-
-            if (FinishedCampaignWithoutUnitLoss)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.FinishCampaignWithoutUnitLoss);
-                CheckIfAlreadyCompleted(achievement);
-            }
-
-            if (SavedAllRecruitablesFromAlternatePath)
-            {
-                achievement = achievements.Find(info => info.AchievementName == gameSettings.SaveAllRecruitablesFromAlternatePath);
-                CheckIfAlreadyCompleted(achievement);
-            }*/
-        }
-
-        private void CheckIfAlreadyCompleted(AchievementInfo achievement)
-        {
-            if (achievement.Achieved) return;
-            achievement.Achieved = true;
-            saveController.UpdateAchievements(achievements);
-            StartAchievement(achievement);
-        }
-
-        private void StartAchievement(AchievementInfo achievement)
+        private void ShowAchievement(AchievementInfo achievement)
         {
             animator.SetBool(IS_OPEN,true);
             achievementBeingShown = true;
@@ -174,14 +83,18 @@ namespace Game
                 yield return new WaitForSeconds(secondsBeforeTextCharacterPrint);
             }
             descriptionText.text = text;
-            EndAchievementShow();
-        }
-    
-        private void EndAchievementShow()
-        {
             animator.SetBool(IS_OPEN,false);
             achievementBeingShown = false;
             skipAchievementShow = false;
+        }
+
+        public void UnlockAchievement(string achievementName)
+        {
+            var achievement = achievements.Find(info => info.AchievementName == achievementName);
+            if (achievement == null || achievement.Achieved) return;
+            achievement.Achieved = true;
+            saveController.UpdateAchievements(achievements);
+            ShowAchievement(achievement);
         }
     }
 }
