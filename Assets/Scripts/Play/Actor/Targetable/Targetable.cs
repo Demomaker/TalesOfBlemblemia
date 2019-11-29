@@ -42,7 +42,7 @@ namespace Game
         }
 
         
-        public virtual void Awake()
+        protected virtual void Awake()
         {
             coroutineStarter = Harmony.Finder.CoroutineStarter;
             levelController = Harmony.Finder.LevelController;

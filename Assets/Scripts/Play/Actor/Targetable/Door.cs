@@ -8,7 +8,12 @@ namespace Game
     public class Door : Targetable
     {
         [SerializeField] private int baseHealth = 1;
+        private LevelController levelController;
 
+        protected override void Awake()
+        {
+            levelController = Harmony.Finder.LevelController;
+        }
         protected override void Start()
         {
             if (baseHealth < 1) throw new Exception("Door base health should be at least 1");
@@ -19,7 +24,7 @@ namespace Game
         protected override IEnumerator Die()
         {
             currentTile.UnlinkDoor();
-            Harmony.Finder.LevelController.IncrementTileUpdate();
+            levelController.IncrementTileUpdate();
             yield return base.Die();
         }
     }
