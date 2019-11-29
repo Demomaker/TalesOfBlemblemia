@@ -14,6 +14,7 @@ namespace Game
         private Tile tile;
         private LevelController levelController;
         private GridController grid;
+        private CoroutineStarter coroutineStarter;
         
         private void Awake()
         {
@@ -21,6 +22,7 @@ namespace Game
             levelController = Harmony.Finder.LevelController;
             tile = GetComponent<Tile>();
             grid = Harmony.Finder.GridController;
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -35,7 +37,7 @@ namespace Game
 
             if (tile.LinkedUnitCanBeSelectedByPlayer && tile.LinkedUnit != selectedPlayerUnit)
             {
-                if ( clickButton == ClickButton.LeftClick || (clickButton == ClickButton.RightClick && selectedPlayerUnit?.WeaponType != WeaponType.HealingStaff))
+                if ( clickButton == ClickButton.LeftClick || (clickButton == ClickButton.RightClick && selectedPlayerUnit.WeaponType != WeaponType.HealingStaff))
                 {
                     SelectUnit(grid);
                     return;
@@ -62,7 +64,7 @@ namespace Game
                     if (playerClickManager.ExecuteAction() != ActionType.Nothing) DeselectUnit(grid);
                     else
                     {
-                        Harmony.Finder.CoroutineStarter.StartCoroutine(SelectAfterMove(grid, selectedPlayerUnit, tile));
+                        coroutineStarter.StartCoroutine(SelectAfterMove(grid, selectedPlayerUnit, tile));
                     }
                 }
                 else
@@ -70,7 +72,6 @@ namespace Game
                     DeselectUnit(grid);
                 }
             }
-
             tile.UpdateClickHint();
         }
 
@@ -101,13 +102,10 @@ namespace Game
             return eventData.button == PointerEventData.InputButton.Right ? ClickButton.RightClick : ClickButton.LeftClick;
         }
 
-        public IEnumerator SelectAfterMove(GridController gridController, Unit playerUnit, Tile tileFrom)
+        private IEnumerator SelectAfterMove(GridController gridController, Unit playerUnit, Tile tileFrom)
         {
             DeselectUnit(gridController);
-            while (playerUnit.CurrentTile != tileFrom)
-            {
-                yield return null;
-            }
+            while (playerUnit.CurrentTile != tileFrom) yield return null;
             SelectUnit(gridController, playerUnit, tileFrom);
         }
     }
