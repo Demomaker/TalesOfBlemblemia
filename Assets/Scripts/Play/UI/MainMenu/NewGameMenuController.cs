@@ -76,7 +76,7 @@ namespace Game
             }
             
             saves[saveSlotSelectedNumber - 1].LevelName = gameSettings.EmptyLevelString;
-            gameController.PreviousLevelName = gameSettings.EmptyLevelString;
+            gameController.PreviousLevelName = gameSettings.StartingLevelSceneName;
             
             saveController.UpdateSave(saveSlotSelectedNumber);
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
