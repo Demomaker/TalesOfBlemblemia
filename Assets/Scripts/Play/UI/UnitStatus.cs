@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
+    //Author: Jérémie Bertrand
     [RequireComponent(typeof(Canvas), typeof(BoxCollider2D))]
     public class UnitStatus : MonoBehaviour
     {
