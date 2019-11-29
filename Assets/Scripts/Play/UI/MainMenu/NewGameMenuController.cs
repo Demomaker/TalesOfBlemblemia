@@ -35,7 +35,7 @@ namespace Game
             saveController = Finder.SaveController;
             newGameScreen = GetComponent<Canvas>();
             saveSlotSelectedNumber = 0;
-            gameController = Finder.GameController;
+            gameController = Harmony.Finder.GameController;
         }
 
         public void Enter(int saveSlotNumber)
@@ -52,7 +52,7 @@ namespace Game
             //if the player did not enter a name, player name will be Franklem
             if (playerNameInputField.text == "")
             {
-                playerNameInputField.text = "Franklem";
+                playerNameInputField.text = gameSettings.FranklemName;
             }
 
             saveController.ResetSave();
@@ -76,7 +76,7 @@ namespace Game
             }
             
             saves[saveSlotSelectedNumber - 1].LevelName = gameSettings.EmptyLevelString;
-            gameController.PreviousLevelName = gameSettings.StartingLevelSceneName;
+            gameController.PreviousLevelName = gameSettings.EmptyLevelString;
             
             saveController.UpdateSave(saveSlotSelectedNumber);
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);

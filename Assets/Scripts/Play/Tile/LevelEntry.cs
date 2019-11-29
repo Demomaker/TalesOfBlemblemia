@@ -28,7 +28,7 @@ namespace Game
         {
             gameSettings = Harmony.Finder.GameSettings;
             overWorldController = Harmony.Finder.OverWorldController;
-            gameController = Finder.GameController;
+            gameController = Harmony.Finder.GameController;
             levelEntryButton = GetComponent<Button>();
 
             foreach (var level in gameController.Levels)

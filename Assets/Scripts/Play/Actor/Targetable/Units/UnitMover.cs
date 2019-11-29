@@ -1,0 +1,202 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+namespace Game
+{
+    public class UnitMover
+    {
+        private readonly UIController uiController;
+        private readonly LevelController levelController;
+        private readonly GameSettings gameSettings;
+        private readonly Unit associatedUnit;
+
+        public UnitMover(Unit associatedUnit, LevelController levelController, UIController uiController, GameSettings gameSettings)
+        {
+            this.uiController = uiController;
+            this.gameSettings = gameSettings;
+            this.levelController = levelController;
+            this.associatedUnit = associatedUnit;
+        }
+
+        private void LookAt(Vector3 target)
+        {
+            int xModifier = 1;
+            if (target.x < associatedUnit.Appearance.transform.position.x)
+            {
+                xModifier = -1;
+            }
+            var localScale = associatedUnit.Appearance.localScale;
+            Vector2 scale = new Vector2(Math.Abs(localScale.x), localScale.y);
+            scale.x *= xModifier;
+            associatedUnit.Appearance.localScale = scale;
+        }
+        
+        public List<Tile> PrepareMove(Tile targetTile, bool forArrow = true)
+        {
+            if (targetTile != associatedUnit.CurrentTile)
+            {
+                if (forArrow)
+                {
+                    associatedUnit.CurrentTile.UnlinkUnit();
+                }
+                List<Tile> path = PathFinder.FindPath(associatedUnit.MovementCosts, associatedUnit.CurrentTile.LogicalPosition, targetTile.LogicalPosition, associatedUnit);
+                path.Add(targetTile);
+                return path;
+            }
+            return null;
+        }
+        
+        public IEnumerator MoveByAction(Action action, float duration)
+        {
+            var path = action?.Path;
+            if (path != null)
+            {
+                associatedUnit.IsMoving = true;
+                Tile finalTile = null;
+                var pathCount = path.Count;
+                for (int i = 0; i < pathCount; i++)
+                {
+                    if (path[i] != null)
+                        finalTile = path[i];
+                    float counter = 0;
+
+                    if (path.IndexOf(finalTile) != pathCount - 1)
+                        associatedUnit.MovesLeft -= finalTile.CostToMove;
+                    Vector3 startPos = associatedUnit.Transform.position;
+                    LookAt(finalTile.WorldPosition);
+
+                    while (counter < duration)
+                    {
+                        counter += Time.deltaTime;
+                        
+                        associatedUnit.Transform.position = Vector3.Lerp(startPos, finalTile.WorldPosition, counter / duration);
+                        yield return null;
+                    }
+
+                    if (associatedUnit.MovesLeft < 0 && path.IndexOf(finalTile) != pathCount - 1)
+                    {
+                        i = pathCount;
+                    }
+                }
+                
+                associatedUnit.OnUnitMove.Publish(associatedUnit);
+
+                associatedUnit.CurrentTile = finalTile;
+                if (associatedUnit.CurrentTile != null) associatedUnit.Transform.position = associatedUnit.CurrentTile.WorldPosition;
+                associatedUnit.IsMoving = false;
+            }
+
+            if (action != null)
+            {
+                if (action.ActionType != ActionType.Nothing)
+                {
+                    if (action.ActionType == ActionType.Attack && action.Target != null)
+                    {
+                        associatedUnit.OnAttack.Publish(associatedUnit);
+                        if (associatedUnit.TargetIsInRange(action.Target))
+                        {
+                            levelController.BattleOngoing = true;
+                            yield return associatedUnit.Attack(action.Target);
+                            if (action.Target.GetType() == typeof(Unit))
+                                if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
+                                    yield return uiController.LaunchBattleReport(associatedUnit.IsEnemy);
+                            levelController.BattleOngoing = false;
+                        }
+                        else
+                            associatedUnit.Rest();
+                    }
+                    else if (action.ActionType == ActionType.Recruit && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !associatedUnit.RecruitUnit((Unit) action.Target))
+                            associatedUnit.Rest();
+                    }
+                    else if (action.ActionType == ActionType.Heal && action.Target != null)
+                    {
+                        if (action.Target.GetType() == typeof(Unit) && !associatedUnit.HealUnit((Unit) action.Target))
+                            associatedUnit.Rest();
+                    }
+                    else
+                    {
+                        associatedUnit.Rest();
+                    }
+                }
+            }
+            else
+            {
+                associatedUnit.Rest();
+            }
+        }
+        
+        public IEnumerator Attack(Targetable target, bool isCountering, float duration)
+        {
+            if (associatedUnit.IsAttacking) yield break;
+            associatedUnit.IsAttacking = true;
+            
+            float counter = 0;
+            Vector3 startPos = associatedUnit.Transform.position;
+            Vector3 targetPos = (target.CurrentTile.WorldPosition + startPos) / 2f;
+            LookAt(targetPos);
+            LookAt(targetPos);
+            duration /= 2;
+
+            while (counter < duration)
+            {
+                counter += Time.deltaTime;
+                associatedUnit.Transform.position = Vector3.Lerp(startPos, targetPos, counter / duration);
+                yield return null;
+            }
+            
+            float hitRate = associatedUnit.Stats.HitRate - target.CurrentTile.DefenseRate;
+            int damage = 0;
+            var critModifier = 1;
+            if (Random.value <= hitRate)
+            {
+                damage = associatedUnit.Stats.AttackStrength;
+                if(target is Unit unit)
+                    associatedUnit.OnDodge.Publish(unit);
+            }
+            else if (target is Unit unit)
+            {
+                associatedUnit.OnHurt.Publish(unit);
+            }
+            if (!isCountering && !associatedUnit.IsImmuneToCrits && (target.GetType() == typeof(Unit) && (associatedUnit.CanCritOnEverybody || ((Unit)target).WeaponType == associatedUnit.WeaponAdvantage)))
+            {
+                critModifier = Random.value <= associatedUnit.Stats.CritRate ? 2 : 1;
+                damage *= critModifier;
+                if (critModifier > 1 && associatedUnit.CameraShake != null)
+                {
+                    associatedUnit.CameraShake.TriggerShake();
+                }
+            }
+            
+            target.CurrentHealthPoints -= damage;
+            
+            if (target is Unit)
+                uiController.ChangeCharacterDamageTaken(damage, !associatedUnit.IsEnemy, critModifier);
+            counter = 0;
+            
+            while (counter < duration)
+            {
+                counter += Time.deltaTime;
+                associatedUnit.Transform.position = Vector3.Lerp(targetPos, startPos, counter / duration);
+                yield return null;
+            }
+            
+            associatedUnit.Transform.position = startPos;
+            associatedUnit.IsAttacking = false;
+
+            //A unit cannot make a critical hit on a counter
+            //A unit cannot counter on a counter
+            if (!target.NoHealthLeft && !isCountering && target is Unit targetUnit)
+                yield return targetUnit.UnitMover.Attack(associatedUnit, true, gameSettings.AttackDuration);
+            
+            if (!isCountering)
+            {
+                associatedUnit.HasActed = true;
+            }
+        }
+    }
+}

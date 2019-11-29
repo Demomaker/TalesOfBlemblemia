@@ -19,6 +19,7 @@ namespace Game
 
         public void SetAction(Unit selectedPlayerUnit, Tile target, ClickButton clickButton)
         {
+            var grid = Harmony.Finder.GridController;
             playerUnit = selectedPlayerUnit;
             tileToConfirm = target;
 
@@ -29,7 +30,7 @@ namespace Game
                 switch (target.LeftClickType)
                 {
                     case ClickType.MoveTo:
-                        unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(target, false));
+                        unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(target, false));
                         break;
                     default:
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
@@ -40,10 +41,10 @@ namespace Game
                 switch (target.RightClickType)
                 {
                     case ClickType.MoveTo:
-                        unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(target, false));
+                        unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(target, false));
                         break;
                     case ClickType.Rest:
-                        unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(target, false), ActionType.Rest);
+                        unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(target, false), ActionType.Rest);
                         break;
                     case ClickType.Attack:
                         if (selectedPlayerUnit.TargetIsInRange(target.LinkedTargetable))
@@ -53,9 +54,9 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
-                                unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
+                                unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(adjacentTile, false),
                                     ActionType.Attack, target.LinkedTargetable);
                         }
                         break;
@@ -67,9 +68,9 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
-                                unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
+                                unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(adjacentTile, false),
                                     ActionType.Heal, target.LinkedUnit);
                         }
                         break;
@@ -81,26 +82,28 @@ namespace Game
                         else
                         {
                             var adjacentTile =
-                                Finder.GridController.FindAvailableAdjacentTile(target, selectedPlayerUnit);
+                                grid.FindAvailableAdjacentTile(target, selectedPlayerUnit);
                             if (adjacentTile != null)
-                                unitTurnAction = new Action(selectedPlayerUnit.PrepareMove(adjacentTile, false),
+                                unitTurnAction = new Action(selectedPlayerUnit.UnitMover.PrepareMove(adjacentTile, false),
                                     ActionType.Recruit, target.LinkedUnit);
                         }
                         break;
                     default:
+                        //break;
                         throw new Exception("Player click manager should only manage actions clicks, not selecting or other");
                 }
             }
-            Finder.GridController.RemoveActionPath();
+            grid.RemoveActionPath();
             if (unitTurnAction != null)
-                Finder.GridController.DisplayAction(unitTurnAction, selectedPlayerUnit);
+                grid.DisplayAction(unitTurnAction, selectedPlayerUnit);
         }
 
-        public void ExecuteAction()
+        public ActionType ExecuteAction()
         {
-            playerUnit.RemoveInitialMovement();
+            ActionType actionType = unitTurnAction.ActionType;
             playerUnit.MoveByAction(unitTurnAction);
             Reset();
+            return actionType;
         }
 
         public void Reset()

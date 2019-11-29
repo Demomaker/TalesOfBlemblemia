@@ -15,12 +15,10 @@ namespace Game
         [SerializeField] private float dampingSpeed;
 
         private float duration;
-        private Transform transform;
         private Vector3 initialPosition;
         
         private void Awake()
         {
-            transform = GetComponent<Transform>();
             duration = 0f;
         }
 

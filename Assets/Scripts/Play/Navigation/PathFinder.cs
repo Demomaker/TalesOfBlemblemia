@@ -11,7 +11,7 @@ namespace Game
     {
         public static int[,] ComputeCost(Vector2Int from, bool unitIsEnemy)
         {
-            GridController grid = Finder.GridController;
+            GridController grid = Harmony.Finder.GridController;
             //Initialize movementCosts array
             int[,] movementCosts = new int[grid.NbColumns,grid.NbLines];
 
@@ -106,7 +106,7 @@ namespace Game
             Unit unit
         )
         {
-            GridController grid = Finder.GridController;
+            GridController grid = Harmony.Finder.GridController;
             //If there is a unit on the target the unit must find the closest available tile.
             if (grid.GetTile(to.x, to.y).LinkedUnit != null)
             {
@@ -158,7 +158,7 @@ namespace Game
             List<Tile> newPath = new List<Tile>();
             if (grid.GetTile(to.x + toXModifier, to.y + toYModifier).LinkedUnit == null)
             {
-                    newPath = FindPath(grid, movementCosts, new List<Tile>(), from, new Vector2Int(to.x + toXModifier,to.y + toYModifier), unit);
+                newPath = FindPath(grid, movementCosts, new List<Tile>(), from, new Vector2Int(to.x + toXModifier,to.y + toYModifier), unit);
             }
             return newPath;
         }
@@ -212,7 +212,7 @@ namespace Game
                             unit);
                     }
                 }
-
+                
                 return path;
             }
 
