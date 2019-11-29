@@ -49,7 +49,7 @@ MonoBehaviour:
   enemyAttackRange: 1
   attackDuration: 0.3
   movementDuration: 0.3
-  numberOfRecruitablesOnAlternatePath: 7
+  numberOfMaximumUnitsForThePlayer: 8
   skipComputerTurnKey: 32
   skipLevelKey: 111
   emptyLevelString: 
@@ -60,7 +60,7 @@ MonoBehaviour:
   rinfretVillageScene: 15409662
   darkTowerScene: 20786035
   tulipValleyScene: 56662542
-  endScene: 0
+  endScene: 85916631
   morktressScene: 96624225
   overworldScene: 18175791
   mainmenuScene: 10387227

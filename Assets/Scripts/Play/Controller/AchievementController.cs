@@ -64,24 +64,25 @@ namespace Game
         }
         private void ShowAchievement(AchievementInfo achievement)
         {
-            animator.SetBool(IS_OPEN,true);
-            achievementBeingShown = true;
             Harmony.Finder.CoroutineStarter.StartCoroutine(TypeAchievementText(achievement.AchievementName));
         }
 
         private IEnumerator TypeAchievementText(string text)
         {
+            while (achievementBeingShown)
+            {
+                yield return null;
+            }
+            animator.SetBool(IS_OPEN,true);
+            achievementBeingShown = true;
             achievementUnlockedText.text = "";
             descriptionText.text = "";
-            const float secondsBeforeTypingStart = 1;
-            const float secondsBeforeTitleCharacterPrint = 0.1f;
-            const float secondsBeforeTextCharacterPrint = 0.05f;
-            yield return new WaitForSeconds(secondsBeforeTypingStart);
+            yield return new WaitForSeconds(gameSettings.SecondsBeforeTypingStart);
             foreach (var character in gameSettings.AchievementUnlockedString)
             {
                 if (skipAchievementShow) break;
                 achievementUnlockedText.text += character;
-                yield return new WaitForSeconds(secondsBeforeTitleCharacterPrint);
+                yield return new WaitForSeconds(gameSettings.SecondsBeforeTitleCharacterPrint);
             }
 
             achievementUnlockedText.text = gameSettings.AchievementUnlockedString;
@@ -89,10 +90,11 @@ namespace Game
             {
                 if (skipAchievementShow) break;
                 descriptionText.text += character;
-                yield return new WaitForSeconds(secondsBeforeTextCharacterPrint);
+                yield return new WaitForSeconds(gameSettings.SecondsBeforeTextCharacterPrint);
             }
             descriptionText.text = text;
             animator.SetBool(IS_OPEN,false);
+            yield return new WaitForSeconds(gameSettings.SecondsBeforeNewAchievementShow);
             achievementBeingShown = false;
             skipAchievementShow = false;
         }
