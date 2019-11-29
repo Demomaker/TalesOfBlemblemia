@@ -10,10 +10,8 @@ namespace Game
     {
         [Header("Buttons")] 
         [SerializeField] private Button[] saveSlots;
-
         [Header("Canvas")] 
-        [SerializeField] private 
-        NewGameMenuController newGameScreen;
+        [SerializeField] private NewGameMenuController newGameScreen;
 
         private Navigator navigator;
         private SaveController saveController;
@@ -23,8 +21,8 @@ namespace Game
 
         private void Awake()
         {
-            navigator = Finder.Navigator;
-            saveController = Finder.SaveController;
+            navigator = Harmony.Finder.Navigator;
+            saveController = Harmony.Finder.SaveController;
             saveSelectionScreen = GetComponent<Canvas>();
             gameSettings = Harmony.Finder.GameSettings;
         }
@@ -36,17 +34,22 @@ namespace Game
 
         private void Start()
         {
-            int saveCounter = 0;
+            SetupSaveValues();
+        }
 
-            SaveInfos[] saves = saveController.GetSaves();
-            
+        private void SetupSaveValues()
+        {
+            var saveCounter = 0;
+
+            var saves = saveController.GetSaves();
+
             foreach (var saveSlot in saveSlots)
             {
                 saveSlot.transform.Find(gameSettings.NameString).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
                 saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
                 saveSlot.transform.Find(gameSettings.DifficultyString).GetComponent<TMP_Text>().text =
                     saves[saveCounter].DifficultyLevel;
-                
+
                 ++saveCounter;
             }
         }

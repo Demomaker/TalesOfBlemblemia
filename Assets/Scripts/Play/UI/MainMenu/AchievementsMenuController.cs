@@ -17,14 +17,12 @@ namespace Game
         private Navigator navigator;
         private SaveController saveController;
         private GameSettings gameSettings;
-        private GameController gameController;
         private Canvas achievementsScreen;
 
         private void Awake()
         {
-            navigator = Finder.Navigator;
-            saveController = Finder.SaveController;
-            gameController = Harmony.Finder.GameController;
+            navigator = Harmony.Finder.Navigator;
+            saveController = Harmony.Finder.SaveController;
             gameSettings = Harmony.Finder.GameSettings;
             achievementsScreen = GetComponent<Canvas>();
         }
@@ -44,6 +42,7 @@ namespace Game
 
                 if (!achievementsInfo[achievementsCounter].Achieved)
                 {
+                    //We have to store the color to change it, otherwise it is not possible because it is a struct
                     var tempColor = container.color;
                     tempColor = gameSettings.PaleAlpha;
                     container.color = tempColor;

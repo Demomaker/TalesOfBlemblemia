@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,8 +22,8 @@ namespace Game
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
-            navigator = Finder.Navigator;
-            saveController = Finder.SaveController;
+            navigator = Harmony.Finder.Navigator;
+            saveController = Harmony.Finder.SaveController;
             loadGameScreen = GetComponent<Canvas>();
             levelLoader = Harmony.Finder.LevelLoader;
             gameController = Harmony.Finder.GameController;
@@ -55,6 +54,13 @@ namespace Game
         [UsedImplicitly]
         public void SaveSlotSelected(int saveSlotId)
         {
+            LoadGame(saveSlotId);
+
+            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+        }
+
+        private void LoadGame(int saveSlotId)
+        {
             saveSlotId = Mathf.Clamp(saveSlotId, 0, 2);
             saveController.SaveSelected = saveSlotId + 1;
             var difficultyLevel = saveSlots[saveSlotId].transform.Find(gameSettings.DifficultyString)
@@ -77,19 +83,12 @@ namespace Game
 
             gameController.PreviousLevelName = saveSlots[saveSlotId].transform.Find(gameSettings.StageString)
                 .GetComponent<TMP_Text>().text;
-
-            LoadOverWorld();
         }
 
         [UsedImplicitly]
         public void ReturnToMainMenu()
         {
             navigator.Leave();
-        }
-
-        private void LoadOverWorld()
-        {
-            levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
     }
 }

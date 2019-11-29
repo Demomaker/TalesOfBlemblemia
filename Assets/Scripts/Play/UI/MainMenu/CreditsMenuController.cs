@@ -1,7 +1,7 @@
-﻿using Harmony;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+
 //Author: Antoine Lessard
 namespace Game
 {
@@ -15,7 +15,7 @@ namespace Game
 
         private void Awake()
         {
-            navigator = Finder.Navigator;
+            navigator = Harmony.Finder.Navigator;
             creditsScreen = GetComponent<Canvas>();
         }
 
