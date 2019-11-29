@@ -36,8 +36,8 @@ namespace Game
         private void Awake()
         {
             coroutineStarter = Harmony.Finder.CoroutineStarter;
-            uiController = GameObject.FindWithTag(Tags.UI_CONTROLLER_TAG) == null ? null : Harmony.Finder.UIController.gameObject;
-            dialogueManager = GameObject.FindWithTag(Tags.DIALOGUE_MANAGER_TAG) == null ? null : Harmony.Finder.DialogueManager;
+            uiController = Harmony.Finder.UIController.gameObject;
+            dialogueManager = Harmony.Finder.DialogueManager;
             mainCamera = Camera.main;
             if (mainCamera != null)
                 cameraController = mainCamera.GetComponent<CameraController>();
