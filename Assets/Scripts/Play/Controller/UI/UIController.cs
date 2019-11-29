@@ -15,7 +15,7 @@ namespace Game
     {
         private const string TURN_FORMAT_TEXT = "00";
         private const string TURN_DISPLAY_TEXT = "Turn ";
-        private const string UNREACHABLE_TILE_TEXT = "X";//"\u221E";//TODO decider du symbole
+        private const string UNREACHABLE_TILE_TEXT = "X";
         private const float TIME_TO_WAIT_BETWEEN_ANIMATIONS = 0.5f;
         private const float TIME_BEFORE_HIDING_BATTLE_REPORT_AUTO = 2f;
 
