@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using System;
+
+namespace Game
 {
     //Author: Jérémie Bertrand
     public enum ClickType
@@ -20,34 +22,39 @@
     
     public static class ClickTypeExt
     {
-        public static string GetString(this ClickType clickType)
+        public static string GetString(this ClickType clickType, GameSettings gameSettings)
         {
             switch (clickType)
             {
                 case ClickType.Select:
-                    return "Select";
+                    return gameSettings.SelectText;
                 case ClickType.Deselect:
-                    return "Deselect";
+                    return gameSettings.DeselectText;
                 case ClickType.MoveTo:
-                    return "Move To";
+                    return gameSettings.MoveToText;
                 case ClickType.Rest:
-                    return "Rest";
+                    return gameSettings.RestText;
                 case ClickType.Attack:
-                    return "Attack";
+                    return gameSettings.AttackText;
                 case ClickType.Heal:
-                    return "Heal";
+                    return gameSettings.HealText;
+                case ClickType.Recruit:
+                    return gameSettings.RecruitText;
                 case ClickType.ConfirmMoveTo:
-                    return "Confirm Move To";
+                    return gameSettings.ConfirmMoveToText;
                 case ClickType.ConfirmRest:
-                    return "Confirm Rest";
+                    return gameSettings.ConfirmRestText;
                 case ClickType.ConfirmAttack:
-                    return "Confirm Attack";
+                    return gameSettings.ConfirmAttackText;
                 case ClickType.ConfirmRecruit:
-                    return "Confirm Recruit";
+                    return gameSettings.ConfirmRecruitText;
                 case ClickType.ConfirmHeal:
-                    return "Confirm Heal";
+                    return gameSettings.ConfirmHealText;
+                case ClickType.None:
+                    return gameSettings.NoneText;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(clickType), clickType, null);
             }
-            return "";
         }
     }
 }

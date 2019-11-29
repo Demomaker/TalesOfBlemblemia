@@ -342,12 +342,12 @@ namespace Game
 
         public void UpdateLeftClickHint(ClickType leftClickType)
         {
-            leftClickText.text = leftClickType.GetString();
+            leftClickText.text = leftClickType.GetString(gameSettings);
         }
 
         public void UpdateRightClickHint(ClickType rightClickType)
         {
-            rightClickText.text = rightClickType.GetString();
+            rightClickText.text = rightClickType.GetString(gameSettings);
         }
     }
 }

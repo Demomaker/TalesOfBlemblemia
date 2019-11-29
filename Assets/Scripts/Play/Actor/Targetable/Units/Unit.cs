@@ -162,7 +162,7 @@ namespace Game
             }
         }
         private int AttackRange => 1;
-        public override void Awake()
+        protected override void Awake()
         {
             onHurt = Harmony.Finder.OnHurt;
             onAttack = Harmony.Finder.OnAttack;

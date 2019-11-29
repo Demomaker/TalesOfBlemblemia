@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
 namespace Game
 {
     //Author: Jérémie Bertrand, Mike Bédard
@@ -13,16 +12,17 @@ namespace Game
     {
         [SerializeField] private LevelID representedLevelId;
         
-        private readonly List<string> previousLevelName = new List<string>();
+        private readonly List<string> previousLevelNames = new List<string>();
         
         private GameSettings gameSettings;
         private Button levelEntryButton;
         private OverWorldController overWorldController;
         private GameController gameController;
+        private CoroutineStarter coroutineStarter;
 
         private bool IsFirstLevel => gameSettings.StartingLevelSceneName == RepresentedLevelName;
-        private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && previousLevelName.Count <= 0 || PreviousLevelNameListContainsElement(gameController.PreviousLevelName);
-        private string RepresentedLevelName => representedLevelId.GetLevelNameFromLevelID();
+        private bool CanBeClicked => overWorldController.IsDebugging || IsFirstLevel && previousLevelNames.Count <= 0 || previousLevelNames.Any(levelName => levelName == gameController.PreviousLevelName);
+        private string RepresentedLevelName => representedLevelId.GetLevelName(gameSettings);
 
         private void Awake()
         {
@@ -30,18 +30,14 @@ namespace Game
             overWorldController = Harmony.Finder.OverWorldController;
             gameController = Harmony.Finder.GameController;
             levelEntryButton = GetComponent<Button>();
-
-            foreach (var level in gameController.Levels)
-            {
-                if (level.LevelName == RepresentedLevelName)
-                {
-                    previousLevelName.Add(level.PreviousLevel);
-                }
-            }
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
-        
+
         private void Start()
         {
+            foreach (var level in gameController.Levels)
+                if (level.LevelName == RepresentedLevelName) previousLevelNames.Add(level.PreviousLevel);
+            
             var colors = levelEntryButton.colors;
             colors.highlightedColor = !CanBeClicked ? gameSettings.Red : gameSettings.Green;
             levelEntryButton.colors = colors;
@@ -58,13 +54,8 @@ namespace Game
             EventSystem.current.SetSelectedGameObject(null);
             if (CanBeClicked && overWorldController.CanLoadANewLevel && !overWorldController.CharacterIsMoving)
             {
-                Harmony.Finder.CoroutineStarter.StartCoroutine(overWorldController.LoadLevel(RepresentedLevelName, transform.position));
+                coroutineStarter.StartCoroutine(overWorldController.LoadLevel(RepresentedLevelName, transform.position));
             }
-        }
-        
-        private bool PreviousLevelNameListContainsElement(string previousLevel)
-        {
-            return previousLevelName.Any(levelName => levelName == previousLevel);
         }
     }
 }

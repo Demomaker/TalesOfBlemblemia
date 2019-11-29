@@ -2,10 +2,7 @@
 
 namespace Game
 {
-    /// <summary>
-    /// A tile sprite
-    /// Author : Mike Bédard
-    /// </summary>
+    //Author: Mike Bédard
     public class TileSprite : MonoBehaviour
     {
         [SerializeField] private Sprite tileSprite;

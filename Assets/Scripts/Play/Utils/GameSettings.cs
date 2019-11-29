@@ -13,6 +13,21 @@ namespace Game
     {
         private const float RGB_MAX = 255f;
 
+        [Header("Click Hint Text")] 
+        [SerializeField] private string confirmMoveToText = "Confirm Move To";
+        [SerializeField] private string confirmRecruitText = "Confirm Recruit";
+        [SerializeField] private string confirmRestText = "Confirm Rest";
+        [SerializeField] private string confirmAttackText = "Confirm Attack";
+        [SerializeField] private string confirmHealText = "Confirm Heal";
+        [SerializeField] private string moveToText = "Move To";
+        [SerializeField] private string recruitText = "Recruit";
+        [SerializeField] private string restText = "Rest";
+        [SerializeField] private string attackText = "Attack";
+        [SerializeField] private string healText = "Heal";
+        [SerializeField] private string selectText = "Select";
+        [SerializeField] private string deselectText = "Deselect";
+        [SerializeField] private string noneText = "";
+
         [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
         [SerializeField] private int enemyMovementRange = 3;
         [SerializeField] private int playerAttackRange = 1;
@@ -20,8 +35,6 @@ namespace Game
         [SerializeField] private float attackDuration = 0.3f;
         [SerializeField] private float movementDuration = 0.3f;
         [SerializeField] private int numberOfMaximumUnitsForThePlayer = 8;
-        [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
-        [SerializeField] private KeyCode skipLevelKey = KeyCode.O;
 
         [Header("Scene Names")] 
         [SerializeField] private string emptyLevelString = "";
@@ -94,6 +107,21 @@ namespace Game
         [SerializeField] private string audioPath = "Audio";
         [SerializeField] private string darkKnightName = "Dark Knight";
 
+        
+        public string ConfirmMoveToText => confirmMoveToText;
+        public string ConfirmRecruitText => confirmRecruitText;
+        public string ConfirmRestText => confirmRestText;
+        public string ConfirmAttackText => confirmAttackText;
+        public string ConfirmHealText => confirmHealText;
+        public string MoveToText => moveToText;
+        public string RecruitText => recruitText;
+        public string RestText => restText;
+        public string AttackText => attackText;
+        public string HealText => healText;
+        public string SelectText => selectText;
+        public string DeselectText => deselectText;
+        public string NoneText => noneText;
+
         public Color PaleAlpha => paleAlpha;
         public Color OpaqueAlpha => opaqueAlpha;
         public Color Green => green;
@@ -110,8 +138,6 @@ namespace Game
         public float AttackDuration => attackDuration;
         public float MovementDuration => movementDuration;
         public int NumberOfMaximumUnitsForThePlayer => numberOfMaximumUnitsForThePlayer;
-
-        public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
 
         public string SnowyPeaksSceneName => snowyPeaksScene.ToString();
         public string JimsterburgSceneName => jimsterburgScene.ToString();
