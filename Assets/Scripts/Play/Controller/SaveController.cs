@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Harmony;
 using Mono.Data.Sqlite;
 using UnityEngine;
 
 //Author: Antoine Lessard, Pierre-Luc Maltais
 namespace Game
 {
+    [Findable("SaveController")]
     public class SaveController : MonoBehaviour
     {
         private SaveInfos saveSlot1;
