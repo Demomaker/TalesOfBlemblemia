@@ -7,9 +7,6 @@ namespace Game
 {
     public class CreditsMenuController : MonoBehaviour
     {
-        [Header("Buttons")] 
-        [SerializeField] private Button returnToMainMenuButton = null;
-
         private Navigator navigator;
         private Canvas creditsScreen;
 

@@ -13,9 +13,7 @@ namespace Game
         [SerializeField] private Slider mainVolumeSlider;
         [SerializeField] private Slider musicVolumeSlider;
         [SerializeField] private Slider sfxVolumeSlider;
-        [SerializeField] private Button returnButton;
-        [SerializeField] private Button applyChangesButton;
-        
+
         private SaveController saveController;
         private Navigator navigator;
         private OnSFXToggle onSfxToggle;

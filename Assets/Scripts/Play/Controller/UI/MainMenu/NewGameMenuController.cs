@@ -13,8 +13,6 @@ namespace Game
         [Header("Buttons")] 
         [SerializeField] private TMP_Dropdown difficultyDropdownMenu;
         [SerializeField] private TMP_InputField playerNameInputField;
-        [SerializeField] private Button startNewGameButton;
-        [SerializeField] private Button returnToMainMenuButton;
 
         private const int NUMBER_OF_MENUS_TO_GO_BACK_TO_MAIN = 2;
         private LevelLoader levelLoader;

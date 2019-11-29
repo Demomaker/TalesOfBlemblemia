@@ -14,15 +14,7 @@ namespace Game
         [SerializeField] private OptionsMenuController optionsMenuController;
         [SerializeField] private CreditsMenuController creditsMenuController;
         [SerializeField] private AchievementsMenuController achievementMenuController;
-
-        [Header("Buttons")] 
-        [SerializeField] private Button newGameButton = null;
-        [SerializeField] private Button loadGameButton = null;
-        [SerializeField] private Button optionsButton = null;
-        [SerializeField] private Button achievementsButton;
-        [SerializeField] private Button creditsButton = null;
-        [SerializeField] private Button exitGameButton = null;
-
+        
         private Canvas mainMenuCanvas;
         private Navigator navigator;
         private OnMainMenuEnter onMainMenuEnter;

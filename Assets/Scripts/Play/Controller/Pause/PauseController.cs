@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using Harmony;
+using UnityEngine;
 
 namespace Game
 {
+    [Findable("PauseController")]
     //Author: Antoine Lessard
     public class PauseController : MonoBehaviour
     {
@@ -17,17 +19,19 @@ namespace Game
 
         private bool isPaused;
         private CinematicController cinematicController;
+        private LevelController levelController;
 
         private void Awake()
         {
             isPaused = false;
+            levelController = Harmony.Finder.LevelController;
         }
 
         private void Start()
         {
             pauseMenuCanvas.enabled = false;
             optionsMenuCanvas.enabled = false;
-            cinematicController = Harmony.Finder.LevelController.CinematicController;
+            cinematicController = levelController.CinematicController;
         }
 
         private void Update()

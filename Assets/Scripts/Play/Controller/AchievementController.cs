@@ -30,7 +30,7 @@ namespace Game
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
-            saveController = Finder.SaveController;
+            saveController = Harmony.Finder.SaveController;
             achievementUnlockedText.text = gameSettings.AchievementUnlockedString;
         }
 

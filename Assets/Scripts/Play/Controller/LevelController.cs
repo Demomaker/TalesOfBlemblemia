@@ -83,7 +83,7 @@ namespace Game
             onLevelChange = Harmony.Finder.OnLevelChange;
             onCampaignFailed = Harmony.Finder.OnCampaignFailed;
             levelLoader = Harmony.Finder.LevelLoader;
-            saveController = Finder.SaveController;
+            saveController = Harmony.Finder.SaveController;
             gameController = Harmony.Finder.GameController;
             gameSettings = Harmony.Finder.GameSettings;
             grid = Harmony.Finder.GridController;

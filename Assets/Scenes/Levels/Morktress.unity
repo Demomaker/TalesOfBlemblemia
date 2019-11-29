@@ -44046,7 +44046,7 @@ PrefabInstance:
     - target: {fileID: 8107675077010686818, guid: 69882a1ea8ed9d642905dec4560464a8,
         type: 3}
       propertyPath: detectionRadius
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2597390413755073546, guid: 69882a1ea8ed9d642905dec4560464a8,
         type: 3}
@@ -56448,7 +56448,7 @@ PrefabInstance:
     - target: {fileID: 4253085984880015324, guid: 14fb1eef9f754fc43ac9e02382952550,
         type: 3}
       propertyPath: detectionRadius
-      value: 6
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 679603002114897798, guid: 14fb1eef9f754fc43ac9e02382952550,
         type: 3}

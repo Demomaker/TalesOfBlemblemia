@@ -8,9 +8,6 @@ namespace Game
     //Author : Antoine Lessard
     public class AchievementsMenuController : MonoBehaviour
     {
-        [Header("Buttons")] 
-        [SerializeField] private Button returnToMainMenuButton;
-
         [Header("Achievements")] 
         [SerializeField] private Image[] achievements;
         
@@ -58,9 +55,9 @@ namespace Game
         }
 
         [UsedImplicitly]
-        public void ReturnToMainMenu()
-        {
-            navigator.Leave();
-        }
+         public void ReturnToMainMenu()
+         {
+             navigator.Leave();
+         }
     }
 }

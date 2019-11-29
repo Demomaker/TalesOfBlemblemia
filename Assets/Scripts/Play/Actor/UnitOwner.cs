@@ -48,6 +48,7 @@ namespace Game
             {
                 unit.HasActed = true;
                 HasLostAUnitInCurrentLevel = true;
+                DefeatedUnits.Add(unit);
                 ownedUnits.Remove(unit);
             }
         }
@@ -56,7 +57,6 @@ namespace Game
         {
             if (enemyUnits.Contains(enemy))
             {
-                DefeatedUnits.Add(enemy);
                 enemyUnits.Remove(enemy);
             }
         }

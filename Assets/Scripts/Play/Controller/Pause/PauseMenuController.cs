@@ -19,9 +19,9 @@ namespace Game
 
         private void Start()
         {
-            navigator = Finder.Navigator;
+            navigator = Harmony.Finder.Navigator;
             pauseMenuScreen = GetComponent<Canvas>();
-            pauseController = Finder.PauseController;
+            pauseController = Harmony.Finder.PauseController;
             levelLoader = Harmony.Finder.LevelLoader;
             gameSettings = Harmony.Finder.GameSettings;
         }
