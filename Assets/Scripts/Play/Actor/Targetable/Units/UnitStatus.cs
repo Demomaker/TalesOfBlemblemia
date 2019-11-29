@@ -1,4 +1,5 @@
 ﻿using System;
+using Harmony;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,8 +7,10 @@ using UnityEngine.UI;
 namespace Game
 {
     [RequireComponent(typeof(Canvas), typeof(BoxCollider2D))]
-    public class UnitGraphics : MonoBehaviour
+    public class UnitStatus : MonoBehaviour
     {
+        private const string HEALTH_TEXT_SEPARATOR = "/";
+        
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI movementText;
@@ -97,7 +100,7 @@ namespace Game
 
         private void UpdateHealthText()
         {
-            healthText.text = Mathf.Clamp(unit.CurrentHealthPoints, 0, unit.Stats.MaxHealthPoints).ToString();
+            healthText.text = Mathf.Clamp(unit.CurrentHealthPoints, 0, unit.Stats.MaxHealthPoints) + HEALTH_TEXT_SEPARATOR + unit.Stats.MaxHealthPoints;
         }
 
         private void UpdateMovementText()
