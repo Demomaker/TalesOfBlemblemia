@@ -85,6 +85,7 @@ namespace Game
 
         private IEnumerator PlayQuote(Dialogue dialogue)
         {
+            if (dialogueManager == null) yield break;
             dialogueManager.StartDialogue(dialogue);
             while (dialogueManager.IsDisplayingDialogue)
             {

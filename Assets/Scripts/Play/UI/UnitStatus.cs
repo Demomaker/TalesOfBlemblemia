@@ -14,7 +14,7 @@ namespace Game
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI movementText;
         [SerializeField] private TextMeshProUGUI attackText;
-        [SerializeField] private Image[] nameBackground;
+        [SerializeField] private Image[] background;
         [SerializeField] private Image attackIcon;
         [SerializeField] private Sprite axeSprite;
         [SerializeField] private Sprite spearSprite;
@@ -58,7 +58,7 @@ namespace Game
                     break;
             }
             
-            foreach (var image in nameBackground)
+            foreach (var image in background)
             {
                 image.color = unit.IsEnemy ? gameSettings.Red : gameSettings.Green;
             }

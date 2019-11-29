@@ -32,21 +32,17 @@ namespace Game
         [SerializeField] private string surviveString = "Survive ";
         [SerializeField] private string turnString = " turns";
         private CoroutineStarter coroutineStarter;
-        private CinematicController cinematicController;
         private int levelTileUpdateKeeper;
         private string levelName;
         private bool levelIsEnding;
         private bool isComputerPlaying;
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
-        private OnLevelChange onLevelChange;
         private OnCampaignFailed onCampaignFailed;
         private UIController uiController;
-        private LevelLoader levelLoader;
         private Unit[] units;
         private UnitOwner currentPlayer;
         private int numberOfPlayerTurns;
-        private GameSettings gameSettings;
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
@@ -54,9 +50,13 @@ namespace Game
         private EnemyRangeController enemyRangeController;
         private AchievementController achievementController;
         private GridController grid;
-
         private HumanPlayer humanPlayer;
         private ComputerPlayer computerPlayer;
+        
+        protected CinematicController cinematicController;
+        protected OnLevelChange onLevelChange;
+        protected LevelLoader levelLoader;
+        protected GameSettings gameSettings;
 
         private bool AllEnemiesDied => computerPlayer.HaveAllUnitsDied;
         private bool PointAchieved => completeIfPointAchieved && protagonistGameObject.GetComponent<Unit>()?.CurrentTile.LogicalPosition == pointToAchieve;
@@ -69,14 +69,14 @@ namespace Game
         public bool LevelEnded => LevelCompleted || LevelFailed;
         public bool RevertWeaponTriangle => revertWeaponTriangle;
         public int LevelTileUpdateKeeper => levelTileUpdateKeeper;
-        public AudioClip BackgroundMusic => backgroundMusic;
-        public CinematicController CinematicController => cinematicController;
+        public virtual AudioClip BackgroundMusic => backgroundMusic;
+        public virtual CinematicController CinematicController => cinematicController;
         public UnitOwner CurrentPlayer => currentPlayer;
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
         public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && CurrentPlayer == humanPlayer;
         public bool BattleOngoing { get; set; }
-        private void Awake()
+        protected virtual void Awake()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelFailed = Harmony.Finder.OnLevelFailed;
@@ -101,7 +101,7 @@ namespace Game
             achievementController = Harmony.Finder.AchievementController;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             onLevelChange.Publish(this);
             units = FindObjectsOfType<Unit>();
@@ -115,18 +115,18 @@ namespace Game
             if((levelName == gameSettings.DarkTowerSceneName || levelName == gameSettings.TulipValleySceneName) && humanPlayer.NumberOfUnits == gameSettings.NumberOfMaximumUnitsForThePlayer) 
                 achievementController.UnlockAchievement(gameSettings.ReachFinalLevelWith8Players);
         }
-        
-        private void OnEnable()
+
+        protected virtual void OnEnable()
         {
             onUnitDeath.Notify += computerPlayer.OnUnitDeath;
         }
-        
-        private void OnDisable()
+
+        protected virtual void OnDisable()
         {
             onUnitDeath.Notify -= computerPlayer.OnUnitDeath;
         }
-
-        protected void Update()
+        
+        protected virtual void Update()
         {
             if (!cinematicController.IsPlayingACinematic)
             {
@@ -141,14 +141,24 @@ namespace Game
         {
             if (levelIsEnding) yield break;
             levelIsEnding = true;
-            if(LevelCompleted) onLevelVictory.Publish(this);
+            if (LevelCompleted)
+            {
+                onLevelVictory.Publish();
+                if (endGameCredits != null)
+                {
+                    endGameCredits.RollCredits();
+                    yield return new WaitForSeconds(CREDITS_DURATION);
+                    CheckForPermadeath();
+                    CheckIfUnitWasRecruited();
+                    CheckIfUpperPathWasTaken();
+                    UpdatePlayerSave();
+                    levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
+                    yield break;
+                }
+            }
+            
             if(LevelFailed) PublishFailDependingOnDifficultyLevel(gameController.DifficultyLevel);
             while (cinematicController.IsPlayingACinematic) yield return null;
-            if (endGameCredits != null)
-            {
-                endGameCredits.RollCredits();
-                yield return new WaitForSeconds(CREDITS_DURATION);
-            }
             CheckForPermadeath();
             CheckIfUnitWasRecruited();
             CheckIfUpperPathWasTaken();
@@ -176,10 +186,10 @@ namespace Game
         private void PublishFailDependingOnDifficultyLevel(DifficultyLevel difficultyLevel)
         {
             if (difficultyLevel == DifficultyLevel.Easy)
-                onLevelFailed.Publish(this);
+                onLevelFailed.Publish();
             else
             {
-                onCampaignFailed.Publish(this);
+                onCampaignFailed.Publish();
                 saveController.ResetSave();
                 levelLoader.FadeToLevel(gameSettings.MainmenuSceneName, LoadSceneMode.Additive);
             }

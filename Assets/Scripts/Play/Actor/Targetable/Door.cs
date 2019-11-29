@@ -13,6 +13,7 @@ namespace Game
         protected override void Awake()
         {
             levelController = Harmony.Finder.LevelController;
+            base.Awake();
         }
         protected override void Start()
         {

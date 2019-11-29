@@ -12,6 +12,7 @@ namespace Game
         private OnLevelVictory onLevelVictory;
         private OnLevelFailed onLevelFailed;
         private OnCampaignFailed onCampaignFailed;
+        private LevelController levelController;
 
         public IEnumerable<CinematicAction> Actions => actions;
 
@@ -20,6 +21,7 @@ namespace Game
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelFailed = Harmony.Finder.OnLevelFailed;
             onCampaignFailed = Harmony.Finder.OnCampaignFailed;
+            levelController = Harmony.Finder.LevelController;
         }
         
         private void Start()
@@ -69,14 +71,9 @@ namespace Game
             }
         }
 
-        public void TriggerCinematic(LevelController levelController)
-        {
-            levelController.CinematicController.LaunchCinematic(this);
-        }
-        
         public void TriggerCinematic()
         {
-            TriggerCinematic(Harmony.Finder.LevelController);
+            levelController.CinematicController.LaunchCinematic(this);
         }
     }
 }

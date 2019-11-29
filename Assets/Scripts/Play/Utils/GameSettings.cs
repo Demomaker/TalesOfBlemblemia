@@ -73,6 +73,10 @@ namespace Game
         [SerializeField] private string thomasName = "Thomas";
         [SerializeField] private string abrahamName = "Abraham";
         [SerializeField] [Header("Achievements")] private string achievementUnlockedString = "Achievement unlocked!";
+        [SerializeField] [Header("Achievement Timing")] private float secondsBeforeTypingStart = 1;
+        [SerializeField] private float secondsBeforeTitleCharacterPrint = 0.1f;
+        [SerializeField] private float secondsBeforeTextCharacterPrint = 0.05f;
+        [SerializeField] private float secondsBeforeNewAchievementShow = 1f;
         [SerializeField] [Header("Achievement Names")] private string completeCampaignOnEasy = "Baby Steps";
         [SerializeField] private string completeCampaignOnMedium = "Now you're getting it!";
         [SerializeField] private string completeCampaignOnHard = "You mad man!";
@@ -166,6 +170,10 @@ namespace Game
         public string AbrahamName => abrahamName;
 
         public string AchievementUnlockedString => achievementUnlockedString;
+        public float SecondsBeforeTypingStart => secondsBeforeTypingStart;
+        public float SecondsBeforeTitleCharacterPrint => secondsBeforeTitleCharacterPrint;
+        public float SecondsBeforeTextCharacterPrint => secondsBeforeTextCharacterPrint;
+        public float SecondsBeforeNewAchievementShow => secondsBeforeNewAchievementShow;
         public string CompleteCampaignOnEasy => completeCampaignOnEasy;
         public string CompleteCampaignOnEasyDescription => completeCampaignOnEasyDescription;
         public string CompleteCampaignOnMedium => completeCampaignOnMedium;
@@ -199,5 +207,6 @@ namespace Game
         public string EmptyLevelString => emptyLevelString;
         public string AudioPath => audioPath;
         public string DarkKnightName => darkKnightName;
+
     }
 }

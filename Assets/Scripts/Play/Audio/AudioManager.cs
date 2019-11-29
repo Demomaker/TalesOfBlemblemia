@@ -32,6 +32,7 @@ namespace Game
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private OnLevelVictory onLevelVictory;
         private OnLevelChange onLevelChange;
+        private OnEndLevelEnter onEndLevelEnter;
         private OnOverWorldEnter onOverWorldEnter;
         private OnMainMenuEnter onMainMenuEnter;
         private OnButtonClick onButtonClick;
@@ -78,6 +79,7 @@ namespace Game
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelChange = Harmony.Finder.OnLevelChange;
+            onEndLevelEnter = Harmony.Finder.OnEndLevelEnter;
             onOverWorldEnter = Harmony.Finder.OnOverWorldEnter;
             onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
             onButtonClick = Harmony.Finder.OnButtonClick;
@@ -98,6 +100,7 @@ namespace Game
             onPlayerUnitLoss.Notify += PlayUnitLossMusic;
             onLevelVictory.Notify += PlayLevelVictoryMusic;
             onLevelChange.Notify += PlayBackgroundMusicOfLevel;
+            onEndLevelEnter.Notify += PlayEndLevelMusic;
             onOverWorldEnter.Notify += PlayOverWorldBackgroundMusic;
             onMainMenuEnter.Notify += PlayMainMenuBackgroundMusic;
             onButtonClick.Notify += PlayButtonClickSound;
@@ -118,6 +121,7 @@ namespace Game
             onPlayerUnitLoss.Notify -= PlayUnitLossMusic;
             onLevelVictory.Notify -= PlayLevelVictoryMusic;
             onLevelChange.Notify -= PlayBackgroundMusicOfLevel;
+            onEndLevelEnter.Notify -= PlayEndLevelMusic;
             onOverWorldEnter.Notify -= PlayOverWorldBackgroundMusic;
             onMainMenuEnter.Notify -= PlayMainMenuBackgroundMusic;
             onButtonClick.Notify -= PlayButtonClickSound;
@@ -127,7 +131,7 @@ namespace Game
             onMusicVolumeChange.Notify -= ChangeMusicVolume;
             onSFXVolumeChange.Notify -= ChangeSFXVolume;
         }
-        
+
         #endregion
         #region Audio Management
         private void UpdateMusicVolume()
@@ -282,7 +286,7 @@ namespace Game
                 PlayMusic(audioClips.SadMusic);
         }
 
-        private void PlayLevelVictoryMusic(LevelController levelController)
+        private void PlayLevelVictoryMusic()
         {
             if(musicSource.clip != audioClips.LevelVictoryMusic)
                 PlayMusic(audioClips.LevelVictoryMusic);
@@ -292,6 +296,11 @@ namespace Game
         {
             StopCurrentMusic();
             PlayMusic(level.BackgroundMusic);
+        }
+        
+        private void PlayEndLevelMusic(EndSceneController endSceneController)
+        {
+            StopCurrentMusic();
         }
 
         private void PlayOverWorldBackgroundMusic(OverWorldController overWorld)

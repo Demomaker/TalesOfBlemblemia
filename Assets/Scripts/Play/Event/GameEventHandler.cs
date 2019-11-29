@@ -33,6 +33,7 @@ namespace Game
             gameObject.AddComponent<OnPlayerUnitLoss>();
             gameObject.AddComponent<OnSFXToggle>();
             gameObject.AddComponent<OnSFXVolumeChange>();
+            gameObject.AddComponent<OnEndLevelEnter>();
             gameObject.AddComponent<OnHealthChange>();
             gameObject.AddComponent<OnMovementChange>();
         }

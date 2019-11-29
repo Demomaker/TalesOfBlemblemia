@@ -23,6 +23,7 @@ namespace Game
         private OnOverWorldEnter onOverWorldEnter;
         private LevelLoader levelLoader;
         private GameSettings gameSettings;
+        private GameController gameController;
 
         public bool CharacterIsMoving { get; private set; }
 
@@ -36,11 +37,16 @@ namespace Game
             gameSettings = Harmony.Finder.GameSettings;
             onOverWorldEnter = Harmony.Finder.OnOverWorldEnter;
             levelLoader = Harmony.Finder.LevelLoader;
+            gameController = Harmony.Finder.GameController;
         }
         
         private void Start()
         {
             onOverWorldEnter.Publish(this);
+            if (gameController.PreviousLevelName == gameSettings.MorktressSceneName)
+            {
+                levelLoader.FadeToLevel(gameSettings.EndSceneName, LoadSceneMode.Additive);
+            }
         }
 
         private IEnumerator MoveCharacterToLevelEntry(Vector3 to)

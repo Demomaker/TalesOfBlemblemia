@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Harmony;
 using JetBrains.Annotations;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game
 {
@@ -22,8 +20,8 @@ namespace Game
         private OnHurt onHurt;
         private OnAttack onAttack;
         private OnDodge onDodge;
-        private OnUnitMove onUnitMove;
         private OnUnitDeath onUnitDeath;
+        private OnUnitMove onUnitMove;
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private GridController gridController;
         private OnHealthChange onHealthChange;
@@ -120,7 +118,7 @@ namespace Game
         {
             get
             {
-                if (tileUpdateKeeper == Harmony.Finder.LevelController.LevelTileUpdateKeeper) return movementCosts;
+                if (tileUpdateKeeper == levelController.LevelTileUpdateKeeper) return movementCosts;
                 if (currentTile != null)
                     MovementCosts = PathFinder.ComputeCost(currentTile.LogicalPosition, IsEnemy);
                 return movementCosts;
@@ -128,7 +126,7 @@ namespace Game
             set
             {
                 movementCosts = value;
-                tileUpdateKeeper = Harmony.Finder.LevelController.LevelTileUpdateKeeper;
+                tileUpdateKeeper = levelController.LevelTileUpdateKeeper;
             }
         }
         public int HpGainedByResting
@@ -263,8 +261,8 @@ namespace Game
             if (hasDiedOnce) yield break;
             hasDiedOnce = true;
             GetComponent<Cinematic>()?.TriggerCinematic();
-            while (Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic ||
-                   Harmony.Finder.UIController.IsBattleReportActive)
+            while (levelController.CinematicController.IsPlayingACinematic ||
+                   uiController.IsBattleReportActive)
             {
                 yield return null;
             }

@@ -13,5 +13,7 @@
         public const string GAME_EVENT_HANDLER_TAG = "GameEventHandler";
         public const string PLAYER_TAG = "Player";
         public const string DIALOGUE_UI_TAG = "DialogueUi";
+        public const string DIALOGUE_MANAGER_TAG = "DialogueManager";
+        public const string UI_CONTROLLER_TAG = "UIController";
     }
 }

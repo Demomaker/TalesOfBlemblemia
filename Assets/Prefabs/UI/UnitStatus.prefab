@@ -1803,7 +1803,7 @@ MonoBehaviour:
   healthText: {fileID: 7657747826430101217}
   movementText: {fileID: 8163905367009167704}
   attackText: {fileID: 338712064408286797}
-  nameBackground:
+  background:
   - {fileID: 2378493946547805189}
   - {fileID: 4782633673784735056}
   - {fileID: 6198530051504072220}

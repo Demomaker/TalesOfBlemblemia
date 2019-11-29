@@ -11,8 +11,8 @@ namespace Game
 
         protected Tile currentTile;
         private int currentHealthPoints;
-        private CoroutineStarter coroutineStarter;
-        private LevelController levelController;
+        protected CoroutineStarter coroutineStarter;
+        protected LevelController levelController;
 
         public bool IsEnemyTarget => isEnemyTarget;
         public bool NoHealthLeft => CurrentHealthPoints <= 0;
