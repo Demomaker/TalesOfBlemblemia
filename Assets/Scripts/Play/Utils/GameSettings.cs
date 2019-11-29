@@ -12,15 +12,14 @@ namespace Game
     public class GameSettings : MonoBehaviour
     {
         private const float RGB_MAX = 255f;
-        
-        #region Serialized Fields
+
         [SerializeField] [Header("Unit settings")] private int playerMovementRange = 3;
         [SerializeField] private int enemyMovementRange = 3;
         [SerializeField] private int playerAttackRange = 1;
         [SerializeField] private int enemyAttackRange = 1;
         [SerializeField] private float attackDuration = 0.3f;
         [SerializeField] private float movementDuration = 0.3f;
-        [SerializeField] private int numberOfRecruitablesOnAlternatePath = 8;
+        [SerializeField] private int numberOfMaximumUnitsForThePlayer = 8;
         [SerializeField] [Header("Input settings")] private KeyCode skipComputerTurnKey = KeyCode.Space;
         [SerializeField] private KeyCode skipLevelKey = KeyCode.O;
 
@@ -94,10 +93,7 @@ namespace Game
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
         [SerializeField] private string darkKnightName = "Dark Knight";
-        #endregion Serialized Fields
-        
-        #region Accessors
-        #region Colors
+
         public Color PaleAlpha => paleAlpha;
         public Color OpaqueAlpha => opaqueAlpha;
         public Color Green => green;
@@ -106,20 +102,17 @@ namespace Game
         public Color DarkGreen => darkGreen;
         public Color DarkYellow => darkYellow;
         public Color DarkRed => darkRed;
-        #endregion Colors
-        #region Unit Settings
+
         public int PlayerMovementRange => playerMovementRange;
         public int EnemyMovementRange => enemyMovementRange;
         public int PlayerAttackRange => playerAttackRange;
         public int EnemyAttackRange => enemyAttackRange;
         public float AttackDuration => attackDuration;
         public float MovementDuration => movementDuration;
-        public int NumberOfRecruitablesOnAlternatePath => numberOfRecruitablesOnAlternatePath;
-        #endregion Unit Settings
-        #region Input Settings
+        public int NumberOfMaximumUnitsForThePlayer => numberOfMaximumUnitsForThePlayer;
+
         public KeyCode SkipComputerTurnKey => skipComputerTurnKey;
-        #endregion Input Settings
-        #region Scene Names
+
         public string SnowyPeaksSceneName => snowyPeaksScene.ToString();
         public string JimsterburgSceneName => jimsterburgScene.ToString();
         public string ParabeneForestSceneName => parabeneForestScene.ToString();
@@ -132,13 +125,11 @@ namespace Game
         public string OverworldSceneName => overworldScene.ToString();
         public string MainmenuSceneName => mainmenuScene.ToString();
         public string StartingLevelSceneName => startingLevelScene.ToString();
-        #endregion Scene Names
-        #region Saves
+  
         public int SaveSlotOne => saveSlotOne;
         public int SaveSlotTwo => saveSlotTwo;
         public int SaveSlotThree => saveSlotThree;
-        #endregion Saves
-        #region Playable Characters
+
         public string FranklemName => franklemName;
         public string MyriamName => myriamName;
         public string BramName => bramName;
@@ -147,10 +138,8 @@ namespace Game
         public string JebediahName => jebediahName;
         public string ThomasName => thomasName;
         public string AbrahamName => abrahamName;
-        #endregion Playable Characters
-        #region Achievements
+
         public string AchievementUnlockedString => achievementUnlockedString;
-        #region Achievement Names
         public string CompleteCampaignOnEasy => completeCampaignOnEasy;
         public string CompleteCampaignOnEasyDescription => completeCampaignOnEasyDescription;
         public string CompleteCampaignOnMedium => completeCampaignOnMedium;
@@ -165,19 +154,14 @@ namespace Game
         public string FinishALevelWithoutUnitLossDescription => finishALevelWithoutUnitLossDescription;
         public string FinishCampaignWithoutUnitLoss => finishCampaignWithoutUnitLoss;
         public string FinishCampaignWithoutUnitLossDescription => finishCampaignWithoutUnitLossDescription;
-        public string SaveAllRecruitablesFromAlternatePath => saveAllRecruitablesFromAlternatePath;
-        public string SaveAllRecruitablesFromAlternatePathDescription => saveAllRecruitablesFromAlternatePathDescription;
-        #endregion Achievement Names
-        #endregion Achievements
-        #region Animation and Actions
+
         public string IsMoving => isMoving;
         public string IsAttacking => isAttacking;
         public string IsGoingToDie => isGoingToDie;
         public string IsBeingHurt => isBeingHurt;
         public string IsDodging => isDodging;
         public string IsResting => isResting;
-        #endregion Animation and Actions
-        #region Other
+
         public string NameString => nameString;
         public string DescriptionString => descriptionString;
         public string DifficultyString => difficultyString;
@@ -189,8 +173,5 @@ namespace Game
         public string EmptyLevelString => emptyLevelString;
         public string AudioPath => audioPath;
         public string DarkKnightName => darkKnightName;
-        #endregion Other
-        #endregion Accessors
-        
     }
 }
