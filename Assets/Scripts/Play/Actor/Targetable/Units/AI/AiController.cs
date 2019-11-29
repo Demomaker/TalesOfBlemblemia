@@ -4,33 +4,24 @@ using UnityEngine;
 
 namespace Game
 {
-    //Author: Zacharie Lavigne
     /// <summary>
     /// The artificial intelligence controller for the enemy units
     /// Author: Zacharie Lavigne
     /// </summary>
     public class AiController
     {
-        private GridController grid;
-        /// <summary>
-        /// The number of actions from which the enemy may choose randomly from based on the difficulty level 
-        /// </summary>
-        private int nbOfChoice = 5;
+        private readonly int nbOfChoice;
         
         private AiControllerValues aiControllerValues = new AiControllerValues();
 
-
-        /// <summary>
-        /// Finds an action to do for an AI controlled unit on its turn
-        /// </summary>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
-        /// <param name="enemyUnits">The player's units</param>
-        /// <returns>The action the unit should play on its turn</returns>
-        public Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy)
+        public AiController(int nbOfChoice)
         {
-            if (grid == null) grid = Harmony.Finder.GridController;
+            this.nbOfChoice = nbOfChoice;
+        }
 
-            if (Harmony.Finder.LevelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert)) aiControllerValues = new AiControllerValuesRevert();
+        public Action DetermineAction(Unit playableUnit, List<Unit> enemyUnits, List<Targetable> targetsToDestroy, GridController grid, LevelController levelController)
+        {
+            if (levelController.RevertWeaponTriangle && !(aiControllerValues is AiControllerValuesRevert)) aiControllerValues = new AiControllerValuesRevert();
             
             if (!playableUnit.IsAwake)
             {
@@ -40,8 +31,8 @@ namespace Game
                 }
             }
             //Every potential actions the unit could do
-            List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits);
-            actionsToDo.AddRange(ScanForTargets(playableUnit, targetsToDestroy));
+            List<Action> actionsToDo = ScanForEnemies(playableUnit, enemyUnits, grid);
+            actionsToDo.AddRange(ScanForTargets(playableUnit, targetsToDestroy, grid));
             
             //Setting every action's turn
             ComputeChoiceScores(actionsToDo, playableUnit);
@@ -50,7 +41,7 @@ namespace Game
             List<Action> bestActions = GetBestActions(actionsToDo);
 
             //Verification of if resting and fleeing is needed
-            AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo);
+            AddRestActionIfNeeded(bestActions, playableUnit, actionsToDo, grid);
 
             //The action is randomly selected from the best possible ones
             return SelectRandomBestAction(bestActions);
@@ -70,11 +61,6 @@ namespace Game
             return false;
         }
 
-        /// <summary>
-        /// Randomly chooses an action from the best possible actions to do
-        /// </summary>
-        /// <param name="bestActions">The best possible actions to do</param>
-        /// <returns>A randomly chosen an action</returns>
         private Action SelectRandomBestAction(List<Action> bestActions)
         {
             int totalScore = (int)GetTotalScore(bestActions);
@@ -107,26 +93,15 @@ namespace Game
             return totalScore;
         }
 
-        /// <summary>
-        /// Adds resting as a potential action if needed
-        /// </summary>
-        /// <param name="bestActions">The best possible actions to do</param>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
-        /// <param name="actionsToDo">The potential actions the unit could do</param>
-        private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo)
+        private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo, GridController grid)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
             if(playableUnit.Stats.MaxHealthPoints * aiControllerValues.HealthModForResting < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
             {
-                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
+                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
             }
         }
         
-        /// <summary>
-        /// Computes the score of every action the unit could do
-        /// </summary>
-        /// <param name="actionsToDo">The potential actions the unit could do</param>
-        /// <param name="playableUnit">The unit currently controlled by the AI</param>
         private void ComputeChoiceScores(List<Action> actionsToDo, Unit playableUnit)
         {
             foreach (var action in actionsToDo)
@@ -142,12 +117,6 @@ namespace Game
             }
         }
         
-        /// <summary>
-        /// Gets the best possible actions (with the highest scores) in descending order
-        /// The number of best actions depends on the difficulty level
-        /// </summary>
-        /// <param name="actionsToDo">The action to execute on this turn</param>
-        /// <returns>An array of all the best possible actions</returns>
         private List<Action> GetBestActions(List<Action> actionsToDo)
         {
             //Copy to not change the original list
@@ -207,9 +176,8 @@ namespace Game
         /// <param name="potentialActions">The potential actions of this unit</param>
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <returns>The path to the safest tile to go</returns>
-        private List<Tile> FindFleePath(List<Action> potentialActions, Unit playableUnit)
+        private List<Tile> FindFleePath(List<Action> potentialActions, Unit playableUnit, GridController grid)
         {
-            var grid = Harmony.Finder.GridController;
             int[,] optionMap = new int[grid.NbColumns, grid.NbLines]; 
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
@@ -251,7 +219,7 @@ namespace Game
                 }
             }
 
-            return FindPathTo(playableUnit, position);
+            return FindPathTo(playableUnit, position, grid);
         }
         
         /// <summary>
@@ -260,7 +228,7 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="potentialTarget">The target unit</param>
         /// <returns>The path to a target unit</returns>
-        private List<Tile> FindPathTo(Unit playableUnit, Targetable potentialTarget)
+        private List<Tile> FindPathTo(Unit playableUnit, Targetable potentialTarget, GridController grid)
         {
             List<Tile> path;
             if (playableUnit.TargetIsInRange(potentialTarget))
@@ -271,7 +239,7 @@ namespace Game
             else
             {
                 path = PathFinder.GetPath(
-                    Harmony.Finder.GridController,
+                    grid,
                     new List<Tile>(), 
                     new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                     new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y), 
@@ -289,10 +257,10 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="targetPosition">The target position</param>
         /// <returns>The shortest path to a target position</returns>
-        private List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition)
+        private List<Tile> FindPathTo(Unit playableUnit, Vector2Int targetPosition, GridController grid)
         {
             return PathFinder.GetPath(
-                Harmony.Finder.GridController,
+                grid,
                 new List<Tile>(), 
                 new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y), 
                 new Vector2Int(targetPosition.x, targetPosition.y),
@@ -306,13 +274,13 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyUnits">The player's units</param>
         /// <returns>A list of potential actions, on per enemy</returns>
-        private List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits)
+        private List<Action> ScanForEnemies(Unit playableUnit, List<Unit> enemyUnits, GridController grid)
         {
             List<Action> actions = new List<Action>();
             for (int i = 0; i < enemyUnits.Count; i++)
             {
                 if(enemyUnits[i] != null && enemyUnits[i].IsPlayer)
-                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i]), ActionType.Attack, enemyUnits[i], aiControllerValues.BaseChoiceActionScore));
+                    actions.Add(new Action(FindPathTo(playableUnit, enemyUnits[i], grid), ActionType.Attack, enemyUnits[i], aiControllerValues.BaseChoiceActionScore));
             }
             return actions;
         }
@@ -323,14 +291,14 @@ namespace Game
         /// <param name="playableUnit">The unit currently controlled by the AI</param>
         /// <param name="enemyTargets">The AI's targets</param>
         /// <returns>A list of potential actions, on per target</returns>
-        private List<Action> ScanForTargets(Unit playableUnit, List<Targetable> enemyTargets)
+        private List<Action> ScanForTargets(Unit playableUnit, List<Targetable> enemyTargets, GridController grid)
         {
             List<Action> actions = new List<Action>();
             foreach (var target in enemyTargets)
             {
                 if (target != null)
                 {
-                    actions.Add(new Action(FindPathTo(playableUnit, target), ActionType.Attack, target, aiControllerValues.BaseTargetActionScore));
+                    actions.Add(new Action(FindPathTo(playableUnit, target, grid), ActionType.Attack, target, aiControllerValues.BaseTargetActionScore));
                 }
             }
             return actions;

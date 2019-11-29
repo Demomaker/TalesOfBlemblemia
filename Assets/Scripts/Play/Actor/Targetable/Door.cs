@@ -11,13 +11,12 @@ namespace Game
 
         protected override void Start()
         {
-            if (baseHealth < 1)
-                throw new Exception("Door base health should be at least 1");
+            if (baseHealth < 1) throw new Exception("Door base health should be at least 1");
             CurrentHealthPoints = baseHealth;
             base.Start();
         }
 
-        public override IEnumerator Die()
+        protected override IEnumerator Die()
         {
             currentTile.UnlinkDoor();
             Harmony.Finder.LevelController.IncrementTileUpdate();

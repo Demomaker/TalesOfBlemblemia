@@ -11,7 +11,6 @@ namespace Game
 
         protected Tile currentTile;
         private int currentHealthPoints;
-        private OnUnitDeath onUnitDeath;
         private CoroutineStarter coroutineStarter;
         private LevelController levelController;
 
@@ -42,23 +41,23 @@ namespace Game
             }
         }
 
-        public virtual IEnumerator Die()
-        {
-            currentTile.UnlinkUnit();
-            gameObject.SetActive(false);
-            yield return null;
-        }
-
+        
         public virtual void Awake()
         {
             coroutineStarter = Harmony.Finder.CoroutineStarter;
             levelController = Harmony.Finder.LevelController;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
         }
         
         protected virtual void Start()
         {
             coroutineStarter.StartCoroutine(InitPosition());
+        }
+
+        protected virtual IEnumerator Die()
+        {
+            currentTile.UnlinkUnit();
+            gameObject.SetActive(false);
+            yield return null;
         }
         
         private IEnumerator InitPosition()
