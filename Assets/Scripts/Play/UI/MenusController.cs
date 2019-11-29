@@ -20,7 +20,7 @@ namespace Game
 
         private void Awake()
         {
-            navigator = Finder.Navigator;
+            navigator = Harmony.Finder.Navigator;
         }
 
         private void Start()
