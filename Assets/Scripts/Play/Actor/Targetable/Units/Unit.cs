@@ -256,9 +256,9 @@ namespace Game
             AttackRoutineHandle = coroutineStarter.StartCoroutine(unitMover.Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
-        
-        
-        public override IEnumerator Die()
+
+
+        protected override IEnumerator Die()
         {
             if (hasDiedOnce) yield break;
             hasDiedOnce = true;

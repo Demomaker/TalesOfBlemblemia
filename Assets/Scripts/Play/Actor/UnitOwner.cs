@@ -5,7 +5,7 @@ namespace Game
 {
     /// <summary>
     /// A virtual player, be it human or artificial
-    /// Authors: Mike Bédard, Zacharie Lavigne, Jérémie Bertrand
+    /// Authors: Zacharie Lavigne, Jérémie Bertrand
     /// </summary>
     public class UnitOwner
     {
