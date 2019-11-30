@@ -13,15 +13,9 @@ namespace Game
 
         protected WeaponType weaponType;
         protected WeaponType advantage;
-        private LevelController levelController;
-        
+
         public UnitStats WeaponStats => weaponStats;
         public WeaponType WeaponType => weaponType;
-        public WeaponType Advantage => levelController.RevertWeaponTriangle ? advantage.GetAdvantageByWeaponType() : advantage;
-        
-        private void Awake()
-        {
-            levelController = Harmony.Finder.LevelController;
-        }
+        public WeaponType Advantage => Harmony.Finder.LevelController.RevertWeaponTriangle ? advantage.GetAdvantageByWeaponType() : advantage;
     }
 }

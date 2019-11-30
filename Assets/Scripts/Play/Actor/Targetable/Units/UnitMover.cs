@@ -103,12 +103,12 @@ namespace Game
                         associatedUnit.OnAttack.Publish(associatedUnit);
                         if (associatedUnit.TargetIsInRange(action.Target))
                         {
-                            levelController.BattleOngoing = true;
+                            Harmony.Finder.LevelController.BattleOngoing = true;
                             yield return associatedUnit.Attack(action.Target);
                             if (action.Target.GetType() == typeof(Unit))
-                                if (!levelController.CinematicController.IsPlayingACinematic)
+                                if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
                                     yield return uiController.LaunchBattleReport(associatedUnit.IsEnemy);
-                            levelController.BattleOngoing = false;
+                            Harmony.Finder.LevelController.BattleOngoing = false;
                         }
                         else
                             associatedUnit.Rest();
