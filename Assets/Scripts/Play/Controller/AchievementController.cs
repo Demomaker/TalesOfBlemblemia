@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using Game.UI.Achievement;
+using System.Linq;
+using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,104 +11,94 @@ namespace Game
     /// Controls the achievements and sends messages if achievements are completed
     /// Author : Mike Bédard
     /// </summary>
+    [Findable("AchievementController")]
     public class AchievementController : MonoBehaviour
     {
-
-        [SerializeField] private Text nameText;
+        private static readonly int IS_OPEN = Animator.StringToHash("IsOpen");
+        
+        [SerializeField] private Text achievementUnlockedText;
         [SerializeField] private Text descriptionText;
         [SerializeField] private Animator animator;
-        private readonly List<Achievement> achievements = new List<Achievement>();
-        private bool AchievementBeingShown;
-        private GameSettings gameSettings;
-        private GameController gameController;
+        [SerializeField] private Button skipButton;
         
-        private bool CompletedCampaignOnEasy =>
-            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Easy;
-        private bool CompletedCampaignOnMedium =>
-            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Medium;
-        private bool CompletedCampaignOnHard =>
-            gameController.AllLevelsCompleted && gameController.DifficultyLevel == DifficultyLevel.Hard;
-        private bool BlackKnightDefeated => gameController.PreviousLevelName == gameSettings.DarkTowerSceneName;
-        private bool ReachedFinalLevelWith8Players =>
-            HumanPlayer.Instance.NumberOfUnits > 8 &&
-            gameController.CurrentLevelName == gameSettings.MorktressSceneName;
-        private bool FinishedALevelWithoutUnitLoss =>
-            !HumanPlayer.Instance.HasLostAUnitInCurrentLevel &&
-            gameController.PreviousLevelName == gameController.CurrentLevelName &&
-            !string.IsNullOrEmpty(gameController.PreviousLevelName);
-        private bool SavedAllRecruitablesFromAlternatePath =>
-            HumanPlayer.Instance.NumberOfRecruitedUnitsFromAlternatePath >=
-            gameSettings.NumberOfRecruitablesOnAlternatePath;
-        private bool FinishedCampaignWithoutUnitLoss =>
-            !HumanPlayer.Instance.HasEverLostAUnit && gameController.AllLevelsCompleted;
+        private List<AchievementInfo> achievements = new List<AchievementInfo>();
+        private bool achievementBeingShown;
+        private bool skipAchievementShow;
+        private GameSettings gameSettings;
+        private SaveController saveController;
+        private CoroutineStarter coroutineStarter;
 
         private void Awake()
         {
             gameSettings = Harmony.Finder.GameSettings;
-            gameController = Harmony.Finder.GameController;
-            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnEasy,  () => CompletedCampaignOnEasy));
-            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnMedium,  () => CompletedCampaignOnMedium));
-            achievements.Add(new Achievement(gameSettings.CompleteCampaignOnHard,  () => CompletedCampaignOnHard));
-            achievements.Add(new Achievement(gameSettings.DefeatBlackKnight,  () => BlackKnightDefeated));
-            achievements.Add(new Achievement(gameSettings.ReachFinalLevelWith8Players,  () => ReachedFinalLevelWith8Players));
-            achievements.Add(new Achievement(gameSettings.FinishALevelWithoutUnitLoss,  () => FinishedALevelWithoutUnitLoss));
-            achievements.Add(new Achievement(gameSettings.SaveAllRecruitablesFromAlternatePath,  () => SavedAllRecruitablesFromAlternatePath));
-            achievements.Add(new Achievement(gameSettings.FinishCampaignWithoutUnitLoss,  () => FinishedCampaignWithoutUnitLoss));
-            nameText.text = gameSettings.AchievementGetString;
+            saveController = Harmony.Finder.SaveController;
+            achievementUnlockedText.text = gameSettings.AchievementUnlockedString;
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
 
-        private void Update()
+        private void Start()
         {
-            CheckIfAchievementCompleted();
+            achievements = saveController.Achievements;
         }
 
-        public void CheckIfAchievementCompleted()
+        private void OnEnable()
         {
-            foreach (var achievement in achievements)
-            {
-                if (achievement.AchievementCompleted)
-                {
-                    if(!achievement.AchievementHasBeenShown && !AchievementBeingShown)
-                            ShowAchievement(achievement);
-                }
-            }
+            skipButton.onClick.AddListener(SkipAchievementShow);
         }
 
-        public void ShowAchievement(Achievement achievement)
+        private void OnDisable()
         {
-            achievement.SetAchievementHasBeenShown();
-            StartAchievement(achievement);
+            skipButton.onClick.RemoveListener(SkipAchievementShow);
         }
         
-        public void StartAchievement(Achievement achievement)
+        //Author : Jérémie Bertrand
+        public void UnlockAchievement(string achievementName)
         {
-            animator.SetBool("IsOpen",true);
-            AchievementBeingShown = true;
-            StartCoroutine(TypeAchievementText(achievement.AchievementName));
+            var achievement = achievements.Find(info => info.AchievementName == achievementName);
+            if (achievement == null || achievement.Achieved) return;
+            achievement.Achieved = true;
+            saveController.UpdateAchievements(achievements);
+            ShowAchievement(achievement);
         }
 
-        IEnumerator TypeAchievementText(string text)
+        private void SkipAchievementShow()
         {
-            nameText.text = "";
-            descriptionText.text = "";
-            yield return new WaitForSeconds(1);
-            for (int i = 0; i < gameSettings.AchievementGetString.Length; i++)
-            {
-                nameText.text += gameSettings.AchievementGetString[i];
-                yield return new WaitForSeconds(0.1f);
-            }
-            for(int i = 0; i < text.Length; i++)
-            {
-                descriptionText.text += text[i];
-                yield return new WaitForSeconds(0.2f);
-            }
-            EndAchievementShow();
+            skipAchievementShow = true;
         }
-    
-        private void EndAchievementShow()
+        
+        private void ShowAchievement(AchievementInfo achievement)
         {
-            animator.SetBool("IsOpen",false);
-            AchievementBeingShown = false;
+            coroutineStarter.StartCoroutine(TypeAchievementText(achievement.AchievementName));
+        }
+
+        private IEnumerator TypeAchievementText(string text)
+        {
+            while (achievementBeingShown)
+            {
+                yield return null;
+            }
+            animator.SetBool(IS_OPEN,true);
+            achievementBeingShown = true;
+            achievementUnlockedText.text = "";
+            descriptionText.text = "";
+            yield return new WaitForSeconds(gameSettings.SecondsBeforeTypingStart);
+            foreach (var character in gameSettings.AchievementUnlockedString.TakeWhile(character => !skipAchievementShow))
+            {
+                achievementUnlockedText.text += character;
+                yield return new WaitForSeconds(gameSettings.SecondsBeforeTitleCharacterPrint);
+            }
+
+            achievementUnlockedText.text = gameSettings.AchievementUnlockedString;
+            foreach (var character in text.TakeWhile(character => !skipAchievementShow))
+            {
+                descriptionText.text += character;
+                yield return new WaitForSeconds(gameSettings.SecondsBeforeTextCharacterPrint);
+            }
+            descriptionText.text = text;
+            animator.SetBool(IS_OPEN,false);
+            yield return new WaitForSeconds(gameSettings.SecondsBeforeNewAchievementShow);
+            achievementBeingShown = false;
+            skipAchievementShow = false;
         }
     }
 }

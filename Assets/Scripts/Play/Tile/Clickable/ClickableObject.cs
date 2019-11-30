@@ -1,98 +1,121 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace Game
 {
     /// <summary>
     /// Personalized clickable to detect if a tile has been clicked on
-    /// Author: Zacharie Lavigne
+    /// Author: Zacharie Lavigne, Jérémie Bertrand
     /// </summary>
     public class ClickableObject : MonoBehaviour, IPointerClickHandler
     {
+        private PlayerClickManager playerClickManager;
         private Tile tile;
-        private UIController uiController;
         private LevelController levelController;
-
+        private GridController grid;
+        private CoroutineStarter coroutineStarter;
+        
         private void Awake()
         {
+            playerClickManager = Harmony.Finder.PlayerClickManager;
             levelController = Harmony.Finder.LevelController;
             tile = GetComponent<Tile>();
-        }
-
-        private void Start()
-        {
-            uiController = Harmony.Finder.UIController;
+            grid = Harmony.Finder.GridController;
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            tile.UpdateClickHint();
             //Player cannot play while a cinematic is playing or if another of its units is moving
-            if (tile == null || levelController.PlayerUnitIsMovingOrAttacking || levelController.CinematicController.IsPlayingACinematic) return;
+            if (tile == null || !levelController.PlayerCanPlay) return;
             
-            var gridController = Finder.GridController;
-            ClickButton clickButton = ReadClick(eventData);
+            var clickButton = ReadClick(eventData);
             EventSystem.current.SetSelectedGameObject(null);
             var selectedPlayerUnit = tile.GridController.SelectedUnit;
 
             if (tile.LinkedUnitCanBeSelectedByPlayer && tile.LinkedUnit != selectedPlayerUnit)
             {
-                if ( clickButton == ClickButton.LeftClick || (clickButton == ClickButton.RightClick && selectedPlayerUnit?.WeaponType != WeaponType.HealingStaff))
+                try
                 {
-                    SelectUnit(gridController);
-                    return;
+                    if ( clickButton == ClickButton.LeftClick || (clickButton == ClickButton.RightClick && selectedPlayerUnit?.WeaponType != WeaponType.HealingStaff))
+                    {
+                        SelectUnit(grid);
+                        return;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
-
             if (selectedPlayerUnit != null)
             {
                 if (!tile.IsPossibleAction)
                 {
-                    DeselectUnit(gridController);
+                    DeselectUnit(grid);
                 }
                 else if (tile == selectedPlayerUnit.CurrentTile)
                 {
                     if (clickButton == ClickButton.RightClick)
                         selectedPlayerUnit.Rest();
-                    DeselectUnit(gridController);
+                    DeselectUnit(grid);
                 }
-                else if (!PlayerClickManager.ActionIsSet || PlayerClickManager.TileToConfirm != tile)
+                else if (!playerClickManager.ActionIsSet || playerClickManager.TileToConfirm != tile)
                 {
-                    PlayerClickManager.SetAction(selectedPlayerUnit, tile, clickButton);
+                    playerClickManager.SetAction(selectedPlayerUnit, tile, clickButton);
                 }
-                else if (PlayerClickManager.TileToConfirm == tile)
+                else if (playerClickManager.TileToConfirm == tile)
                 {
-                    PlayerClickManager.ExecuteAction();
-                    DeselectUnit(gridController);
+                    if (playerClickManager.ExecuteAction() != ActionType.Nothing) DeselectUnit(grid);
+                    else
+                    {
+                        coroutineStarter.StartCoroutine(SelectAfterMove(grid, selectedPlayerUnit, tile));
+                    }
                 }
                 else
                 {
-                    DeselectUnit(gridController);
+                    DeselectUnit(grid);
                 }
             }
+            tile.UpdateClickHint();
         }
 
         private void DeselectUnit(GridController gridController)
         {
             gridController.DeselectUnit();
             gridController.RemoveActionPath();
-            PlayerClickManager.Reset();
+            playerClickManager.Reset();
+            tile.UpdateClickHint();
         }
 
         private void SelectUnit(GridController gridController)
         {
+            SelectUnit(gridController, tile.LinkedUnit, tile);
+        }
+
+        private void SelectUnit(GridController gridController, Unit playerUnit, Tile tileFrom)
+        {
             DeselectUnit(gridController);
-            PlayerClickManager.Reset();
-            gridController.SelectUnit(tile.LinkedUnit);
-            gridController.DisplayPossibleActionsFrom(tile);
+            playerClickManager.Reset();
+            gridController.SelectUnit(playerUnit);
+            gridController.DisplayPossibleActionsFrom(tileFrom);
+            tile.UpdateClickHint();
         }
 
         private ClickButton ReadClick(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Right)
-                return ClickButton.RightClick;
-            return ClickButton.LeftClick;
+            return eventData.button == PointerEventData.InputButton.Right ? ClickButton.RightClick : ClickButton.LeftClick;
+        }
+
+        private IEnumerator SelectAfterMove(GridController gridController, Unit playerUnit, Tile tileFrom)
+        {
+            DeselectUnit(gridController);
+            while (playerUnit.CurrentTile != tileFrom) yield return null;
+            SelectUnit(gridController, playerUnit, tileFrom);
         }
     }
 }

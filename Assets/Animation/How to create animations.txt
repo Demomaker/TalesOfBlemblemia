@@ -1,9 +1,0 @@
-1. If the character doesn't have an animator, create an Animator Override Controller with the character's name.
-2. Make the overriden animator the Unit animator.
-3. Create a new animation for every type of animation possible linked to that character, rename them and insert them into each animation to override.
-4. Create the sprites for the animations and generate the single sprites.
-5. Open the character you want to add an animator to and drag the desired animator.
-6. Open the Animation window in "Window -> Animation -> Animation".
-7. Select an animation and drag the sprites desired for that animation.
-8. Distance the sprites in order for the animation to not feel too fast nor too slow.
-9. Do steps 7 and 8 for every animation and test the animations to see if they work as desired.

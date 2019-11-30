@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Harmony;
 using UnityEngine;
 
 namespace Game
 {
     //Author: Antoine Lessard
+    [Findable("Navigator")]
     public class Navigator : MonoBehaviour
     {
         private Stack<Canvas> menusStack;

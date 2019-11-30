@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Game
 {
-    // <summary>
+    /// <summary>
     /// Behaviour of a tile
-    /// Author: Jérémie Bertrand
+    /// Author: Jérémie Bertrand, Zacharie Lavigne
     /// </summary>
     public abstract class Tile : MonoBehaviour
     {
-        private Button tileButton;
         [SerializeField] private TileType tileType;
-        public TileType TileType => tileType;
         private TileSprite tileSprite;
 
         private Image tileImage;
@@ -22,10 +19,17 @@ namespace Game
         private Unit linkedUnit;
         private Door linkedDoor;
         private GridController gridController;
+        private UIController uiController;
+        private ClickType leftClickType = ClickType.None;
+        private ClickType rightClickType = ClickType.None;
+        private Vector2Int positionInGrid;
+        private EnemyRangeController enemyRangeController;
+        private PlayerClickManager playerClickManager;
+
+        public TileType TileType => tileType;
+        public ClickType LeftClickType => leftClickType;
+        public ClickType RightClickType => rightClickType;
         public GridController GridController => gridController;
-        private readonly int costToMove;
-        private readonly float defenseRate;
-        
         public bool IsPossibleAction => gridController.AUnitIsCurrentlySelected && !gridController.SelectedUnit.HasActed && tileImage.sprite != gridController.NormalSprite;
         public bool LinkedUnitCanBeAttackedByPlayer => IsOccupiedByAUnit && linkedUnit.IsEnemy && IsPossibleAction;
         public bool LinkedDoorCanBeAttackedByPlayer => IsOccupiedByADoor && IsPossibleAction && !linkedDoor.IsEnemyTarget;
@@ -37,47 +41,36 @@ namespace Game
         public bool IsOccupiedByAUnitOrDoor => IsOccupiedByAUnit || IsOccupiedByADoor;
         public bool IsOccupiedByAUnit => linkedUnit != null && linkedUnit.isActiveAndEnabled;
         public bool IsOccupiedByADoor => linkedDoor != null && linkedDoor.isActiveAndEnabled;
-        private Vector2Int positionInGrid;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int LogicalPosition => positionInGrid;
         public Unit LinkedUnit => linkedUnit;
         public Door LinkedDoor => linkedDoor;
-        public int CostToMove
-        {
-            get
-            {
-                if (tileType == TileType.Obstacle || IsOccupiedByADoor)
-                {
-                    return int.MaxValue;
-                }
-
-                return costToMove;
-            }
-        }
-        public float DefenseRate => defenseRate;
-
-
-        protected Tile(TileType tileType, int costToMove = TileValues.DEFAULT_COST_TO_MOVE, float defenseRate = TileValues.DEFAULT_DEFENSE_RATE)
+        public Targetable LinkedTargetable => linkedDoor != null ? (Targetable)linkedDoor : linkedUnit;
+        public int CostToMove => IsOccupiedByADoor ? TileTypeExt.HIGH_COST_TO_MOVE : tileType.GetCostToMove();
+        public float DefenseRate => tileType.GetDefenseRate();
+        
+        protected Tile(TileType tileType)
         {
             this.tileType = tileType;
-            this.costToMove = costToMove;
-            this.defenseRate = defenseRate;
         }
         
         protected virtual void Awake()
         {
-            tileButton = GetComponent<Button>();
             tileImage = GetComponent<Image>();
             tileSprite = GetComponent<TileSprite>();
             tilePathSprite = GetComponentInChildren<SpriteRenderer>();
             gridController = transform.parent.GetComponent<GridController>();
+            uiController = Harmony.Finder.UIController;
+            enemyRangeController = Harmony.Finder.EnemyRangeController;
+            playerClickManager = Harmony.Finder.PlayerClickManager;
         }
 
         protected void Start()
         {
-            int index = transform.GetSiblingIndex();
-            positionInGrid.x = index % Finder.GridController.NbColumns;
-            positionInGrid.y = index / Finder.GridController.NbColumns;
+            var index = transform.GetSiblingIndex();
+            var nbColumns = gridController.NbColumns;
+            positionInGrid.x = index % nbColumns;
+            positionInGrid.y = index / nbColumns;
         }
 
         public void DisplayMoveActionPossibility()
@@ -93,6 +86,11 @@ namespace Game
         public void DisplaySelectedTile()
         {
             tileImage.sprite = gridController.SelectedSprite;
+        }
+
+        public void DisplayEnemyRange()
+        {
+             tilePathSprite.sprite = gridController.EnemyRangeSprite;
         }
 
         public void DisplayAttackActionPossibility()
@@ -114,30 +112,34 @@ namespace Game
         {
             tileImage.sprite = gridController.ProtectableTileSprite;
         }
-        
+
         public void HideActionPossibility()
         {
             tileImage.sprite = gridController.NormalSprite;
         }
-        
+
         public void HideActionPath()
         {
-            tilePathSprite.sprite = gridController.NormalSprite;
+            if (tilePathSprite.sprite != gridController.EnemyRangeSprite)
+                tilePathSprite.sprite = gridController.NormalSprite;
+            enemyRangeController.DisplayEnemyRange();
         }
-        
+
+        public void HideEnemyRange()
+        {
+            if (tilePathSprite.sprite == gridController.EnemyRangeSprite)
+                tilePathSprite.sprite = gridController.NormalSprite;
+        }
+
         /// <summary>
         /// Verifies if a tile is adjacent on a X or Y axis to this tile
         /// Authors: Jérémie Bertrand, Zacharie Lavigne
         /// </summary>
         /// <param name="otherTile">The other tile to verify adjacency</param>
-        /// <param name="range">The threshold of adjacency</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException">The range must be greater than 0</exception>
-        public bool IsWithinRange(Tile otherTile, int range)
+        /// <returns>Return if target is within melee range</returns>
+        public bool IsWithinRange(Tile otherTile)
         {
-            if (range <= 0)
-                throw  new ArgumentException("Range should be higher than zero");
-            return Math.Abs(this.LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(this.LogicalPosition.y - otherTile.LogicalPosition.y) <= range;
+            return Math.Abs(LogicalPosition.x - otherTile.LogicalPosition.x) + Math.Abs(LogicalPosition.y - otherTile.LogicalPosition.y) <= 1;
         }
 
         public void MakeObstacle()
@@ -152,7 +154,55 @@ namespace Game
 
         public void OnCursorEnter()
         {
-            Harmony.Finder.UIController.ModifyPlayerUi(this);
+            uiController.UpdateTileInfos(this);
+            UpdateClickHint();
+        }
+
+        public void UpdateClickHint()
+        {
+            leftClickType = ClickType.None;
+            rightClickType = ClickType.None;
+            if (playerClickManager.ActionIsSet && this == playerClickManager.TileToConfirm)
+            {
+                switch (playerClickManager.UnitTurnAction.ActionType)
+                {
+                    case ActionType.Rest:
+                        rightClickType = leftClickType = ClickType.ConfirmRest;
+                        break;
+                    case ActionType.Attack:
+                        rightClickType = leftClickType = ClickType.ConfirmAttack;
+                        break;
+                    case ActionType.Nothing:
+                        rightClickType = leftClickType = ClickType.ConfirmMoveTo;
+                        break;
+                    case ActionType.Recruit:
+                        rightClickType = leftClickType = ClickType.ConfirmRecruit;
+                        break;
+                    case ActionType.Heal:
+                        rightClickType = leftClickType = ClickType.ConfirmHeal;
+                        break;
+                }
+            }
+            else
+            {
+                if (LinkedUnitCanBeSelectedByPlayer && gridController.SelectedUnit == linkedUnit)
+                {
+                    leftClickType = ClickType.Deselect;
+                    rightClickType = ClickType.Rest;
+                }
+                else if (LinkedUnitCanBeSelectedByPlayer) leftClickType = rightClickType = ClickType.Select;
+                else if (LinkedDoorCanBeAttackedByPlayer || LinkedUnitCanBeAttackedByPlayer) rightClickType = ClickType.Attack;
+                else if (IsPossibleAction) {
+                    leftClickType = ClickType.MoveTo;
+                    rightClickType = ClickType.Rest;
+                } 
+                else if (gridController.AUnitIsCurrentlySelected) leftClickType = rightClickType = ClickType.Deselect;
+                if (LinkedUnitCanBeRecruitedByPlayer) rightClickType = ClickType.Attack;
+                if (LinkedUnitCanBeHealedByPlayer && gridController.SelectedUnit != linkedUnit) rightClickType = ClickType.Heal;
+                if (LinkedUnitCanBeRecruitedByPlayer) rightClickType = ClickType.Recruit;
+            }
+            uiController.UpdateLeftClickHint(leftClickType);
+            uiController.UpdateRightClickHint(rightClickType);
         }
 
         public void LinkTargetable(Targetable targetable)
@@ -161,34 +211,27 @@ namespace Game
                 LinkUnit((Unit) targetable);
             else if (targetable.GetType() == typeof(Door))
                 LinkDoor((Door) targetable);
+            UpdateClickHint();
         }
 
-        public bool LinkUnit(Unit unit)
+        private void LinkUnit(Unit unit)
         {
-            if (!IsWalkable) 
-                return false;
-            this.linkedUnit = unit;
-            return IsOccupiedByAUnitOrDoor;
+            if (IsWalkable) linkedUnit = unit;
         }
-        public bool UnlinkUnit()
+        public void UnlinkUnit()
         {
-            if (!IsOccupiedByAUnitOrDoor) return false;
             linkedUnit = null;
-            return true;
+            UpdateClickHint();
         }
         
-        public bool LinkDoor(Door door)
+        private void LinkDoor(Door door)
         {
-            if (!IsWalkable) 
-                return false;
-            this.linkedDoor = door;
-            return IsOccupiedByAUnitOrDoor;
+            if (IsWalkable) linkedDoor = door;
         }
-        public bool UnlinkDoor()
+        public void UnlinkDoor()
         {
-            if (!IsOccupiedByAUnitOrDoor) return false;
-            linkedUnit = null;
-            return true;
+            linkedDoor = null;
+            UpdateClickHint();
         }
 
         public void DisplayPathPossibility(Tile prevTile, Tile nextTile)
@@ -272,13 +315,13 @@ namespace Game
                     return gridController.UpToLeftPathTileSprite;
             }
             //Comes from below
-            else if (prevPosition.x > currentPosition.x)
+            else if (prevPosition.y > currentPosition.y)
             {
                 //Goes right
-                if (currentPosition.x > nextPosition.x)
+                if (currentPosition.x < nextPosition.x)
                     return gridController.DownToRightPathTileSprite;
                 //Goes left
-                if (currentPosition.x < nextPosition.x)
+                if (currentPosition.x > nextPosition.x)
                     return gridController.DownToLeftPathTileSprite;
             }
             return null;
@@ -299,6 +342,34 @@ namespace Game
             else if (currentPosition.y < nextPosition.y) 
                 return gridController.DownStartPathTileSprite;
             return null;
+        }
+
+        public IEnumerator Blink(Sprite blinkSprite)
+        {
+            var fadeIn = false;
+            var fadeValue = 1f;
+            tileImage.sprite = blinkSprite;
+            var faded = tileImage.color;
+            while (true)
+            {
+                if (tileImage.sprite != blinkSprite) tileImage.sprite = blinkSprite;
+                fadeValue += fadeIn ? 0.01f : -0.01f;
+
+                faded.a = fadeValue;
+                tileImage.color = faded;
+                if (fadeValue <= 0f) fadeIn = true;
+                if (fadeValue >= 1f) fadeIn = false;
+                yield return null;
+            }
+
+        }
+
+        public void ResetTileImage()
+        {
+            tileImage.sprite = gridController.NormalSprite;
+            var color = tileImage.color;
+            color = new Color(color.r, color.g, color.b);
+            tileImage.color = color;
         }
     }
 }

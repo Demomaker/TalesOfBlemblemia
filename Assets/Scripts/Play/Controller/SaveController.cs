@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Harmony;
 using Mono.Data.Sqlite;
 using UnityEngine;
-
 
 //Author: Antoine Lessard, Pierre-Luc Maltais
 namespace Game
 {
+    [Findable("SaveController")]
     public class SaveController : MonoBehaviour
     {
         private SaveInfos saveSlot1;
@@ -18,7 +19,9 @@ namespace Game
         private SaveGameRepo saveGameRepo;
         private CharacterStatusRepo characterStatusRepo;
         private SaveSettingsRepo saveSettingsRepo;
+        private AchievementsRepo achievementsRepo;
         private SqliteConnection connection;
+        private List<AchievementInfo> achievements;
 
         public int SaveSelected { get; set; }
 
@@ -43,13 +46,14 @@ namespace Game
 
         public PlayerSettings PlayerSettings => playerSettings;
 
+        public List<AchievementInfo> Achievements => achievements;
 
         public void Awake()
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
             gameSettings = Harmony.Finder.GameSettings;
             InitiateSaveController(gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
-                gameSettings.TutorialSceneName, playableCharactersDictionary);
+                gameSettings.EmptyLevelString, playableCharactersDictionary);
         }
 
 
@@ -82,14 +86,15 @@ namespace Game
             connection.Open();
             InitiateSaveInfo(username, difficultyLevel, levelName, characterStatus);
             InitiateSettingsInfo();
+            InitializeAchievements();
             InitiateRepos();
             //Check if there are any settings in the database
             CheckForExistingSettings();
             //Check if saves were already created in the database
             CheckForExistingSaves();
+            CheckForAchievements();
         }
-
-
+        
         private static string GetPath()
         {
 #if UNITY_EDITOR
@@ -124,8 +129,22 @@ namespace Game
             saveGameRepo = new SaveGameRepo(connection);
             characterStatusRepo = new CharacterStatusRepo(connection);
             saveSettingsRepo = new SaveSettingsRepo(connection);
+            achievementsRepo = new AchievementsRepo(connection);
         }
-
+        
+        private void InitializeAchievements()
+        {
+            achievements = new List<AchievementInfo>
+            {
+                new AchievementInfo(gameSettings.CompleteCampaignOnEasy, gameSettings.CompleteCampaignOnEasyDescription, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnMedium, gameSettings.CompleteCampaignOnMediumDescription, false),
+                new AchievementInfo(gameSettings.CompleteCampaignOnHard, gameSettings.CompleteCampaignOnHardDescription,  false),
+                new AchievementInfo(gameSettings.DefeatBlackKnight, gameSettings.DefeatBlackKnightDescription, false),
+                new AchievementInfo(gameSettings.ReachFinalLevelWith8Players, gameSettings.ReachFinalLevelWith8PlayersDescription,  false),
+                new AchievementInfo(gameSettings.FinishALevelWithoutUnitLoss, gameSettings.FinishALevelWithoutUnitLossDescription, false),
+                new AchievementInfo(gameSettings.FinishCampaignWithoutUnitLoss, gameSettings.FinishCampaignWithoutUnitLossDescription, false),
+            };
+        }
         #endregion
 
         //Author : Antoine Lessard
@@ -148,6 +167,30 @@ namespace Game
         }
         
         /// <summary>
+        /// Check for existing achievements in the database, if there are, we load those achievements and their status, otherwise, we create and add them
+        /// </summary>
+        private void CheckForAchievements()
+        {
+            var achievementsInDatabase = achievementsRepo.FindAll();
+
+            if (achievementsInDatabase.Count == 0)
+            {
+                foreach (var achievement in achievements)
+                {
+                    achievementsRepo.Insert(achievement);
+                }
+            }
+            else
+            {
+                achievements.Clear();
+                foreach (var achievement in achievementsInDatabase)
+                {
+                    achievements.Add(achievement);
+                }
+            }
+        }
+
+        /// <summary>
         /// Check for existing saves in the database, if there are, we load those saves, otherwise, we create them as "new saves"
         /// </summary>
         private void CheckForExistingSaves()
@@ -165,6 +208,15 @@ namespace Game
                 saveSlot1 = saves[0];
                 saveSlot2 = saves[1];
                 saveSlot3 = saves[2];
+            }
+        }
+
+        public void UpdateAchievements(List<AchievementInfo> newAchievementsInfo)
+        {
+            achievements = newAchievementsInfo;
+            foreach (var achievement in achievements)
+            {
+                achievementsRepo.Update(achievement);
             }
         }
 
@@ -209,7 +261,6 @@ namespace Game
                     {
                         characterStatusRepo.Update(character);
                     }
-
                     break;
                 case 2:
                     saveGameRepo.Update(saveSlot2);
@@ -217,7 +268,6 @@ namespace Game
                     {
                         characterStatusRepo.Update(character);
                     }
-
                     break;
                 case 3:
                     saveGameRepo.Update(saveSlot3);
@@ -225,7 +275,6 @@ namespace Game
                     {
                         characterStatusRepo.Update(character);
                     }
-
                     break;
             }
         }
@@ -234,10 +283,10 @@ namespace Game
 
         #region FindAll
 
-        public List<SaveInfos> FindAll()
+        private List<SaveInfos> FindAll()
         {
-            List<SaveInfos> result = saveGameRepo.FindAll();
-            List<CharacterInfo> characterInfos = characterStatusRepo.FindAll();
+            var result = saveGameRepo.FindAll();
+            var characterInfos = characterStatusRepo.FindAll();
 
             foreach (var characterInfo in characterInfos)
             {
@@ -259,7 +308,7 @@ namespace Game
 
         public SaveInfos[] GetSaves()
         {
-            return new SaveInfos[]{saveSlot1, saveSlot2, saveSlot3};
+            return new[] {saveSlot1, saveSlot2, saveSlot3};
         }
         #endregion
 
@@ -267,8 +316,8 @@ namespace Game
         {
             var playableCharactersDictionary = CreateBaseCharacterDictionary();
 
-            SaveInfos cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
-                gameSettings.TutorialSceneName, playableCharactersDictionary);
+            var cleanSave = new SaveInfos(1, gameSettings.DefaultUsername, DifficultyLevel.Medium.ToString(),
+                gameSettings.EmptyLevelString, playableCharactersDictionary);
             
             switch (SaveSelected)
             {

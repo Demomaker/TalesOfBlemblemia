@@ -6,7 +6,7 @@ namespace Game
     /// OnMusicVolumeChange event channel
     /// Author : Mike Bédard
     /// </summary>
-    [Findable(Game.Tags.GAME_CONTROLLER_TAG)]
+    [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
     public class OnMusicVolumeChange : EventChannel<float>
     {
         public event EventHandler<float> Notify; 

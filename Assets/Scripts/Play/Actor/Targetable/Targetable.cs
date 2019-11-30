@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Game
@@ -12,9 +11,9 @@ namespace Game
 
         protected Tile currentTile;
         private int currentHealthPoints;
-        private OverHeadHpController overHeadHpController;
-
-        private LevelController levelController;
+        protected CoroutineStarter coroutineStarter;
+        protected LevelController levelController;
+        private GridController gridController;
 
         public bool IsEnemyTarget => isEnemyTarget;
         public bool NoHealthLeft => CurrentHealthPoints <= 0;
@@ -25,9 +24,8 @@ namespace Game
             protected internal set
             {
                 currentHealthPoints = value;
-                if(overHeadHpController != null) overHeadHpController.ModifyOverHeadHp(currentHealthPoints);
-                if (NoHealthLeft) 
-                    Die();
+                if (NoHealthLeft) coroutineStarter.StartCoroutine(Die());
+                if (this is Unit unit) unit.OnHealthChange.Publish();
             }
         }
         
@@ -42,39 +40,32 @@ namespace Game
                 levelController.IncrementTileUpdate();
             }
         }
+        
+        protected virtual void Awake()
+        {
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
+            levelController = Harmony.Finder.LevelController;
+            gridController = Harmony.Finder.GridController;
+        }
+        
+        protected virtual void Start()
+        {
+            coroutineStarter.StartCoroutine(InitPosition());
+        }
 
-        public virtual void Die()
+        protected virtual IEnumerator Die()
         {
             currentTile.UnlinkUnit();
             gameObject.SetActive(false);
-        }
-
-        public virtual void Awake()
-        {
-            levelController = Harmony.Finder.LevelController;
-            try
-            {
-                overHeadHpController = gameObject.GetComponent<OverHeadHpController>();
-            }
-            catch (Exception e)
-            {
-                Debug.Log("The gameobject doesn't have a overheadHp object and it requires it");
-            }
-        }
-
-        protected virtual void Start()
-        {
-            StartCoroutine(InitPosition());
+            yield return null;
         }
         
         private IEnumerator InitPosition()
         {
             yield return new WaitForEndOfFrame();
             while (levelController.CinematicController.IsPlayingACinematic)
-            {
                 yield return null;
-            }
-            var tile = Finder.GridController.GetTile(initialPosition.x, initialPosition.y);
+            var tile = gridController.GetTile(initialPosition.x, initialPosition.y);
             transform.position = tile.WorldPosition;
             CurrentTile = tile;
         }

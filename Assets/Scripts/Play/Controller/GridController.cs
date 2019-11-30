@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
 
  namespace Game
  {
     //Authors: Jérémie Bertrand, Mike Bédard, Zacharie Lavigne
+    [Findable("GridController")]
     public class GridController : MonoBehaviour
     {
-        private GridLayoutGroup gridLayoutGroup;
         [SerializeField] private Sprite movementTileSprite;
         [SerializeField] private Sprite normalTileSprite;
         [SerializeField] private Sprite selectedTileSprite;
+        [SerializeField] private Sprite enemyRangeSprite;
         [SerializeField] private Sprite attackableTileSprite;
         [SerializeField] private Sprite healableTileSprite;
         [SerializeField] private Sprite recruitableTileSprite;
@@ -30,15 +32,13 @@ using UnityEngine.UI;
         [SerializeField] private Sprite downStartPathTileSprite;
         [SerializeField] private Sprite upStartPathTileSprite;
 
+        private GridLayoutGroup gridLayoutGroup;
 
-        public Unit SelectedUnit
-        {
-            get; 
-            private set;
-        }
+        public Unit SelectedUnit { get; private set; }
         public Sprite AvailabilitySprite => movementTileSprite;
         public Sprite NormalSprite => normalTileSprite;
         public Sprite SelectedSprite => selectedTileSprite;
+        public Sprite EnemyRangeSprite => enemyRangeSprite;
         public Sprite AttackableTileSprite => attackableTileSprite;
         public Sprite HealableTileSprite => healableTileSprite;
         public Sprite RecruitableTileSprite => recruitableTileSprite;
@@ -57,12 +57,10 @@ using UnityEngine.UI;
         public Sprite RightStartPathTileSprite => rightStartPathTileSprite;
         public Sprite DownStartPathTileSprite => downStartPathTileSprite;
         public Sprite UpStartPathTileSprite => upStartPathTileSprite;
-
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
-
         public int NbColumns { get; private set; }
         public int NbLines { get; private set; }
-        
+
         private void Awake()
         {
             gridLayoutGroup = GetComponent<GridLayoutGroup>();
@@ -110,7 +108,7 @@ using UnityEngine.UI;
                         }
                         else if (tile.LinkedUnit != null && playerUnit.TargetIsInMovementRange(tile.LinkedUnit))
                         {
-                            if (playerUnit.WeaponType != WeaponType.HealingStaff && (tile.LinkedUnit.IsEnemy))
+                            if (playerUnit.WeaponType != WeaponType.HealingStaff && tile.LinkedUnit.IsEnemy)
                             {
                                 tile.DisplayAttackActionPossibility();
                             }
@@ -142,21 +140,23 @@ using UnityEngine.UI;
             
             var unitMovesLeft = unit.MovesLeft;
             var movementCosts = unit.MovementCosts;
+
+            var grid = Harmony.Finder.GridController;
             
             //Check left
-            Tile tileToCheck = Finder.GridController.GetTile(tilePosX - 1, tilePosY);
+            Tile tileToCheck = grid.GetTile(tilePosX - 1, tilePosY);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX - 1, tilePosY] <= unitMovesLeft)
                 return tileToCheck;
             //Check up
-            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY - 1);
+            tileToCheck = grid.GetTile(tilePosX, tilePosY - 1);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY - 1] <= unitMovesLeft)
                 return tileToCheck;
             //Check right
-            tileToCheck = Finder.GridController.GetTile(tilePosX + 1, tilePosY);
+            tileToCheck = grid.GetTile(tilePosX + 1, tilePosY);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX + 1, tilePosY] <= unitMovesLeft)
                 return tileToCheck;
             //Check down
-            tileToCheck = Finder.GridController.GetTile(tilePosX, tilePosY + 1);
+            tileToCheck = grid.GetTile(tilePosX, tilePosY + 1);
             if (tileToCheck != null && tileToCheck.IsAvailable && movementCosts[tilePosX, tilePosY + 1] <= unitMovesLeft)
                 return tileToCheck;
             return null;
@@ -182,8 +182,8 @@ using UnityEngine.UI;
             var completePath = new List<Tile>();
             completePath.Add(playerUnit.CurrentTile);
             completePath.AddRange(unitTurnAction.Path);
-            int prevIndex = -1;
-            int nextIndex = -1;
+            var prevIndex = -1;
+            var nextIndex = -1;
             var pathCount = completePath.Count;
             for (int i = 0; i < pathCount; i++)
             {

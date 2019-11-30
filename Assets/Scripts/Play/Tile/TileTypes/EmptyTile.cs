@@ -5,6 +5,7 @@
     {
         public EmptyTile() : base(TileType.Empty)
         {
+            //Empty on purpose
         }
     }
 }

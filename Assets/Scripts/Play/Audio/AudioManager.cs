@@ -1,23 +1,25 @@
-﻿using System;
-using Harmony;
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = System.Diagnostics.Debug;
 
 namespace Game
 {
     /// <summary>
-    /// Manages the sounds and music of the game
+    /// Manages the audio of the game
     /// Author : Mike Bédard
     /// </summary>
     public class AudioManager : MonoBehaviour
     {
         [SerializeField] private int numberOfSFXThatCanBePlayedAtTheSameTime = 10;
+        
         private GameSettings gameSettings;
         private AudioClips audioClips;
         private AudioSource[] sfxSources;
         private AudioSource musicSource;
         private bool playSFX;
-        private bool playMusic;
+        private bool canPlayMusic;
         private float mainVolume = 100;
         private float musicVolume = 100;
         private float sfxVolume = 100;
@@ -29,6 +31,7 @@ namespace Game
         private OnPlayerUnitLoss onPlayerUnitLoss;
         private OnLevelVictory onLevelVictory;
         private OnLevelChange onLevelChange;
+        private OnEndLevelEnter onEndLevelEnter;
         private OnOverWorldEnter onOverWorldEnter;
         private OnMainMenuEnter onMainMenuEnter;
         private OnButtonClick onButtonClick;
@@ -37,20 +40,20 @@ namespace Game
         private OnMainVolumeChange onMainVolumeChange;
         private OnMusicVolumeChange onMusicVolumeChange;
         private OnSFXVolumeChange onSFXVolumeChange;
-
+        
         private void Awake ()
         {
             gameSettings = Harmony.Finder.GameSettings;
-            musicSource = gameObject.AddComponent<AudioSource>();
             sfxSources = new AudioSource[numberOfSFXThatCanBePlayedAtTheSameTime];
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
             {
                 sfxSources[i] = gameObject.AddComponent<AudioSource>();
             }
+            musicSource = gameObject.AddComponent<AudioSource>();
 
-            audioClips = Finder.AudioClips;
-            if(audioClips == null) audioClips = new NullAudioClips();
             InitializeEventChannels();
+            audioClips = Finder.AudioClips;
+            if(audioClips == null) audioClips = gameObject.AddComponent<AudioClips>();
         }
 
         private void OnEnable()
@@ -62,7 +65,8 @@ namespace Game
         {
             DisableEventChannels();
         }
-
+        
+       
         private void InitializeEventChannels()
         {
             onHurt = Harmony.Finder.OnHurt;
@@ -73,6 +77,7 @@ namespace Game
             onPlayerUnitLoss = Harmony.Finder.OnPlayerUnitLoss;
             onLevelVictory = Harmony.Finder.OnLevelVictory;
             onLevelChange = Harmony.Finder.OnLevelChange;
+            onEndLevelEnter = Harmony.Finder.OnEndLevelEnter;
             onOverWorldEnter = Harmony.Finder.OnOverWorldEnter;
             onMainMenuEnter = Harmony.Finder.OnMainMenuEnter;
             onButtonClick = Harmony.Finder.OnButtonClick;
@@ -93,6 +98,7 @@ namespace Game
             onPlayerUnitLoss.Notify += PlayUnitLossMusic;
             onLevelVictory.Notify += PlayLevelVictoryMusic;
             onLevelChange.Notify += PlayBackgroundMusicOfLevel;
+            onEndLevelEnter.Notify += PlayEndLevelMusic;
             onOverWorldEnter.Notify += PlayOverWorldBackgroundMusic;
             onMainMenuEnter.Notify += PlayMainMenuBackgroundMusic;
             onButtonClick.Notify += PlayButtonClickSound;
@@ -113,6 +119,7 @@ namespace Game
             onPlayerUnitLoss.Notify -= PlayUnitLossMusic;
             onLevelVictory.Notify -= PlayLevelVictoryMusic;
             onLevelChange.Notify -= PlayBackgroundMusicOfLevel;
+            onEndLevelEnter.Notify -= PlayEndLevelMusic;
             onOverWorldEnter.Notify -= PlayOverWorldBackgroundMusic;
             onMainMenuEnter.Notify -= PlayMainMenuBackgroundMusic;
             onButtonClick.Notify -= PlayButtonClickSound;
@@ -122,7 +129,7 @@ namespace Game
             onMusicVolumeChange.Notify -= ChangeMusicVolume;
             onSFXVolumeChange.Notify -= ChangeSFXVolume;
         }
-
+        
         private void UpdateMusicVolume()
         {
             musicSource.volume = mainVolume * musicVolume / (gameSettings.Percent * gameSettings.Percent);
@@ -130,7 +137,7 @@ namespace Game
 
         private void UpdateSoundVolume()
         {
-            float totalSFXVolume = mainVolume * sfxVolume / (gameSettings.Percent * gameSettings.Percent);
+            var totalSFXVolume = mainVolume * sfxVolume / (gameSettings.Percent * gameSettings.Percent);
             foreach (var sfxSource in sfxSources)
             {
                 sfxSource.volume = totalSFXVolume;
@@ -151,16 +158,11 @@ namespace Game
 
         private void ToggleMusic(bool toggle)
         {
-
-            playMusic = toggle;
-            if (!playMusic)
-            {
+            canPlayMusic = toggle;
+            if (!canPlayMusic)
                 musicSource.Pause();
-            }
             else
-            {
                 musicSource.Play();
-            }
         }
 
         private void ChangeMainVolume(float volume)
@@ -185,7 +187,7 @@ namespace Game
         //Used to play single sound clips.
         private void PlaySFX(AudioClip clip, Vector2 position = new Vector2())
         {
-            if (audioClips is NullAudioClips) return;
+            if (audioClips is null) return;
             for (int i = 0; i < numberOfSFXThatCanBePlayedAtTheSameTime; i++)
             {
                 if (sfxSources[i].isPlaying == false)
@@ -206,17 +208,13 @@ namespace Game
         //Used to play music clips
         private void PlayMusic(AudioClip clip)
         {
-            if (audioClips is NullAudioClips) return;
+            if (audioClips is null) return;
             StopCurrentMusic();
             
-            //Set the clip of our musicSource audio source to the clip passed in as a parameter.
             musicSource.clip = clip;
-            
-            //Set the musicSource as a loop, so that the music restarts on end.
             musicSource.loop = true;
             
-            //Play the clip.
-            if (playMusic)
+            if (canPlayMusic)
                 musicSource.Play();
         }
 
@@ -235,7 +233,7 @@ namespace Game
 
         private void PlayAttackSound(Unit unit)
         {
-            switch (unit.Gender)
+            switch (unit.UnitInfos.Gender)
             {
                 case UnitGender.Male :
                     PlaySFX(audioClips.MaleAttackSound, unit.transform.position);
@@ -246,6 +244,8 @@ namespace Game
                 case UnitGender.Mork :
                     PlaySFX(audioClips.MorkAttackSound, unit.transform.position);
                     break;
+                default:
+                    throw new Exception("Unit has no gender");
             }
         }
 
@@ -275,7 +275,7 @@ namespace Game
                 PlayMusic(audioClips.SadMusic);
         }
 
-        private void PlayLevelVictoryMusic(LevelController levelController)
+        private void PlayLevelVictoryMusic()
         {
             if(musicSource.clip != audioClips.LevelVictoryMusic)
                 PlayMusic(audioClips.LevelVictoryMusic);
@@ -283,20 +283,23 @@ namespace Game
 
         private void PlayBackgroundMusicOfLevel(LevelController level)
         {
-            StopCurrentMusic();
             PlayMusic(level.BackgroundMusic);
+        }
+        
+        private void PlayEndLevelMusic(EndSceneController endSceneController)
+        {
+            StopCurrentMusic();
         }
 
         private void PlayOverWorldBackgroundMusic(OverWorldController overWorld)
         {
-            StopCurrentMusic();
             PlayMusic(audioClips.OverWorldMusic);
         }
 
         private void PlayMainMenuBackgroundMusic(MainMenuController mainMenu)
         {
-            StopCurrentMusic();
             PlayMusic(audioClips.MainMenuMusic);
         }
+        
     }
 }

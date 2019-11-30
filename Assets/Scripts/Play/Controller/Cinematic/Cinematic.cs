@@ -3,20 +3,27 @@ using UnityEngine;
 
 namespace Game
 {
-    //Author: Jérémie Bertrand
+    //Author: Jérémie Bertrand, Mike Bédard
     public class Cinematic : MonoBehaviour
     {
         [SerializeField] private CinematicTriggerType trigger = CinematicTriggerType.Manual;
         [SerializeField] private List<CinematicAction> actions;
-        
+
         private OnLevelVictory onLevelVictory;
+        private OnLevelFailed onLevelFailed;
+        private OnCampaignFailed onCampaignFailed;
+        private LevelController levelController;
+
         public IEnumerable<CinematicAction> Actions => actions;
 
         private void Awake()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
+            onLevelFailed = Harmony.Finder.OnLevelFailed;
+            onCampaignFailed = Harmony.Finder.OnCampaignFailed;
+            levelController = Harmony.Finder.LevelController;
         }
-
+        
         private void Start()
         {
             if(trigger == CinematicTriggerType.OnStart) TriggerCinematic();
@@ -24,35 +31,62 @@ namespace Game
 
         private void OnEnable()
         {
+            EnableEvents();
+        }
+
+        private void OnDisable()
+        {
+            DisableEvents();
+        }
+
+        private void EnableEvents()
+        {
             switch (trigger)
             {
                 case CinematicTriggerType.OnLevelVictory:
                     onLevelVictory.Notify += TriggerCinematic;
                     break;
+                case CinematicTriggerType.OnLevelFailed:
+                    onLevelFailed.Notify += TriggerCinematic;
+                    break;
+                case CinematicTriggerType.OnCampaignFailed:
+                    onCampaignFailed.Notify += TriggerCinematic;
+                    break;
             }
         }
 
-        private void OnDisable()
+        private void DisableEvents()
         {
             switch (trigger)
             {
                 case CinematicTriggerType.OnLevelVictory:
                     onLevelVictory.Notify -= TriggerCinematic;
                     break;
+                case CinematicTriggerType.OnLevelFailed:
+                    onLevelFailed.Notify -= TriggerCinematic;
+                    break;
+                case CinematicTriggerType.OnCampaignFailed:
+                    onCampaignFailed.Notify -= TriggerCinematic;
+                    break;
             }
         }
 
-        public void TriggerCinematic(LevelController levelController = null)
+        public void TriggerCinematic()
         {
-            Harmony.Finder.LevelController.CinematicController.LaunchCinematic(this);
+            levelController.CinematicController.LaunchCinematic(this);
         }
-
-        public enum CinematicTriggerType
+        
+        /// <summary>
+        /// Cinematic trigger types
+        /// Authors : Jérémie Bertrand, Mike Bédard
+        /// </summary>
+        private enum CinematicTriggerType
         {
             Manual,
             OnStart,
             OnLevelVictory,
-            OnLevelFailed
+            OnLevelFailed,
+            OnCampaignFailed
         }
     }
 }

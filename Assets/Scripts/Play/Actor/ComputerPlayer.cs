@@ -1,34 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace Game
 {
     /// <summary>
     /// The computer player that controls its units
-    /// Authors: Zacharie Lavigne, Pierre-Luc Maltais
+    /// Authors: Zacharie Lavigne, Pierre-Luc Maltais, Jérémie Bertrand
     /// </summary>
     public class ComputerPlayer : UnitOwner
     {
-        private static ComputerPlayer instance = null;
-        private List<Targetable> targetsToDestroy;
-
-        public static ComputerPlayer Instance
+        private const string COMPUTER_PLAYER_NAME = "Enemy";
+        private readonly AiController aiController;
+        private readonly List<Targetable> targetsToDestroy;
+        
+        private int dynamicUnitCounter;
+        private int dynamicUnitCount;
+        private Unit currentUnit ;
+        
+        public ComputerPlayer(int nbOfChoice) : base(COMPUTER_PLAYER_NAME)
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ComputerPlayer();
-                }
-                return instance;
-            }
+            aiController = new AiController(nbOfChoice);
+            targetsToDestroy = new List<Targetable>();
         }
 
-        private ComputerPlayer()
+        public void OnUnitDeath(Unit unit)
         {
-            targetsToDestroy = new List<Targetable>();  
+            if (unit != currentUnit) return;
+            dynamicUnitCount--;
+            dynamicUnitCounter--;
         }
 
         public void AddTarget(Targetable target)
@@ -36,47 +35,19 @@ namespace Game
             targetsToDestroy.Add(target);
         }
         
-        public IEnumerator PlayUnits()
+        public IEnumerator PlayUnits(GridController grid, LevelController levelController, UIController uiController)
         {
-            //TODO les unités qui meurent altèrent la liste du foreach et font crasher si une unité meurt pendant sont tour
-            /*foreach (var unit in ownedUnits)
+            dynamicUnitCount = ownedUnits.Count;
+            for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
             {
-                var uiController = Harmony.Finder.UIController;
-                while (uiController.IsBattleReportActive)
-                {
-                    yield return null;
-                } 
-                
-                var currentUnit = unit;
-                if (!currentUnit.HasActed)
-                {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
-                    while (!currentUnit.HasActed)
-                    {
-                        yield return currentUnit.MoveByAction(action);
-                    }
-                    base.CheckUnitDeaths();
-                }
-            }*/
-            for (int i = 0; i < ownedUnits.Count; i++)
-            {
-                var uiController = Harmony.Finder.UIController;
-                while (uiController.IsBattleReportActive)
-                {
-                    yield return null;
-                } 
-                var currentUnit = ownedUnits[i];
-                     
-                if (!currentUnit.HasActed)
-                {
-                    var action = AiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy);
-                    
-                    while (!currentUnit.HasActed)
-                    {
-                        yield return currentUnit.MoveByAction(action);
-                    }
+                while (uiController.IsBattleReportActive) yield return null;
+                currentUnit = dynamicUnitCount > 0 ? ownedUnits[dynamicUnitCounter] : currentUnit = ownedUnits[0];
 
-                    base.RemoveDeadUnits();
+                if (!currentUnit.HasActed && !levelController.LevelEnded)
+                {
+                    var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy, grid, levelController);
+                    
+                    yield return currentUnit.MoveByAction(action);
                 }
             }
         }

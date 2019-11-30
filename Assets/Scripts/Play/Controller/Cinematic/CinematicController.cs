@@ -11,13 +11,14 @@ namespace Game
         private DialogueManager dialogueManager;
         private CameraController cameraController;
         private GameObject uiController;
+        private CoroutineStarter coroutineStarter;
         
         private bool isPlayingACinematic;
 
         public bool IsPlayingACinematic
         {
             get => isPlayingACinematic;
-            private set 
+            set 
             { 
                 isPlayingACinematic = value;
                 if (isPlayingACinematic)
@@ -34,6 +35,7 @@ namespace Game
         }
         private void Awake()
         {
+            coroutineStarter = Harmony.Finder.CoroutineStarter;
             uiController = Harmony.Finder.UIController.gameObject;
             dialogueManager = Harmony.Finder.DialogueManager;
             mainCamera = Camera.main;
@@ -69,11 +71,22 @@ namespace Game
                 case CinematicActionType.GameObjectMovement:
                     yield return PlayGameObjectMovement(action.GameObjectToMove, action.GameObjectTarget.position, action.Duration, action.CameraZoom, action.CameraFollow);
                     break;
+                case CinematicActionType.Activate:
+                    yield return ActivateObject(action.GameObjectToActivate, action.ActivateGameObject);
+                    break;
             }
+        }
+
+        //Author : Mike Bédard
+        private IEnumerator ActivateObject(GameObject actionGameObjectToActivate, bool activateGameObject)
+        {
+            actionGameObjectToActivate.SetActive(activateGameObject);
+            yield break;
         }
 
         private IEnumerator PlayQuote(Dialogue dialogue)
         {
+            if (dialogueManager == null) yield break;
             dialogueManager.StartDialogue(dialogue);
             while (dialogueManager.IsDisplayingDialogue)
             {
@@ -99,7 +112,7 @@ namespace Game
             {
                 var camTransform = mainCamera.transform;
                 camTransform.position = new Vector3(startPosition.x, startPosition.y, camTransform.position.z);
-                StartCoroutine(cameraController.MoveCameraTo(targetPos, targetZoom, duration));
+                coroutineStarter.StartCoroutine(cameraController.MoveCameraTo(targetPos, targetZoom, duration));
             }
             for (float elapsedTime = 0; elapsedTime < duration; elapsedTime += Time.deltaTime)
             {
@@ -111,7 +124,7 @@ namespace Game
 
         public void LaunchCinematic(Cinematic cinematic)
         {
-            StartCoroutine(PlayCameraActions(cinematic.Actions));
+            coroutineStarter.StartCoroutine(PlayCameraActions(cinematic.Actions));
         }
     }
 }

@@ -24,6 +24,9 @@ namespace Game
         [SerializeField] private Transform gameObjectToMove;
         [SerializeField] private Transform gameObjectTarget;
         [SerializeField] private bool cameraFollow;
+
+        [SerializeField] private GameObject gameObjectToActivate;
+        [SerializeField] private bool activateGameObject;
     
         public Transform CameraTarget => cameraTarget;
         public float Duration => duration;
@@ -35,12 +38,15 @@ namespace Game
         public Transform GameObjectToMove => gameObjectToMove;
         public Transform GameObjectTarget => gameObjectTarget;
         public bool CameraFollow => cameraFollow;
+        public GameObject GameObjectToActivate => gameObjectToActivate;
+        public bool ActivateGameObject => activateGameObject;
     }
     public enum CinematicActionType
     {
         Quote,
         CameraMovement,
         GameObjectMovement,
-        Damage
+        Damage,
+        Activate
     }
 }

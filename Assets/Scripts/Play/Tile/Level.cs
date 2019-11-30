@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    //Author: Mike Bédard
     public class Level
     {
         public string PreviousLevel { get; }
@@ -7,8 +8,8 @@
 
         public Level(string previousLevel, string levelName)
         {
-            this.PreviousLevel = previousLevel;
-            this.LevelName = levelName;
+            PreviousLevel = previousLevel;
+            LevelName = levelName;
         }
     }
 }

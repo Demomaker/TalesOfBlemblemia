@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae361f60e5e4f045871ba281a2d6c81, type: 3}
   m_Name: LordMorkStats
   m_EditorClassIdentifier: 
-  maxHealthPoints: 15
+  maxHealthPoints: 16
   moveSpeed: 4
   attackStrength: 2
   hitRate: 0
