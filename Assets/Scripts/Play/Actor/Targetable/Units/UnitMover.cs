@@ -109,8 +109,7 @@ namespace Game
                                 if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
                                 {
                                     uiController.LaunchBattleReport(associatedUnit.IsEnemy);
-                                    yield return new WaitUntil(() => uiController.IsBattleReportActive);
-                                    uiController.DeactivateBattleReport();
+                                    while (uiController.IsBattleReportActive) yield return null;
                                 }
                             Harmony.Finder.LevelController.BattleOngoing = false;
                         }
