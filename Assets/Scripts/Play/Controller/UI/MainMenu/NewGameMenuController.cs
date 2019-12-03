@@ -74,7 +74,7 @@ namespace Game
             }
             
             saves[saveSlotSelectedNumber - 1].LevelName = gameSettings.EmptyLevelString;
-            gameController.PreviousLevelName = gameSettings.EmptyLevelString;
+            gameController.PreviousLevelName = gameSettings.JimsterburgSceneName;
             
             saveController.UpdateSave(saveSlotSelectedNumber);
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
