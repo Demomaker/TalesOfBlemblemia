@@ -102,6 +102,7 @@ namespace Game
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
         [SerializeField] private string darkKnightName = "Dark Knight";
+        [SerializeField] private string emptyString = "";
         
         public string ConfirmMoveToText => confirmMoveToText;
         public string ConfirmRecruitText => confirmRecruitText;
@@ -188,5 +189,6 @@ namespace Game
         public string AudioPath => audioPath;
         public string DarkKnightName => darkKnightName;
 
+        public string EmptyString => emptyString;
     }
 }

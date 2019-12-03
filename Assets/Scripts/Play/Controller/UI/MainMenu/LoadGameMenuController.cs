@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Linq;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,13 +36,22 @@ namespace Game
             var saveCounter = 0;
 
             var saves = saveController.GetSaves();
-            
+
             foreach (var saveSlot in saveSlots)
             {
                 saveSlot.transform.Find(gameSettings.NameString).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
-                saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saveSlot.name = saves[saveCounter].LevelName;
                 saveSlot.transform.Find(gameSettings.DifficultyString).GetComponent<TMP_Text>().text =
                     saves[saveCounter].DifficultyLevel;
+                saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saveSlot.name = saves[saveCounter].LevelName;
+                if (SaveSlotSelectionController.SaveSlotIsEmpty(saveSlots, Array.IndexOf(saveSlots, saveSlot)))
+                {
+                    saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saveSlot.name =
+                        gameSettings.EmptyLevelString;
+                    saveSlot.enabled = false;
+                    var tempColor = saveSlot.GetComponent<Image>().color;
+                    tempColor = gameSettings.PaleAlpha;
+                    saveSlot.GetComponent<Image>().color = tempColor;
+                }
 
                 ++saveCounter;
             }
@@ -84,6 +95,8 @@ namespace Game
             gameController.PreviousLevelName = saveSlots[saveSlotId].transform.Find(gameSettings.StageString)
                 .GetComponent<TMP_Text>().text;
         }
+        
+
 
         [UsedImplicitly]
         public void ReturnToMainMenu()
