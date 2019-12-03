@@ -350,10 +350,9 @@ namespace Game
             Unit unit
         )
         {
-            var moveCosts = ComputeCost(from, unit.IsEnemy);
             var currentPath = new List<Tile>();
             
-            var pathInOrder = FindPath(grid, moveCosts , currentPath, from, to, unit);
+            var pathInOrder = FindPath(grid, unit.MovementCosts , currentPath, from, to, unit);
             if (path != null)
                 pathInOrder.Reverse();
             return pathInOrder;
