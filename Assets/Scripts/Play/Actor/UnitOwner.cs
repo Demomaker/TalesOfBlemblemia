@@ -15,7 +15,7 @@ namespace Game
         public int NumberOfUnits => ownedUnits.Count;
         public List<Unit> DefeatedUnits { get; } = new List<Unit>();
         public string Name { get; }
-        public bool HaveAllUnitsDied => ownedUnits.Count <= 0;
+        public bool HaveAllUnitsDied => ownedUnits.All(unit => unit.NoHealthLeft);
         public List<Unit> OwnedUnits => ownedUnits;
         public bool HasNoMorePlayableUnits => ownedUnits.All(t => t.HasActed);
         public bool HasLostAUnitInCurrentLevel { get; private set; }
