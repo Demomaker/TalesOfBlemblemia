@@ -107,7 +107,11 @@ namespace Game
                             yield return associatedUnit.Attack(action.Target);
                             if (action.Target is Unit)
                                 if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
-                                    yield return uiController.LaunchBattleReport(associatedUnit.IsEnemy);
+                                {
+                                    uiController.LaunchBattleReport(associatedUnit.IsEnemy);
+                                    yield return new WaitUntil(() => uiController.IsBattleReportActive);
+                                    uiController.DeactivateBattleReport();
+                                }
                             Harmony.Finder.LevelController.BattleOngoing = false;
                         }
                         else

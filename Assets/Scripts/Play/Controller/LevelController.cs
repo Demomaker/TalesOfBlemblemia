@@ -43,7 +43,6 @@ namespace Game
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
-        private OnUnitDeath onUnitDeath;
         private EnemyRangeController enemyRangeController;
         private AchievementController achievementController;
         private GridController grid;
@@ -93,7 +92,6 @@ namespace Game
             if (protagonistGameObject == null) Debug.LogError("Missing ProtagonistGameObject in LevelController!");
             if (endGameCredits != null) endGameCredits.gameObject.SetActive(false);
             coroutineStarter = Harmony.Finder.CoroutineStarter;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
             enemyRangeController = Harmony.Finder.EnemyRangeController;
             achievementController = Harmony.Finder.AchievementController;
         }
@@ -109,20 +107,11 @@ namespace Game
             CheckForDarkKnight();
             uiController.ModifyVictoryCondition(customObjectiveMessage);
             if (completeIfPointAchieved) CreatePointToAchievePointingArrow();
-            if((levelName == gameSettings.DarkTowerSceneName || levelName == gameSettings.TulipValleySceneName) && humanPlayer.NumberOfUnits == gameSettings.NumberOfMaximumUnitsForThePlayer) 
+            if ((levelName == gameSettings.DarkTowerSceneName || levelName == gameSettings.TulipValleySceneName) &&
+                humanPlayer.NumberOfUnits == gameSettings.NumberOfMaximumUnitsForThePlayer)
                 achievementController.UnlockAchievement(gameSettings.ReachFinalLevelWith8Players);
         }
 
-        protected virtual void OnEnable()
-        {
-            onUnitDeath.Notify += computerPlayer.OnUnitDeath;
-        }
-
-        protected virtual void OnDisable()
-        {
-            onUnitDeath.Notify -= computerPlayer.OnUnitDeath;
-        }
-        
         protected virtual void Update()
         {
             if (!cinematicController.IsPlayingACinematic)
