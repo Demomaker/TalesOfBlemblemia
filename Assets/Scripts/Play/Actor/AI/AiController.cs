@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace Game
@@ -245,6 +246,11 @@ namespace Game
                     new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y), 
                     playableUnit
                 );
+                /*
+                Vector2Int currentPosition = new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y);
+                Vector2Int targetPosition = new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y);
+                int[,] computedCost = PathFinder.ComputeCost(currentPosition, true);
+                path = PathFinder.FindPath(computedCost, currentPosition, targetPosition, playableUnit);*/
                 path.Reverse();
             }
 
