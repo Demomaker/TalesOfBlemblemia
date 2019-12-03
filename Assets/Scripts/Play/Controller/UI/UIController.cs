@@ -73,6 +73,8 @@ namespace Game
         private GridController gridController;
         private CoroutineStarter coroutineStarter;
 
+        private Coroutine displayReportCoroutine;
+
         public bool IsBattleReportActive => battleReports.activeSelf;
 
         private void Awake()
@@ -160,10 +162,10 @@ namespace Game
             enemyDeathSymbol.SetActive(false);
             playerOutcome.enabled = false;
             enemyOutcome.enabled = false;
+            
+            displayReportCoroutine = coroutineStarter.StartCoroutine(BattleReport(isEnemy));
 
-            var handle = coroutineStarter.StartCoroutine(BattleReport(isEnemy));
-
-            return handle;
+            return displayReportCoroutine;
         }
 
         private IEnumerator BattleReport(bool isEnemy)
@@ -198,7 +200,7 @@ namespace Game
             }
 
             yield return new WaitForSeconds(timeBeforeHidingBattleReportAuto);
-            battleReports.SetActive(false);
+            if(battleReports != null) battleReports.SetActive(false);
         }
 
         private IEnumerator AttackAnimation(Animator animator, BattleInfos battleInfos, GameObject[] healthBar, bool isEnemy)
@@ -269,6 +271,7 @@ namespace Game
         [UsedImplicitly]
         public void DeactivateBattleReport()
         {
+            if (displayReportCoroutine != null) StopCoroutine(displayReportCoroutine);
             battleReports.SetActive(false);
         }
 
