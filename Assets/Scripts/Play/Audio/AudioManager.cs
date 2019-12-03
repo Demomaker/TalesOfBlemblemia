@@ -275,8 +275,9 @@ namespace Game
                 PlayMusic(audioClips.SadMusic);
         }
 
-        private void PlayLevelVictoryMusic()
+        private void PlayLevelVictoryMusic(LevelController levelController)
         {
+            if (levelController.LevelName == gameSettings.SnowyPeaksSceneName) return;
             if(musicSource.clip != audioClips.LevelVictoryMusic)
                 PlayMusic(audioClips.LevelVictoryMusic);
         }
