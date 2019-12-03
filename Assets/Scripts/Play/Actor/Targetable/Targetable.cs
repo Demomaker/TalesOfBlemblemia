@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Game
@@ -34,9 +35,22 @@ namespace Game
             get => currentTile;
             set
             {
-                if (currentTile != null) currentTile.UnlinkUnit();
+                if (currentTile != null)
+                {
+                    currentTile.UnlinkUnit();
+                }
+                if (value != null)
+                {
+                    if (value.LinkedUnit != null)
+                    {
+                        throw new Exception(
+                            "A unit was about to be linked to a tile occupied by another unit.\n" +
+                            this + " was trying to be linked to " + value + " which was occupied by " + value.LinkedUnit
+                            );
+                    }
+                    value.LinkTargetable(this);
+                }
                 currentTile = value;
-                if (value != null) value.LinkTargetable(this);
                 levelController.IncrementTileUpdate();
             }
         }

@@ -173,7 +173,7 @@ namespace Game
             if (isEnemy)
             {
                 yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);
-                if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken > 0)
+                if (playerBattleInfos.CurrentHealth > 0)
                 {
                     yield return new WaitForSeconds(timeToWaitBetweenAnimations);
                     yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
@@ -182,7 +182,7 @@ namespace Game
             else
             {
                 yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
-                if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken > 0)
+                if (enemyBattleInfos.CurrentHealth > 0)
                 {
                     yield return new WaitForSeconds(timeToWaitBetweenAnimations);
                     yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);

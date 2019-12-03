@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,12 +47,25 @@ namespace Game
             foreach (var saveSlot in saveSlots)
             {
                 saveSlot.transform.Find(gameSettings.NameString).GetComponent<TMP_Text>().text = saves[saveCounter].Username;
-                saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
                 saveSlot.transform.Find(gameSettings.DifficultyString).GetComponent<TMP_Text>().text =
                     saves[saveCounter].DifficultyLevel;
+                saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saves[saveCounter].LevelName;
+                if (SaveSlotIsEmpty(saveSlots, Array.IndexOf(saveSlots, saveSlot)))
+                {
+                    saveSlot.transform.Find(gameSettings.StageString).GetComponent<TMP_Text>().text = saveSlot.name =
+                        gameSettings.EmptyLevelString;
+                }
 
                 ++saveCounter;
             }
+        }
+        
+        public static bool SaveSlotIsEmpty(Button[] saveSlots, int saveSlotId)
+        {
+            var gameSettings = Harmony.Finder.GameSettings;
+            var saveSlotLevelText = saveSlots[Mathf.Clamp(saveSlotId, 0, 2)].transform.Find(gameSettings.StageString)
+                .GetComponent<TMP_Text>().text;
+            return saveSlotLevelText == gameSettings.EmptyString || saveSlotLevelText == gameSettings.EmptyLevelString;
         }
 
         [UsedImplicitly]

@@ -105,7 +105,7 @@ namespace Game
                         {
                             Harmony.Finder.LevelController.BattleOngoing = true;
                             yield return associatedUnit.Attack(action.Target);
-                            if (action.Target.GetType() == typeof(Unit))
+                            if (action.Target is Unit)
                                 if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
                                 {
                                     uiController.LaunchBattleReport(associatedUnit.IsEnemy);

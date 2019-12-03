@@ -20,9 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Jimsterburg.unity
     guid: c787b87a96eb24d42970ca72d48a0649
+  - enabled: 0
+    path: Assets/Scenes/Levels/ParabeneForest 2.unity
+    guid: 8a2366d1db21489409e5c5e7a8f5f560
   - enabled: 1
     path: Assets/Scenes/Levels/ParabeneForest.unity
-    guid: 8a2366d1db21489409e5c5e7a8f5f560
+    guid: fa916f42fa38e80438d37f12f94b3268
   - enabled: 1
     path: Assets/Scenes/Levels/BlemburgCitadel.unity
     guid: 836a255d2ae3d884285c915c0faf4e55
