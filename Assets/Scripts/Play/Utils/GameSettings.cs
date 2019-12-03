@@ -97,7 +97,7 @@ namespace Game
         [SerializeField] private string difficultyString = "Difficulty";
         [SerializeField] private string stageString = "Stage";
         [SerializeField] private bool defaultToggleValue = true;
-        [SerializeField] private int defaultSliderValue = 100;
+        [SerializeField] private int defaultSliderValue = 50;
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";

@@ -64,15 +64,26 @@ namespace Game
 
         private Action SelectRandomBestAction(List<Action> bestActions)
         {
-            int totalScore = (int)GetTotalScore(bestActions);
 
+            float weakestScore = GetWeakestScore(bestActions);
+            if (weakestScore < 0)
+            {
+                foreach (var action in bestActions)
+                {
+                    action.Score -= weakestScore;
+                }
+            }
+            
+            int totalScore = (int) GetTotalScore(bestActions);
+            
             if (totalScore > 0)
             {
                 float diceRoll = Finder.Random.Next(0, totalScore);
 
-                foreach (var action in bestActions)
+                for (int i = 0; i < bestActions.Count; i++)
                 {
-                    if (diceRoll < action.Score)
+                    var action = bestActions[i];
+                    if (i >= bestActions.Count - 1 || (diceRoll < action.Score && diceRoll >= bestActions[i+1].Score))
                     {
                         return action;
                     }
@@ -80,8 +91,20 @@ namespace Game
                     diceRoll -= action.Score;
                 }
             }
-
             return null;
+        }
+
+        private float GetWeakestScore(List<Action> bestActions)
+        {
+            float weakestScore = int.MaxValue;
+            foreach (var action in bestActions)
+            {
+                if (action.Score < weakestScore)
+                {
+                    weakestScore = action.Score;
+                }
+            }
+            return weakestScore;
         }
 
         private float GetTotalScore(List<Action> bestActions)
@@ -153,7 +176,7 @@ namespace Game
         {
             int bestActionIndex = -1;
             
-            float highestActionScore = -1;
+            float highestActionScore = int.MinValue;
             
             if (actionsToDo.Count == 0)
             {
