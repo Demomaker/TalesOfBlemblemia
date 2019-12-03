@@ -73,7 +73,12 @@ namespace Game
 
         public void TriggerCinematic()
         {
-            levelController.CinematicController.LaunchCinematic(this);
+            TriggerCinematic(null);
+        }
+
+        public void TriggerCinematic(LevelController levelController = null)
+        {
+            this.levelController.CinematicController.LaunchCinematic(this);
         }
         
         /// <summary>

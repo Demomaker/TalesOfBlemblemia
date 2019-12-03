@@ -54,6 +54,8 @@ namespace Game
         protected LevelLoader levelLoader;
         protected GameSettings gameSettings;
 
+        public string LevelName => levelName;
+
         private bool AllEnemiesDied => computerPlayer.HaveAllUnitsDied;
         private bool PointAchieved => completeIfPointAchieved && protagonistGameObject.GetComponent<Unit>()?.CurrentTile?.LogicalPosition == pointToAchieve;
         private bool AllTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
@@ -129,7 +131,7 @@ namespace Game
             levelIsEnding = true;
             if (LevelCompleted)
             {
-                onLevelVictory.Publish();
+                onLevelVictory.Publish(this);
                 if (endGameCredits != null)
                 {
                     endGameCredits.RollCredits();
