@@ -108,9 +108,6 @@ namespace Game
                             if (action.Target is Unit)
                                 if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
                                     yield return uiController.LaunchBattleReport(associatedUnit.IsEnemy);
-                            /*if (action.Target is Unit)
-                                if (!Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
-                                    yield return uiController.LaunchBattleReport(associatedUnit.IsEnemy);*/
                             Harmony.Finder.LevelController.BattleOngoing = false;
                         }
                         else
