@@ -237,8 +237,6 @@ namespace Game
         
         public Coroutine Attack(Targetable target, bool isCountering = false)
         {
-            Coroutine AttackRoutineHandle;
-            
             if(target.GetType() == typeof(Unit))
             {
                 uiController.SetupCharactersBattleInfo(
@@ -249,7 +247,7 @@ namespace Game
                     IsEnemy
                 );
             }
-            AttackRoutineHandle = coroutineStarter.StartCoroutine(unitMover.Attack(target, isCountering, gameSettings.AttackDuration));
+            Coroutine AttackRoutineHandle = coroutineStarter.StartCoroutine(unitMover.Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 
