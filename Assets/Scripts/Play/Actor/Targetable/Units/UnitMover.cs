@@ -183,7 +183,8 @@ namespace Game
                 associatedUnit.OnHurt.Publish(unit);
                 associatedUnit.UnitAnimator?.PlayHurtAnimation();
             }
-            if (!isCountering && !associatedUnit.IsImmuneToCrits && (target.GetType() == typeof(Unit) && (associatedUnit.CanCritOnEverybody || ((Unit)target).WeaponType == associatedUnit.WeaponAdvantage)))
+            
+            if (damage > 0 && !isCountering && !associatedUnit.IsImmuneToCrits && (target.GetType() == typeof(Unit) && (associatedUnit.CanCritOnEverybody || ((Unit)target).WeaponType == associatedUnit.WeaponAdvantage)))
             {
                 critModifier = Random.value <= associatedUnit.Stats.CritRate ? 2 : 1;
                 damage *= critModifier;
