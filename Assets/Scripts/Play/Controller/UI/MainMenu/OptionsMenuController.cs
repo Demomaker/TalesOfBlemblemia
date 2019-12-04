@@ -39,6 +39,7 @@ namespace Game
         private void Start()
         {
             InitializeSettingsValues();
+            ActivateSounds();
         }
 
         public void Enter()
@@ -66,6 +67,10 @@ namespace Game
             mainVolumeSlider.value = saveController.PlayerSettings.MainVolume;
             musicVolumeSlider.value = saveController.PlayerSettings.MusicVolume;
             sfxVolumeSlider.value = saveController.PlayerSettings.SfxVolume;
+        }
+        
+        private void ActivateSounds()
+        {
             onMusicToggle.Publish(musicToggle.isOn);
             onSfxToggle.Publish(sfxToggle.isOn);
             onMainVolumeChange.Publish(mainVolumeSlider.value);
