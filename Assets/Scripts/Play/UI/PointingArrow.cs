@@ -13,12 +13,12 @@ namespace Game
         [SerializeField] private Unit unitToMove;
         [SerializeField] private Vector3 specificUnitMovePosition = nullVector3;
         [SerializeField] private float maxYPositionDifference = 0.5f;
-        [SerializeField] private float yPositionChange = 0.01f;
         [SerializeField] private YDirection startingYDirection = YDirection.Up;
         [SerializeField] private Transform transformToPoint;
         [SerializeField] private PointingArrow nextArrowToActivate = null;
         [SerializeField] private Cinematic cinematicToTriggerOnStop = null;
         [SerializeField] private Cinematic cinematicToTriggerOnStart = null;
+        [SerializeField] private float speed = 1f;
 
         private static readonly Vector3 nullVector3 = new Vector3(-1, -1, -1);
         private float yPositionDifference = 0;
@@ -108,10 +108,10 @@ namespace Game
             switch (yDirection)
             {
                 case YDirection.Up:
-                    yPositionDifference += yPositionChange;
+                    yPositionDifference += Time.deltaTime * speed;
                     break;
                 case YDirection.Down:
-                    yPositionDifference -= yPositionChange;
+                    yPositionDifference -= Time.deltaTime * speed;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

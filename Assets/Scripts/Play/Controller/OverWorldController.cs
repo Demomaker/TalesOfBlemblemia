@@ -18,11 +18,14 @@ namespace Game
         [SerializeField] private GameObject overWorldPath;
         
         [SerializeField] private bool isDebugging;
+        
+        [SerializeField] private UnitAnimator unitAnimator;
 
         private OnOverWorldEnter onOverWorldEnter;
         private LevelLoader levelLoader;
         private GameSettings gameSettings;
         private GameController gameController;
+        
 
         public bool CharacterIsMoving { get; private set; }
 
@@ -81,6 +84,7 @@ namespace Game
 
         private IEnumerator MoveCharacterToPosition(Vector3 endPosition)
         {
+            
             var startPosition = characterTransform.position;
             var movementDuration = gameSettings.MovementDuration;
             for (float elapsedTime = 0; elapsedTime < movementDuration; elapsedTime += Time.deltaTime)
@@ -96,7 +100,9 @@ namespace Game
             if(!CanLoadANewLevel || CharacterIsMoving) yield break;
             CharacterIsMoving = true;
             levelLoader.FadeToLevel(levelName, LoadSceneMode.Additive);
+            unitAnimator.PlayMoveAnimation();
             yield return MoveCharacterToLevelEntry(position);
+            unitAnimator.StopMoveAnimation();
             CharacterIsMoving = false;
         }
 

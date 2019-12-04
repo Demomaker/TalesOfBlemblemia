@@ -107,6 +107,8 @@ namespace Game
 
         private IEnumerator PlayGameObjectMovement(Transform movingObject, Vector3 targetPos, float duration, float targetZoom, bool moveWithCam = false)
         {
+            var unitAnimator = movingObject.GetComponentInChildren<UnitAnimator>();
+            if(unitAnimator != null) unitAnimator.PlayMoveAnimation();
             var startPosition = movingObject.transform.position;
             if (moveWithCam)
             {
@@ -120,6 +122,7 @@ namespace Game
                 yield return null;
             }
             movingObject.position = targetPos;
+            if(unitAnimator != null) unitAnimator.StopMoveAnimation();
         }
 
         public void LaunchCinematic(Cinematic cinematic)
