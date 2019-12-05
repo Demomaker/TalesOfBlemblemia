@@ -5672,17 +5672,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textures:
-  - {fileID: 2800000, guid: 6bad82e30c0387045878cadfbfa35432, type: 3}
+  - {fileID: 2800000, guid: 85f5cf535fc9bc445a134091eea79363, type: 3}
+  - {fileID: 2800000, guid: 10a5d9d263fea1245a56d378eb1799aa, type: 3}
+  - {fileID: 2800000, guid: 78c1f4667aabf5c46b64cfc6d6a82473, type: 3}
+  - {fileID: 2800000, guid: 2dfbc37b3d8d2784ea063e5f2b6d5eb9, type: 3}
   - {fileID: 2800000, guid: a2d629178f817444197d86b700086410, type: 3}
-  - {fileID: 2800000, guid: 650cf51eb69c90140bfd88681fa0d4d9, type: 3}
-  - {fileID: 2800000, guid: e5cc3065497b5d44190ab43b29cd4a74, type: 3}
-  - {fileID: 2800000, guid: ea8d92ebb4263ce41b86009e7aeb6eb0, type: 3}
   - {fileID: 2800000, guid: 23c531fd33dde5a4d9919161bc9d7593, type: 3}
-  - {fileID: 2800000, guid: 9a64fae288f06eb47b3f9089188719fd, type: 3}
-  - {fileID: 2800000, guid: ed2a0325ff4843e4b87e874facd923c7, type: 3}
-  - {fileID: 2800000, guid: 40a08f792dad33d49b8628f341e3aafa, type: 3}
-  - {fileID: 2800000, guid: 9e1569cb8877b7644a0a0d87ec0a3d6b, type: 3}
+  - {fileID: 2800000, guid: c963e7c387f6e77449063eec1ee4e080, type: 3}
+  - {fileID: 2800000, guid: 66ed3d8b946323c4f9d255c3b04ce506, type: 3}
+  - {fileID: 2800000, guid: 615010eefd64f084995ff46d7672cf79, type: 3}
+  - {fileID: 2800000, guid: e3293e2d2796ebb4fb2f281fd360ad00, type: 3}
   - {fileID: 2800000, guid: 0b8211197f3671148b91ca150634b04e, type: 3}
+  - {fileID: 2800000, guid: 23c531fd33dde5a4d9919161bc9d7593, type: 3}
+  - {fileID: 2800000, guid: 954fe14ec8ab94b4aa02e466d057cf7b, type: 3}
+  - {fileID: 2800000, guid: fe71df0769f53a140abdf076ea345c72, type: 3}
+  - {fileID: 2800000, guid: ea8d92ebb4263ce41b86009e7aeb6eb0, type: 3}
   nameText: {fileID: 7627078250476067537}
   dialogueText: {fileID: 358164863145587516}
   animator: {fileID: 3219058003856424712}

@@ -146,7 +146,7 @@ namespace Game
             CheckIfUnitWasRecruited();
             CheckIfUpperPathWasTaken();
             UpdatePlayerSave();
-            UnlockEndLevelAchievements();
+            if(!LevelFailed)UnlockEndLevelAchievements();
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
 
