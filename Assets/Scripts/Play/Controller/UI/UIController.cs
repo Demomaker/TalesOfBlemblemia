@@ -115,7 +115,7 @@ namespace Game
                 healthBar[i].SetActive(i < maxHealthPoints);
             }
         
-            for (int i = 0; i < currentHealthPoint; i++)
+            for (int i = 0; i < healthBar.Length; i++)
             {
                 var healthBarImage = healthBar[i].GetComponentInChildren<RawImage>();
                 healthBarImage.color = gameSettings.Green;
