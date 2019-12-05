@@ -436,7 +436,7 @@ PrefabInstance:
         type: 3}
       propertyPath: mainMenuMusic
       value: 
-      objectReference: {fileID: 8300000, guid: 1c19d8f4b45516849b15652204e37832, type: 3}
+      objectReference: {fileID: 8300000, guid: f933e1f5180f0014db37c98abfc8bbd8, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: overWorldMusic
