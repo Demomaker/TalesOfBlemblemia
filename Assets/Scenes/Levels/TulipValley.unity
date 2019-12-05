@@ -81170,7 +81170,7 @@ PrefabInstance:
         type: 3}
       propertyPath: backgroundMusic
       value: 
-      objectReference: {fileID: 8300000, guid: 10095b5e1bbafc5449259a6594aad68c, type: 3}
+      objectReference: {fileID: 8300000, guid: 8993fda01b2cd004488b4300ab93ed94, type: 3}
     - target: {fileID: 3032034816976037128, guid: 68d4561e12f7e2f4790af4b236bd15c0,
         type: 3}
       propertyPath: backgroundMusicOption
