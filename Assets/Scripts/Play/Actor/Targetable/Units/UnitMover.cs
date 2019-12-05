@@ -56,6 +56,7 @@ namespace Game
             if (path != null)
             {
                 associatedUnit.IsMoving = true;
+                associatedUnit.UnitAnimator?.PlayMoveAnimation();
                 Tile finalTile = null;
                 var pathCount = path.Count;
                 for (int i = 0; i < pathCount; i++)
@@ -70,7 +71,7 @@ namespace Game
                             associatedUnit.MovesLeft -= finalTile.CostToMove;
                         var startPos = associatedUnit.Transform.position;
                         LookAt(finalTile.WorldPosition);
-                        
+
                         while (counter < duration)
                         {
                             counter += Time.deltaTime;
@@ -86,12 +87,14 @@ namespace Game
                         }
                     }
                 }
-                
+
                 associatedUnit.OnUnitMove.Publish(associatedUnit);
 
                 associatedUnit.CurrentTile = finalTile;
-                if (associatedUnit.CurrentTile != null) associatedUnit.Transform.position = associatedUnit.CurrentTile.WorldPosition;
+                if (associatedUnit.CurrentTile != null)
+                    associatedUnit.Transform.position = associatedUnit.CurrentTile.WorldPosition;
                 associatedUnit.IsMoving = false;
+                associatedUnit.UnitAnimator?.StopMoveAnimation();
             }
 
             if (action != null)
@@ -118,13 +121,17 @@ namespace Game
                     }
                     else if (action.ActionType == ActionType.Recruit && action.Target != null)
                     {
+                        associatedUnit.UnitAnimator?.PlayAttackAnimation();
                         if (action.Target.GetType() == typeof(Unit) && !associatedUnit.RecruitUnit((Unit) action.Target))
                             associatedUnit.Rest();
+                        associatedUnit.UnitAnimator?.StopAttackAnimation();
                     }
                     else if (action.ActionType == ActionType.Heal && action.Target != null)
                     {
+                        associatedUnit.UnitAnimator?.PlayAttackAnimation();
                         if (action.Target.GetType() == typeof(Unit) && !associatedUnit.HealUnit((Unit) action.Target))
                             associatedUnit.Rest();
+                        associatedUnit.UnitAnimator?.StopAttackAnimation();
                     }
                     else
                     {
@@ -142,6 +149,7 @@ namespace Game
         {
             if (associatedUnit.IsAttacking) yield break;
             associatedUnit.IsAttacking = true;
+            associatedUnit.UnitAnimator?.PlayAttackAnimation();
             
             var counter = 0f;
             var startPos = associatedUnit.Transform.position;
@@ -163,12 +171,17 @@ namespace Game
             if (Random.value <= hitRate)
             {
                 damage = associatedUnit.Stats.AttackStrength;
-                if(target is Unit unit)
+                if (target is Unit unit)
+                {
                     associatedUnit.OnDodge.Publish(unit);
+                    associatedUnit.UnitAnimator?.PlayBlockAnimation();
+                }
+                    
             }
             else if (target is Unit unit)
             {
                 associatedUnit.OnHurt.Publish(unit);
+                associatedUnit.UnitAnimator?.PlayHurtAnimation();
             }
             
             if (damage > 0 && !isCountering && !associatedUnit.IsImmuneToCrits && (target.GetType() == typeof(Unit) && (associatedUnit.CanCritOnEverybody || ((Unit)target).WeaponType == associatedUnit.WeaponAdvantage)))
@@ -185,8 +198,12 @@ namespace Game
             
             if (target is Unit)
                 uiController.ChangeCharacterDamageTaken(damage, !associatedUnit.IsEnemy, critModifier);
-            counter = 0;
             
+            associatedUnit.UnitAnimator?.StopBlockAnimation();
+            associatedUnit.UnitAnimator?.StopHurtAnimation();
+
+            counter = 0;
+
             while (counter < duration)
             {
                 counter += Time.deltaTime;
@@ -196,6 +213,7 @@ namespace Game
             
             associatedUnit.Transform.position = startPos;
             associatedUnit.IsAttacking = false;
+            associatedUnit.UnitAnimator?.StopAttackAnimation();
 
             //A unit cannot make a critical hit on a counter && cannot counter on a counter
             if (!target.NoHealthLeft && !isCountering && target is Unit targetUnit)
