@@ -288,6 +288,11 @@ PrefabInstance:
       propertyPath: emptyLevelString
       value: Empty
       objectReference: {fileID: 0}
+    - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
+        type: 3}
+      propertyPath: snowyPeaksScene
+      value: 76988147
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5394f606be27d3448b787dc0ec56a8f6, type: 3}
 --- !u!1001 &740606059
