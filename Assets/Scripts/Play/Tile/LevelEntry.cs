@@ -52,9 +52,9 @@ namespace Game
         public void OnLevelEntry()
         {
             EventSystem.current.SetSelectedGameObject(null);
-            levelEntryButton.interactable = false;
             if (CanBeClicked && overWorldController.CanLoadANewLevel && !overWorldController.CharacterIsMoving)
             {
+                levelEntryButton.interactable = false;
                 coroutineStarter.StartCoroutine(overWorldController.LoadLevel(RepresentedLevelName, transform.position));
             }
         }
