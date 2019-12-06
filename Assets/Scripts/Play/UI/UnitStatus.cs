@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,8 @@ namespace Game
         private Unit unit;
         private Canvas canvas;
         private GameSettings gameSettings;
+        private bool isActive = false;
+        private bool iscanvasNull;
 
         private void Awake()
         {
@@ -34,7 +37,8 @@ namespace Game
 
         private void Start()
         {
-            DisableUnitGraphics();
+            iscanvasNull = canvas == null;
+            if (canvas != null) canvas.enabled = false;
             InitUnitInfos();
         }
         private void InitUnitInfos()
@@ -79,22 +83,19 @@ namespace Game
 
         private void OnMouseEnter()
         {
-            EnableUnitGraphics();
+            isActive = true;
         }
 
         protected void OnMouseExit()
         {
-            DisableUnitGraphics();
+            isActive = false;
         }
 
-        private void EnableUnitGraphics()
+        private void Update()
         {
-            if (canvas != null) canvas.enabled = true;
-        }
-
-        private void DisableUnitGraphics()
-        {
-            if (canvas != null) canvas.enabled = false;
+            if (iscanvasNull || Time.timeScale == 0) return;
+            if(isActive && !canvas.enabled) canvas.enabled = true;
+            else if(!isActive && canvas.enabled) canvas.enabled = false;
         }
 
         private void UpdateHealthText()
