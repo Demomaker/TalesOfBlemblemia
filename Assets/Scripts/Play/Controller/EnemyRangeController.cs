@@ -64,7 +64,7 @@ namespace Game
             {
                 for (int j = 0; j < gridController.NbLines; j++)
                 {
-                    var tile = gridController.GetTile(i, j);
+                    var tile = gridController.TileArray[i, j];
                     if (TileIsReachableByEnemy(tile.LogicalPosition, enemyUnits))
                     {
                         InRangeTiles.Add(tile);
@@ -103,23 +103,20 @@ namespace Game
         public void OnPlayerTurn(List<Unit> ownedUnits)
         {
             if (isActivated)
-                SetEnemyRange(ownedUnits);
-        }
-
-        private void FixedUpdate()
-        {
-            if (levelController.LevelTileUpdateKeeper > tileUpdateKeeper && isActivated && levelController.CurrentPlayer is HumanPlayer)
             {
-                StartCoroutine(RangeUpdate());
+                SetEnemyRange(ownedUnits);
+                DisplayEnemyRange();
             }
         }
 
-        private IEnumerator RangeUpdate()
+        private void Update()
         {
-            HideEnemyRange();
-            FindInRangeTiles(levelController.ComputerPlayer.OwnedUnits);
-            DisplayEnemyRange();
-            yield return null;
+            if (levelController.LevelTileUpdateKeeper > tileUpdateKeeper && isActivated && levelController.CurrentPlayer is HumanPlayer)
+            {
+                HideEnemyRange();
+                FindInRangeTiles(levelController.ComputerPlayer.OwnedUnits);
+                DisplayEnemyRange();
+            }
         }
         
     }

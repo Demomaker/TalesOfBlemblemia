@@ -27,7 +27,7 @@ namespace Game
         }
         private static int[,] ComputeCosts(GridController grid, int[,] movementCosts, Vector2Int from, bool unitIsEnemy)
         {
-            var costToMove = grid.GetTile(from.x, from.y).CostToMove;
+            var costToMove = grid.TileArray[from.x, from.y].CostToMove;
 
             //We check if the cost to move is smaller then the cost of the current tile. We do so for each direction
             //Checking right movement first.
@@ -87,9 +87,9 @@ namespace Game
             if (CheckIfTargetIsWithinBoardLimit(from, grid, 0, 0)
                 && CheckIfTargetIsWithinBoardLimit(from, grid, xModifier, yModifier)
                 && CostToMoveIsSmallerThenCurrentTile(movementCosts[from.x, from.y] + costToMove, movementCosts[from.x + xModifier, from.y + yModifier] )
-                && IsTileAccessible(grid.GetTile(from.x + xModifier, from.y + yModifier))
-                && (!IsTileOccupied(grid.GetTile(from.x + xModifier, from.y + yModifier)) 
-                || UnitOnTileIsFriendly(grid.GetTile(from.x + xModifier, from.y + yModifier), unitIsEnemy))
+                && IsTileAccessible(grid.TileArray[from.x + xModifier, from.y + yModifier])
+                && (!IsTileOccupied(grid.TileArray[from.x + xModifier, from.y + yModifier]) 
+                || UnitOnTileIsFriendly(grid.TileArray[from.x + xModifier, from.y + yModifier], unitIsEnemy))
             )
             {
                 //Changing the value to move to the cell 
@@ -108,7 +108,7 @@ namespace Game
         {
             GridController grid = Harmony.Finder.GridController;
             //If there is a unit on the target the unit must find the closest available tile.
-            if (grid.GetTile(to.x, to.y).LinkedUnit != null)
+            if (grid.TileArray[to.x, to.y].LinkedUnit != null)
             {
                 List<Tile> currentPath;
                 //check for the closest available tile to target
@@ -156,7 +156,7 @@ namespace Game
             )
         {
             var newPath = new List<Tile>();
-            if (grid.GetTile(to.x + toXModifier, to.y + toYModifier).LinkedUnit == null)
+            if (grid.TileArray[to.x + toXModifier, to.y + toYModifier].LinkedUnit == null)
             {
                 newPath = FindPath(grid, movementCosts, new List<Tile>(), from, new Vector2Int(to.x + toXModifier,to.y + toYModifier), unit);
             }
@@ -176,11 +176,11 @@ namespace Game
             if (CheckIfTileInaccessible(to, movementCosts))
             {
                 List<Tile> emptyPath = new List<Tile>();
-                emptyPath.Add(grid.GetTile(from.x, from.y));
+                emptyPath.Add(grid.TileArray[from.x, from.y]);
                 return emptyPath;
             }
             //Exit statement when path is found
-            if (grid.GetTile(from.x, from.y).Equals(grid.GetTile(to.x, to.y)))
+            if (grid.TileArray[from.x, from.y].Equals(grid.TileArray[to.x, to.y]))
             {
                 path.Remove(null);
                 path.Reverse();
@@ -200,10 +200,10 @@ namespace Game
                     if (lastTileInTurn != null && !lastTileInTurn.IsAvailable)
                     {
                         TileType lastTileType = lastTileInTurn.TileType;
-                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).MakeObstacle();
+                        grid.TileArray[lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y].MakeObstacle();
                         movementCosts = ComputeCost(from, unit.IsEnemy);
-                        var t = grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y);
-                        grid.GetTile(lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y).UnMakeObstacle(lastTileType);
+                        var t = grid.TileArray[lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y];
+                        grid.TileArray[lastTileInTurn.LogicalPosition.x, lastTileInTurn.LogicalPosition.y].UnMakeObstacle(lastTileType);
                         int lastIndex = path.Count - 1;
                         
                         return FindPath(grid, movementCosts, new List<Tile>(), 
@@ -258,7 +258,7 @@ namespace Game
         {
             if (to.y + 1 < grid.NbLines && to.y + 1 >= 0 && movementCosts[to.x, to.y + 1] < movementCosts[to.x, to.y])
             {
-                var tile = grid.GetTile(to.x, to.y + 1);
+                var tile = grid.TileArray[to.x, to.y + 1];
                 //The first tile in the path should be available
                 if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
@@ -277,14 +277,14 @@ namespace Game
         {
             if (to.x + 1 < grid.NbColumns && to.x + 1 >= 0 && movementCosts[to.x + 1, to.y] < movementCosts[to.x, to.y])
             {
-                var tile = grid.GetTile(to.x + 1, to.y);
+                var tile = grid.TileArray[to.x + 1, to.y];
                 //The first tile in the path should be available
                 if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
                 if (path.Last() == null ||(tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy == unitIsEnemy))
                 {
                     if (newPosition == new Vector2Int(-1,-1) || movementCosts[to.x + 1, to.y] < movementCosts[to.x, to.y] || (movementCosts[to.x - 1, to.y] == movementCosts[newPosition.x, newPosition.y] &&
-                                                                                                                              tile.CostToMove < grid.GetTile(newPosition.x, newPosition.y).CostToMove))
+                                                                                                                              tile.CostToMove < grid.TileArray[newPosition.x, newPosition.y].CostToMove))
                     {
                         path[path.Count - 1] = tile;
 
@@ -300,14 +300,14 @@ namespace Game
         {
             if (to.y - 1 < grid.NbLines && to.y - 1 >= 0 && movementCosts[to.x, to.y - 1] < movementCosts[to.x, to.y])
             {
-                var tile = grid.GetTile(to.x, to.y - 1);
+                var tile = grid.TileArray[to.x, to.y - 1];
                 //The first tile in the path should be available
                 if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
                 if (path.Last() == null || (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy == unitIsEnemy))
                 {
                     if (newPosition == new Vector2Int(-1,-1) || movementCosts[to.x, to.y - 1] < movementCosts[to.x, to.y] || (movementCosts[to.x - 1, to.y] == movementCosts[newPosition.x, newPosition.y] &&
-                                                                                                                              tile.CostToMove < grid.GetTile(newPosition.x, newPosition.y).CostToMove))
+                                                                                                                              tile.CostToMove < grid.TileArray[newPosition.x, newPosition.y].CostToMove))
                     {
                         path[path.Count - 1] = tile;
 
@@ -323,14 +323,14 @@ namespace Game
         {
             if (to.x - 1 < grid.NbColumns && to.x - 1 >= 0)
             {
-                var tile = grid.GetTile(to.x - 1, to.y);
+                var tile = grid.TileArray[to.x - 1, to.y];
                 //The first tile in the path should be available
                 if (unitIsEnemy && path.Count == 1 && !tile.IsAvailable)
                     return newPosition;
                 if (path.Last() == null || (tile.LinkedUnit == null || tile.LinkedUnit.IsEnemy == unitIsEnemy))
                 {
                     if (newPosition == new Vector2Int(-1,-1) || movementCosts[to.x - 1, to.y] < movementCosts[newPosition.x, newPosition.y] || (movementCosts[to.x - 1, to.y] == movementCosts[newPosition.x, newPosition.y] &&
-                        tile.CostToMove < grid.GetTile(newPosition.x, newPosition.y).CostToMove))
+                        tile.CostToMove < grid.TileArray[newPosition.x, newPosition.y].CostToMove))
                     {
                         path[path.Count - 1] = tile;
 

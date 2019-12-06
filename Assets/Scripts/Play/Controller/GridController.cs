@@ -33,6 +33,7 @@ using UnityEngine.UI;
         [SerializeField] private Sprite upStartPathTileSprite;
 
         private GridLayoutGroup gridLayoutGroup;
+        private Tile[,] tileArray;
 
         public Unit SelectedUnit { get; private set; }
         public Sprite AvailabilitySprite => movementTileSprite;
@@ -60,12 +61,14 @@ using UnityEngine.UI;
         public bool AUnitIsCurrentlySelected => SelectedUnit != null;
         public int NbColumns { get; private set; }
         public int NbLines { get; private set; }
+        public Tile[,] TileArray => tileArray;
 
         private void Awake()
         {
             gridLayoutGroup = GetComponent<GridLayoutGroup>();
             NbColumns = (int)(GetComponent<RectTransform>().rect.width / gridLayoutGroup.cellSize.x);
             NbLines = (int)(GetComponent<RectTransform>().rect.height / gridLayoutGroup.cellSize.y);
+            tileArray = GetTileArray();
         }
 
         public void SelectUnit(Unit unit)
@@ -162,7 +165,7 @@ using UnityEngine.UI;
             return null;
         }
 
-        public Tile GetTile(int x, int y)
+        private Tile GetTile(int x, int y)
         {
             if (IsValidGridPosition(x, y))
             {
@@ -171,7 +174,7 @@ using UnityEngine.UI;
 
             return null;
         }
-        
+
         public bool IsValidGridPosition(int x, int y)
         {
             return x >= 0 && y >= 0 && x < NbColumns && y < NbLines;
@@ -202,6 +205,21 @@ using UnityEngine.UI;
                 else
                     target.CurrentTile.DisplayAttackActionPossibility();
             }
+        }
+        
+        private Tile[,] GetTileArray()
+        {
+            Tile[,] tileArray = new Tile[NbColumns,NbLines];
+
+            for (int i = 0; i < NbColumns; i++)
+            {
+                for (int j = 0; j < NbLines; j++)
+                {
+                    tileArray[i, j] = GetTile(i, j);
+                }
+            }
+            
+            return tileArray;
         }
     }
  }
