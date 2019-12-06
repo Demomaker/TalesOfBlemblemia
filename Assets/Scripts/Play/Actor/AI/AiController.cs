@@ -122,7 +122,7 @@ namespace Game
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
             if(playableUnit.CurrentHealthPoints < playableUnit.Stats.MaxHealthPoints/3)
             {
-                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
+                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, 8f));
             }
         }
         
