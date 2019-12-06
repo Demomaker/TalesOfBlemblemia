@@ -79,7 +79,7 @@ namespace Game
             yield return new WaitForEndOfFrame();
             while (levelController.CinematicController.IsPlayingACinematic)
                 yield return null;
-            var tile = gridController.GetTile(initialPosition.x, initialPosition.y);
+            var tile = gridController.TileArray[initialPosition.x, initialPosition.y];
             transform.position = tile.WorldPosition;
             CurrentTile = tile;
         }
