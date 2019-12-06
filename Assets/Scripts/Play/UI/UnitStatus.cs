@@ -25,23 +25,19 @@ namespace Game
         private Unit unit;
         private Canvas canvas;
         private GameSettings gameSettings;
-        private CinematicController cinematicController;
         private bool isActive = false;
         private bool iscanvasNull;
-        private bool iscinematicControllerNotNull;
 
         private void Awake()
         {
             unit = transform.root.GetComponent<Unit>();
             canvas = GetComponent<Canvas>();
             gameSettings = Harmony.Finder.GameSettings;
-            cinematicController = Harmony.Finder.LevelController.CinematicController;
+            iscanvasNull = canvas == null;
         }
 
         private void Start()
         {
-            iscinematicControllerNotNull = cinematicController != null;
-            iscanvasNull = canvas == null;
             if (canvas != null) canvas.enabled = false;
             InitUnitInfos();
         }
@@ -98,7 +94,7 @@ namespace Game
         private void Update()
         {
             if (iscanvasNull || Time.timeScale == 0) return;
-            if (iscinematicControllerNotNull && cinematicController.IsPlayingACinematic)
+            if (Harmony.Finder.LevelController.CinematicController != null && Harmony.Finder.LevelController.CinematicController.IsPlayingACinematic)
             {
                 if(canvas.enabled) canvas.enabled = false;
                 return;
