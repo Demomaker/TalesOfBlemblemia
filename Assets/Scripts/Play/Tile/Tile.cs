@@ -220,6 +220,7 @@ namespace Game
         }
         public void UnlinkUnit()
         {
+            Harmony.Finder.LevelController.IncrementTileUpdate();
             linkedUnit = null;
             UpdateClickHint();
         }

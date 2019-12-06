@@ -73,7 +73,8 @@ namespace Game
         public ComputerPlayer ComputerPlayer => computerPlayer;
         public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && currentPlayer == humanPlayer;
         public bool BattleOngoing { get; set; }
-        
+        public UnitOwner CurrentPlayer => currentPlayer;
+
         protected virtual void Awake()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
