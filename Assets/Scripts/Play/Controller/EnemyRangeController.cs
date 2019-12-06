@@ -22,7 +22,6 @@ namespace Game
         {
             levelController = Harmony.Finder.LevelController;
             gridController = Harmony.Finder.GridController;
-            //StartCoroutine(RangeUpdate());
         }
 
         private void EnableEnemyRange(List<Unit> enemyUnits)
