@@ -54,6 +54,7 @@ namespace Game
             EventSystem.current.SetSelectedGameObject(null);
             if (CanBeClicked && overWorldController.CanLoadANewLevel && !overWorldController.CharacterIsMoving)
             {
+                levelEntryButton.interactable = false;
                 coroutineStarter.StartCoroutine(overWorldController.LoadLevel(RepresentedLevelName, transform.position));
             }
         }

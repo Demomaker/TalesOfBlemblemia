@@ -59,7 +59,7 @@ MonoBehaviour:
   attackDuration: 0.3
   movementDuration: 0.3
   numberOfMaximumUnitsForThePlayer: 8
-  emptyLevelString: 
+  emptyLevelString: Empty
   snowyPeaksScene: 78225045
   jimsterburgScene: 21787095
   parabeneForestScene: 76988147
@@ -124,3 +124,4 @@ MonoBehaviour:
   percent: 100
   audioPath: Audio
   darkKnightName: Dark Knight
+  emptyString: 
