@@ -120,9 +120,9 @@ namespace Game
         private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo, GridController grid)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
-            if(playableUnit.Stats.MaxHealthPoints * aiControllerValues.HealthModForResting < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
+            if(playableUnit.CurrentHealthPoints < playableUnit.Stats.MaxHealthPoints/3)
             {
-                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
+                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, 8f));
             }
         }
         
