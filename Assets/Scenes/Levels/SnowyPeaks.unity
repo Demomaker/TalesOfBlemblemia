@@ -9259,7 +9259,7 @@ PrefabInstance:
         type: 3}
       propertyPath: transformToPoint
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1013971668}
     - target: {fileID: 6664270035422016782, guid: 3816b382bc0d99044955b1efc5f4f115,
         type: 3}
       propertyPath: unitToAttack
@@ -27174,7 +27174,7 @@ PrefabInstance:
         type: 3}
       propertyPath: transformToPoint
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1285350279}
     - target: {fileID: 6664270035422016782, guid: 3816b382bc0d99044955b1efc5f4f115,
         type: 3}
       propertyPath: unitToAttack
@@ -27190,7 +27190,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tileToBlink
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1285350283}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3816b382bc0d99044955b1efc5f4f115, type: 3}
 --- !u!114 &682070054 stripped
@@ -66896,7 +66896,7 @@ PrefabInstance:
         type: 3}
       propertyPath: transformToPoint
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1543030007}
     - target: {fileID: 6664270035422016782, guid: 3816b382bc0d99044955b1efc5f4f115,
         type: 3}
       propertyPath: nextArrowToActivate
@@ -66937,7 +66937,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tileToBlink
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1543030011}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3816b382bc0d99044955b1efc5f4f115, type: 3}
 --- !u!1 &1229981644 stripped
@@ -66946,6 +66946,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1229981643}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1229981645 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6664270035422016782, guid: 3816b382bc0d99044955b1efc5f4f115,
+    type: 3}
+  m_PrefabInstance: {fileID: 1229981643}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229981644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b2649c5aff8e149ad4da761d1866a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1232415724
 GameObject:
   m_ObjectHideFlags: 0
@@ -78583,6 +78595,23 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1543030011}
           m_MethodName: OnCursorEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1229981645}
+          m_MethodName: OnStopEvent
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
