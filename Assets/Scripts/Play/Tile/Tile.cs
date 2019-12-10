@@ -220,6 +220,7 @@ namespace Game
         }
         public void UnlinkUnit()
         {
+            Harmony.Finder.LevelController.IncrementTileUpdate();
             linkedUnit = null;
             UpdateClickHint();
         }
@@ -342,26 +343,6 @@ namespace Game
             else if (currentPosition.y < nextPosition.y) 
                 return gridController.DownStartPathTileSprite;
             return null;
-        }
-
-        public IEnumerator Blink(Sprite blinkSprite)
-        {
-            var fadeIn = false;
-            var fadeValue = 1f;
-            tileImage.sprite = blinkSprite;
-            var faded = tileImage.color;
-            while (true)
-            {
-                if (tileImage.sprite != blinkSprite) tileImage.sprite = blinkSprite;
-                fadeValue += fadeIn ? 0.01f : -0.01f;
-
-                faded.a = fadeValue;
-                tileImage.color = faded;
-                if (fadeValue <= 0f) fadeIn = true;
-                if (fadeValue >= 1f) fadeIn = false;
-                yield return null;
-            }
-
         }
 
         public void ResetTileImage()

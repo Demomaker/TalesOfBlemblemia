@@ -97,11 +97,12 @@ namespace Game
         [SerializeField] private string difficultyString = "Difficulty";
         [SerializeField] private string stageString = "Stage";
         [SerializeField] private bool defaultToggleValue = true;
-        [SerializeField] private int defaultSliderValue = 100;
+        [SerializeField] private int defaultSliderValue = 50;
         [SerializeField] private string defaultUsername = "Franklem";
         [SerializeField] private int percent = 100;
         [SerializeField] private string audioPath = "Audio";
         [SerializeField] private string darkKnightName = "Dark Knight";
+        [SerializeField] private string emptyString = "";
         
         public string ConfirmMoveToText => confirmMoveToText;
         public string ConfirmRecruitText => confirmRecruitText;
@@ -188,5 +189,6 @@ namespace Game
         public string AudioPath => audioPath;
         public string DarkKnightName => darkKnightName;
 
+        public string EmptyString => emptyString;
     }
 }

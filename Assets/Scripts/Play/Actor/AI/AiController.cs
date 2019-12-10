@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace Game
@@ -63,15 +64,26 @@ namespace Game
 
         private Action SelectRandomBestAction(List<Action> bestActions)
         {
-            int totalScore = (int)GetTotalScore(bestActions);
 
+            float weakestScore = GetWeakestScore(bestActions);
+            if (weakestScore < 0)
+            {
+                foreach (var action in bestActions)
+                {
+                    action.Score -= weakestScore;
+                }
+            }
+            
+            int totalScore = (int) GetTotalScore(bestActions);
+            
             if (totalScore > 0)
             {
                 float diceRoll = Finder.Random.Next(0, totalScore);
 
-                foreach (var action in bestActions)
+                for (int i = 0; i < bestActions.Count; i++)
                 {
-                    if (diceRoll < action.Score)
+                    var action = bestActions[i];
+                    if (i >= bestActions.Count - 1 || (diceRoll < action.Score && diceRoll >= bestActions[i+1].Score))
                     {
                         return action;
                     }
@@ -79,8 +91,20 @@ namespace Game
                     diceRoll -= action.Score;
                 }
             }
-
             return null;
+        }
+
+        private float GetWeakestScore(List<Action> bestActions)
+        {
+            float weakestScore = int.MaxValue;
+            foreach (var action in bestActions)
+            {
+                if (action.Score < weakestScore)
+                {
+                    weakestScore = action.Score;
+                }
+            }
+            return weakestScore;
         }
 
         private float GetTotalScore(List<Action> bestActions)
@@ -96,9 +120,9 @@ namespace Game
         private void AddRestActionIfNeeded(List<Action> bestActions, Unit playableUnit, List<Action> actionsToDo, GridController grid)
         {
             //The unit should flee and rest if 4/3 of its health is smaller than its maximum health plus the health it would gain by resting
-            if(playableUnit.Stats.MaxHealthPoints * aiControllerValues.HealthModForResting < playableUnit.Stats.MaxHealthPoints + playableUnit.HpGainedByResting)
+            if(playableUnit.CurrentHealthPoints < playableUnit.Stats.MaxHealthPoints/3)
             {
-                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, aiControllerValues.BaseChoiceActionScore));
+                bestActions.Add(new Action(FindFleePath(actionsToDo, playableUnit, grid), ActionType.Rest, null, 8f));
             }
         }
         
@@ -152,7 +176,7 @@ namespace Game
         {
             int bestActionIndex = -1;
             
-            float highestActionScore = -1;
+            float highestActionScore = int.MinValue;
             
             if (actionsToDo.Count == 0)
             {
@@ -187,18 +211,18 @@ namespace Game
                 }
             }
 
-            Unit enemy = null;
+            Targetable enemy = null;
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
                 for (int j = 0; j < optionMap.GetLength(1); j++)
                 {
                     for (int k = 0; k < potentialActions.Count; k++)
                     {
-                        if (enemy.GetType() == typeof(Unit))
+                        enemy = potentialActions[k].Target;
+                        if (enemy is Unit enemyUnit)
                         {
-                            enemy = (Unit)potentialActions[k].Target;
                             //Each tile has a score based on the added number of turns it would take each player's unit to get there
-                            optionMap[i, j] += (int)Math.Ceiling(((double)(enemy.MovementCosts[i, j] - 1) / (double)enemy.Stats.MoveSpeed));
+                            optionMap[i, j] += (int)Math.Ceiling((enemyUnit.MovementCosts[i, j] - 1) / (double)enemyUnit.Stats.MoveSpeed);
                         }
                     }
                 }
@@ -245,6 +269,11 @@ namespace Game
                     new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y), 
                     playableUnit
                 );
+                /*
+                Vector2Int currentPosition = new Vector2Int(playableUnit.CurrentTile.LogicalPosition.x, playableUnit.CurrentTile.LogicalPosition.y);
+                Vector2Int targetPosition = new Vector2Int(potentialTarget.CurrentTile.LogicalPosition.x, potentialTarget.CurrentTile.LogicalPosition.y);
+                int[,] computedCost = PathFinder.ComputeCost(currentPosition, true);
+                path = PathFinder.FindPath(computedCost, currentPosition, targetPosition, playableUnit);*/
                 path.Reverse();
             }
 

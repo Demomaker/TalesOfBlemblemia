@@ -7,8 +7,8 @@
     public class AiControllerValues
     {
         private float baseTargetActionScore = 20f + 3f;
-        private float adjacentTargetChoiceMod = 6f;
-        private float inaccessibleTargetChoiceMod = -15f;
+        private float adjacentTargetChoiceMod = 8f;
+        private float inaccessibleTargetChoiceMod = -18f;
         private float potentialDeathChoiceMod = -5f;
         private float damageReceiveChoiceMod = -0.8f;
         private float spearAttackingFortressChoiceMod = -2f;
@@ -23,8 +23,8 @@
         protected float attackingAxeWithoutAdvantageChoiceMod = -2f;
         protected float attackingSpearWithoutAdvantageChoiceMod = -3f;
         protected float attackingSwordWithoutAdvantageChoiceMod = -2.5f;
-        private float turnMultiplierForDistanceChoiceMod = -4f;
-        private float turnAdderForDistanceChoiceMod = 4f;
+        private float turnMultiplierForDistanceChoiceMod = -6f;
+        private float turnAdderForDistanceChoiceMod = 5f;
         private float killingEnemyChoiceMod = 12f;
         private float baseChoiceActionScore = 20f;
         private float healthModForResting = 1.33f;

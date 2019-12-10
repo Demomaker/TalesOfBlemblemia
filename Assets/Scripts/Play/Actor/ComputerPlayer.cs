@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game
 {
@@ -13,21 +14,12 @@ namespace Game
         private readonly AiController aiController;
         private readonly List<Targetable> targetsToDestroy;
         
-        private int dynamicUnitCounter;
-        private int dynamicUnitCount;
         private Unit currentUnit ;
         
         public ComputerPlayer(int nbOfChoice) : base(COMPUTER_PLAYER_NAME)
         {
             aiController = new AiController(nbOfChoice);
             targetsToDestroy = new List<Targetable>();
-        }
-
-        public void OnUnitDeath(Unit unit)
-        {
-            if (unit != currentUnit) return;
-            dynamicUnitCount--;
-            dynamicUnitCounter--;
         }
 
         public void AddTarget(Targetable target)
@@ -37,16 +29,13 @@ namespace Game
         
         public IEnumerator PlayUnits(GridController grid, LevelController levelController, UIController uiController)
         {
-            dynamicUnitCount = ownedUnits.Count;
-            for (dynamicUnitCounter = 0; dynamicUnitCounter < dynamicUnitCount; dynamicUnitCounter++)
+            for (int i = ownedUnits.Count - 1; i >= 0; i--)
             {
                 while (uiController.IsBattleReportActive) yield return null;
-                currentUnit = dynamicUnitCount > 0 ? ownedUnits[dynamicUnitCounter] : currentUnit = ownedUnits[0];
-
+                currentUnit = ownedUnits[i];
                 if (!currentUnit.HasActed && !levelController.LevelEnded)
                 {
                     var action = aiController.DetermineAction(currentUnit, enemyUnits, targetsToDestroy, grid, levelController);
-                    
                     yield return currentUnit.MoveByAction(action);
                 }
             }

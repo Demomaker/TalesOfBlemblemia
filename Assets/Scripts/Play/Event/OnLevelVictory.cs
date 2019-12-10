@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using JetBrains.Annotations;
 
 namespace Game
 {
@@ -7,12 +8,12 @@ namespace Game
     /// Author : Mike Bédard
     /// </summary>
     [Findable(Game.Tags.GAME_EVENT_HANDLER_TAG)]
-    public class OnLevelVictory : EventChannel
+    public class OnLevelVictory : EventChannel<LevelController>
     {
-        public event EventHandler Notify; 
-        public override void Publish()
+        public event EventHandler<LevelController> Notify;
+        public override void Publish(LevelController levelController)
         {
-            Notify?.Invoke();
+            Notify?.Invoke(levelController);
         }
     }
 }

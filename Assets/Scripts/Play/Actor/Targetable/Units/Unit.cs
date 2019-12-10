@@ -45,6 +45,9 @@ namespace Game
         private int movesLeft;
         private int tileUpdateKeeper;
         private SpriteRenderer[] spriteRenderers;
+        private UnitAnimator unitAnimator;
+
+        public UnitAnimator UnitAnimator => unitAnimator;
 
         public OnUnitMove OnUnitMove => onUnitMove;
         public OnAttack OnAttack => onAttack;
@@ -178,6 +181,7 @@ namespace Game
             gameSettings = Harmony.Finder.GameSettings;
             unitMover = new UnitMover(this, levelController, uiController, gameSettings);
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+            unitAnimator = GetComponentInChildren<UnitAnimator>();
             base.Awake();
         }
         protected override void Start()
@@ -237,8 +241,6 @@ namespace Game
         
         public Coroutine Attack(Targetable target, bool isCountering = false)
         {
-            Coroutine AttackRoutineHandle;
-            
             if(target.GetType() == typeof(Unit))
             {
                 uiController.SetupCharactersBattleInfo(
@@ -249,7 +251,7 @@ namespace Game
                     IsEnemy
                 );
             }
-            AttackRoutineHandle = coroutineStarter.StartCoroutine(unitMover.Attack(target, isCountering, gameSettings.AttackDuration));
+            Coroutine AttackRoutineHandle = coroutineStarter.StartCoroutine(unitMover.Attack(target, isCountering, gameSettings.AttackDuration));
             return AttackRoutineHandle;
         }
 
@@ -265,8 +267,10 @@ namespace Game
             }
 
             isGoingToDie = true;
+            unitAnimator?.PlayDeathAnimation();
             onUnitDeath.Publish(this);
             if (playerType == PlayerType.Ally) onPlayerUnitLoss.Publish(this);
+            unitAnimator?.StopDeathAnimation();
             isGoingToDie = false;
             yield return base.Die();
         }
@@ -293,6 +297,7 @@ namespace Game
         {
             if (TargetIsInRange(target))
             {
+                
                 target.Heal();
                 HasActed = true;
                 return true;

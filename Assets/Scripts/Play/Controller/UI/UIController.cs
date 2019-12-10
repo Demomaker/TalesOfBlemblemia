@@ -72,6 +72,7 @@ namespace Game
         private GameSettings gameSettings;
         private GridController gridController;
         private CoroutineStarter coroutineStarter;
+        private Coroutine displayReportCoroutine;
 
         public bool IsBattleReportActive => battleReports.activeSelf;
 
@@ -114,7 +115,7 @@ namespace Game
                 healthBar[i].SetActive(i < maxHealthPoints);
             }
         
-            for (int i = 0; i < currentHealthPoint; i++)
+            for (int i = 0; i < healthBar.Length; i++)
             {
                 var healthBarImage = healthBar[i].GetComponentInChildren<RawImage>();
                 healthBarImage.color = gameSettings.Green;
@@ -152,18 +153,21 @@ namespace Game
             }
         }
 
-        public Coroutine LaunchBattleReport(bool isEnemy)
+        public void LaunchBattleReport(bool isEnemy)
         {
             battleReports.SetActive(true);
 
+            enemyAnimator.SetBool(IS_ATTACKING, false);
+            playerAnimator.SetBool(IS_ATTACKING, false);
+            animationIsPlaying = false;
             playerDeathSymbol.SetActive(false);
             enemyDeathSymbol.SetActive(false);
             playerOutcome.enabled = false;
             enemyOutcome.enabled = false;
+            
+            if(displayReportCoroutine != null) coroutineStarter.StopCoroutine(displayReportCoroutine);
 
-            var handle = coroutineStarter.StartCoroutine(BattleReport(isEnemy));
-
-            return handle;
+            displayReportCoroutine = coroutineStarter.StartCoroutine(BattleReport(isEnemy));
         }
 
         private IEnumerator BattleReport(bool isEnemy)
@@ -171,7 +175,7 @@ namespace Game
             if (isEnemy)
             {
                 yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);
-                if (playerBattleInfos.CurrentHealth - playerBattleInfos.DamageTaken > 0)
+                if (playerBattleInfos.CurrentHealth > 0)
                 {
                     yield return new WaitForSeconds(timeToWaitBetweenAnimations);
                     yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
@@ -180,7 +184,7 @@ namespace Game
             else
             {
                 yield return AttackAnimation(playerAnimator, enemyBattleInfos, enemyHealthBar, false);
-                if (enemyBattleInfos.CurrentHealth - enemyBattleInfos.DamageTaken > 0)
+                if (enemyBattleInfos.CurrentHealth > 0)
                 {
                     yield return new WaitForSeconds(timeToWaitBetweenAnimations);
                     yield return AttackAnimation(enemyAnimator, playerBattleInfos, playerHealthBar, true);
@@ -198,7 +202,7 @@ namespace Game
             }
 
             yield return new WaitForSeconds(timeBeforeHidingBattleReportAuto);
-            battleReports.SetActive(false);
+            if(battleReports != null) battleReports.SetActive(false);
         }
 
         private IEnumerator AttackAnimation(Animator animator, BattleInfos battleInfos, GameObject[] healthBar, bool isEnemy)

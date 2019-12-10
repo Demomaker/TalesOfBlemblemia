@@ -268,21 +268,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
-        type: 3}
-      propertyPath: startingLevelScene
-      value: 85916631
-      objectReference: {fileID: 0}
-    - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
-        type: 3}
-      propertyPath: numberOfRecruitablesOnAlternatePath
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6757921886440334875, guid: 5394f606be27d3448b787dc0ec56a8f6,
-        type: 3}
-      propertyPath: endScene
-      value: 85916631
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5394f606be27d3448b787dc0ec56a8f6, type: 3}
 --- !u!1001 &740606059
@@ -356,42 +341,42 @@ PrefabInstance:
         type: 3}
       propertyPath: maleAttackSound
       value: 
-      objectReference: {fileID: 8300000, guid: 8900fb0395f64414d9593c91379161e4, type: 3}
+      objectReference: {fileID: 8300000, guid: faf8c87710ca09e4787d8575b3ccf715, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: femaleAttackSound
       value: 
-      objectReference: {fileID: 8300000, guid: 8900fb0395f64414d9593c91379161e4, type: 3}
+      objectReference: {fileID: 8300000, guid: faf8c87710ca09e4787d8575b3ccf715, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: morkAttackSound
       value: 
-      objectReference: {fileID: 8300000, guid: 8900fb0395f64414d9593c91379161e4, type: 3}
+      objectReference: {fileID: 8300000, guid: faf8c87710ca09e4787d8575b3ccf715, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: hurtSound
       value: 
-      objectReference: {fileID: 8300000, guid: 8900fb0395f64414d9593c91379161e4, type: 3}
+      objectReference: {fileID: 8300000, guid: faf8c87710ca09e4787d8575b3ccf715, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: dodgeSound
       value: 
-      objectReference: {fileID: 8300000, guid: c81b174f668a6d54f904e9caee168a3b, type: 3}
+      objectReference: {fileID: 8300000, guid: b8d66ca2d4f36ac4885dcce01b88b4b8, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: unitMoveSound
       value: 
-      objectReference: {fileID: 8300000, guid: 21976f4219ea7c341aeb61332fa4a84e, type: 3}
+      objectReference: {fileID: 8300000, guid: faf8c87710ca09e4787d8575b3ccf715, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: unitDeathSound
       value: 
-      objectReference: {fileID: 8300000, guid: d9b627d833b8a1d44998a0c956c41b20, type: 3}
+      objectReference: {fileID: 8300000, guid: 6c47adcf745eb1341b63001c97dd5832, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: buttonClickSound
       value: 
-      objectReference: {fileID: 8300000, guid: bc73feb6f69ef2b41a30205bef7fcec8, type: 3}
+      objectReference: {fileID: 8300000, guid: e2c094ce755ea9c42839a54045d43984, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: overworldMusic
@@ -426,7 +411,7 @@ PrefabInstance:
         type: 3}
       propertyPath: mainMenuMusic
       value: 
-      objectReference: {fileID: 8300000, guid: 1c19d8f4b45516849b15652204e37832, type: 3}
+      objectReference: {fileID: 8300000, guid: f933e1f5180f0014db37c98abfc8bbd8, type: 3}
     - target: {fileID: -3413932158639265391, guid: f183aca2613f51148ae7f62fdf261a94,
         type: 3}
       propertyPath: overWorldMusic

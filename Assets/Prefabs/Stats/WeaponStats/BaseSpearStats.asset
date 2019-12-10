@@ -16,4 +16,4 @@ MonoBehaviour:
   moveSpeed: 0
   attackStrength: 2
   hitRate: 0.95
-  critRate: 0.15
+  critRate: 0.25

@@ -43,7 +43,6 @@ namespace Game
         private GameController gameController;
         private SaveController saveController;
         private EndGameCreditsController endGameCredits;
-        private OnUnitDeath onUnitDeath;
         private EnemyRangeController enemyRangeController;
         private AchievementController achievementController;
         private GridController grid;
@@ -55,8 +54,10 @@ namespace Game
         protected LevelLoader levelLoader;
         protected GameSettings gameSettings;
 
+        public string LevelName => levelName;
+
         private bool AllEnemiesDied => computerPlayer.HaveAllUnitsDied;
-        private bool PointAchieved => completeIfPointAchieved && protagonistGameObject.GetComponent<Unit>()?.CurrentTile.LogicalPosition == pointToAchieve;
+        private bool PointAchieved => completeIfPointAchieved && protagonistGameObject.GetComponent<Unit>()?.CurrentTile?.LogicalPosition == pointToAchieve;
         private bool AllTargetsDefeated => completeIfCertainTargetsDefeated && AllTargetsToDefeatHaveBeenDefeated();
         private bool Survived => completeIfSurvivedCertainNumberOfTurns && numberOfPlayerTurns >= numberOfTurnsBeforeCompletion;
         private bool ProtagonistDied => protagonistGameObject == null || protagonistGameObject.GetComponent<Unit>().NoHealthLeft;
@@ -70,9 +71,10 @@ namespace Game
         public CinematicController CinematicController => cinematicController;
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
-        public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && currentPlayer == humanPlayer;
+        public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && currentPlayer == humanPlayer && !BattleOngoing && !uiController.IsBattleReportActive;
         public bool BattleOngoing { get; set; }
-        
+        public UnitOwner CurrentPlayer => currentPlayer;
+
         protected virtual void Awake()
         {
             onLevelVictory = Harmony.Finder.OnLevelVictory;
@@ -93,7 +95,6 @@ namespace Game
             if (protagonistGameObject == null) Debug.LogError("Missing ProtagonistGameObject in LevelController!");
             if (endGameCredits != null) endGameCredits.gameObject.SetActive(false);
             coroutineStarter = Harmony.Finder.CoroutineStarter;
-            onUnitDeath = Harmony.Finder.OnUnitDeath;
             enemyRangeController = Harmony.Finder.EnemyRangeController;
             achievementController = Harmony.Finder.AchievementController;
         }
@@ -109,20 +110,11 @@ namespace Game
             CheckForDarkKnight();
             uiController.ModifyVictoryCondition(customObjectiveMessage);
             if (completeIfPointAchieved) CreatePointToAchievePointingArrow();
-            if((levelName == gameSettings.DarkTowerSceneName || levelName == gameSettings.TulipValleySceneName) && humanPlayer.NumberOfUnits == gameSettings.NumberOfMaximumUnitsForThePlayer) 
+            if ((levelName == gameSettings.DarkTowerSceneName || levelName == gameSettings.TulipValleySceneName) &&
+                humanPlayer.NumberOfUnits == gameSettings.NumberOfMaximumUnitsForThePlayer)
                 achievementController.UnlockAchievement(gameSettings.ReachFinalLevelWith8Players);
         }
 
-        protected virtual void OnEnable()
-        {
-            onUnitDeath.Notify += computerPlayer.OnUnitDeath;
-        }
-
-        protected virtual void OnDisable()
-        {
-            onUnitDeath.Notify -= computerPlayer.OnUnitDeath;
-        }
-        
         protected virtual void Update()
         {
             if (!cinematicController.IsPlayingACinematic)
@@ -140,7 +132,7 @@ namespace Game
             levelIsEnding = true;
             if (LevelCompleted)
             {
-                onLevelVictory.Publish();
+                onLevelVictory.Publish(this);
                 if (endGameCredits != null)
                 {
                     endGameCredits.RollCredits();
@@ -155,7 +147,7 @@ namespace Game
             CheckIfUnitWasRecruited();
             CheckIfUpperPathWasTaken();
             UpdatePlayerSave();
-            UnlockEndLevelAchievements();
+            if(!LevelFailed)UnlockEndLevelAchievements();
             levelLoader.FadeToLevel(gameSettings.OverworldSceneName, LoadSceneMode.Additive);
         }
 

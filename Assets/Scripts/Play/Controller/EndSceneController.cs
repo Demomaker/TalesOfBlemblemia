@@ -41,16 +41,6 @@ public class EndSceneController : LevelController
         //Do Nothing On Purpose 
     }
 
-    protected override void OnEnable()
-    {
-        //Do Nothing On Purpose 
-    }
-
-    protected override void OnDisable()
-    {
-        //Do Nothing On Purpose   
-    }
-    
     private IEnumerator ChangeTilemaps()
     {
         while (CinematicController.IsPlayingACinematic) yield return null;
