@@ -71,7 +71,7 @@ namespace Game
         public CinematicController CinematicController => cinematicController;
         public HumanPlayer HumanPlayer => humanPlayer;
         public ComputerPlayer ComputerPlayer => computerPlayer;
-        public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && currentPlayer == humanPlayer;
+        public bool PlayerCanPlay => !PlayerUnitIsMovingOrAttacking && !CinematicController.IsPlayingACinematic && currentPlayer == humanPlayer && !BattleOngoing && !uiController.IsBattleReportActive;
         public bool BattleOngoing { get; set; }
         public UnitOwner CurrentPlayer => currentPlayer;
 
