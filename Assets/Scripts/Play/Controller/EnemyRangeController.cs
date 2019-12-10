@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Harmony;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -88,6 +89,7 @@ namespace Game
             }
         }
         
+        [UsedImplicitly]
         public void OnToggleChange(Toggle enemyRangeToggle)
         {
             if (enemyRangeToggle.isOn)

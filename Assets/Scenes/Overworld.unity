@@ -115921,7 +115921,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 1485261739}
   overWorldPath: {fileID: 1938653789}
-  isDebugging: 0
+  isDebugging: 1
   unitAnimator: {fileID: 1485261740}
 --- !u!1001 &1353857792
 PrefabInstance:

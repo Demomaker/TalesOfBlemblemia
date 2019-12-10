@@ -106776,11 +106776,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3809288141195027915, guid: 623c911082da5da4db1e7fc3a7896563,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -108576,8 +108571,50 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1725622910440463560, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 592188211527406255, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 805108950}
+    - target: {fileID: 592188211527406255, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnToggleChange
+      objectReference: {fileID: 0}
+    - target: {fileID: 592188211527406255, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 592188211527406255, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1959580776}
+    - target: {fileID: 592188211527406255, guid: 623c911082da5da4db1e7fc3a7896563,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.UI.Toggle, UnityEngine.UI
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 623c911082da5da4db1e7fc3a7896563, type: 3}
+--- !u!114 &1959580776 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 592188211527406255, guid: 623c911082da5da4db1e7fc3a7896563,
+    type: 3}
+  m_PrefabInstance: {fileID: 1959580775}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1959836458
 GameObject:
   m_ObjectHideFlags: 0
