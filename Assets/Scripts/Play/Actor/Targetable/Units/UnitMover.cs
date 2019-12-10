@@ -183,14 +183,18 @@ namespace Game
                 associatedUnit.OnHurt.Publish(unit);
                 associatedUnit.UnitAnimator?.PlayHurtAnimation();
             }
-            
-            if (damage > 0 && !isCountering && !associatedUnit.IsImmuneToCrits && (target.GetType() == typeof(Unit) && (associatedUnit.CanCritOnEverybody || ((Unit)target).WeaponType == associatedUnit.WeaponAdvantage)))
+
+            if (target is Unit enemyUnit)
             {
-                critModifier = Random.value <= associatedUnit.Stats.CritRate ? 2 : 1;
-                damage *= critModifier;
-                if (critModifier > 1 && associatedUnit.CameraShake != null)
+                if (damage > 0 && !isCountering && !enemyUnit.IsImmuneToCrits 
+                    && (associatedUnit.CanCritOnEverybody || enemyUnit.WeaponType == associatedUnit.WeaponAdvantage))
                 {
-                    associatedUnit.CameraShake.TriggerShake();
+                    critModifier = Random.value <= associatedUnit.Stats.CritRate ? 2 : 1;
+                    damage *= critModifier;
+                    if (critModifier > 1 && associatedUnit.CameraShake != null)
+                    {
+                        associatedUnit.CameraShake.TriggerShake();
+                    }
                 }
             }
             

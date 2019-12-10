@@ -115921,7 +115921,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 1485261739}
   overWorldPath: {fileID: 1938653789}
-  isDebugging: 0
+  isDebugging: 1
   unitAnimator: {fileID: 1485261740}
 --- !u!1001 &1353857792
 PrefabInstance:
@@ -116259,12 +116259,12 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7566137344601970420, guid: 27860fc454e884c4d9ad86c5483c83a8,
+    - target: {fileID: 7566137342310431230, guid: 27860fc454e884c4d9ad86c5483c83a8,
         type: 3}
       propertyPath: m_SortingLayerID
       value: 18170363
       objectReference: {fileID: 0}
-    - target: {fileID: 7566137344601970420, guid: 27860fc454e884c4d9ad86c5483c83a8,
+    - target: {fileID: 7566137342310431230, guid: 27860fc454e884c4d9ad86c5483c83a8,
         type: 3}
       propertyPath: m_SortingLayer
       value: 1
@@ -116275,26 +116275,6 @@ PrefabInstance:
       value: 18170363
       objectReference: {fileID: 0}
     - target: {fileID: 7566137342889349544, guid: 27860fc454e884c4d9ad86c5483c83a8,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7566137343997065814, guid: 27860fc454e884c4d9ad86c5483c83a8,
-        type: 3}
-      propertyPath: m_SortingLayerID
-      value: 18170363
-      objectReference: {fileID: 0}
-    - target: {fileID: 7566137343997065814, guid: 27860fc454e884c4d9ad86c5483c83a8,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7566137342310431230, guid: 27860fc454e884c4d9ad86c5483c83a8,
-        type: 3}
-      propertyPath: m_SortingLayerID
-      value: 18170363
-      objectReference: {fileID: 0}
-    - target: {fileID: 7566137342310431230, guid: 27860fc454e884c4d9ad86c5483c83a8,
         type: 3}
       propertyPath: m_SortingLayer
       value: 1
@@ -116329,20 +116309,25 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 7566137341887797496, guid: 27860fc454e884c4d9ad86c5483c83a8,
+    - target: {fileID: 7566137343997065814, guid: 27860fc454e884c4d9ad86c5483c83a8,
         type: 3}
       propertyPath: m_SortingLayerID
       value: 18170363
       objectReference: {fileID: 0}
-    - target: {fileID: 7566137341887797496, guid: 27860fc454e884c4d9ad86c5483c83a8,
+    - target: {fileID: 7566137343997065814, guid: 27860fc454e884c4d9ad86c5483c83a8,
         type: 3}
       propertyPath: m_SortingLayer
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7566137341887797496, guid: 27860fc454e884c4d9ad86c5483c83a8,
+    - target: {fileID: 7566137344601970420, guid: 27860fc454e884c4d9ad86c5483c83a8,
         type: 3}
-      propertyPath: m_SortingOrder
-      value: -2
+      propertyPath: m_SortingLayerID
+      value: 18170363
+      objectReference: {fileID: 0}
+    - target: {fileID: 7566137344601970420, guid: 27860fc454e884c4d9ad86c5483c83a8,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7566137337282742294, guid: 27860fc454e884c4d9ad86c5483c83a8,
         type: 3}
@@ -116358,6 +116343,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7566137341887797496, guid: 27860fc454e884c4d9ad86c5483c83a8,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: 18170363
+      objectReference: {fileID: 0}
+    - target: {fileID: 7566137341887797496, guid: 27860fc454e884c4d9ad86c5483c83a8,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7566137341887797496, guid: 27860fc454e884c4d9ad86c5483c83a8,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27860fc454e884c4d9ad86c5483c83a8, type: 3}

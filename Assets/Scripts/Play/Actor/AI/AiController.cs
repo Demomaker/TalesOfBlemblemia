@@ -211,18 +211,18 @@ namespace Game
                 }
             }
 
-            Unit enemy = null;
+            Targetable enemy = null;
             for (int i = 0; i < optionMap.GetLength(0); i++)
             {
                 for (int j = 0; j < optionMap.GetLength(1); j++)
                 {
                     for (int k = 0; k < potentialActions.Count; k++)
                     {
-                        if (enemy.GetType() == typeof(Unit))
+                        enemy = potentialActions[k].Target;
+                        if (enemy is Unit enemyUnit)
                         {
-                            enemy = (Unit)potentialActions[k].Target;
                             //Each tile has a score based on the added number of turns it would take each player's unit to get there
-                            optionMap[i, j] += (int)Math.Ceiling(((double)(enemy.MovementCosts[i, j] - 1) / (double)enemy.Stats.MoveSpeed));
+                            optionMap[i, j] += (int)Math.Ceiling((enemyUnit.MovementCosts[i, j] - 1) / (double)enemyUnit.Stats.MoveSpeed);
                         }
                     }
                 }
