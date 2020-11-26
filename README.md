@@ -1,5 +1,6 @@
 # Tales of Blemblemia
-
+![GitHub license](https://img.shields.io/github/license/Demomaker/Offline-Video-Library?style=plastic)
+![GitHub all releases](https://img.shields.io/github/downloads/Demomaker/Offline-Video-Library/total?style=plastic)
 ```
 Tales of Blemblemia est un tactical rpg. Le jeu se déroule dans le royaume de Blemblemia.
 
