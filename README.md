@@ -8,12 +8,6 @@ Tales of Blemblemia est un tactical rpg. Le jeu se déroule dans le royaume de B
 
 ```
 
-```
-À faire : Mettre à jour les liens dans ce document vers votre dépôt. 
-Par exemple : 
-   https://gitlab.com/csfpwmjv/projet-synthese/starter-game.git
-```
-
 ## Démarrage rapide
 
 Ces instructions vous permettront d'obtenir une copie opérationnelle du projet sur votre machine à des fins de développement.
@@ -41,7 +35,7 @@ Ensuite, clonez le projet **en vous assurant qu'il n'y a pas d'espace dans le ch
 
 ```
 cd /folder/with_no_space/
-git clone https://gitlab.com/csfpwmjv/projet-synthese/starter-game.git
+git clone https://github.com/Demomaker/TalesOfBlemblemia.git
 ```
 
 Avant d'ouvrir le projet dans Unity, exécutez le script `GenerateCode.bat`. Ce dernier va générer du code C # (principalement 
@@ -58,7 +52,7 @@ Notez que vous aurez à régénérer le code régulièrement.
 
 Ouvrez le projet dans Unity. Ensuite, allez dans `File > Build Settings…` et compilez une version Windows X64.
 
-Si vous rencontrez un bogue, vous êtes priés de le [signaler](https://gitlab.com/csfpwmjv/projet-synthese/starter-game/issues/new?issuable_template=Bug). 
+Si vous rencontrez un bogue, vous êtes priés de le [signaler](https://github.com/Demomaker/TalesOfBlemblemia/issues/new?issuable_template=Bug). 
 Veuillez fournir une explication détaillée de votre problème avec les étapes pour reproduire le bogue. Les captures d'écran et 
 les vidéos jointes sont les bienvenues.
 
@@ -104,27 +98,24 @@ Veuillez lire [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails sur notre
 ## Auteurs
 
 ```
-À faire : Ajoutez vous noms ici ainsi que le nom de tout artiste ayant participé au projet 
-(avec lien vers leur portfolio s'il existe).
-
-Inscrivez aussi, en détail, ce sur quoi chaque membre de l'équipe a principalement travaillé.
+En détail, ce sur quoi chaque membre de l'équipe a principalement travaillé.
 ```
 
 * **Benjamin Lemelin** - *Programmeur*
   * Extensions sur le moteur Unity pour la recherche d'objets et de composants. Générateur de constantes. Gestionnaire de
     chargement des scènes.
-* **Jérémie Bertrand** - *Programmeur*
-* **Mike Bédard** - *Programmeur*
-* **Zacharie Lavigne** - *Programmeur*
-* **Antoine Lessard** - *Programmeur*
-* **Pierre-Luc Maltais** - *Programmeur*
-* **Prénom Nom** - *Concepteur sonore*
-* **Prénom Nom** - *Artiste 2D et Artiste UI*
+* **Jérémie Bertrand** - *Programmeur UI, Gameplay et Engin*
+* **Mike Bédard** - *Programmeur Gameplay et Engin*
+* **Zacharie Lavigne** - *Programmeur UI et Gameplay*
+* **Antoine Lessard** - *Programmeur UI et Intégration*
+* **Pierre-Luc Maltais** - *Programmeur UI et Gameplay*
+* **Out-sourced** - *Concepteur sonore*
+* **Out-sourced** - *Artiste 2D et Artiste UI*
 
-## Remierciements
+## Remerciements
 
 ```
-À faire : Remercier toute personne ayant contribué au projet, mais qui n'est pas un auteur.
+Merci à toute personne ayant contribué au projet, mais qui n'est pas un auteur.
 ```
 
 * Tyler Coles - Pour [son guide](https://ornithoptergames.com/how-to-set-up-sqlite-for-unity/) d'intégration de SQLite dans Unity, dont l'implémentation dans ce projet fut fortement inspirée.
